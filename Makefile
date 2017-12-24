@@ -28,3 +28,9 @@ test: code ## Lance les tests unitaires
 doc: test ## Génération de la documentation
 	@echo -e '$(OK_COLOR)Documentation des sources$(NO_COLOR)'
 	@/home/dev/www/phpdoc/./vendor/bin/phpdoc -d $(PROJECT_DIR)/src -t $(PROJECT_DIR)/public/doc --template="responsive"
+
+push: ## Commit et Push tous les changements
+	git status
+	git add .
+	git commit -a -m "MAJ Globale"
+	git push -u origin master
