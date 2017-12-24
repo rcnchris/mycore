@@ -1,0 +1,684 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project title="API Documentation" version="2.8.5">
+  <partials/>
+  <file path="Collection.php" generated-path="Collection.html" hash="76afc77df846be1da0feaa862441b771" package="Core">
+    <docblock line="0">
+      <description>Fichier Collection.php du 10/10/2017
+Description : Fichier de la classe Collection</description>
+      <long-description>PHP version 5</long-description>
+      <tag name="category" line="0" description="Collection"/>
+      <tag name="package" line="0" description="Core"/>
+      <tag name="author" line="0" description="Raoul" link="mailto:rcn.chris@gmail.com"/>
+      <tag name="license" line="0" description="GPL" link="https://github.com/rcnchris"/>
+      <tag name="link" line="0" description="On Github" link="https://github.com/rcnchris"/>
+    </docblock>
+    <namespace-alias name="Traversable">\Traversable</namespace-alias>
+    <namespace-alias name="ArrayIterator">\ArrayIterator</namespace-alias>
+    <class final="false" abstract="false" namespace="Rcnchris\Core\Tools" line="44" package="Core">
+      <extends/>
+      <implements>\ArrayAccess</implements>
+      <implements>\IteratorAggregate</implements>
+      <implements>\Countable</implements>
+      <implements>\Serializable</implements>
+      <name>Collection</name>
+      <full_name>\Rcnchris\Core\Tools\Collection</full_name>
+      <docblock line="44">
+        <description>Class Collection&lt;br/&gt;
+&lt;ul&gt;
+&lt;li&gt;Permet de gérer une liste de données&lt;/li&gt;
+&lt;/ul&gt;</description>
+        <long-description></long-description>
+        <tag name="category" line="44" description="Collection"/>
+        <tag name="package" line="44" description="Core"/>
+        <tag name="author" line="44" description="Raoul" link="mailto:rcn.chris@gmail.com"/>
+        <tag name="license" line="44" description="GPL" link="https://github.com/rcnchris/fmk-php"/>
+        <tag name="version" line="44" description="Release: &lt;3.0.0&gt;"/>
+        <tag name="link" line="44" description="on Github" link="https://github.com/rcnchris/fmk-php"/>
+        <tag name="since" line="44" description="Release: &lt;1.0.0&gt;"/>
+      </docblock>
+      <property static="false" visibility="private" namespace="Rcnchris\Core\Tools" line="52" package="Core">
+        <name>$items</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::items</full_name>
+        <default></default>
+        <docblock line="52">
+          <description>Tableau des données</description>
+          <long-description></long-description>
+          <tag name="var" line="52" description="" type="array" variable="">
+            <type>array</type>
+          </tag>
+        </docblock>
+      </property>
+      <property static="false" visibility="private" namespace="Rcnchris\Core\Tools" line="59" package="Core">
+        <name>$name</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::name</full_name>
+        <default></default>
+        <docblock line="59">
+          <description>Nom de la collection</description>
+          <long-description></long-description>
+          <tag name="var" line="59" description="" type="string" variable="">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </property>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="72" package="Core">
+        <name>__construct</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::__construct()</full_name>
+        <docblock line="72">
+          <description>Constructeur</description>
+          <long-description>&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;$collection = new Collection('ola,ole,oli', "Liste simple vie une chaîne de caractères");&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$collection = new Collection(['ola', 'ole', 'oli'], "Liste simple via un tableau");&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;</long-description>
+          <tag name="param" line="72" description="&lt;p&gt;Liste de données (chaîne avec séparateur, json, array, objet)&lt;/p&gt;" type="string|array|null" variable="$items">
+            <type>string</type>
+            <type>array</type>
+            <type>null</type>
+          </tag>
+          <tag name="param" line="72" description="&lt;p&gt;Nom de la collection&lt;/p&gt;" type="string|null" variable="$name">
+            <type>string</type>
+            <type>null</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$items</name>
+          <default>null</default>
+          <type>string|array|null</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$name</name>
+          <default>null</default>
+          <type>string|null</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="101" package="Core">
+        <name>__destruct</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::__destruct()</full_name>
+        <docblock line="101">
+          <description>Vide les données de la mémoire</description>
+          <long-description></long-description>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="115" package="Core">
+        <name>__get</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::__get()</full_name>
+        <docblock line="115">
+          <description>Obtenir la valeur d'une clé.</description>
+          <long-description>&lt;code&gt;$collection-&gt;key&lt;/code&gt;</long-description>
+          <tag name="param" line="115" description="&lt;p&gt;Numéro ou nom de la clé&lt;/p&gt;" type="integer|string" variable="$key">
+            <type>integer</type>
+            <type>string</type>
+          </tag>
+          <tag name="return" line="115" description="" type="mixed|null">
+            <type>mixed</type>
+            <type>null</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default></default>
+          <type>integer|string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="125" package="Core">
+        <name>__toString</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::__toString()</full_name>
+        <docblock line="125">
+          <description>Obtenir le contenu de la collection au format jSon</description>
+          <long-description></long-description>
+          <tag name="return" line="125" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="137" package="Core">
+        <name>toArray</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::toArray()</full_name>
+        <docblock line="137">
+          <description>Obtenir la collection sous forme de tableau</description>
+          <long-description>&lt;code&gt;$array = $collection-&gt;toArray()&lt;/code&gt;</long-description>
+          <tag name="return" line="137" description="" type="array">
+            <type>array</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="152" package="Core">
+        <name>toJson</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::toJson()</full_name>
+        <docblock line="152">
+          <description>Obtenir le contenu d'une clé au format JSON</description>
+          <long-description>&lt;code&gt;$string = $collection-&gt;toJson()&lt;/code&gt;
+&lt;code&gt;$string = $collection-&gt;toJson($key)&lt;/code&gt;</long-description>
+          <tag name="param" line="152" description="&lt;p&gt;Clé du tableau&lt;/p&gt;" type="null" variable="$key">
+            <type>null</type>
+          </tag>
+          <tag name="return" line="152" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default>null</default>
+          <type>null</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="169" package="Core">
+        <name>join</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::join()</full_name>
+        <docblock line="169">
+          <description>Obtenir une liste de valeur avec séparateur</description>
+          <long-description>&lt;code&gt;$string = $collection-&gt;join()&lt;/code&gt;&lt;br/&gt;
+&lt;code&gt;$string = $collection-&gt;join('#')&lt;/code&gt;</long-description>
+          <tag name="param" line="169" description="" type="string" variable="$glue">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="169" description="" type="boolean|string">
+            <type>boolean</type>
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$glue</name>
+          <default>', '</default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="188" package="Core">
+        <name>has</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::has()</full_name>
+        <docblock line="188">
+          <description>Vérifie la présence d'une clé dans la collection</description>
+          <long-description>&lt;code&gt;$this-&gt;user-&gt;has('email')&lt;/code&gt;&lt;br/&gt;
+&lt;code&gt;$this-&gt;user-&gt;has('name.firtName')&lt;/code&gt;</long-description>
+          <tag name="param" line="188" description="&lt;p&gt;Numéro ou nom de la clé&lt;/p&gt;" type="integer|string" variable="$key">
+            <type>integer</type>
+            <type>string</type>
+          </tag>
+          <tag name="return" line="188" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default></default>
+          <type>integer|string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="205" package="Core">
+        <name>get</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::get()</full_name>
+        <docblock line="205">
+          <description>Obtenir la valeur d'une clé de la collection</description>
+          <long-description>&lt;code&gt;$collection-&gt;get('email')&lt;/code&gt;&lt;br/&gt;</long-description>
+          <tag name="param" line="205" description="&lt;p&gt;Clé de la collection&lt;/p&gt;" type="string|integer" variable="$key">
+            <type>string</type>
+            <type>integer</type>
+          </tag>
+          <tag name="return" line="205" description="" type="\Core\Collection|null">
+            <type>\Core\Collection</type>
+            <type>null</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default></default>
+          <type>string|integer</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="218" package="Core">
+        <name>hasGet</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::hasGet()</full_name>
+        <docblock line="218">
+          <description>Retourne false si la clé n'existe pas</description>
+          <long-description></long-description>
+          <tag name="param" line="218" description="&lt;p&gt;Clé de la collection&lt;/p&gt;" type="string|integer" variable="$key">
+            <type>string</type>
+            <type>integer</type>
+          </tag>
+          <tag name="return" line="218" description="" type="boolean|\Core\Collection|null">
+            <type>boolean</type>
+            <type>\Core\Collection</type>
+            <type>null</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default></default>
+          <type>string|integer</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="230" package="Core">
+        <name>first</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::first()</full_name>
+        <docblock line="230">
+          <description>Obtenir le premier élément de la collection</description>
+          <long-description></long-description>
+          <tag name="return" line="230" description="" type="mixed|\Core\Collection|null">
+            <type>mixed</type>
+            <type>\Core\Collection</type>
+            <type>null</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="247" package="Core">
+        <name>last</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::last()</full_name>
+        <docblock line="247">
+          <description>Obtenir le dernier élément de la collection</description>
+          <long-description></long-description>
+          <tag name="return" line="247" description="" type="\Core\Collection|mixed|null">
+            <type>\Core\Collection</type>
+            <type>mixed</type>
+            <type>null</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="272" package="Core">
+        <name>count</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::count()</full_name>
+        <docblock line="272">
+          <description>Compte le nombre d'items de la collection</description>
+          <long-description></long-description>
+          <tag name="return" line="272" description="" type="integer|void">
+            <type>integer</type>
+            <type>void</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="282" package="Core">
+        <name>keys</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::keys()</full_name>
+        <docblock line="282">
+          <description>Obtenir la liste des clés de la collection</description>
+          <long-description></long-description>
+          <tag name="return" line="282" description="" type="\Core\Collection|null">
+            <type>\Core\Collection</type>
+            <type>null</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="302" package="Core">
+        <name>inArray</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::inArray()</full_name>
+        <docblock line="302">
+          <description>Vérifie la présence d'une valeur dans la collection</description>
+          <long-description></long-description>
+          <tag name="param" line="302" description="&lt;p&gt;Valeur à chercher&lt;/p&gt;" type="mixed" variable="$value">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="302" description="&lt;p&gt;Respecte la casse&lt;/p&gt;" type="boolean" variable="$strict">
+            <type>boolean</type>
+          </tag>
+          <tag name="return" line="302" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$value</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$strict</name>
+          <default>true</default>
+          <type>boolean</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="325" package="Core">
+        <name>set</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::set()</full_name>
+        <docblock line="325">
+          <description>Ajoute une clé et sa valeur à la collection</description>
+          <long-description></long-description>
+          <tag name="param" line="325" description="" type="integer|string|null" variable="$key">
+            <type>integer</type>
+            <type>string</type>
+            <type>null</type>
+          </tag>
+          <tag name="param" line="325" description="" type="mixed|null" variable="$value">
+            <type>mixed</type>
+            <type>null</type>
+          </tag>
+          <tag name="return" line="325" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default>null</default>
+          <type>integer|string|null</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$value</name>
+          <default>null</default>
+          <type>mixed|null</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="343" package="Core">
+        <name>isEmpty</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::isEmpty()</full_name>
+        <docblock line="343">
+          <description>Vérifie si la collection est vide</description>
+          <long-description></long-description>
+          <tag name="return" line="343" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="355" package="Core">
+        <name>isArray</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::isArray()</full_name>
+        <docblock line="355">
+          <description>Vérifier si la valeur d'une clé est un tableau</description>
+          <long-description></long-description>
+          <tag name="param" line="355" description="&lt;p&gt;Nom de la clé&lt;/p&gt;" type="string" variable="$key">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="355" description="" type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="370" package="Core">
+        <name>type</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::type()</full_name>
+        <docblock line="370">
+          <description>Obtenir le type de la collection</description>
+          <long-description></long-description>
+          <tag name="return" line="370" description="" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="418" package="Core">
+        <name>name</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::name()</full_name>
+        <docblock line="418">
+          <description>Obtenir ou définir le nom de la collcetion</description>
+          <long-description></long-description>
+          <tag name="param" line="418" description="&lt;p&gt;Nom  à attribuer à la collection&lt;/p&gt;" type="string|null" variable="$name">
+            <type>string</type>
+            <type>null</type>
+          </tag>
+          <tag name="return" line="418" description="" type="null|string">
+            <type>null</type>
+            <type>string</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$name</name>
+          <default>null</default>
+          <type>string|null</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="Rcnchris\Core\Tools" line="437" package="Core">
+        <name>getValue</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::getValue()</full_name>
+        <docblock line="437">
+          <description>Obtenir la valeur d'une clé du tableau (récursive) pour la notation avec point</description>
+          <long-description></long-description>
+          <tag name="param" line="437" description="" type="array" variable="$indexes">
+            <type>array</type>
+          </tag>
+          <tag name="param" line="437" description="" type="" variable="$value"/>
+          <tag name="return" line="437" description="" type="\Core\Collection|null">
+            <type>\Core\Collection</type>
+            <type>null</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$indexes</name>
+          <default></default>
+          <type>array</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$value</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="Rcnchris\Core\Tools" line="457" package="Core">
+        <name>typesKeys</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::typesKeys()</full_name>
+        <docblock line="457">
+          <description>Obtenir la liste des types de données des clés de la collection</description>
+          <long-description></long-description>
+          <tag name="return" line="457" description="" type="\Core\Collection">
+            <type>\Core\Collection</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="private" namespace="Rcnchris\Core\Tools" line="473" package="Core">
+        <name>typesDatas</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::typesDatas()</full_name>
+        <docblock line="473">
+          <description>Obtenir la liste des types de données de la collection</description>
+          <long-description></long-description>
+          <tag name="return" line="473" description="" type="\Core\Collection">
+            <type>\Core\Collection</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="491" package="Core">
+        <name>typeOf</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::typeOf()</full_name>
+        <docblock line="491">
+          <description>Obtenir le type de données d'une clé</description>
+          <long-description></long-description>
+          <tag name="param" line="491" description="" type="" variable="$key"/>
+          <tag name="return" line="491" description="" type="boolean|string|void">
+            <type>boolean</type>
+            <type>string</type>
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default></default>
+          <type/>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="507" package="Core">
+        <name>extract</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::extract()</full_name>
+        <docblock line="507">
+          <description>Obtenir une extraction des données à partir d'un nom de clé</description>
+          <long-description></long-description>
+          <tag name="param" line="507" description="" type="" variable="$key"/>
+          <tag name="param" line="507" description="" type="null" variable="$value">
+            <type>null</type>
+          </tag>
+          <tag name="return" line="507" description="" type="\Core\Collection">
+            <type>\Core\Collection</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$key</name>
+          <default></default>
+          <type/>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$value</name>
+          <default>null</default>
+          <type>null</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="518" package="Core">
+        <name>min</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::min()</full_name>
+        <docblock line="518">
+          <description>Obtenir la valeur minimale de la collection</description>
+          <long-description></long-description>
+          <tag name="return" line="518" description="" type="\Core\Collection|mixed">
+            <type>\Core\Collection</type>
+            <type>mixed</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="529" package="Core">
+        <name>max</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::max()</full_name>
+        <docblock line="529">
+          <description>Obtenir la valeur max de la collection</description>
+          <long-description></long-description>
+          <tag name="return" line="529" description="" type="\Core\Collection|mixed">
+            <type>\Core\Collection</type>
+            <type>mixed</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="550" package="Core">
+        <name>offsetExists</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::offsetExists()</full_name>
+        <docblock line="550">
+          <description>(PHP 5 &amp;gt;= 5.0.0)&lt;br/&gt;
+Whether a offset exists</description>
+          <long-description></long-description>
+          <tag name="link" line="550" description="http://php.net/manual/en/arrayaccess.offsetexists.php" link="http://php.net/manual/en/arrayaccess.offsetexists.php"/>
+          <tag name="param" line="550" description="&lt;p&gt;&#10;                     An offset to check for.&#10;                     &lt;/p&gt;" type="mixed" variable="$offset">
+            <type>mixed</type>
+          </tag>
+          <tag name="return" line="550" description="true on success or false on failure.&#10;&lt;/p&gt;&#10;&lt;p&gt;&#10;The return value will be casted to boolean if non-boolean was returned." type="boolean">
+            <type>boolean</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$offset</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="567" package="Core">
+        <name>offsetGet</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::offsetGet()</full_name>
+        <docblock line="567">
+          <description>(PHP 5 &amp;gt;= 5.0.0)&lt;br/&gt;
+Offset to retrieve</description>
+          <long-description></long-description>
+          <tag name="link" line="567" description="http://php.net/manual/en/arrayaccess.offsetget.php" link="http://php.net/manual/en/arrayaccess.offsetget.php"/>
+          <tag name="param" line="567" description="&lt;p&gt;&#10;                     The offset to retrieve.&#10;                     &lt;/p&gt;" type="mixed" variable="$offset">
+            <type>mixed</type>
+          </tag>
+          <tag name="return" line="567" description="Can return all value types." type="mixed">
+            <type>mixed</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$offset</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="587" package="Core">
+        <name>offsetSet</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::offsetSet()</full_name>
+        <docblock line="587">
+          <description>(PHP 5 &amp;gt;= 5.0.0)&lt;br/&gt;
+Offset to set</description>
+          <long-description></long-description>
+          <tag name="link" line="587" description="http://php.net/manual/en/arrayaccess.offsetset.php" link="http://php.net/manual/en/arrayaccess.offsetset.php"/>
+          <tag name="param" line="587" description="&lt;p&gt;&#10;                     The offset to assign the value to.&#10;                     &lt;/p&gt;" type="mixed" variable="$offset">
+            <type>mixed</type>
+          </tag>
+          <tag name="param" line="587" description="&lt;p&gt;&#10;                     The value to set.&#10;                     &lt;/p&gt;" type="mixed" variable="$value">
+            <type>mixed</type>
+          </tag>
+          <tag name="return" line="587" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$offset</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+        <argument line="0" by_reference="false">
+          <name>$value</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="604" package="Core">
+        <name>offsetUnset</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::offsetUnset()</full_name>
+        <docblock line="604">
+          <description>(PHP 5 &amp;gt;= 5.0.0)&lt;br/&gt;
+Offset to unset</description>
+          <long-description></long-description>
+          <tag name="link" line="604" description="http://php.net/manual/en/arrayaccess.offsetunset.php" link="http://php.net/manual/en/arrayaccess.offsetunset.php"/>
+          <tag name="param" line="604" description="&lt;p&gt;&#10;                     The offset to unset.&#10;                     &lt;/p&gt;" type="mixed" variable="$offset">
+            <type>mixed</type>
+          </tag>
+          <tag name="return" line="604" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$offset</name>
+          <default></default>
+          <type>mixed</type>
+        </argument>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="619" package="Core">
+        <name>getIterator</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::getIterator()</full_name>
+        <docblock line="619">
+          <description>(PHP 5 &amp;gt;= 5.0.0)&lt;br/&gt;
+Retrieve an external iterator</description>
+          <long-description></long-description>
+          <tag name="link" line="619" description="http://php.net/manual/en/iteratoraggregate.getiterator.php" link="http://php.net/manual/en/iteratoraggregate.getiterator.php"/>
+          <tag name="return" line="619" description="An instance of an object implementing &lt;b&gt;Iterator&lt;/b&gt; or&#10;      &lt;b&gt;Traversable&lt;/b&gt;" type="\Traversable">
+            <type>\Traversable</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="631" package="Core">
+        <name>serialize</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::serialize()</full_name>
+        <docblock line="631">
+          <description>(PHP 5 &amp;gt;= 5.1.0)&lt;br/&gt;
+String representation of object</description>
+          <long-description></long-description>
+          <tag name="link" line="631" description="http://php.net/manual/en/serializable.serialize.php" link="http://php.net/manual/en/serializable.serialize.php"/>
+          <tag name="return" line="631" description="the string representation of the object or null" type="string">
+            <type>string</type>
+          </tag>
+        </docblock>
+      </method>
+      <method final="false" abstract="false" static="false" visibility="public" namespace="Rcnchris\Core\Tools" line="648" package="Core">
+        <name>unserialize</name>
+        <full_name>\Rcnchris\Core\Tools\Collection::unserialize()</full_name>
+        <docblock line="648">
+          <description>(PHP 5 &amp;gt;= 5.1.0)&lt;br/&gt;
+Constructs the object</description>
+          <long-description></long-description>
+          <tag name="link" line="648" description="http://php.net/manual/en/serializable.unserialize.php" link="http://php.net/manual/en/serializable.unserialize.php"/>
+          <tag name="param" line="648" description="&lt;p&gt;&#10;                          The string representation of the object.&#10;                          &lt;/p&gt;" type="string" variable="$serialized">
+            <type>string</type>
+          </tag>
+          <tag name="return" line="648" description="" type="void">
+            <type>void</type>
+          </tag>
+        </docblock>
+        <argument line="0" by_reference="false">
+          <name>$serialized</name>
+          <default></default>
+          <type>string</type>
+        </argument>
+      </method>
+    </class>
+    <source>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</source>
+  </file>
+  <package name="Core" full_name="Core"/>
+  <package name="global" full_name="global"/>
+  <namespace name="Rcnchris" full_name="Rcnchris">
+    <namespace name="Core" full_name="Rcnchris\Core">
+      <namespace name="Tools" full_name="Rcnchris\Core\Tools"/>
+    </namespace>
+  </namespace>
+  <deprecated count="0"/>
+</project>
