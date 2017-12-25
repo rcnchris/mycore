@@ -14,9 +14,7 @@
     "email": "rcn.chris@gmail.com"
   },
   "minimum-stability": "stable",
-  "require": {
-    "php": ">=5.6.29"
-  },
+  "require": {},
   "autoload": {
     "psr-4": {
       "Rcnchris\\Core\\": "src/",
