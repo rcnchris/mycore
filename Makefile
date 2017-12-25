@@ -15,6 +15,17 @@ NO_COLOR    = \033[m
 PROJECT_DIR = $(shell pwd)
 TEMPLATE_DOC = responsive
 
+vendor: composer.json ## Mise à jour des librairies composer
+	@composer selfupdate
+	@echo -e '$(OK_COLOR)Mise à jour Composer$(NO_COLOR)'
+	@composer update
+
+install: ## Installation du projet
+	@echo -e '$(OK_COLOR)Installation du projet$(NO_COLOR)'
+	@rm -r vendor
+	@rm -r composer.lock
+	@composer install
+
 code: ## Vérification et corection de la syntaxe
 	@echo -e '$(OK_COLOR)Corrections syntaxiques$(NO_COLOR)'
 	@./vendor/bin/phpcbf
@@ -30,7 +41,7 @@ doc: test ## Génération de la documentation
 	@/home/dev/www/phpdoc/./vendor/bin/phpdoc -d $(PROJECT_DIR)/src -t $(PROJECT_DIR)/public/doc --template="responsive"
 
 push: ## Commit et Push tous les changements
-	git status
-	git add .
-	git commit -a -m "MAJ Globale"
-	git push -u origin master
+	@git status
+	@git add .
+	@git commit -a -m "MAJ Globale"
+	@git push -u origin master
