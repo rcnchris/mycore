@@ -198,7 +198,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      *
      * @param string|int $key Clé de la collection
      *
-     * @return \Core\Collection|null
+     * @return Collection|null
      */
     public function get($key)
     {
@@ -211,7 +211,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      *
      * @param string|int $key Clé de la collection
      *
-     * @return bool|\Core\Collection|null
+     * @return bool|Collection|null
      */
     public function hasGet($key)
     {
@@ -223,7 +223,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
     /**
      * Obtenir le premier élément de la collection
      *
-     * @return mixed|\Core\Collection|null
+     * @return mixed|Collection|null
      */
     public function first()
     {
@@ -240,7 +240,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
     /**
      * Obtenir le dernier élément de la collection
      *
-     * @return \Core\Collection|mixed|null
+     * @return Collection|mixed|null
      */
     public function last()
     {
@@ -275,7 +275,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
     /**
      * Obtenir la liste des clés de la collection
      *
-     * @return \Core\Collection|null
+     * @return Collection|null
      */
     public function keys()
     {
@@ -430,7 +430,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      * @param array $indexes
      * @param       $value
      *
-     * @return \Core\Collection|null
+     * @return Collection|null
      */
     private function getValue(array $indexes, $value)
     {
@@ -450,7 +450,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
     /**
      * Obtenir la liste des types de données des clés de la collection
      *
-     * @return \Core\Collection
+     * @return Collection
      */
     private function typesKeys()
     {
@@ -466,7 +466,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
     /**
      * Obtenir la liste des types de données de la collection
      *
-     * @return \Core\Collection
+     * @return Collection
      */
     private function typesDatas()
     {
@@ -500,7 +500,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      * @param      $key
      * @param null $value
      *
-     * @return \Core\Collection
+     * @return Collection
      */
     public function extract($key, $value = null)
     {
@@ -511,7 +511,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
     /**
      * Obtenir la valeur minimale de la collection
      *
-     * @return \Core\Collection|mixed
+     * @return Collection|mixed
      */
     public function min()
     {
@@ -522,7 +522,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
     /**
      * Obtenir la valeur max de la collection
      *
-     * @return \Core\Collection|mixed
+     * @return Collection|mixed
      */
     public function max()
     {
