@@ -32,4 +32,11 @@ Classe statique qui fournit des méthodes diverses.
 $m = Common::getMemoryUse();
 ````
 
+### Composer
+Facilite la lecture d'un fichier composer.json
+````
+$composer = new Composer($path);
+$libs = $composer->show();
+````
+
 -------
