@@ -53,3 +53,17 @@ $slug = Text::slug('Le slug qui va bien !');
 ````
 
 -------
+
+## Package Apis
+
+### ApiTrait
+Comportements communs à toutes les API.
+
+### OneApi
+Utilisation de n'importe quelle API à partir de son URL.
+````
+$api = new OneApi('https://randomuser.me/api');
+$users = $api->addParams(['results' => 3]))->request('Obtention de trois utilisateurs');
+````
+
+-------
