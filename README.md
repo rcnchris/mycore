@@ -1,8 +1,8 @@
-[![Github Release](https://img.shields.io/github/release/rcnchris/mycore.svg)](https://img.shields.io/github/release/rcnchris/mycore.svg)
-[![Coverage Status](https://coveralls.io/repos/github/rcnchris/mycore/badge.svg)](https://coveralls.io/github/rcnchris/mycore)
-[![Packagist License](https://img.shields.io/packagist/l/rcnchris/mycore.svg)](https://img.shields.io/packagist/l/rcnchris/mycore.svg)
-[![Packagist Version](https://img.shields.io/packagist/v/rcnchris/mycore.svg)](https://img.shields.io/packagist/v/rcnchris/mycore.svg)
-[![Packagist Downloads](https://img.shields.io/packagist/dt/rcnchris/mycore.svg)](https://img.shields.io/packagist/dt/rcnchris/mycore.svg)
+[![Build Status](https://travis-ci.org/rcnchris/mycore.svg?branch=master)](https://travis-ci.org/rcnchris/mycore)
+[![Coveralls github](https://img.shields.io/coveralls/github/rcnchris/mycore.svg)](https://github.com/rcnchris/mycore)
+[![Packagist License](https://img.shields.io/packagist/l/rcnchris/core.svg)](https://img.shields.io/packagist/l/rcnchris/core.svg)
+[![Packagist Version](https://img.shields.io/packagist/v/rcnchris/core.svg)](https://img.shields.io/packagist/v/rcnchris/core.svg)
+[![Packagist Downloads](https://img.shields.io/packagist/dt/rcnchris/core.svg)](https://img.shields.io/packagist/dt/rcnchris/core.svg)
 
 <img src="public/img/icon_readme.png" align="right" />
 
