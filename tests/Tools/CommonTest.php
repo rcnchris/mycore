@@ -26,7 +26,7 @@ class CommonTest extends BaseTestCase
 
     public function testObjectToArray()
     {
-        $this->ekoTitre('Core - Common');
+        $this->ekoTitre('Tools - Common');
         $o = new \stdClass();
         $o->name = 'Mathis';
         $o->birthday = date('d-m-Y');

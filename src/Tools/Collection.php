@@ -35,7 +35,7 @@ use ArrayIterator;
  *
  * @license  https://github.com/rcnchris/fmk-php GPL
  *
- * @version  Release: <3.0.0>
+ * @version  Release: <0.0.1>
  *
  * @link     https://github.com/rcnchris/fmk-php on Github
  */

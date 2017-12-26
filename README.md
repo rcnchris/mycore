@@ -33,10 +33,17 @@ $m = Common::getMemoryUse();
 ````
 
 ### Composer
-Facilite la lecture d'un fichier composer.json
+Facilite la lecture d'un fichier composer.json.
 ````
 $composer = new Composer($path);
 $libs = $composer->show();
+````
+
+### Folder
+Facilite la manipulation de fichiers et dossiers.
+````
+$folder = new Folder($path);
+$size = $folder->size();
 ````
 
 -------
