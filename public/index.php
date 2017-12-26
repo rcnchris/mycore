@@ -44,36 +44,14 @@ require 'vendor/autoload.php';
 </nav>
 
 <div class="container-fluid" role="main">
+
     <div class="row">
         <div class="col-12">
             <h1 class="display-3">Ola les gens</h1>
             <hr/>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            <h2><i class="fa fa-fire"></i> Tests</h2>
-        </div>
 
-        <div class="col-6">
-            <?php
-            $api = new \Rcnchris\Core\Apis\OneApi('https://randomuser.me/api');
-            $results = 3;
-            $users = $api->addParams(compact('results'))->request('Obtention de trois utilisateurs');
-            r($api);
-            ?>
-        </div>
-
-        <div class="col-6">
-            <?php
-            r($users);
-            ?>
-        </div>
-
-        <div class="col-12">
-            <hr/>
-        </div>
-    </div>
     <div class="row">
         <div class="col-12">
             <?php

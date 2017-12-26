@@ -16,7 +16,7 @@
  * @link     https://github.com/rcnchris On Github
  */
 
-namespace Rcnchris\Core\Exceptions;
+namespace Rcnchris\Core\Apis;
 
 /**
  * Class ApiException
