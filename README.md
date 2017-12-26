@@ -46,4 +46,10 @@ $folder = new Folder($path);
 $size = $folder->size();
 ````
 
+### Text
+Facilite la manipulation des chaînes de caractères.
+````
+$slug = Text::slug('Le slug qui va bien !');
+````
+
 -------
