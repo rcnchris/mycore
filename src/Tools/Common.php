@@ -60,6 +60,8 @@ class Common
     /**
      * Retourne la quantité de mémoire allouée par PHP
      *
+     * <code>$m = Common::getMemoryUse();</code>
+     *
      * @param bool|null $peak  Mémoire max
      * @param bool|null $octet Retour en octets
      *

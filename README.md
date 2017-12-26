@@ -14,10 +14,22 @@
 ## Package Tools
 Package qui regroupe les classes utilisées de manière autonomes un peu partout.
 
+### Cmd
+Classe statique qui permet d'exécuter des commandes *shell*.
+````
+$ls = Cmd::exec("cd $path && ls");
+````
+
 ### Collection
-Manipulation d'un tableau via un objet.
+Facilite la manipulation d'un tableau via un objet.
 ````
 $col = new Collection('ola,ole,oli', "Liste de valeurs dans une chaîne avec séparateur");
+````
+
+### Common
+Classe statique qui fournit des méthodes diverses.
+````
+$m = Common::getMemoryUse();
 ````
 
 -------
