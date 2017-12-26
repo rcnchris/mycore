@@ -7,7 +7,7 @@
  *
  * @category Collection
  *
- * @package  Core
+ * @package  Rcnchris\Core\Tools
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -29,7 +29,7 @@ use ArrayIterator;
  *
  * @category Collection
  *
- * @package  Core
+ * @package  Rcnchris\Core\Tools
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *

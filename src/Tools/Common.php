@@ -7,7 +7,7 @@
  *
  * @category Outils
  *
- * @package  Core\Tools
+ * @package  Rcnchris\Core\Tools
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -27,7 +27,7 @@ namespace Rcnchris\Core\Tools;
  *
  * @category Outils
  *
- * @package  Core\Tools
+ * @package  Rcnchris\Core\Tools
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *

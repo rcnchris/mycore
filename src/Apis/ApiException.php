@@ -7,7 +7,7 @@
  *
  * @category API
  *
- * @package  Core\Exceptions
+ * @package  Rcnchris\Core\Apis
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -23,7 +23,7 @@ namespace Rcnchris\Core\Apis;
  *
  * @category API
  *
- * @package  Core\Exceptions
+ * @package  Rcnchris\Core\Apis
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
