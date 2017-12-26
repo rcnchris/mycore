@@ -11,7 +11,7 @@
 
 -------
 
-## Tools
+## Package Tools
 Package qui regroupe les classes utilisées de manière autonomes un peu partout.
 
 ### Collection

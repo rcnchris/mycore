@@ -154,7 +154,7 @@ class CollectionTest extends BaseTestCase {
      */
     public function testInstanceWithoutParam()
     {
-        $this->ekoTitre('Core Tools - Collection');
+        $this->ekoTitre('Tools - Collection');
         $c = $this->makeCollection();
         $this->assertInstanceOf(Collection::class, $c);
         $this->assertEquals(0, $c->count());
