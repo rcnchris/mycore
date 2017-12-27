@@ -77,12 +77,17 @@ class OneAPITest extends BaseTestCase {
     {
         $api = $this->makeApi($this->urlRandomUser);
 
-        $api->addQuery('results', 3);
+        $api->addQuery('results', 3, true);
         $this->assertCount(1, $api->getQueries(false));
 
-        $api->addQuery('results', 2);
+        $api->addQuery('ola', 2, false);
         $this->assertCount(2, $api->getQueries(false));
-        var_dump($api->getQueries(false));
+
+        $api->addQuery(['ole' => 2]);
+        $this->assertCount(3, $api->getQueries(false));
+
+        $api->addQuery(['ole' => 2], null, true);
+        $this->assertCount(1, $api->getQueries(false));
     }
 
     public function testGetBuildQueries()
