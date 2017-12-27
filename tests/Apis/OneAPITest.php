@@ -137,6 +137,6 @@ class OneAPITest extends BaseTestCase {
     {
         $api = $this->makeApi($this->urlRandomUser);
         $api->addQuery('results', 3);
-        $this->assertNotEmpty($api->results);
+        $this->assertNotEmpty($api->request()->results);
     }
 }
