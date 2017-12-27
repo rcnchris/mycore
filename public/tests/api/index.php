@@ -1,7 +1,8 @@
 <?php
-use Michelf\MarkdownExtra;
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 
-chdir(dirname(__DIR__));
+chdir(dirname(dirname(dirname(__DIR__))));
 require 'vendor/autoload.php';
 ?>
 <!doctype html>
@@ -31,9 +32,6 @@ require 'vendor/autoload.php';
                 <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a href="tests/api/" class="nav-link" target="_blank"><i class="fa fa-globe"></i> Test OneAPI</a>
-            </li>
-            <li class="nav-item">
                 <a href="coverage/index.html" class="nav-link" target="_blank"><i class="fa fa-bar-chart"></i> Coverage</a>
             </li>
             <li class="nav-item">
@@ -50,20 +48,29 @@ require 'vendor/autoload.php';
             <h1 class="display-3">Ola les gens</h1>
             <hr/>
         </div>
-
     </div>
 
     <div class="row">
-        <div class="col-12">
+        <div class="col-6">
             <?php
-            $readme = dirname(__DIR__) . '/README.md';
-            if (file_exists($readme)) {
-                $content = file_get_contents($readme);
-                echo MarkdownExtra::defaultTransform($content);
-            }
+            //$api = new \Rcnchris\Core\Apis\OneAPI('https://nexiste/pas');
+            $api = new \Rcnchris\Core\Apis\OneAPI('https://randomuser.me/api');
+            $api->addQuery('results', 2);
+            $users = $api->request();
+            r($api);
+            ?>
+        </div>
+
+        <div class="col-6">
+            <?php
+            r($users->results);
+            $api->addQuery('results', 1, true);
+            $users = $api->request();
+            r($api->getLog());
             ?>
         </div>
     </div>
+
 </div>
 
 <!-- Optional JavaScript -->

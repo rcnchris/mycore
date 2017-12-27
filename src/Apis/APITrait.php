@@ -18,6 +18,9 @@
 
 namespace Rcnchris\Core\Apis;
 
+use Faker\Factory;
+use Faker\Generator;
+
 /**
  * Class APITrait<br/>
  *
@@ -74,6 +77,20 @@ trait APITrait
     ];
 
     /**
+     * Générateur aléatoire
+     *
+     * @var Generator
+     */
+    protected $faker;
+
+    /**
+     * Journal des requêtes exécutées
+     *
+     * @var array
+     */
+    private $log = [];
+
+    /**
      * Initialise la ressource Curl à partir d'une URL
      *
      * @param string|null $url URL
@@ -86,6 +103,7 @@ trait APITrait
             $this->curl = curl_init($url);
             $this->setCurlOptions($this->curlOptions);
         }
+        $this->faker = Factory::create();
         return $this;
     }
 
@@ -136,12 +154,12 @@ trait APITrait
      *
      * @return $this
      */
-    public function addQuery($query, $value = null, $erase = true)
+    public function addQuery($query, $value = null, $erase = false)
     {
+        if ($erase) {
+            $this->queries = [];
+        }
         if (is_string($query)) {
-            if ($erase) {
-                $this->queries = [];
-            }
             $this->queries[$query] = $value;
         } elseif (is_array($query)) {
             $this->queries = !$erase
@@ -173,7 +191,7 @@ trait APITrait
      * @return mixed|null|string
      * @throws ApiException
      */
-    public function request($url = null)
+    public function request($url = null, $logTitle = null)
     {
         // Définition de l'URL à exécuter
         if (is_null($url)) {
@@ -185,8 +203,12 @@ trait APITrait
 
         // Queries
         $url = $url . '?' . $this->getQueries();
-        curl_setopt($this->curl, CURLOPT_URL, $url);
+        $options = [
+            CURLOPT_URL => $url
+        ];
+        $this->setCurlOptions($options);
         $this->response = curl_exec($this->curl);
+        $this->addLog($logTitle);
         return $this;
     }
 
@@ -203,6 +225,48 @@ trait APITrait
         return $full
             ? $url . '?' . $this->getQueries()
             : $url;
+    }
+
+    /**
+     * Utiliser un navigateur particulier
+     *
+     * @param string|null $userAgent Navigateur, si vide navigaetur aléatoire
+     *
+     * @return $this
+     */
+    public function withUserAgent($userAgent = null)
+    {
+        if (is_null($userAgent)) {
+            $userAgent = $this->faker->userAgent;
+        }
+        curl_setopt($this->curl, CURLOPT_USERAGENT, $userAgent);
+        return $this;
+    }
+
+    /**
+     * Obtenir la liste des requêtes exécutées
+     *
+     * @return array
+     */
+    public function getLog()
+    {
+        return $this->log;
+    }
+
+    /**
+     * Ajoute une requête au journal
+     *
+     * @param string|null $title Titre de la requête dans le journal
+     */
+    private function addLog($title = null)
+    {
+        if (is_null($title)) {
+            $title = $this->getCurlInfos('url');
+        }
+        array_push($this->log, [
+            'title' => $title,
+            'details' => $this->getCurlInfos()
+        ]);
     }
 
     /**

@@ -1,6 +1,8 @@
 <?php
 namespace Tests\Rcnchris\Core\Apis;
 
+use Faker\Factory;
+use Faker\Generator;
 use Rcnchris\Core\Apis\ApiException;
 use Rcnchris\Core\Apis\OneAPI;
 use Tests\Rcnchris\BaseTestCase;
@@ -14,10 +16,17 @@ class OneAPITest extends BaseTestCase {
      */
     private $urlRandomUser;
 
+    /**
+     * @var Generator
+     */
+    private $faker;
+
     public function setUp()
     {
         $this->urlRandomUser = 'https://randomuser.me/api';
+        $this->faker = Factory::create('fr_FR');
     }
+
     /**
      * Obtenir une instance
      *
@@ -55,9 +64,6 @@ class OneAPITest extends BaseTestCase {
 
         $api->addQuery('results', 3);
         $this->assertEquals(['results' => 3], $api->getQueries(false));
-
-        $api->addQuery(['ola' => 'ole'], null, false);
-        $this->assertEquals(['results' => 3, 'ola' => 'ole'], $api->getQueries(false));
     }
 
     public function testAddQueryWithArrayParam()
@@ -65,6 +71,18 @@ class OneAPITest extends BaseTestCase {
         $api = $this->makeApi($this->urlRandomUser);
         $api->addQuery(['results' => 3]);
         $this->assertEquals(['results' => 3], $api->getQueries(false));
+    }
+
+    public function testAddQueryErase()
+    {
+        $api = $this->makeApi($this->urlRandomUser);
+
+        $api->addQuery('results', 3);
+        $this->assertCount(1, $api->getQueries(false));
+
+        $api->addQuery('results', 2);
+        $this->assertCount(2, $api->getQueries(false));
+        var_dump($api->getQueries(false));
     }
 
     public function testGetBuildQueries()
@@ -113,7 +131,7 @@ class OneAPITest extends BaseTestCase {
     public function testRequestWithWrongUrl()
     {
         $api = $this->makeApi('http://nexiste/pas');
-        $this->assertFalse($api->request()->toArray());
+        $this->assertInternalType('string', $api->request()->toArray());
 
         $api = $this->makeApi('https://randomuser.me/fake');
         $this->assertInternalType('string', $api->request()->toJson());
@@ -138,5 +156,19 @@ class OneAPITest extends BaseTestCase {
         $api = $this->makeApi($this->urlRandomUser);
         $api->addQuery('results', 3);
         $this->assertNotEmpty($api->request()->results);
+    }
+
+    public function testRequestWithUserAgent()
+    {
+        $api = $this->makeApi($this->urlRandomUser);
+        $this->assertNotEmpty($api->addQuery('results', 1)->withUserAgent()->request()->toArray());
+    }
+
+    public function testGetLog()
+    {
+        $api = $this->makeApi($this->urlRandomUser);
+        $api->addQuery('results', 3)->request();
+        $api->addQuery('results', 1)->request();
+        $this->assertCount(2, $api->getLog());
     }
 }

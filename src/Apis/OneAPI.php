@@ -73,15 +73,12 @@ class OneAPI
         if (is_null($this->response)) {
             $this->request();
         }
-        if (is_string($this->response)) {
-            $array = json_decode($this->response, true);
-            if (json_last_error() || !is_array($array)) {
-                return [json_last_error_msg()];
+        if ($this->getCurlInfos('http_code') === 200) {
+            if (is_string($this->response)) {
+                return json_decode($this->response, true);
             }
-            return $array;
-        } else {
-            return $this->response;
         }
+        return curl_error($this->curl);
     }
 
     /**
@@ -94,6 +91,9 @@ class OneAPI
         if (is_null($this->response)) {
             $this->request();
         }
-        return json_encode($this->toArray());
+        if ($this->getCurlInfos('http_code') === 200) {
+            return json_encode($this->toArray());
+        }
+        return curl_error($this->curl);
     }
 }
