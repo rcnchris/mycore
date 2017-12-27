@@ -52,18 +52,6 @@ class OneAPI
     }
 
     /**
-     * Obtenir la valeur d'une clé du résulat
-     *
-     * @param $key
-     *
-     * @return mixed
-     */
-    public function __get($key)
-    {
-        return $this->toArray()[$key];
-    }
-
-    /**
      * Obtenir la réponse sous la forme d'un tableau
      *
      * @return bool|array

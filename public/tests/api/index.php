@@ -63,7 +63,6 @@ require 'vendor/autoload.php';
 
         <div class="col-6">
             <?php
-            r($users->results);
             $api->addQuery('results', 1, true);
             $users = $api->request();
             r($api->getLog());

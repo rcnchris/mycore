@@ -156,14 +156,6 @@ class OneAPITest extends BaseTestCase {
         $this->assertInternalType('string', $api->toJson());
     }
 
-    public function testGetProperty()
-    {
-        $api = $this->makeApi($this->urlRandomUser);
-        $api->addQuery('results', 3);
-        $response = $api->request();
-        $this->assertNotEmpty($response->results);
-    }
-
     public function testRequestWithUserAgent()
     {
         $api = $this->makeApi($this->urlRandomUser);
