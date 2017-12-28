@@ -56,7 +56,7 @@ class CurlResponseTest extends BaseTestCase {
 
     public function testGetResponse()
     {
-        $this->assertInternalType('string', $this->response->get());
+        $this->assertInternalType('string', $this->makeResponse()->get());
     }
 
     public function testGetType()
