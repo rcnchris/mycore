@@ -51,20 +51,38 @@ require 'vendor/autoload.php';
     </div>
 
     <div class="row">
+
         <div class="col-6">
             <?php
-            //$api = new \Rcnchris\Core\Apis\OneAPI('https://nexiste/pas');
-            $api = new \Rcnchris\Core\Apis\OneAPI('https://randomuser.me/api');
-            $api->addQuery('results', 2);
-            $users = $api->request();
+            $apiName = 'one';
+            if ($apiName === 'one') {
+                $api = (new \Rcnchris\Core\Apis\OneAPI('https://randomuser.me/api'))->addParams('results', 2);
+            } elseif ($apiName === 'allo') {
+                $api = new \Rcnchris\Core\Apis\AlloCine();
+            } else {
+                $api = new \Rcnchris\Core\Apis\OneAPI();
+            }
+            // http://api.allocine.fr/rest/v3/search?q=Mechanic+%3A+Resurrection&format=json&partner=100043982026&sed=20171228&sig=sSSnq26%2F7CPlTxQ0HJ48ARKbF5s%3D
+            // http://api.allocine.fr/rest/v3/search?q=Scarface&format=json&partner=100043982026&sed=20171228&sig=NKHrZBtnDLqLzZAJ92lygyS8BD0%3D?q=Scarface&format=json&partner=100043982026
             r($api);
             ?>
         </div>
 
         <div class="col-6">
             <?php
-            $api->addQuery('results', 1, true);
-            $users = $api->request();
+            r($api->url());
+            if ($apiName === 'one') {
+                $response = $api->r();
+                r($response);
+                r($response->toJson('info'));
+            } elseif ($apiName === 'allo') {
+                $response = $api->r();
+                r($response);
+                r($response->get());
+                //r($api->search('Scarface')->toArray());
+            } else {
+                r($api->r());
+            }
             r($api->getLog());
             ?>
         </div>

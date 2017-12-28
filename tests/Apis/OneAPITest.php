@@ -4,7 +4,9 @@ namespace Tests\Rcnchris\Core\Apis;
 use Faker\Factory;
 use Faker\Generator;
 use Rcnchris\Core\Apis\ApiException;
+use Rcnchris\Core\Apis\CurlResponse;
 use Rcnchris\Core\Apis\OneAPI;
+use Rcnchris\Core\Tools\Collection;
 use Tests\Rcnchris\BaseTestCase;
 
 class OneAPITest extends BaseTestCase {
@@ -62,111 +64,111 @@ class OneAPITest extends BaseTestCase {
     {
         $api = $this->makeApi($this->urlRandomUser);
 
-        $api->addQuery('results', 3);
-        $this->assertEquals(['results' => 3], $api->getQueries(false));
+        $api->addParams('results', 3);
+        $this->assertEquals(['results' => 3], $api->getParams(false));
     }
 
-    public function testAddQueryWithArrayParam()
+    public function testAddParamsWithArrayParam()
     {
         $api = $this->makeApi($this->urlRandomUser);
-        $api->addQuery(['results' => 3]);
-        $this->assertEquals(['results' => 3], $api->getQueries(false));
+        $api->addParams(['results' => 3]);
+        $this->assertEquals(['results' => 3], $api->getParams(false));
     }
 
-    public function testAddQueryErase()
+    public function testAddParamsErase()
     {
         $api = $this->makeApi($this->urlRandomUser);
 
-        $api->addQuery('results', 3, true);
-        $this->assertCount(1, $api->getQueries(false));
+        $api->addParams('results', 3, true);
+        $this->assertCount(1, $api->getParams(false));
 
-        $api->addQuery('ola', 2, false);
-        $this->assertCount(2, $api->getQueries(false));
+        $api->addParams('ola', 2, false);
+        $this->assertCount(2, $api->getParams(false));
 
-        $api->addQuery(['ole' => 2]);
-        $this->assertCount(3, $api->getQueries(false));
+        $api->addParams(['ole' => 2]);
+        $this->assertCount(3, $api->getParams(false));
 
-        $api->addQuery(['ole' => 2], null, true);
-        $this->assertCount(1, $api->getQueries(false));
+        $api->addParams(['ole' => 2], null, true);
+        $this->assertCount(1, $api->getParams(false));
     }
 
-    public function testGetBuildQueries()
+    public function testGetBuildParams()
     {
         $api = $this->makeApi($this->urlRandomUser);
-        $api->addQuery([
+        $params = [
             'results' => 3
             , 'ola' => 'ole'
-        ]);
-        $this->assertEquals('results=3&ola=ole', $api->getQueries());
+        ];
+        $api->addParams($params);
+        $this->assertEquals($params, $api->getParams(false));
+        $this->assertEquals('?results=3&ola=ole', $api->getParams());
     }
 
     public function testGetUrl()
     {
         $api = $this->makeApi($this->urlRandomUser);
-        $api->addQuery('results', 1);
+        $api->addParams('results', 1);
         $this->assertEquals($this->urlRandomUser . '?results=1', $api->url());
+        $this->assertEquals($this->urlRandomUser, $api->url(false));
     }
 
     public function testRequest()
     {
         $api = $this->makeApi($this->urlRandomUser);
-        $response = $api->addQuery('results', 3)->request();
+        $response = $api->r();
+        $this->assertInstanceOf(CurlResponse::class, $response);
+        $this->assertNotEmpty($response->toArray());
+    }
 
+    public function testRequestWithParamString()
+    {
+        $api = $this->makeApi($this->urlRandomUser);
+        $response = $api->addParams('results', 3)->r();
         $this->assertInternalType('string', $response->toJson());
         $this->assertNotEmpty($response->toArray());
     }
 
-    public function testRequestWithValidUrl()
+    public function testRequestWithParamArray()
+    {
+        $api = $this->makeApi($this->urlRandomUser);
+        $response = $api->r(['results' => 3]);
+        $this->assertInternalType('string', $response->toJson());
+        $this->assertNotEmpty($response->toArray());
+    }
+
+    public function testRequestWithValidUrlWithParams()
     {
         $api = $this->makeApi();
-        $this->assertNotEmpty($api->request('https://randomuser.me/api?results=3')->toArray());
+        $this->assertNotEmpty($api->r('https://randomuser.me/api?results=3')->toArray());
+    }
+
+    public function testRequestWithValidUrlWithAddParams()
+    {
+        $api = $this->makeApi();
+        $api->addParams('results', 3);
+        $response = $api->r('https://randomuser.me/api')->toArray();
+        $this->assertNotEmpty($response);
+        $this->assertCount(1, $response['results']);
     }
 
     public function testRequestWithoutUrl()
     {
         $api = $this->makeApi('');
-
         $this->expectException(ApiException::class);
-        $api->request();
-
-        $this->expectException(ApiException::class);
-        $api->toArray();
+        $api->r();
     }
 
-    public function testRequestWithWrongUrl()
+    public function testWithUserAgent()
     {
-        $api = $this->makeApi('http://nexiste/pas');
-        $this->assertInternalType('string', $api->request()->toArray());
-
-        $api = $this->makeApi('https://randomuser.me/fake');
-        $this->assertInternalType('string', $api->request()->toJson());
-    }
-
-    public function testToArrayWithoutRequest()
-    {
-        $api = $this->makeApi($this->urlRandomUser);
-        $api->addQuery('results', 3);
-        $this->assertNotEmpty($api->toArray());
-    }
-
-    public function testToJsonWithoutRequest()
-    {
-        $api = $this->makeApi($this->urlRandomUser);
-        $api->addQuery('results', 3);
-        $this->assertInternalType('string', $api->toJson());
-    }
-
-    public function testRequestWithUserAgent()
-    {
-        $api = $this->makeApi($this->urlRandomUser);
-        $this->assertNotEmpty($api->addQuery('results', 1)->withUserAgent()->request()->toArray());
+        $api = $this->makeApi($this->urlRandomUser)->withUserAgent();
+        $this->assertCount(3, $api->addParams('results', 3)->r()->toArray('results'));
     }
 
     public function testGetLog()
     {
         $api = $this->makeApi($this->urlRandomUser);
-        $api->addQuery('results', 3)->request();
-        $api->addQuery('results', 1)->request();
+        $api->addParams('results', 3)->r();
+        $api->addParams('results', 1)->r();
         $this->assertCount(2, $api->getLog());
     }
 }

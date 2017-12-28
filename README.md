@@ -59,12 +59,14 @@ $slug = Text::slug('Le slug qui va bien !');
 ### APITrait
 Comportement communs à toutes les APIs sur la base de **curl**
 
+### CurlResponse
+Représente une réponse de la commande <code>curl_exec()</code>
+
 ### OneAPI
 Utiliser n'importe quelle API à partir de son URL.
 ````
 $api = new OneAPI('https://randomuser.me/api');
-$api->addQuery('results', 3);
-$users = $api->results;
+$users = $api->r(['results' => 3])->toArray('results');
 ````
 
 -------

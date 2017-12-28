@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Apis;
 
+use Rcnchris\Core\Tools\Collection;
+
 /**
  * Class OneAPI<br/>
  * <ul>
@@ -49,39 +51,5 @@ class OneAPI
     public function __construct($url = null)
     {
         $this->initialize($url);
-    }
-
-    /**
-     * Obtenir la réponse sous la forme d'un tableau
-     *
-     * @return bool|array
-     */
-    public function toArray()
-    {
-        if (is_null($this->response)) {
-            $this->request();
-        }
-        if ($this->getCurlInfos('http_code') === 200) {
-            if (is_string($this->response)) {
-                return json_decode($this->response, true);
-            }
-        }
-        return curl_error($this->curl);
-    }
-
-    /**
-     * Obtenir le résultat au format JSON
-     *
-     * @return bool|int|string
-     */
-    public function toJson()
-    {
-        if (is_null($this->response)) {
-            $this->request();
-        }
-        if ($this->getCurlInfos('http_code') === 200) {
-            return json_encode($this->toArray());
-        }
-        return curl_error($this->curl);
     }
 }
