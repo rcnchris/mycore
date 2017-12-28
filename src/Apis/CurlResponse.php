@@ -181,5 +181,6 @@ class CurlResponse
                 return json_encode($array[$key]);
             }
         }
+        return null;
     }
 }
