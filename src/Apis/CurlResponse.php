@@ -105,6 +105,13 @@ class CurlResponse
         return $type === 'json';
     }
 
+    public function isHtml()
+    {
+        $parts = explode('/', $this->getContentType());
+        $type = array_pop($parts);
+        return $type === 'html';
+    }
+
     /**
      * Obtenir le Charset du retour de la requête
      *
@@ -120,6 +127,16 @@ class CurlResponse
     }
 
     /**
+     * Obtenir l'URL de la requête
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->curlInfos['url'];
+    }
+
+    /**
      * Obtenir la réponse brute
      *
      * @return mixed
@@ -127,19 +144,17 @@ class CurlResponse
     public function get()
     {
         $httpCode = $this->getHttpCode();
-        if (!$this->response) {
-            if ($httpCode === 301) {
-                return '301 : Moved Permanently';
-            } elseif ($httpCode === 401) {
-                return '401 : Unauthorized';
-            } elseif ($httpCode === 403) {
-                return '403 : Forbidden';
-            } elseif ($httpCode === 404) {
-                return '404 : Not Found';
-            }
-        }
+
         if ($httpCode === 200) {
             return $this->response;
+        } elseif ($httpCode === 301) {
+            return '301 : Moved Permanently';
+        } elseif ($httpCode === 401) {
+            return '401 : Unauthorized';
+        } elseif ($httpCode === 403) {
+            return '403 : Forbidden';
+        } elseif ($httpCode === 404) {
+            return '404 : Not Found';
         }
         return curl_error($this->curl);
     }
@@ -153,9 +168,14 @@ class CurlResponse
      */
     public function toArray($key = null)
     {
+        $response = $this->get();
         $array = [];
-        if ($this->getType() === 'string' && $this->isJson()) {
-            $array = json_decode($this->response, true);
+        if ($this->getType() === 'string') {
+            if ($this->isJson()) {
+                $array = json_decode($response, true);
+            } elseif ($this->isHtml()) {
+                array_push($array, $response);
+            }
         }
         if (!is_null($key) && array_key_exists($key, $array)) {
             return $array[$key];
@@ -172,15 +192,23 @@ class CurlResponse
      */
     public function toJson($key = null)
     {
-        if ($this->getType() === 'string' && $this->isJson()) {
-            if (is_null($key)) {
-                return $this->response;
-            }
-            $array = json_decode($this->response, true);
-            if (array_key_exists($key, $array)) {
-                return json_encode($array[$key]);
+        $response = $this->get();
+        if ($this->getType() === 'string') {
+            if ($this->isJson()) {
+                if (is_null($key)) {
+                    return $response;
+                }
+                $array = json_decode($response, true);
+                if (array_key_exists($key, $array)) {
+                    return json_encode($array[$key]);
+                }
             }
         }
-        return null;
+        return $response;
+    }
+
+    public function __toString()
+    {
+        return $this->get();
     }
 }

@@ -52,39 +52,113 @@ require 'vendor/autoload.php';
 
     <div class="row">
 
-        <div class="col-6">
+        <div class="col-4">
+            <h2>API</h2>
             <?php
-            $apiName = 'one';
+
+            $apiName = 'allo';
+
             if ($apiName === 'one') {
-                $api = (new \Rcnchris\Core\Apis\OneAPI('https://randomuser.me/api'))->addParams('results', 2);
+                $api = (new \Rcnchris\Core\Apis\OneAPI('https://randomuser.me/api'));
             } elseif ($apiName === 'allo') {
                 $api = new \Rcnchris\Core\Apis\AlloCine();
             } else {
                 $api = new \Rcnchris\Core\Apis\OneAPI();
             }
-            // http://api.allocine.fr/rest/v3/search?q=Mechanic+%3A+Resurrection&format=json&partner=100043982026&sed=20171228&sig=sSSnq26%2F7CPlTxQ0HJ48ARKbF5s%3D
-            // http://api.allocine.fr/rest/v3/search?q=Scarface&format=json&partner=100043982026&sed=20171228&sig=NKHrZBtnDLqLzZAJ92lygyS8BD0%3D?q=Scarface&format=json&partner=100043982026
+            // http://api.allocine.fr/rest/v3/search?q=Dinosaure&format=json&partner=100043982026&sed=20171229&sig=ouxJi9P%2FwSaGFWUT4Rnhl1p42s8%3D
+            // http://api.allocine.fr/rest/v3/search?q=Dinosaure&format=json&partner=100043982026&sed=20171229&sig=VKm5CXWOg37PVXN563cudvCmP9M%3D
             r($api);
             ?>
         </div>
 
-        <div class="col-6">
+        <div class="col-8">
+            <h2>Réponse</h2>
             <?php
-            r($api->url());
             if ($apiName === 'one') {
-                $response = $api->r();
-                r($response);
-                r($response->toJson('info'));
+
+                $response = $api->addParams('results', 2)->r();
+
             } elseif ($apiName === 'allo') {
-                $response = $api->r();
-                r($response);
-                r($response->get());
-                //r($api->search('Scarface')->toArray());
+
+                $response = $api->search('Dinosaure');
+
             } else {
-                r($api->r());
+                $response = $api->r();
             }
-            r($api->getLog());
             ?>
+            <table class="table table-sm">
+                <tbody>
+                <tr>
+                    <th>URL de l'API</th>
+                    <td><code><?= $api->url(false); ?></code></td>
+                </tr>
+                <tr>
+                    <th>URL de la réponse</th>
+                    <td><code><?= $response->getUrl(); ?></code></td>
+                </tr>
+                <tr>
+                    <th>Code HTTP</th>
+                    <td><div class="badge badge-secondary"><?= $response->getHttpCode(); ?></div></td>
+                </tr>
+                <tr>
+                    <th>Content Type</th>
+                    <td><code><?= $response->getContentType(); ?></code></td>
+                </tr>
+                <tr>
+                    <th>Charset</th>
+                    <td><code><?= $response->getCharset(); ?></code></td>
+                </tr>
+                <tr>
+                    <th>Réponse brute</th>
+                    <td><?= $response ?></td>
+                </tr>
+                <tr>
+                    <th>Réponse au format jSon</th>
+                    <td><?= $response->toJson() ?></td>
+                </tr>
+                <tr>
+                    <th>Réponse dans un tableau</th>
+                    <td><?= r($response->toArray()) ?></td>
+                </tr>
+                <tr>
+                    <th>Journal des requêtes</th>
+                    <td>
+                        <?php $logs = $api->getLog(); ?>
+                        <table class="table-sm">
+                            <thead>
+                            <tr>
+                                <th>Classe</th>
+                                <th>Titre</th>
+                                <th>Détails</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($logs as $log): ?>
+                                <tr>
+                                    <td><code><?= $log['class'] ?></code></td>
+                                    <td><?= $log['title'] ?></td>
+                                    <td>
+                                        <table class="table table-sm">
+                                            <tbody>
+                                        <?php foreach ($log['details'] as $k =>$v): ?>
+                                            <?php if ($k != 'url'): ?>
+                                            <tr>
+                                                <th><?= $k ?></th>
+                                                <td><?= is_array($v) ? r($v) : $v ?></td>
+                                            </tr>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

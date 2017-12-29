@@ -36,4 +36,29 @@ class BaseTestCase extends TestCase
         echo "\n\033[0;36m{$parts[0]}\033[m - {$parts[1]} (\033[0;32m$tests\033[m)\n";
         //$this->assertTrue(true);
     }
+
+    /**
+     * Supprime les espaces et retours à la ligne
+     *
+     * @param $string
+     *
+     * @return string
+     */
+    protected function trim($string)
+    {
+        $lines = explode(PHP_EOL, $string);
+        $lines = array_map('trim', $lines);
+        return implode('', $lines);
+    }
+
+    /**
+     * Compare deux expressions en utilisant le trim de cette classe
+     *
+     * @param string $expected Chaîne de caractères à comparer
+     * @param string $actual   Chaîne de caractères à comparer
+     */
+    protected function assertSimilar($expected, $actual)
+    {
+        $this->assertEquals($this->trim($expected), $this->trim($actual));
+    }
 }

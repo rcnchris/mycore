@@ -80,9 +80,19 @@ class CurlResponseTest extends BaseTestCase {
         $this->assertEquals('utf-8', $this->response->getCharset());
     }
 
+    public function testGetUrl()
+    {
+        $this->assertEquals($this->urlRandomUser, $this->response->getUrl());
+    }
+
     public function testIsJson()
     {
         $this->assertTrue($this->response->isJson());
+    }
+
+    public function testIsHtml()
+    {
+        $this->assertFalse($this->response->isHtml());
     }
 
     public function testToArray()
@@ -97,6 +107,11 @@ class CurlResponseTest extends BaseTestCase {
         $this->assertNotEmpty($this->response->toJson('info'));
     }
 
+    public function testToString()
+    {
+        $this->assertEquals($this->response->toJson(), (string)$this->response);
+    }
+
     public function testGetWithValidUrl()
     {
         $api = $this->makeApi('https://randomuser.me/api');
@@ -104,13 +119,9 @@ class CurlResponseTest extends BaseTestCase {
         $this->assertInternalType('string', $response->get());
     }
 
-    public function testGetWithMovedPermanentlyUrl()
-    {
-        $api = $this->makeApi('http://randomuser.me/api');
-        $response = $api->r();
-        $this->assertEquals('301 : Moved Permanently', $response->get());
-    }
-
+    /**
+     * @throws \Rcnchris\Core\Apis\ApiException
+     */
     public function testGetWithWrongUrl()
     {
         $api = $this->makeApi('https://randomuser.mz/api');
@@ -118,10 +129,46 @@ class CurlResponseTest extends BaseTestCase {
         $this->assertEquals('Could not resolve host: randomuser.mz', $response->get());
     }
 
+    /**
+     * 301
+     * @throws \Rcnchris\Core\Apis\ApiException
+     */
+    public function testGetWithMovedPermanentlyUrl()
+    {
+        $api = $this->makeApi('http://randomuser.me/api');
+        $response = $api->r();
+        $this->assertEquals('301 : Moved Permanently', $response->get());
+    }
+
+    /**
+     * 403
+     * @throws \Rcnchris\Core\Apis\ApiException
+     */
+    public function testGetWithForbiddenUrl()
+    {
+        $api = $this->makeApi('http://api.allocine.fr/rest/v3/search?q=Dinosaure&format=json&partner=100043982026&sed=20171229&sig=VKm5CXWOg37PVXN563cudvCmP9M%3D');
+        $response = $api->r();
+        $this->assertEquals('403 : Forbidden', $response->get());
+    }
+
+    /**
+     * 404
+     * @throws \Rcnchris\Core\Apis\ApiException
+     */
     public function testGetWithNotFoundUrl()
     {
         $api = $this->makeApi('http://api.allocine.fr/rest/v3');
         $response = $api->r(['q' => 'scarface']);
         $this->assertEquals('404 : Not Found', $response->get());
+    }
+
+    public function testGetWithErrorUrl()
+    {
+        $api = $this->makeApi('http://api.allocine.fr/rest/v3/search?q=Dinosaure');
+        $response = $api->r();
+        $this->assertTrue($response->isHtml());
+        $this->assertFalse($response->isJson());
+        $this->assertNotEmpty($response->toArray());
+        $this->assertInternalType('string', $response->toJson());
     }
 }
