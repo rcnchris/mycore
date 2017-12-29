@@ -55,6 +55,20 @@ class CurlResponse
     private $curlInfos = [];
 
     /**
+     * Code des entêtes HTTP
+     *
+     * @var array
+     */
+    private $httpCodes = [
+        200 => 'OK'
+        , 301 => 'Moved Permanently'
+        , 401 => 'Unauthorized'
+        , 403 => 'Forbidden'
+        , 404 => 'Not Found'
+        , 500 => 'Internal Server Error'
+    ];
+
+    /**
      * Constructeur
      *
      * @param resource $curl     CURL
@@ -144,17 +158,10 @@ class CurlResponse
     public function get()
     {
         $httpCode = $this->getHttpCode();
-
         if ($httpCode === 200) {
             return $this->response;
-        } elseif ($httpCode === 301) {
-            return '301 : Moved Permanently';
-        } elseif ($httpCode === 401) {
-            return '401 : Unauthorized';
-        } elseif ($httpCode === 403) {
-            return '403 : Forbidden';
-        } elseif ($httpCode === 404) {
-            return '404 : Not Found';
+        } elseif (array_key_exists($httpCode, $this->httpCodes)) {
+            return $this->httpCodes[$httpCode];
         }
         return curl_error($this->curl);
     }

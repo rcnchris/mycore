@@ -137,7 +137,7 @@ class CurlResponseTest extends BaseTestCase {
     {
         $api = $this->makeApi('http://randomuser.me/api');
         $response = $api->r();
-        $this->assertEquals('301 : Moved Permanently', $response->get());
+        $this->assertEquals('Moved Permanently', $response->get());
     }
 
     /**
@@ -148,7 +148,7 @@ class CurlResponseTest extends BaseTestCase {
     {
         $api = $this->makeApi('http://api.allocine.fr/rest/v3/search?q=Dinosaure&format=json&partner=100043982026&sed=20171229&sig=VKm5CXWOg37PVXN563cudvCmP9M%3D');
         $response = $api->r();
-        $this->assertEquals('403 : Forbidden', $response->get());
+        $this->assertEquals('Forbidden', $response->get());
     }
 
     /**
@@ -159,7 +159,7 @@ class CurlResponseTest extends BaseTestCase {
     {
         $api = $this->makeApi('http://api.allocine.fr/rest/v3');
         $response = $api->r(['q' => 'scarface']);
-        $this->assertEquals('404 : Not Found', $response->get());
+        $this->assertEquals('Not Found', $response->get());
     }
 
     public function testGetWithErrorUrl()

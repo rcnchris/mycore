@@ -104,7 +104,8 @@ class AlloCine extends OneAPI
         ]);
         $sed = date('Ymd');
         $sig = urlencode(base64_encode(sha1($this::KEY . $this->getParams() . '&sed=' . $sed, true)));
-        $url = $this->url(false) . '/' . $method . $this->getParams() . '&sed=' . $sed . '&sig=' . $sig;
+        $this->addPart($method);
+        $url = $this->url(false) . $this->getParams() . '&sed=' . $sed . '&sig=' . $sig;
         return $url;
     }
 }
