@@ -57,7 +57,7 @@ class CurlResponseTest extends BaseTestCase {
     public function testGetResponse()
     {
         $response = $this->makeApi($this->urlRandomUser)->r(['results' => 1]);
-        var_dump($response);
+        var_dump($response->get());
         $this->assertInternalType('string', $response->get());
     }
 
