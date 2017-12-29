@@ -10,19 +10,19 @@ class CurlResponseTest extends BaseTestCase {
     /**
      * @var string
      */
-    private $urlRandomUser;
+    public $urlRandomUser;
 
     /**
      * @var OneAPI
      */
-    private $randomUserApi;
+    public $randomUserApi;
 
     /**
      * Réponse de RandomUser avec 1 user
      *
      * @var CurlResponse
      */
-    private $response;
+    public $response;
 
     public function setUp()
     {
@@ -62,7 +62,9 @@ class CurlResponseTest extends BaseTestCase {
 
     public function testGetType()
     {
-        $response = $this->makeApi($this->urlRandomUser)->r(['results' => 1]);
+        $response = $this
+            ->makeApi($this->urlRandomUser)
+            ->r(['results' => 1]);
         $this->assertEquals('string', $response->getType());
     }
 
