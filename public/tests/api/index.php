@@ -117,10 +117,6 @@ require 'vendor/autoload.php';
                     <td><code><?= $response->getCharset(); ?></code></td>
                 </tr>
                 <tr>
-                    <th>Réponse brute</th>
-                    <td><?= r($response->get()) ?></td>
-                </tr>
-                <tr>
                     <th>Réponse dans un tableau</th>
                     <td><?= r($response->toArray()) ?></td>
                 </tr>

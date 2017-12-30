@@ -36,6 +36,8 @@ namespace Rcnchris\Core\Apis;
 class CurlResponse
 {
     /**
+     * Réponse de l'API
+     *
      * @var mixed
      */
     private $response;
@@ -112,6 +114,11 @@ class CurlResponse
         return $type;
     }
 
+    /**
+     * Vérifie que le résultat est de type JSON
+     *
+     * @return bool
+     */
     public function isJson()
     {
         $parts = explode('/', $this->getContentType());
@@ -119,6 +126,11 @@ class CurlResponse
         return $type === 'json';
     }
 
+    /**
+     * Vérifie que le résultat est de type HTML
+     *
+     * @return bool
+     */
     public function isHtml()
     {
         $parts = explode('/', $this->getContentType());
@@ -214,6 +226,11 @@ class CurlResponse
         return $response;
     }
 
+    /**
+     * Affiche le résultat brut de la requête
+     *
+     * @return mixed
+     */
     public function __toString()
     {
         return $this->get();

@@ -69,4 +69,17 @@ $api = new OneAPI('https://randomuser.me/api');
 $users = $api->r(['results' => 3])->toArray('results');
 ````
 
+### AlloCiné
+Obtenir des informations de l'API.
+````
+$api = new AlloCine();
+$search = $api->search('Le Parrain');
+````
+
+### Synology
+Utiliser les API d'un NAS Synology.
+````
+$api = new AbstractSynology($config);
+````
+
 -------
