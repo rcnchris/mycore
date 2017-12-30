@@ -18,8 +18,6 @@
 
 namespace Rcnchris\Core\Apis;
 
-use Rcnchris\Core\Tools\Collection;
-
 /**
  * Class OneAPI<br/>
  * <ul>
@@ -49,11 +47,11 @@ class OneAPI
      * @var array
      */
     protected $curlOptions = [
-        CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT => 10,
-        CURLOPT_CONNECTTIMEOUT => 10
-        , CURLOPT_SSLVERSION => 'CURL_SSLVERSION_TLSv1_2'
+        CURLOPT_SSL_VERIFYPEER => false
+        , CURLOPT_RETURNTRANSFER => true
+        , CURLOPT_TIMEOUT => 10
+        , CURLOPT_CONNECTTIMEOUT => 10
+        //, CURLOPT_SSLVERSION => 'CURL_SSLVERSION_TLSv1_2'
     ];
 
 

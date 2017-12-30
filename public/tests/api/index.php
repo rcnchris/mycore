@@ -66,7 +66,8 @@ require 'vendor/autoload.php';
                 $api = new \Rcnchris\Core\Apis\OneAPI();
             }
             // http://api.allocine.fr/rest/v3/search?q=Dinosaure&format=json&partner=100043982026&sed=20171229&sig=ouxJi9P%2FwSaGFWUT4Rnhl1p42s8%3D
-            // http://api.allocine.fr/rest/v3/search?q=Dinosaure&format=json&partner=100043982026&sed=20171229&sig=VKm5CXWOg37PVXN563cudvCmP9M%3D
+            // http://api.allocine.fr/rest/v3/search?q=Dinosaure&format=json&partner=100043982026&sed=20171230&sig=2c1Pbg9H4P1HEqUHiVG8SsOjMt0%3D
+
             r($api);
             ?>
         </div>
@@ -80,7 +81,8 @@ require 'vendor/autoload.php';
 
             } elseif ($apiName === 'allo') {
 
-                $response = $api->search('Dinosaure');
+                //$response = $api->search('scarface');
+                $response = $api->episode(363695);
 
             } else {
                 $response = $api->r();
@@ -98,7 +100,13 @@ require 'vendor/autoload.php';
                 </tr>
                 <tr>
                     <th>Code HTTP</th>
-                    <td><div class="badge badge-secondary"><?= $response->getHttpCode(); ?></div></td>
+                    <td>
+                        <?php if ($response->getHttpCode() === 200): ?>
+                        <div class="badge badge-success"><?= $response->getHttpCode(); ?></div>
+                        <?php else: ?>
+                        <div class="badge badge-danger"><?= $response->getHttpCode(); ?></div>
+                        <?php endif; ?>
+                    </td>
                 </tr>
                 <tr>
                     <th>Content Type</th>
@@ -110,11 +118,7 @@ require 'vendor/autoload.php';
                 </tr>
                 <tr>
                     <th>Réponse brute</th>
-                    <td><?= $response ?></td>
-                </tr>
-                <tr>
-                    <th>Réponse au format jSon</th>
-                    <td><?= $response->toJson() ?></td>
+                    <td><?= r($response->get()) ?></td>
                 </tr>
                 <tr>
                     <th>Réponse dans un tableau</th>
