@@ -19,7 +19,10 @@
 namespace Rcnchris\Core\Apis;
 
 /**
- * Class AlloCine
+ * Class AlloCine<br/>
+ * <ul>
+ * <li>Interrogation de l'API AlloCiné</li>
+ * </ul>
  *
  * @category API
  *
@@ -386,7 +389,7 @@ class AlloCine extends OneAPI
                 "Méthode $method introuvable ! Essayez plutôt avec une de celles-ci : " . implode(', ', $this->methods)
             );
         }
-        $this->addPart($method);
+        $this->addUrlPart($method);
         $this->addParams($params, null, true);
         $this->addParams([
             'format' => $this->format

@@ -98,6 +98,11 @@ class CurlResponseTest extends BaseTestCase {
         $this->assertFalse($this->response->isHtml());
     }
 
+    public function testIsText()
+    {
+        $this->assertFalse($this->response->isText());
+    }
+
     public function testToArray()
     {
         $this->assertNotEmpty($this->response->toArray());

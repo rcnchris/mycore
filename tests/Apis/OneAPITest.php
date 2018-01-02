@@ -175,7 +175,7 @@ class OneAPITest extends BaseTestCase {
     public function testAddUrlPart()
     {
         $api = $this->makeApi($this->urlRandomUser);
-        $api->addPart('test/add/part');
+        $api->addUrlPart('test/add/part');
         $this->assertEquals($this->urlRandomUser . '/' . 'test/add/part', $api->url(false));
     }
 }

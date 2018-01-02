@@ -56,7 +56,7 @@ require 'vendor/autoload.php';
             <h2>API</h2>
             <?php
 
-            $apiName = 'allo';
+            $apiName = 'one';
 
             if ($apiName === 'one') {
                 $api = (new \Rcnchris\Core\Apis\OneAPI('https://randomuser.me/api'));

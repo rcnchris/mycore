@@ -20,7 +20,6 @@ namespace Rcnchris\Core\Tools;
 
 /**
  * Class Cmd<br/>
- *
  * <ul>
  * <li>Classe statique qui permet d'exécuter des commandes shell.</li>
  * </ul>

@@ -20,7 +20,6 @@ namespace Rcnchris\Core\Tools;
 
 /**
  * Class Common<br/>
- *
  * <ul>
  * <li>Classe statique qui fournit des méthodes diverses.</li>
  * </ul>

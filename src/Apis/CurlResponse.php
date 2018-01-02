@@ -19,7 +19,10 @@
 namespace Rcnchris\Core\Apis;
 
 /**
- * Class CurlResponse
+ * Class CurlResponse<br/>
+ * <ul>
+ * <li>Représente la réponse de l'éxécution de la commande <code>curl_exec()</code></li>
+ * </ul>
  *
  * @category API
  *
@@ -139,6 +142,18 @@ class CurlResponse
     }
 
     /**
+     * Vérifie que le résultat est de type texte
+     *
+     * @return bool
+     */
+    public function isText()
+    {
+        $parts = explode('/', $this->getContentType());
+        $type = current($parts);
+        return $type === 'text';
+    }
+
+    /**
      * Obtenir le Charset du retour de la requête
      *
      * @return array|mixed
@@ -194,6 +209,11 @@ class CurlResponse
                 $array = json_decode($response, true);
             } elseif ($this->isHtml()) {
                 array_push($array, $response);
+            } elseif ($this->isText()) {
+                $array = json_decode($response, true);
+                if (json_last_error()) {
+                    return json_last_error_msg();
+                }
             }
         }
         if (!is_null($key) && array_key_exists($key, $array)) {

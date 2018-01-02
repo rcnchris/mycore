@@ -20,7 +20,6 @@ namespace Rcnchris\Core\Tools;
 
 /**
  * Class Composer<br/>
- *
  * <ul>
  * <li>Facilite la lecture d'un fichier composer.json</li>
  * </ul>

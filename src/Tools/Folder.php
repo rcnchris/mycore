@@ -20,7 +20,6 @@ namespace Rcnchris\Core\Tools;
 
 /**
  * Class Folder<br/>
- *
  * <ul>
  * <li>Facilite la manipulation de fichiers et dossiers.</li>
  * </ul>
