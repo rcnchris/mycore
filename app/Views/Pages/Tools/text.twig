@@ -1,0 +1,31 @@
+{% extends "layout.twig" %}
+{% block content %}
+
+    <div class="page-header">
+        <h1 class="display-1">
+            <small>{{ icon('wrench') }} Tools - {{ icon('font') }} <code>Text</code></small>
+        </h1>
+    </div>
+
+    <div class="alert alert-info">
+        Classe statique de manipulation des chaînes de caractères.
+    </div>
+
+    <div class="row">
+
+        <div class="col-12">
+            <h2>Utilisation</h2>
+            <hr/>
+        </div>
+
+        <div class="col-12">
+            <h3>Obtenir le slug</h3>
+            <pre class="sh_php"> echo Text::slug('Oyé les gens, comment vont-ils ?');</pre>
+            <div class="alert alert-dark">
+                <samp>{{ 'Oyé les gens, comment vont-ils ?'|toSlug }}</samp>
+            </div>
+            <hr/>
+        </div>
+    </div>
+
+{% endblock %}

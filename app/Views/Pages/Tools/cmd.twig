@@ -1,0 +1,45 @@
+{% extends "layout.twig" %}
+{% block content %}
+
+    <div class="page-header">
+        <h1 class="display-1">
+            <small>{{ icon('wrench') }} Tools - {{ icon('terminal') }} <code>Cmd</code></small>
+        </h1>
+    </div>
+
+    <div class="alert alert-info">
+        Classe statique instantiable (singleton) qui permet d'exécuter des commandes shell.
+    </div>
+
+    <div class="row ">
+        <div class="col-12">
+            <h3>Obtenir une instance</h3>
+            <pre class="sh_php"> $cmd = Cmd::getInstance();</pre>
+            <hr/>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-12">
+            <h2>Utilisation</h2>
+            <hr/>
+        </div>
+
+        <div class="col-12">
+            <h3>Exécuter une commande</h3>
+            <pre class="sh_php"> $cmd->exec('ls -la');</pre>
+            {{ r(cmd.exec('ls -la')) }}
+            <hr/>
+        </div>
+
+        <div class="col-12">
+            <h3>Exécuter plusieurs commandes</h3>
+            <pre class="sh_php"> $cmd->exec('cd img && ls -la');</pre>
+            {{ r(cmd.exec('cd img && ls -la')) }}
+            <hr/>
+        </div>
+
+    </div>
+
+{% endblock %}

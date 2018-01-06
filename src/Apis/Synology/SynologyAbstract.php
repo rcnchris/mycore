@@ -71,6 +71,13 @@ class SynologyAbstract extends OneAPI
     ];
 
     /**
+     * Liste des identifiants obtenus grâce à login()
+     *
+     * @var array
+     */
+    private $sids = [];
+
+    /**
      * Constructeur
      *
      * @param array $config Configuration de connexion au NAS
@@ -153,7 +160,7 @@ class SynologyAbstract extends OneAPI
      * @return mixed
      * @throws \Rcnchris\Core\Apis\ApiException
      */
-    public function getApiDef($apiName, $key = 'path')
+    public function getApiDef($apiName, $key = null)
     {
         $this->setCurlUrl($this->getBaseUrl());
         $this->addUrlPart('query.cgi');
@@ -161,12 +168,16 @@ class SynologyAbstract extends OneAPI
             'api' => $this::PREFIXE_API . '.API.Info'
             , 'version' => 1
             , 'method' => 'query'
-            , 'query' => $apiName
+            , 'query' => "SYNO.API.Auth,$apiName"
         ], null, true);
 
         $response = $this->parseResponse($this->r()->toArray());
         if (array_key_exists($apiName, $response)) {
-            return $response[$apiName][$key];
+            if (is_null($key)) {
+                return $response;
+            } elseif (array_key_exists($key, $response[$apiName])) {
+                return $response[$apiName][$key];
+            }
         }
         return false;
     }
@@ -225,6 +236,35 @@ class SynologyAbstract extends OneAPI
     }
 
     /**
+     * Obtenir la liste de tous des SID obtenus
+     * ou uniquement ceux d'un package
+     *
+     * @param string|null $packageName Nom du package
+     *
+     * @return array
+     */
+    public function getSids($packageName = null)
+    {
+        if (is_null($packageName)) {
+            return $this->sids;
+        } elseif (array_key_exists($packageName, $this->sids)) {
+            return $this->sids[$packageName];
+        }
+        return false;
+    }
+
+    /**
+     * Définir un SID pour un package
+     *
+     * @param string $packageName Nom du package
+     * @param string $sid         SID obtenu
+     */
+    public function setSid($packageName, $sid)
+    {
+        $this->sids[$packageName] = $sid;
+    }
+
+    /**
      * Vérifie que la configuration est valide
      *
      * @param array $config
@@ -240,37 +280,6 @@ class SynologyAbstract extends OneAPI
             }
         }
         return true;
-    }
-
-    /**
-     * Effectuer une requête sur le NAS
-     *
-     * @param string     $apiName Nom de l'API
-     * @param array|null $params  Paramètres de la requête
-     *
-     * @return mixed
-     * @throws \Rcnchris\Core\Apis\ApiException
-     * @throws \Rcnchris\Core\Apis\Synology\SynologyException
-     */
-    protected function makeRequest($apiName, array $params = [])
-    {
-        // Nettoyage de l'URL et des paramètres
-        $path = $this->getApiDef($apiName);
-        $this->setCurlUrl($this->getBaseUrl());
-        $this->addUrlPart($path);
-        $this->addParams([], null, true);
-
-        $apiParams = [
-            'api' => $apiName
-            , 'version' => array_key_exists('version', $params)
-                ? $params['version']
-                : 1
-        ];
-        $params = array_merge($apiParams, $params);
-        return $this
-            ->parseResponse(
-                $this->r($params, $apiName)->toArray()
-            );
     }
 
     /**

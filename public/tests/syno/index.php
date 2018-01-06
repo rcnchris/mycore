@@ -8,7 +8,7 @@ require 'vendor/autoload.php';
 <!doctype html>
 <html lang="fr">
 <head>
-    <title>My Core</title>
+    <title>API Synology</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -45,7 +45,7 @@ require 'vendor/autoload.php';
 
     <div class="row">
         <div class="col-12">
-            <h1 class="display-3">Ola les gens</h1>
+            <h1 class="display-3">API Synology</h1>
             <hr/>
         </div>
     </div>
@@ -73,9 +73,48 @@ require 'vendor/autoload.php';
             ?>
         </div>
 
-        <div class="col-8">
-            <h2>Réponse</h2>
+        <div class="col-4">
+            <h2>Méthodes</h2>
+            <?php
+            r($api->getPackage('DownloadStation')->get('Task'));
+            ?>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-12">
+            <?php $logs = $api->getLog(); ?>
+            <table class="table-sm">
+                <thead>
+                <tr>
+                    <th>Classe</th>
+                    <th>Titre</th>
+                    <th>Détails</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach ($logs as $log): ?>
+                    <tr>
+                        <td><code><?= $log['class'] ?></code></td>
+                        <td><?= $log['title'] ?></td>
+                        <td>
+                            <table class="table table-sm">
+                                <tbody>
+                                <?php foreach ($log['details'] as $k =>$v): ?>
+                                    <?php if ($k != 'url'): ?>
+                                        <tr>
+                                            <th><?= $k ?></th>
+                                            <td><?= is_array($v) ? r($v) : $v ?></td>
+                                        </tr>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
     </div>
 

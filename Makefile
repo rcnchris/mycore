@@ -32,11 +32,11 @@ code: ## Vérification et corection de la syntaxe
 	@echo -e '$(OK_COLOR)Tests syntaxiques$(NO_COLOR)'
 	@./vendor/bin/phpcs
 
-test: code ## Lance les tests unitaires
+test: ## Lance les tests unitaires
 	@echo -e '$(OK_COLOR)Tests unitaires$(NO_COLOR)'
 	@./vendor/bin/phpunit --coverage-html public/coverage
 
-doc: test ## Génération de la documentation
+doc: code ## Génération de la documentation
 	@echo -e '$(OK_COLOR)Documentation des sources$(NO_COLOR)'
 	@/home/dev/www/phpdoc/./vendor/bin/phpdoc -d $(PROJECT_DIR)/src -t $(PROJECT_DIR)/public/doc --template="responsive"
 

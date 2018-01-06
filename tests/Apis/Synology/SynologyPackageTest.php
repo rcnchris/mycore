@@ -1,10 +1,9 @@
 <?php
 namespace Tests\Rcnchris\Core\Apis\Synology;
 
-use Rcnchris\Core\Apis\Synology\SynologyException;
 use Rcnchris\Core\Apis\Synology\SynologyPackage;
 
-class SynologyPackageTest extends AbstractSynologyTest {
+class SynologyPackageTest extends SynologyAbstractTest{
 
     /**
      * @param $name
@@ -13,16 +12,13 @@ class SynologyPackageTest extends AbstractSynologyTest {
      */
     public function makePackage($name)
     {
-        return $this->makeAbstract($this->config)->getPackage($name);
+        return $this->makeAbstract('nas')->getPackage($name);
     }
 
     public function testInstance()
     {
         $this->ekoTitre('API - Synology Package');
         $this->assertInstanceOf(SynologyPackage::class, $this->makePackage('API'));
-
-        $this->expectException(SynologyException::class);
-        $this->makePackage('Fake');
     }
 
     public function testGetName()
@@ -32,11 +28,20 @@ class SynologyPackageTest extends AbstractSynologyTest {
 
     public function testGetApis()
     {
-        $this->assertNotEmpty($this->makePackage('API')->getApis());
+        $apis = $this->makePackage('API')->getApis();
+        $this->assertNotEmpty($apis);
+        $this->assertContains('Info', $apis);
+
+        $apis = $this->makePackage('API')->getApis(true);
+        $this->assertNotEmpty($apis);
+        $this->assertContains('SYNO.API.Info', $apis);
     }
 
     public function testGetDefinition()
     {
-        $this->assertEquals('query.cgi', $this->makePackage('API')->getDefinition('Info'));
+        $def = $this->makePackage('DownloadStation')->getDefinition('Task');
+        $this->assertNotEmpty($def);
+        $this->assertArrayHasKey('SYNO.API.Auth', $def);
+        $this->assertArrayHasKey('SYNO.DownloadStation.Task', $def);
     }
 }

@@ -64,11 +64,11 @@ class SynologyPackage
     public function __construct($name, SynologyAbstract $abstract)
     {
         $this->abstract = $abstract;
-        if (!$this->abstract->hasPackage($name)) {
-            throw new SynologyException(
-                "Le package $name est introuvable sur " . $this->abstract->getConfig('description')
-            );
-        }
+//        if (!$this->abstract->hasPackage($name)) {
+//            throw new SynologyException(
+//                "Le package $name est introuvable sur " . $this->abstract->getConfig('description')
+//            );
+//        }
         $this->name = $name;
     }
 
@@ -85,17 +85,25 @@ class SynologyPackage
     /**
      * Obtenir la liste des APIs du package
      *
+     * @param bool $fullName Obtenir le nom complet de l'API
+     *
      * @return array
      */
-    public function getApis()
+    public function getApis($fullName = false)
     {
         $a = $this->abstract;
         $prefix = $a::PREFIXE_API . '.' . $this->getName() . '.';
         $keysForPackage = [];
         $apis = $this->abstract->getApis();
         foreach ($apis as $key) {
-            if (preg_match("#$prefix#", $key)) {
-                $keysForPackage[] = $key;
+            $keyParts = explode('.', $key);
+            $prefixParts = array_filter(explode('.', $prefix));
+            if ($keyParts[0] === $prefixParts[0] && $keyParts[1] === $prefixParts[1]) {
+                if ($fullName) {
+                    $keysForPackage[] = $key;
+                } else {
+                    $keysForPackage[] = $keyParts[2];
+                }
             }
         }
         return $keysForPackage;
@@ -104,13 +112,55 @@ class SynologyPackage
     /**
      * Obtenir la définition de l'API
      *
-     * @param string $name Nom court de l'API (Genre, Movie...)
+     * @param string $apiShortName Nom court de l'API (Genre, Movie...)
      *
      * @return mixed
      */
-    public function getDefinition($name)
+    public function getDefinition($apiShortName)
     {
         $a = $this->abstract;
-        return $this->abstract->getApiDef($a::PREFIXE_API . '.' . $this->getName() . '.' . $name);
+        return $this->abstract->getApiDef($a::PREFIXE_API . '.' . $this->getName() . '.' . $apiShortName);
+    }
+
+    public function get($apiShortName, array $params = [])
+    {
+        $sid = $this->login($apiShortName);
+        return $sid;
+    }
+
+    /**
+     * Obtenir un identifiant de connexion pour un package
+     *
+     * @param string $apiShortName
+     * @param string $format ('sid', 'cookie')
+     *
+     * @return array
+     * @throws \Rcnchris\Core\Apis\Synology\SynologyException
+     */
+    private function login($apiShortName, $format = 'sid')
+    {
+        $formats = ['sid', 'cookie'];
+        if (!in_array($format, $formats)) {
+            throw new SynologyException(
+                "Le format '$format' n'est pas accepté. Essyez plutôt un de ceux-ci : " . implode(', ', $formats)
+            );
+        }
+        $sid = $this->abstract->getSids($this->getName());
+        if ($sid) {
+            return $sid;
+        }
+        $pathAuth = $this->getDefinition($apiShortName)['SYNO.API.Auth']['path'];
+        $this->abstract->setCurlUrl($this->abstract->getBaseUrl());
+        $this->abstract->addUrlPart($pathAuth);
+        $this->abstract->addParams([
+            'api' => 'SYNO.API.Auth'
+            , 'version' => 2
+            , 'method' => 'login'
+            , 'account' => $this->abstract->getConfig('user')
+            , 'passwd' => $this->abstract->getConfig('pwd')
+            , 'session' => $this->getName()
+            , 'format' => $format
+        ], null, true);
+        return $this->abstract->url();
     }
 }

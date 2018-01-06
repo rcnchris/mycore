@@ -1,0 +1,75 @@
+{% extends "layout.twig" %}
+{% block content %}
+
+    <div class="page-header">
+        <h1 class="display-1">
+            <small>{{ icon('globe') }} API - {{ icon('font') }} <code>Synology</code></small>
+        </h1>
+    </div>
+
+    <div class="alert alert-info">
+        Abstraction des API d'un NAS Synology.
+    </div>
+
+    <div class="row">
+
+        <div class="col-12">
+            <h2>Obtenir une instance</h2>
+            <pre class="sh_php"> $nas = new SynologyAbstract($config);</pre>
+            <hr/>
+        </div>
+
+        <div class="col-12">
+            <h2>Utilisation</h2>
+            <hr/>
+        </div>
+
+        <div class="col-12">
+            <h3>Obtenir l'url de base</h3>
+            <pre class="sh_php"> $nas->getBaseUrl();</pre>
+            <div class="alert alert-dark"><samp>{{ nas.getBaseUrl }}</samp></div>
+            <hr/>
+        </div>
+
+        <div class="col-12">
+            <h3>Obtenir la liste des packages</h3>
+            <pre class="sh_php"> $nas->getPackages();</pre>
+            {{ r(nas.getPackages) }}
+            <hr/>
+        </div>
+
+        <div class="col-12">
+            <h3>Obtenir l'instance un package</h3>
+            <pre class="sh_php"> $video = $nas->getPackage('VideoStation');</pre>
+            {{ r(nas.getPackage('VideoStation')) }}
+            <hr/>
+        </div>
+
+        <div class="col-12">
+            <h3>Obtenir les API du package</h3>
+            <pre class="sh_php"> $video = $nas->getApis();</pre>
+            {{ r(video.getApis) }}
+            <hr/>
+        </div>
+
+        <div class="col-12">
+            <h3>Obtenir la définition d'une API</h3>
+            <pre class="sh_php"> $def = $nas->getDefinition('Movie');</pre>
+            {{ r(video.getDefinition('Movie')) }}
+            <hr/>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            <h2>{{ nas.getConfig.description }}</h2>
+            {{ r(nas) }}
+        </div>
+        <div class="col-6">
+            <h2>{{ video.getName }}</h2>
+            {{ r(video) }}
+            {{ r(video.get('Movie')) }}
+        </div>
+    </div>
+
+{% endblock %}
