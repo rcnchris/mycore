@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/dev/www/_lab/mycore/src</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href=".css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href=".css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href=".css/style.css" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]>
+  <script src=".js/html5shiv.min.js"></script>
+  <script src=".js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="index.html">/home/dev/www/_lab/mycore/src</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Apis/Synology/SynologyException.php.html#39">Rcnchris\Core\Apis\Synology\SynologyException</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyPackage.php.html#39">Rcnchris\Core\Apis\Synology\SynologyPackage</a></td><td class="text-right">45%</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#41">Rcnchris\Core\Apis\Synology\SynologyAbstract</a></td><td class="text-right">84%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Apis/Synology/SynologyPackage.php.html#39">Rcnchris\Core\Apis\Synology\SynologyPackage</a></td><td class="text-right">35</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyException.php.html#39">Rcnchris\Core\Apis\Synology\SynologyException</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#41">Rcnchris\Core\Apis\Synology\SynologyAbstract</a></td><td class="text-right">28</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#246"><abbr title="Rcnchris\Core\Apis\Synology\SynologyAbstract::getSids">getSids</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#262"><abbr title="Rcnchris\Core\Apis\Synology\SynologyAbstract::setSid">setSid</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyException.php.html#48"><abbr title="Rcnchris\Core\Apis\Synology\SynologyException::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyPackage.php.html#125"><abbr title="Rcnchris\Core\Apis\Synology\SynologyPackage::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyPackage.php.html#140"><abbr title="Rcnchris\Core\Apis\Synology\SynologyPackage::login">login</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Twig/ArrayExtension.php.html#78"><abbr title="Rcnchris\Core\Twig\ArrayExtension::extract">extract</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Twig/TextExtension.php.html#58"><abbr title="Rcnchris\Core\Twig\TextExtension::toSlug">toSlug</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Tools/Text.php.html#462"><abbr title="Rcnchris\Core\Tools\Text::anonymousFunction:462#2337">anonymousFunction:462#2337</abbr></a></td><td class="text-right">33%</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#295"><abbr title="Rcnchris\Core\Apis\Synology\SynologyAbstract::parseResponse">parseResponse</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Tools/Text.php.html#481"><abbr title="Rcnchris\Core\Tools\Text::substr">substr</abbr></a></td><td class="text-right">73%</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#274"><abbr title="Rcnchris\Core\Apis\Synology\SynologyAbstract::parseConfig">parseConfig</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Tools/Text.php.html#325"><abbr title="Rcnchris\Core\Tools\Text::ascii">ascii</abbr></a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#87"><abbr title="Rcnchris\Core\Apis\Synology\SynologyAbstract::__construct">__construct</abbr></a></td><td class="text-right">83%</td></tr>
+       <tr><td><a href="Apis/AlloCine.php.html#385"><abbr title="Rcnchris\Core\Apis\AlloCine::makeUrl">makeUrl</abbr></a></td><td class="text-right">85%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Apis/Synology/SynologyException.php.html#48"><abbr title="Rcnchris\Core\Apis\Synology\SynologyException::__construct">__construct</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Tools/Text.php.html#481"><abbr title="Rcnchris\Core\Tools\Text::substr">substr</abbr></a></td><td class="text-right">23</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#246"><abbr title="Rcnchris\Core\Apis\Synology\SynologyAbstract::getSids">getSids</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyPackage.php.html#140"><abbr title="Rcnchris\Core\Apis\Synology\SynologyPackage::login">login</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Tools/Text.php.html#325"><abbr title="Rcnchris\Core\Tools\Text::ascii">ascii</abbr></a></td><td class="text-right">4</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#274"><abbr title="Rcnchris\Core\Apis\Synology\SynologyAbstract::parseConfig">parseConfig</abbr></a></td><td class="text-right">3</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#295"><abbr title="Rcnchris\Core\Apis\Synology\SynologyAbstract::parseResponse">parseResponse</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Apis/Synology/SynologyAbstract.php.html#87"><abbr title="Rcnchris\Core\Apis\Synology\SynologyAbstract::__construct">__construct</abbr></a></td><td class="text-right">2</td></tr>
+       <tr><td><a href="Apis/AlloCine.php.html#385"><abbr title="Rcnchris\Core\Apis\AlloCine::makeUrl">makeUrl</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 5.3.0</a> using <a href="https://secure.php.net/" target="_top">PHP 7.1.11-1+0~20171027135825.10+jessie~1.gbp2e638d</a> with <a href="https://xdebug.org/">Xdebug 2.5.5</a> and <a href="https://phpunit.de/">PHPUnit 6.5.5</a> at Sat Jan 6 9:54:28 UTC 2018.</small>
+    </p>
+   </footer>
+  </div>
+  <script src=".js/jquery.min.js" type="text/javascript"></script>
+  <script src=".js/bootstrap.min.js" type="text/javascript"></script>
+  <script src=".js/holder.min.js" type="text/javascript"></script>
+  <script src=".js/d3.min.js" type="text/javascript"></script>
+  <script src=".js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([1,0,0,0,0,1,0,0,0,1,6,14], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([7,0,0,0,1,0,0,1,1,4,5,176], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[97.6470588235294,17,"<a href=\"Apis\/AlloCine.php.html#39\">Rcnchris\\Core\\Apis\\AlloCine<\/a>"],[100,0,"<a href=\"Apis\/ApiException.php.html#36\">Rcnchris\\Core\\Apis\\ApiException<\/a>"],[98.11320754716981,26,"<a href=\"Apis\/CurlResponse.php.html#39\">Rcnchris\\Core\\Apis\\CurlResponse<\/a>"],[100,1,"<a href=\"Apis\/OneAPI.php.html#39\">Rcnchris\\Core\\Apis\\OneAPI<\/a>"],[84.84848484848484,26,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#41\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract<\/a>"],[0,5,"<a href=\"Apis\/Synology\/SynologyException.php.html#39\">Rcnchris\\Core\\Apis\\Synology\\SynologyException<\/a>"],[45,12,"<a href=\"Apis\/Synology\/SynologyPackage.php.html#39\">Rcnchris\\Core\\Apis\\Synology\\SynologyPackage<\/a>"],[100,32,"<a href=\"Tools\/Cmd.php.html#39\">Rcnchris\\Core\\Tools\\Cmd<\/a>"],[98.71794871794873,89,"<a href=\"Tools\/Collection.php.html#42\">Rcnchris\\Core\\Tools\\Collection<\/a>"],[100,10,"<a href=\"Tools\/Common.php.html#39\">Rcnchris\\Core\\Tools\\Common<\/a>"],[100,8,"<a href=\"Tools\/Composer.php.html#39\">Rcnchris\\Core\\Tools\\Composer<\/a>"],[100,18,"<a href=\"Tools\/Folder.php.html#39\">Rcnchris\\Core\\Tools\\Folder<\/a>"],[90.73170731707317,83,"<a href=\"Tools\/Text.php.html#39\">Rcnchris\\Core\\Tools\\Text<\/a>"],[90.9090909090909,6,"<a href=\"Twig\/ArrayExtension.php.html#36\">Rcnchris\\Core\\Twig\\ArrayExtension<\/a>"],[100,32,"<a href=\"Twig\/Bootstrap4Extension.php.html#36\">Rcnchris\\Core\\Twig\\Bootstrap4Extension<\/a>"],[100,13,"<a href=\"Twig\/DebugExtension.php.html#36\">Rcnchris\\Core\\Twig\\DebugExtension<\/a>"],[100,3,"<a href=\"Twig\/FileExtension.php.html#36\">Rcnchris\\Core\\Twig\\FileExtension<\/a>"],[100,25,"<a href=\"Twig\/FormExtension.php.html#36\">Rcnchris\\Core\\Twig\\FormExtension<\/a>"],[100,3,"<a href=\"Twig\/HtmlExtension.php.html#36\">Rcnchris\\Core\\Twig\\HtmlExtension<\/a>"],[100,13,"<a href=\"Twig\/IconsExtension.php.html#36\">Rcnchris\\Core\\Twig\\IconsExtension<\/a>"],[95.45454545454545,11,"<a href=\"Twig\/TextExtension.php.html#40\">Rcnchris\\Core\\Twig\\TextExtension<\/a>"],[100,5,"<a href=\"Twig\/TimeExtension.php.html#36\">Rcnchris\\Core\\Twig\\TimeExtension<\/a>"],[100,37,"<a href=\"Apis\/APITrait.php.html#42\">APITrait<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Apis\/AlloCine.php.html#94\">Rcnchris\\Core\\Apis\\AlloCine::__construct<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#109\">Rcnchris\\Core\\Apis\\AlloCine::search<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#131\">Rcnchris\\Core\\Apis\\AlloCine::movie<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#154\">Rcnchris\\Core\\Apis\\AlloCine::reviewlist<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#179\">Rcnchris\\Core\\Apis\\AlloCine::theaterlist<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#205\">Rcnchris\\Core\\Apis\\AlloCine::showtimelist<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#230\">Rcnchris\\Core\\Apis\\AlloCine::media<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#254\">Rcnchris\\Core\\Apis\\AlloCine::person<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#276\">Rcnchris\\Core\\Apis\\AlloCine::filmography<\/a>"],[100,2,"<a href=\"Apis\/AlloCine.php.html#297\">Rcnchris\\Core\\Apis\\AlloCine::movielist<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#321\">Rcnchris\\Core\\Apis\\AlloCine::tvseries<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#343\">Rcnchris\\Core\\Apis\\AlloCine::season<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#364\">Rcnchris\\Core\\Apis\\AlloCine::episode<\/a>"],[85.71428571428571,2,"<a href=\"Apis\/AlloCine.php.html#385\">Rcnchris\\Core\\Apis\\AlloCine::makeUrl<\/a>"],[100,1,"<a href=\"Apis\/AlloCine.php.html#418\">Rcnchris\\Core\\Apis\\AlloCine::makeRequest<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#82\">Rcnchris\\Core\\Apis\\CurlResponse::__construct<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#94\">Rcnchris\\Core\\Apis\\CurlResponse::getType<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#104\">Rcnchris\\Core\\Apis\\CurlResponse::getHttpCode<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#114\">Rcnchris\\Core\\Apis\\CurlResponse::getContentType<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#125\">Rcnchris\\Core\\Apis\\CurlResponse::isJson<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#137\">Rcnchris\\Core\\Apis\\CurlResponse::isHtml<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#149\">Rcnchris\\Core\\Apis\\CurlResponse::isText<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#161\">Rcnchris\\Core\\Apis\\CurlResponse::getCharset<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#175\">Rcnchris\\Core\\Apis\\CurlResponse::getUrl<\/a>"],[100,3,"<a href=\"Apis\/CurlResponse.php.html#185\">Rcnchris\\Core\\Apis\\CurlResponse::get<\/a>"],[92.85714285714286,8,"<a href=\"Apis\/CurlResponse.php.html#203\">Rcnchris\\Core\\Apis\\CurlResponse::toArray<\/a>"],[100,5,"<a href=\"Apis\/CurlResponse.php.html#232\">Rcnchris\\Core\\Apis\\CurlResponse::toJson<\/a>"],[100,1,"<a href=\"Apis\/CurlResponse.php.html#254\">Rcnchris\\Core\\Apis\\CurlResponse::__toString<\/a>"],[100,1,"<a href=\"Apis\/OneAPI.php.html#63\">Rcnchris\\Core\\Apis\\OneAPI::__construct<\/a>"],[83.33333333333334,2,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#87\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::__construct<\/a>"],[100,1,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#100\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::__destruct<\/a>"],[100,1,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#110\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::getBaseUrl<\/a>"],[100,3,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#125\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::getConfig<\/a>"],[100,1,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#141\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::getApis<\/a>"],[100,4,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#163\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::getApiDef<\/a>"],[100,1,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#192\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::hasApi<\/a>"],[100,1,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#204\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::hasPackage<\/a>"],[100,2,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#214\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::getPackages<\/a>"],[100,1,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#233\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::getPackage<\/a>"],[0,3,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#246\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::getSids<\/a>"],[0,1,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#262\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::setSid<\/a>"],[80,3,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#274\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::parseConfig<\/a>"],[66.66666666666666,2,"<a href=\"Apis\/Synology\/SynologyAbstract.php.html#295\">Rcnchris\\Core\\Apis\\Synology\\SynologyAbstract::parseResponse<\/a>"],[0,5,"<a href=\"Apis\/Synology\/SynologyException.php.html#48\">Rcnchris\\Core\\Apis\\Synology\\SynologyException::__construct<\/a>"],[100,1,"<a href=\"Apis\/Synology\/SynologyPackage.php.html#64\">Rcnchris\\Core\\Apis\\Synology\\SynologyPackage::__construct<\/a>"],[100,1,"<a href=\"Apis\/Synology\/SynologyPackage.php.html#80\">Rcnchris\\Core\\Apis\\Synology\\SynologyPackage::getName<\/a>"],[100,5,"<a href=\"Apis\/Synology\/SynologyPackage.php.html#92\">Rcnchris\\Core\\Apis\\Synology\\SynologyPackage::getApis<\/a>"],[100,1,"<a href=\"Apis\/Synology\/SynologyPackage.php.html#119\">Rcnchris\\Core\\Apis\\Synology\\SynologyPackage::getDefinition<\/a>"],[0,1,"<a href=\"Apis\/Synology\/SynologyPackage.php.html#125\">Rcnchris\\Core\\Apis\\Synology\\SynologyPackage::get<\/a>"],[0,3,"<a href=\"Apis\/Synology\/SynologyPackage.php.html#140\">Rcnchris\\Core\\Apis\\Synology\\SynologyPackage::login<\/a>"],[100,7,"<a href=\"Tools\/Cmd.php.html#67\">Rcnchris\\Core\\Tools\\Cmd::exec<\/a>"],[100,4,"<a href=\"Tools\/Cmd.php.html#125\">Rcnchris\\Core\\Tools\\Cmd::addCmd<\/a>"],[100,3,"<a href=\"Tools\/Cmd.php.html#156\">Rcnchris\\Core\\Tools\\Cmd::getCmds<\/a>"],[100,2,"<a href=\"Tools\/Cmd.php.html#176\">Rcnchris\\Core\\Tools\\Cmd::git<\/a>"],[100,14,"<a href=\"Tools\/Cmd.php.html#196\">Rcnchris\\Core\\Tools\\Cmd::size<\/a>"],[100,2,"<a href=\"Tools\/Cmd.php.html#262\">Rcnchris\\Core\\Tools\\Cmd::getInstance<\/a>"],[100,8,"<a href=\"Tools\/Collection.php.html#70\">Rcnchris\\Core\\Tools\\Collection::__construct<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#99\">Rcnchris\\Core\\Tools\\Collection::__destruct<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#113\">Rcnchris\\Core\\Tools\\Collection::__get<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#123\">Rcnchris\\Core\\Tools\\Collection::__toString<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#135\">Rcnchris\\Core\\Tools\\Collection::toArray<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#150\">Rcnchris\\Core\\Tools\\Collection::toJson<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#167\">Rcnchris\\Core\\Tools\\Collection::join<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#186\">Rcnchris\\Core\\Tools\\Collection::has<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#203\">Rcnchris\\Core\\Tools\\Collection::get<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#216\">Rcnchris\\Core\\Tools\\Collection::hasGet<\/a>"],[100,4,"<a href=\"Tools\/Collection.php.html#228\">Rcnchris\\Core\\Tools\\Collection::first<\/a>"],[100,4,"<a href=\"Tools\/Collection.php.html#245\">Rcnchris\\Core\\Tools\\Collection::last<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#270\">Rcnchris\\Core\\Tools\\Collection::count<\/a>"],[100,4,"<a href=\"Tools\/Collection.php.html#280\">Rcnchris\\Core\\Tools\\Collection::keys<\/a>"],[100,5,"<a href=\"Tools\/Collection.php.html#300\">Rcnchris\\Core\\Tools\\Collection::inArray<\/a>"],[100,4,"<a href=\"Tools\/Collection.php.html#323\">Rcnchris\\Core\\Tools\\Collection::set<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#341\">Rcnchris\\Core\\Tools\\Collection::isEmpty<\/a>"],[100,3,"<a href=\"Tools\/Collection.php.html#353\">Rcnchris\\Core\\Tools\\Collection::isArray<\/a>"],[92.5925925925926,15,"<a href=\"Tools\/Collection.php.html#368\">Rcnchris\\Core\\Tools\\Collection::type<\/a>"],[100,4,"<a href=\"Tools\/Collection.php.html#416\">Rcnchris\\Core\\Tools\\Collection::name<\/a>"],[100,4,"<a href=\"Tools\/Collection.php.html#435\">Rcnchris\\Core\\Tools\\Collection::getValue<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#455\">Rcnchris\\Core\\Tools\\Collection::typesKeys<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#471\">Rcnchris\\Core\\Tools\\Collection::typesDatas<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#489\">Rcnchris\\Core\\Tools\\Collection::typeOf<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#505\">Rcnchris\\Core\\Tools\\Collection::extract<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#516\">Rcnchris\\Core\\Tools\\Collection::min<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#527\">Rcnchris\\Core\\Tools\\Collection::max<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#548\">Rcnchris\\Core\\Tools\\Collection::offsetExists<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#565\">Rcnchris\\Core\\Tools\\Collection::offsetGet<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#585\">Rcnchris\\Core\\Tools\\Collection::offsetSet<\/a>"],[100,2,"<a href=\"Tools\/Collection.php.html#602\">Rcnchris\\Core\\Tools\\Collection::offsetUnset<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#617\">Rcnchris\\Core\\Tools\\Collection::getIterator<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#629\">Rcnchris\\Core\\Tools\\Collection::serialize<\/a>"],[100,1,"<a href=\"Tools\/Collection.php.html#646\">Rcnchris\\Core\\Tools\\Collection::unserialize<\/a>"],[100,4,"<a href=\"Tools\/Common.php.html#49\">Rcnchris\\Core\\Tools\\Common::toArray<\/a>"],[100,3,"<a href=\"Tools\/Common.php.html#73\">Rcnchris\\Core\\Tools\\Common::getMemoryUse<\/a>"],[100,3,"<a href=\"Tools\/Common.php.html#91\">Rcnchris\\Core\\Tools\\Common::bitsSize<\/a>"],[100,1,"<a href=\"Tools\/Composer.php.html#56\">Rcnchris\\Core\\Tools\\Composer::__construct<\/a>"],[100,1,"<a href=\"Tools\/Composer.php.html#68\">Rcnchris\\Core\\Tools\\Composer::__get<\/a>"],[100,1,"<a href=\"Tools\/Composer.php.html#80\">Rcnchris\\Core\\Tools\\Composer::get<\/a>"],[100,1,"<a href=\"Tools\/Composer.php.html#90\">Rcnchris\\Core\\Tools\\Composer::getVersion<\/a>"],[100,3,"<a href=\"Tools\/Composer.php.html#102\">Rcnchris\\Core\\Tools\\Composer::show<\/a>"],[100,1,"<a href=\"Tools\/Composer.php.html#124\">Rcnchris\\Core\\Tools\\Composer::toArray<\/a>"],[100,3,"<a href=\"Tools\/Folder.php.html#72\">Rcnchris\\Core\\Tools\\Folder::__construct<\/a>"],[100,1,"<a href=\"Tools\/Folder.php.html#90\">Rcnchris\\Core\\Tools\\Folder::__destroy<\/a>"],[100,2,"<a href=\"Tools\/Folder.php.html#104\">Rcnchris\\Core\\Tools\\Folder::size<\/a>"],[100,5,"<a href=\"Tools\/Folder.php.html#125\">Rcnchris\\Core\\Tools\\Folder::content<\/a>"],[100,1,"<a href=\"Tools\/Folder.php.html#146\">Rcnchris\\Core\\Tools\\Folder::files<\/a>"],[100,1,"<a href=\"Tools\/Folder.php.html#156\">Rcnchris\\Core\\Tools\\Folder::folders<\/a>"],[100,1,"<a href=\"Tools\/Folder.php.html#168\">Rcnchris\\Core\\Tools\\Folder::hasFile<\/a>"],[100,1,"<a href=\"Tools\/Folder.php.html#180\">Rcnchris\\Core\\Tools\\Folder::hasFolder<\/a>"],[100,3,"<a href=\"Tools\/Folder.php.html#192\">Rcnchris\\Core\\Tools\\Folder::extensions<\/a>"],[100,3,"<a href=\"Tools\/Text.php.html#70\">Rcnchris\\Core\\Tools\\Text::compl<\/a>"],[100,1,"<a href=\"Tools\/Text.php.html#90\">Rcnchris\\Core\\Tools\\Text::uuid<\/a>"],[100,1,"<a href=\"Tools\/Text.php.html#104\">Rcnchris\\Core\\Tools\\Text::serialize<\/a>"],[100,1,"<a href=\"Tools\/Text.php.html#118\">Rcnchris\\Core\\Tools\\Text::unserialize<\/a>"],[97.95918367346938,18,"<a href=\"Tools\/Text.php.html#132\">Rcnchris\\Core\\Tools\\Text::truncate<\/a>"],[92.3076923076923,4,"<a href=\"Tools\/Text.php.html#236\">Rcnchris\\Core\\Tools\\Text::tail<\/a>"],[100,3,"<a href=\"Tools\/Text.php.html#265\">Rcnchris\\Core\\Tools\\Text::isMultibyte<\/a>"],[94.44444444444444,7,"<a href=\"Tools\/Text.php.html#286\">Rcnchris\\Core\\Tools\\Text::utf8<\/a>"],[81.81818181818183,4,"<a href=\"Tools\/Text.php.html#325\">Rcnchris\\Core\\Tools\\Text::ascii<\/a>"],[100,1,"<a href=\"Tools\/Text.php.html#348\">Rcnchris\\Core\\Tools\\Text::getTransliteratorId<\/a>"],[100,1,"<a href=\"Tools\/Text.php.html#360\">Rcnchris\\Core\\Tools\\Text::setTransliteratorId<\/a>"],[100,2,"<a href=\"Tools\/Text.php.html#373\">Rcnchris\\Core\\Tools\\Text::transliterate<\/a>"],[100,4,"<a href=\"Tools\/Text.php.html#390\">Rcnchris\\Core\\Tools\\Text::slug<\/a>"],[100,4,"<a href=\"Tools\/Text.php.html#429\">Rcnchris\\Core\\Tools\\Text::formatNumber<\/a>"],[100,3,"<a href=\"Tools\/Text.php.html#451\">Rcnchris\\Core\\Tools\\Text::strlen<\/a>"],[33.33333333333333,1,"<a href=\"Tools\/Text.php.html#462\">Rcnchris\\Core\\Tools\\Text::anonymousFunction:462#2337<\/a>"],[73.91304347826086,18,"<a href=\"Tools\/Text.php.html#481\">Rcnchris\\Core\\Tools\\Text::substr<\/a>"],[100,3,"<a href=\"Tools\/Text.php.html#565\">Rcnchris\\Core\\Tools\\Text::removeLastWord<\/a>"],[100,2,"<a href=\"Tools\/Text.php.html#586\">Rcnchris\\Core\\Tools\\Text::getBefore<\/a>"],[100,2,"<a href=\"Tools\/Text.php.html#603\">Rcnchris\\Core\\Tools\\Text::getAfter<\/a>"],[100,1,"<a href=\"Twig\/ArrayExtension.php.html#43\">Rcnchris\\Core\\Twig\\ArrayExtension::getFunctions<\/a>"],[100,3,"<a href=\"Twig\/ArrayExtension.php.html#57\">Rcnchris\\Core\\Twig\\ArrayExtension::arrayMerge<\/a>"],[0,1,"<a href=\"Twig\/ArrayExtension.php.html#78\">Rcnchris\\Core\\Twig\\ArrayExtension::extract<\/a>"],[100,1,"<a href=\"Twig\/ArrayExtension.php.html#91\">Rcnchris\\Core\\Twig\\ArrayExtension::inArray<\/a>"],[100,1,"<a href=\"Twig\/Bootstrap4Extension.php.html#66\">Rcnchris\\Core\\Twig\\Bootstrap4Extension::getFilters<\/a>"],[100,5,"<a href=\"Twig\/Bootstrap4Extension.php.html#87\">Rcnchris\\Core\\Twig\\Bootstrap4Extension::alert<\/a>"],[100,5,"<a href=\"Twig\/Bootstrap4Extension.php.html#116\">Rcnchris\\Core\\Twig\\Bootstrap4Extension::badge<\/a>"],[100,4,"<a href=\"Twig\/Bootstrap4Extension.php.html#151\">Rcnchris\\Core\\Twig\\Bootstrap4Extension::badgeBool<\/a>"],[100,9,"<a href=\"Twig\/Bootstrap4Extension.php.html#169\">Rcnchris\\Core\\Twig\\Bootstrap4Extension::button<\/a>"],[100,1,"<a href=\"Twig\/Bootstrap4Extension.php.html#204\">Rcnchris\\Core\\Twig\\Bootstrap4Extension::getFunctions<\/a>"],[100,4,"<a href=\"Twig\/Bootstrap4Extension.php.html#221\">Rcnchris\\Core\\Twig\\Bootstrap4Extension::progress<\/a>"],[100,2,"<a href=\"Twig\/Bootstrap4Extension.php.html#254\">Rcnchris\\Core\\Twig\\Bootstrap4Extension::checkbox<\/a>"],[100,1,"<a href=\"Twig\/Bootstrap4Extension.php.html#279\">Rcnchris\\Core\\Twig\\Bootstrap4Extension::hasContext<\/a>"],[100,1,"<a href=\"Twig\/DebugExtension.php.html#44\">Rcnchris\\Core\\Twig\\DebugExtension::getFilters<\/a>"],[100,2,"<a href=\"Twig\/DebugExtension.php.html#62\">Rcnchris\\Core\\Twig\\DebugExtension::getClass<\/a>"],[100,2,"<a href=\"Twig\/DebugExtension.php.html#77\">Rcnchris\\Core\\Twig\\DebugExtension::getMethods<\/a>"],[100,2,"<a href=\"Twig\/DebugExtension.php.html#96\">Rcnchris\\Core\\Twig\\DebugExtension::getParentClass<\/a>"],[100,1,"<a href=\"Twig\/DebugExtension.php.html#108\">Rcnchris\\Core\\Twig\\DebugExtension::getParentMethods<\/a>"],[100,2,"<a href=\"Twig\/DebugExtension.php.html#120\">Rcnchris\\Core\\Twig\\DebugExtension::getImplements<\/a>"],[100,1,"<a href=\"Twig\/DebugExtension.php.html#130\">Rcnchris\\Core\\Twig\\DebugExtension::getFunctions<\/a>"],[100,1,"<a href=\"Twig\/DebugExtension.php.html#143\">Rcnchris\\Core\\Twig\\DebugExtension::vd<\/a>"],[100,1,"<a href=\"Twig\/DebugExtension.php.html#153\">Rcnchris\\Core\\Twig\\DebugExtension::phpRef<\/a>"],[100,1,"<a href=\"Twig\/FileExtension.php.html#43\">Rcnchris\\Core\\Twig\\FileExtension::getFilters<\/a>"],[100,1,"<a href=\"Twig\/FileExtension.php.html#58\">Rcnchris\\Core\\Twig\\FileExtension::baseName<\/a>"],[100,1,"<a href=\"Twig\/FileExtension.php.html#70\">Rcnchris\\Core\\Twig\\FileExtension::fileExtension<\/a>"],[100,1,"<a href=\"Twig\/FormExtension.php.html#43\">Rcnchris\\Core\\Twig\\FormExtension::getFunctions<\/a>"],[100,8,"<a href=\"Twig\/FormExtension.php.html#64\">Rcnchris\\Core\\Twig\\FormExtension::field<\/a>"],[100,3,"<a href=\"Twig\/FormExtension.php.html#111\">Rcnchris\\Core\\Twig\\FormExtension::getErrorHtml<\/a>"],[100,1,"<a href=\"Twig\/FormExtension.php.html#128\">Rcnchris\\Core\\Twig\\FormExtension::input<\/a>"],[100,1,"<a href=\"Twig\/FormExtension.php.html#140\">Rcnchris\\Core\\Twig\\FormExtension::file<\/a>"],[100,1,"<a href=\"Twig\/FormExtension.php.html#153\">Rcnchris\\Core\\Twig\\FormExtension::textarea<\/a>"],[100,1,"<a href=\"Twig\/FormExtension.php.html#167\">Rcnchris\\Core\\Twig\\FormExtension::select<\/a>"],[100,1,"<a href=\"Twig\/FormExtension.php.html#169\">Rcnchris\\Core\\Twig\\FormExtension::anonymousFunction:169#686<\/a>"],[100,2,"<a href=\"Twig\/FormExtension.php.html#184\">Rcnchris\\Core\\Twig\\FormExtension::checkbox<\/a>"],[100,4,"<a href=\"Twig\/FormExtension.php.html#200\">Rcnchris\\Core\\Twig\\FormExtension::getHtmlFromArray<\/a>"],[100,2,"<a href=\"Twig\/FormExtension.php.html#220\">Rcnchris\\Core\\Twig\\FormExtension::convertValue<\/a>"],[100,1,"<a href=\"Twig\/HtmlExtension.php.html#43\">Rcnchris\\Core\\Twig\\HtmlExtension::getFilters<\/a>"],[100,2,"<a href=\"Twig\/HtmlExtension.php.html#57\">Rcnchris\\Core\\Twig\\HtmlExtension::code<\/a>"],[100,1,"<a href=\"Twig\/IconsExtension.php.html#44\">Rcnchris\\Core\\Twig\\IconsExtension::getFilters<\/a>"],[100,9,"<a href=\"Twig\/IconsExtension.php.html#58\">Rcnchris\\Core\\Twig\\IconsExtension::iconFile<\/a>"],[100,1,"<a href=\"Twig\/IconsExtension.php.html#87\">Rcnchris\\Core\\Twig\\IconsExtension::getFunctions<\/a>"],[100,2,"<a href=\"Twig\/IconsExtension.php.html#102\">Rcnchris\\Core\\Twig\\IconsExtension::icon<\/a>"],[100,1,"<a href=\"Twig\/TextExtension.php.html#48\">Rcnchris\\Core\\Twig\\TextExtension::getFilters<\/a>"],[0,1,"<a href=\"Twig\/TextExtension.php.html#58\">Rcnchris\\Core\\Twig\\TextExtension::toSlug<\/a>"],[100,3,"<a href=\"Twig\/TextExtension.php.html#71\">Rcnchris\\Core\\Twig\\TextExtension::resume<\/a>"],[100,2,"<a href=\"Twig\/TextExtension.php.html#92\">Rcnchris\\Core\\Twig\\TextExtension::jsonDecode<\/a>"],[100,4,"<a href=\"Twig\/TextExtension.php.html#108\">Rcnchris\\Core\\Twig\\TextExtension::bitsSize<\/a>"],[100,1,"<a href=\"Twig\/TimeExtension.php.html#43\">Rcnchris\\Core\\Twig\\TimeExtension::getFilters<\/a>"],[100,2,"<a href=\"Twig\/TimeExtension.php.html#58\">Rcnchris\\Core\\Twig\\TimeExtension::ago<\/a>"],[100,1,"<a href=\"Twig\/TimeExtension.php.html#73\">Rcnchris\\Core\\Twig\\TimeExtension::getFunctions<\/a>"],[100,1,"<a href=\"Twig\/TimeExtension.php.html#85\">Rcnchris\\Core\\Twig\\TimeExtension::now<\/a>"],[100,2,"<a href=\"Apis\/APITrait.php.html#80\">APITrait::initialize<\/a>"],[100,1,"<a href=\"Apis\/APITrait.php.html#93\">APITrait::getCurl<\/a>"],[100,1,"<a href=\"Apis\/APITrait.php.html#105\">APITrait::setCurlOptions<\/a>"],[100,1,"<a href=\"Apis\/APITrait.php.html#118\">APITrait::setCurlUrl<\/a>"],[100,1,"<a href=\"Apis\/APITrait.php.html#131\">APITrait::setCurlNav<\/a>"],[100,2,"<a href=\"Apis\/APITrait.php.html#144\">APITrait::getCurlInfos<\/a>"],[100,5,"<a href=\"Apis\/APITrait.php.html#163\">APITrait::addParams<\/a>"],[100,5,"<a href=\"Apis\/APITrait.php.html#185\">APITrait::getParams<\/a>"],[100,1,"<a href=\"Apis\/APITrait.php.html#202\">APITrait::addUrlPart<\/a>"],[100,8,"<a href=\"Apis\/APITrait.php.html#219\">APITrait::r<\/a>"],[100,2,"<a href=\"Apis\/APITrait.php.html#249\">APITrait::url<\/a>"],[100,2,"<a href=\"Apis\/APITrait.php.html#264\">APITrait::withUserAgent<\/a>"],[100,1,"<a href=\"Apis\/APITrait.php.html#279\">APITrait::getLog<\/a>"],[100,2,"<a href=\"Apis\/APITrait.php.html#289\">APITrait::addLog<\/a>"],[100,2,"<a href=\"Apis\/APITrait.php.html#306\">APITrait::close<\/a>"],[100,1,"<a href=\"Apis\/APITrait.php.html#318\">APITrait::__destruct<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

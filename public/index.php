@@ -8,7 +8,7 @@ require '../vendor/autoload.php';
 
 session_start();
 
-// Container
+// Configuration
 $config = require '../app/config.php';
 
 // Application
