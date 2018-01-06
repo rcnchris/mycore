@@ -32,5 +32,17 @@ $prefixPackage = $app->getContainer()->get('app.prefix') . 'api';
 $app->get($prefixPackage . '/oneapi', PagesController::class . ':oneapi')->setName('api.oneapi');
 $app->get($prefixPackage . '/synology', PagesController::class . ':synology')->setName('api.synology');
 
+// Twig
+$prefixPackage = $app->getContainer()->get('app.prefix') . 'twig';
+$app->get($prefixPackage . '/array', PagesController::class . ':twigArray')->setName('twig.array');
+$app->get($prefixPackage . '/debug', PagesController::class . ':twigDebug')->setName('twig.debug');
+$app->get($prefixPackage . '/file', PagesController::class . ':twigFile')->setName('twig.file');
+$app->get($prefixPackage . '/icons', PagesController::class . ':twigIcons')->setName('twig.icons');
+$app->get($prefixPackage . '/text', PagesController::class . ':twigText')->setName('twig.text');
+$app->get($prefixPackage . '/html', PagesController::class . ':twigHtml')->setName('twig.html');
+$app->get($prefixPackage . '/form', PagesController::class . ':twigForm')->setName('twig.form');
+$app->get($prefixPackage . '/bootstrap', PagesController::class . ':twigBootstrap')->setName('twig.bootstrap');
+$app->get($prefixPackage . '/time', PagesController::class . ':twigTime')->setName('twig.time');
+
 // Run app
 $app->run();

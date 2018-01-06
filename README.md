@@ -80,6 +80,22 @@ $search = $api->search('Le Parrain');
 Utiliser les API d'un NAS Synology.
 ````
 $api = new AbstractSynology($config);
+$movies = $api->getPackage('VideoStation')->get('Movie');
 ````
+
+-------
+
+## Package twig
+Ajoute des extensions à Twig.
+
+- Debug
+- Tableaux
+- Bootstrap 4
+- Fichier et dossier
+- Formulaire
+- HTML
+- Icônes
+- Texte
+- Dates
 
 -------

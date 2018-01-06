@@ -156,4 +156,70 @@ class PagesController extends Controller
         $this->render($response, 'Apis/synology', compact('nas', 'video'));
     }
 
+    public function twigArray(Request $request, Response $response)
+    {
+        $parents = ['Raoul', 'Sandrine'];
+        $minots = ['Mathis', 'Raphaël', 'Clara'];
+        $entities = [
+            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
+            , ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
+            , ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
+        ];
+        $this->render($response, 'Twig/array', compact('parents', 'minots', 'entities'));
+    }
+
+    public function twigFile(Request $request, Response $response)
+    {
+        $file = __FILE__;
+        $this->render($response, 'Twig/file', compact('file'));
+    }
+
+    public function twigDebug(Request $request, Response $response)
+    {
+        $controller = $this;
+        $collection = new Collection(['Mathis', 'Raphaël', 'Clara']);
+        $this->render($response, 'Twig/debug', compact('controller', 'collection'));
+    }
+
+    public function twigIcons(Request $request, Response $response)
+    {
+        $this->render($response, 'Twig/icons');
+    }
+
+    public function twigText(Request $request, Response $response)
+    {
+        $text = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aperiam cumque doloremque ducimus ex, maiores molestiae nesciunt nobis praesentium, quisquam repellendus sed, unde velit! Aliquam aperiam eius eveniet libero, quibusdam voluptatum.';
+        $json = '["Mathis","Rapha\u00ebl","Clara"]';
+        $this->render($response, 'Twig/text', compact('text', 'json'));
+    }
+
+    public function twigHtml(Request $request, Response $response)
+    {
+        $this->render($response, 'Twig/html');
+    }
+
+    public function twigForm(Request $request, Response $response)
+    {
+        $item = [
+            'name' => 'Clara'
+            , 'year' => 2009
+            , 'genre' => 'female'
+            , 'description' => 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.'
+            , 'inHome' => true
+            , 'created' => new \DateTime()
+        ];
+        $genres = ['male', 'female'];
+        $this->render($response, 'Twig/form', compact('item', 'genres'));
+    }
+
+    public function twigBootstrap(Request $request, Response $response)
+    {
+        $this->render($response, 'Twig/bootstrap');
+    }
+
+    public function twigTime(Request $request, Response $response)
+    {
+        $this->render($response, 'Twig/time');
+    }
+
 }

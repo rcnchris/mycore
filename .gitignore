@@ -1,7 +1,5 @@
 /vendor/
 /composer.lock
-public/coverage/
-public/doc/
 /app/
 /public/
 /.htaccess

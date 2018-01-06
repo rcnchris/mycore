@@ -48,7 +48,7 @@ class TextExtensionTest extends BaseTestCase{
         $texte = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid aperiam aut dolores, enim error id, impedit laboriosam nisi nobis porro quo repudiandae veritatis. Blanditiis est fuga magnam necessitatibus quisquam.';
         $this->assertEquals(
             'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium aliquid aperiam aut dolores,...',
-            $this->ext->excerpt($texte));
+            $this->ext->resume($texte));
     }
 
     /**
@@ -57,7 +57,7 @@ class TextExtensionTest extends BaseTestCase{
     public function testExcerptWithoutChange()
     {
         $texte = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.';
-        $this->assertEquals($texte, $this->ext->excerpt($texte));
+        $this->assertEquals($texte, $this->ext->resume($texte));
     }
 
     /**
@@ -65,7 +65,7 @@ class TextExtensionTest extends BaseTestCase{
      */
     public function testExcerptWithoutText()
     {
-        $this->assertEquals('', $this->ext->excerpt());
+        $this->assertEquals('', $this->ext->resume());
     }
 
     /**

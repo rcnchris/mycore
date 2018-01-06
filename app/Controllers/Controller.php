@@ -18,6 +18,7 @@ class Controller
         $this->container = $container;
         $this->getTwig()->getLoader()->addPath(dirname(__DIR__) . '/Views/Pages/');
         $this->getTwig()->getEnvironment()->addGlobal('appCharset', $this->getContainer()->get('app.charset'));
+        $this->getTwig()->getEnvironment()->addGlobal('urlHome', $this->getContainer()->get('app.prefix'));
     }
 
     public function __get($name)

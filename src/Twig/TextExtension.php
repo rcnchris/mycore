@@ -48,8 +48,8 @@ class TextExtension extends Twig_Extension
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter('excerpt', [$this, 'excerpt'])
-            , new Twig_SimpleFilter('json_decode', [$this, 'jsonDecode'])
+            new Twig_SimpleFilter('resume', [$this, 'resume'])
+            , new Twig_SimpleFilter('jsonDecode', [$this, 'jsonDecode'])
             , new Twig_SimpleFilter('bitsSize', [$this, 'bitsSize'])
             , new Twig_SimpleFilter('toSlug', [$this, 'toSlug'])
         ];
@@ -68,7 +68,7 @@ class TextExtension extends Twig_Extension
      *
      * @return string
      */
-    public function excerpt($content = null, $maxLength = 100)
+    public function resume($content = null, $maxLength = 100)
     {
         if (is_null($content)) {
             return '';
