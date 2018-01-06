@@ -2,3 +2,5 @@
 /composer.lock
 /app/
 /.htaccess
+/public/coverage/
+/public/doc/
