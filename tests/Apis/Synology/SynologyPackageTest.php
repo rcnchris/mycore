@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\Apis\Synology;
 
+use Rcnchris\Core\Apis\Synology\SynologyException;
 use Rcnchris\Core\Apis\Synology\SynologyPackage;
 
 class SynologyPackageTest extends SynologyAbstractTest{
@@ -43,5 +44,42 @@ class SynologyPackageTest extends SynologyAbstractTest{
         $this->assertNotEmpty($def);
         $this->assertArrayHasKey('SYNO.API.Auth', $def);
         $this->assertArrayHasKey('SYNO.DownloadStation.Task', $def);
+    }
+
+    public function testGetDefinitionWithKey()
+    {
+        $path = $this->makePackage('DownloadStation')->getDefinition('Task', 'path');
+        $this->assertEquals('DownloadStation/task.cgi', $path);
+    }
+
+    public function testGetDatas()
+    {
+        $audio = $this->makePackage('AudioStation');
+        $genres = $audio->get('Genre');
+        $this->assertNotEmpty($genres);
+        $this->assertArrayHasKey('genres', $genres);
+        $this->assertArrayHasKey('total', $genres);
+        $this->assertArrayHasKey('offset', $genres);
+    }
+
+    public function testGetDatasWithKey()
+    {
+        $audio = $this->makePackage('AudioStation');
+        $genres = $audio->get('Genre', 'list', [], 'genres');
+        $this->assertNotEmpty($genres);
+    }
+
+    public function testGetDatasWithWrongMethod()
+    {
+        $audio = $this->makePackage('AudioStation');
+        $this->expectException(SynologyException::class);
+        $audio->get('Genre', 'fake');
+    }
+
+    public function testUseLoginWhenMultipleGet()
+    {
+        $audio = $this->makePackage('AudioStation');
+        $this->assertNotEmpty($audio->get('Genre', 'list', [], 'genres'));
+        $this->assertNotEmpty($audio->get('Playlist', 'list', [], 'playlists'));
     }
 }

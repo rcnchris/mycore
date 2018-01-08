@@ -52,16 +52,18 @@ class FileExtension extends \Twig_Extension
      * Obtenir uniquement le nom du fichier à partir d'un chemin.
      *
      * @param string $value Chemin avec fichier
+     * @param string $sep Séparateur de parties
      *
      * @return string
      */
-    public function baseName($value)
+    public function baseName($value, $sep = '/')
     {
-        return basename($value);
+        $parts = explode($sep, $value);
+        return array_pop($parts);
     }
 
     /**
-     * Obtenir l'extenion d'un fichier à partir d'un chemin
+     * Obtenir l'extension d'un fichier à partir d'un chemin
      *
      * @param string $value Emplacement ou nom d'un fichier avec une extension
      *

@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
-use Rcnchris\App\Controllers\PagesController;
+use App\Pages\Controllers\PagesController;
 
 require '../vendor/autoload.php';
 

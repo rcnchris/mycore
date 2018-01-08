@@ -55,6 +55,13 @@ class TextExtension extends Twig_Extension
         ];
     }
 
+    /**
+     * Obtenir le slug d'une chaîne de caractères
+     *
+     * @param $value
+     *
+     * @return string
+     */
     public function toSlug($value)
     {
         return Text::slug($value);

@@ -20,7 +20,7 @@
   "autoload": {
     "psr-4": {
       "Rcnchris\\Core\\": "src/",
-      "Rcnchris\\App\\": "app/",
+      "App\\": "app/",
       "Tests\\Rcnchris\\": "tests/"
     }
   },

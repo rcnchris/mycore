@@ -95,7 +95,7 @@ class AlloCine extends OneAPI
     {
         $this->initialize('http://api.allocine.fr/rest/v3');
         $this->setCurlOptions($this->curlOptions);
-        $this->setCurlNav($this::USER_AGENT);
+        $this->setBrowser($this::USER_AGENT);
     }
 
     /**

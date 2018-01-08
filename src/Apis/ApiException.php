@@ -19,7 +19,10 @@
 namespace Rcnchris\Core\Apis;
 
 /**
- * Class ApiException
+ * Class ApiException<br/>
+ * <ul>
+ * <li>Erreurs des APIs</li>
+ * </ul>
  *
  * @category API
  *

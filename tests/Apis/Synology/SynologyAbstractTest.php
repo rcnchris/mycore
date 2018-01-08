@@ -14,8 +14,13 @@ class SynologyAbstractTest extends BaseTestCase {
      */
     public function makeAbstract($name)
     {
-        $config = require $this->rootPath() . '/app/config.php';
-        $config = $config['synology'][$name];
+        $config = [];
+        if (is_string($name)) {
+            $config = require $this->rootPath() . '/app/config.php';
+            $config = $config['synology'][$name];
+        } elseif (is_array($name)) {
+            $config = $name;
+        }
         return new SynologyAbstract($config);
     }
 
@@ -23,6 +28,20 @@ class SynologyAbstractTest extends BaseTestCase {
     {
         $this->ekoTitre('API - Abstraction Synology');
         $this->assertInstanceOf(SynologyAbstract::class, $this->makeAbstract('nas'));
+    }
+
+    public function testInstanceWithEmptyConfig()
+    {
+        $this->expectException(\Exception::class);
+        $this->makeAbstract([]);
+    }
+
+    public function testInstanceWithIncompleteConfig()
+    {
+        $this->expectException(\Exception::class);
+        $this->makeAbstract([
+            'host' => 'localhost'
+        ]);
     }
 
     public function testGetConfig()
@@ -57,5 +76,10 @@ class SynologyAbstractTest extends BaseTestCase {
     public function testHasPackage()
     {
         $this->assertTrue($this->makeAbstract('nas')->hasPackage('API'));
+    }
+
+    public function testGetSids()
+    {
+        $this->assertEmpty($this->makeAbstract('nas')->getSids());
     }
 }

@@ -80,7 +80,13 @@ $search = $api->search('Le Parrain');
 Utiliser les API d'un NAS Synology.
 ````
 $api = new AbstractSynology($config);
-$movies = $api->getPackage('VideoStation')->get('Movie');
+$genres = $api
+    ->getPackage('AudioStation')
+    ->get('Genre');
+
+$movies = $api
+    ->getPackage('VideoStation')
+    ->get('Movie', 'list', ['limit' => 20, 'offset' => 0], 'movies');
 ````
 
 -------

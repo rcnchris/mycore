@@ -86,7 +86,7 @@ class SynologyAbstract extends OneAPI
      */
     public function __construct(array $config)
     {
-        if (!$this->parseConfig($config)) {
+        if (!$this->parseConfig($config) || empty($config)) {
             throw new \Exception("Configuration incomplète !");
         }
         $this->config = $config;
@@ -109,9 +109,9 @@ class SynologyAbstract extends OneAPI
      */
     public function getBaseUrl()
     {
-        return $this->config['protocol']
-        . '://' . $this->config['address']
-        . ':' . $this->config['port']
+        return $this->getConfig('protocol')
+        . '://' . $this->getConfig('address')
+        . ':' . $this->getConfig('port')
         . '/webapi';
     }
 
@@ -140,7 +140,7 @@ class SynologyAbstract extends OneAPI
      */
     public function getApis()
     {
-        $this->setCurlUrl($this->getBaseUrl());
+        $this->setUrl($this->getBaseUrl());
         $this->addUrlPart('query.cgi');
         $this->addParams([
             'api' => $this::PREFIXE_API . '.API.Info'
@@ -148,7 +148,7 @@ class SynologyAbstract extends OneAPI
             , 'method' => 'query'
             , 'query' => 'all'
         ], null, true);
-        return array_keys($this->parseResponse($this->r()->toArray()));
+        return array_keys($this->parseResponse($this->r(null, 'API List')->toArray()));
     }
 
     /**
@@ -162,7 +162,7 @@ class SynologyAbstract extends OneAPI
      */
     public function getApiDef($apiName, $key = null)
     {
-        $this->setCurlUrl($this->getBaseUrl());
+        $this->setUrl($this->getBaseUrl());
         $this->addUrlPart('query.cgi');
         $this->addParams([
             'api' => $this::PREFIXE_API . '.API.Info'
@@ -171,7 +171,7 @@ class SynologyAbstract extends OneAPI
             , 'query' => "SYNO.API.Auth,$apiName"
         ], null, true);
 
-        $response = $this->parseResponse($this->r()->toArray());
+        $response = $this->parseResponse($this->r(null, 'API Def : ' . $apiName)->toArray());
         if (array_key_exists($apiName, $response)) {
             if (is_null($key)) {
                 return $response;
@@ -292,7 +292,7 @@ class SynologyAbstract extends OneAPI
      * @return mixed
      * @throws \Rcnchris\Core\Apis\Synology\SynologyException
      */
-    private function parseResponse(array $response)
+    public function parseResponse(array $response)
     {
         if (array_key_exists('error', $response)) {
             throw new SynologyException('', $response['error']['code']);
