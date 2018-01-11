@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Core\Twig;
+namespace Tests\Rcnchris\Core\Twig;
 
 use Rcnchris\Core\Tools\Collection;
 use Rcnchris\Core\Twig\Bootstrap4Extension;

@@ -81,7 +81,8 @@ class Text
     /**
      * Obtenir un ID unique
      *
-     * @exemple Text::uuid('ola'); --> '5997e8605bc0a7.42903584'
+     * ### Exemple
+     * - `Text::uuid('ola');` --> '5997e8605bc0a7.42903584'
      *
      * @param string|null $prefixe Préfixe de l'ID à retourner
      *
@@ -95,7 +96,8 @@ class Text
     /**
      * Obtenir une chaîne de caractères sérialisée
      *
-     * @exemple Text::serialize('ola'); --> 's:3:"ola";'
+     * ### Exemple
+     * - `Text::serialize('ola');` --> 's:3:"ola";'
      *
      * @param string $value Valeur à sérialiser
      *
@@ -109,7 +111,8 @@ class Text
     /**
      * Obtenir une variable à partir d'une chaîne sérialisée
      *
-     * @exemple Text::unserialize('s:3:"ola";'); --> 'ola'
+     * ### Exemple
+     * - `Text::unserialize('s:3:"ola";');` --> 'ola'
      *
      * @param string $value Valeur à désérialiser
      *
@@ -223,7 +226,7 @@ class Text
     /**
      * Tronquer une chaîne de caractères en commençant par la fin
      *
-     * ### Options:
+     * ### Option
      * - `ellipsis` Préfixera la chaîne retournée
      * - `exact` Si faux, les mots ne sont pas coupés
      *
@@ -277,7 +280,8 @@ class Text
     /**
      * Convertir une chaîne de caractères multi-octets en valeur décimale
      *
-     * @exemple Text::utf8("ù\no"); --> [249, 10, 111]
+     * ### Exemple
+     * - `Text::utf8("ù\no");` --> [249, 10, 111]
      *
      * @param string $string Chaîne dont les caractères doivent être convertis
      *
@@ -315,8 +319,6 @@ class Text
 
     /**
      * Convertir la valeur décimale d'une chaîne de caractères multi-octets en chaîne
-     *
-     * @exemple Text::ascii([249, 10, 111]); --> 'ù o'
      *
      * @param array $array Tableau de caractères
      *
@@ -379,8 +381,6 @@ class Text
 
     /**
      * Obtenir le slug d'une chaîne
-     *
-     * @exemple Text::slug('ola les gens, ca va ?'); --> 'ola-les-gens-ca-va'
      *
      * @param string $string  Chaîne à traiter
      * @param array  $options Options de la demande

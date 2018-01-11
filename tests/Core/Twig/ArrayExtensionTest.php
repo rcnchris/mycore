@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Core\Twig;
+namespace Tests\Rcnchris\Core\Twig;
 
 use Rcnchris\Core\Twig\ArrayExtension;
 use Tests\Rcnchris\BaseTestCase;

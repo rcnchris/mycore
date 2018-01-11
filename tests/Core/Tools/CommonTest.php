@@ -1,21 +1,4 @@
 <?php
-/**
- * Fichier CommonTest.php du 29/10/2017
- * Description : Fichier de la classe CommonTest
- *
- * PHP version 5
- *
- * @category New
- *
- * @package  Tests\Core
- *
- * @author   Raoul <rcn.chris@gmail.com>
- *
- * @license  https://github.com/rcnchris GPL
- *
- * @link     https://github.com/rcnchris On Github
- */
-
 namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Common;

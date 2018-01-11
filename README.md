@@ -91,7 +91,34 @@ $movies = $api
 
 -------
 
-## Package twig
+## Package ORM
+Abstraction des bases de données qui s'appuient sur `PDO`.
+````
+// Obtenir une connexion PDO à MySQL
+$pdo = DbFactory::get('localhost', 3306, 'al', 'secret', 'home', 'mysql');
+
+// Obtenir une connexion PDO à SQL Server
+$pdo = DbFactory::get('MYSERVER\SQLEXPRESS', 1433, 'al', 'secret', 'home', 'sqlsrv');
+
+// Gérer plusieurs sources de données depuis un tableau et s'y connecter
+$manager = new SourcesManager($sources);
+$pdo = $manager->connect('home');
+
+// Effectuer une requête
+$query = (new Query($pdo))
+            ->from('posts')
+            ->where('category_id = 3')
+            ->order('title');
+$result = $query->all()->toArray();
+
+// Utiliser un modèle
+$posts = new PostsModel($pdo);
+$items = $posts->findAll()->all()->toArray();
+````
+
+-------
+
+## Package Twig
 Ajoute des extensions à Twig.
 
 - Debug

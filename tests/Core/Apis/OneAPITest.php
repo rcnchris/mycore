@@ -1,12 +1,9 @@
 <?php
 namespace Tests\Rcnchris\Core\Apis;
 
-use Faker\Factory;
-use Faker\Generator;
 use Rcnchris\Core\Apis\ApiException;
 use Rcnchris\Core\Apis\CurlResponse;
 use Rcnchris\Core\Apis\OneAPI;
-use Rcnchris\Core\Tools\Collection;
 use Tests\Rcnchris\BaseTestCase;
 
 class OneAPITest extends BaseTestCase {
@@ -18,15 +15,9 @@ class OneAPITest extends BaseTestCase {
      */
     private $urlRandomUser;
 
-    /**
-     * @var Generator
-     */
-    private $faker;
-
     public function setUp()
     {
         $this->urlRandomUser = 'https://randomuser.me/api';
-        $this->faker = Factory::create('fr_FR');
     }
 
     /**

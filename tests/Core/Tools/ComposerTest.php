@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Core\Tools;
+namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Composer;
 use Tests\Rcnchris\BaseTestCase;
@@ -13,7 +13,7 @@ class ComposerTest extends BaseTestCase {
 
     public function setUp()
     {
-        $file = dirname(dirname(__DIR__)) . '/composer.json';
+        $file = $this->rootPath() . '/composer.json';
         $this->composer = $this->makeComposer($file);
     }
 

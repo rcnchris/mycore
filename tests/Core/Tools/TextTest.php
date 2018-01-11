@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Core;
+namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Text;
 use Tests\Rcnchris\BaseTestCase;

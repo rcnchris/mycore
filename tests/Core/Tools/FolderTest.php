@@ -1,5 +1,5 @@
 <?php
-namespace Tests\Core;
+namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Folder;
 use Tests\Rcnchris\BaseTestCase;
