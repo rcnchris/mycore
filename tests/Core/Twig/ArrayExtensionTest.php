@@ -20,24 +20,8 @@ class ArrayExtensionTest extends BaseTestCase {
     {
         $this->ekoTitre('Twig - Tableaux');
         $this->assertInstanceOf(ArrayExtension::class, $this->ext);
-    }
-
-    /**
-     * Obtenir la liste des filtres de l'extension
-     */
-    public function testGetFilters()
-    {
-        $filters = $this->ext->getFilters();
-        $this->assertEmpty($filters);
-    }
-
-    /**
-     * Obtenir la liste des fonctions de l'extension
-     */
-    public function testGetFunctions()
-    {
-        $functions = $this->ext->getFunctions();
-        $this->assertNotEmpty($functions);
+        $this->assertNotEmpty($this->ext->getFilters());
+        $this->assertNotEmpty($this->ext->getFunctions());
     }
 
     /**
@@ -58,5 +42,109 @@ class ArrayExtensionTest extends BaseTestCase {
         $tab = ['ola', 'ole', 'oli'];
         $this->assertTrue($this->ext->inArray('ola', $tab));
         $this->assertFalse($this->ext->inArray('rcn', $tab));
+    }
+
+    public function testExtract()
+    {
+        $tab = [
+            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
+            , ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
+            , ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
+        ];
+        $this->assertEquals(
+            ['Mathis', 'Raphaël', 'Clara']
+            , $this->ext->extract($tab, 'name')
+        );
+    }
+
+    public function testExtractWithKey()
+    {
+        $tab = [
+            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
+            , ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
+            , ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
+        ];
+        $this->assertEquals(
+            [
+                'Mathis' => 'male'
+                , 'Raphaël' => 'male'
+                , 'Clara' => 'female'
+            ]
+            , $this->ext->extract($tab, 'genre', 'name')
+        );
+    }
+
+    public function testToHtml()
+    {
+        $tab = ['ola', 'ole', 'oli'];
+        $tab = $this->ext->toHtml($tab);
+        $this->assertSimilar(
+            '<table>
+                <tbody>
+                <tr><td>0</td><td>ola</td></tr>
+                <tr><td>1</td><td>ole</td></tr>
+                <tr><td>2</td><td>oli</td></tr>
+                </tbody>
+            </table>'
+            , $tab
+        );
+    }
+
+    public function testToHtmlWithSimpleHeader()
+    {
+        $tab = ['ola', 'ole', 'oli'];
+        $tab = $this->ext->toHtml($tab, ['header' => true]);
+        $this->assertSimilar(
+            '<table>
+                <thead>
+                <tr><th>#</th><th>Libellé</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>0</td><td>ola</td></tr>
+                <tr><td>1</td><td>ole</td></tr>
+                <tr><td>2</td><td>oli</td></tr>
+                </tbody>
+            </table>'
+            , $tab
+        );
+    }
+
+    public function testToHtmlWithSimpleHeaderWithClass()
+    {
+        $tab = ['ola', 'ole', 'oli'];
+        $tab = $this->ext->toHtml($tab, ['header' => true, 'class' => 'table']);
+        $this->assertSimilar(
+            '<table class="table">
+                <thead>
+                <tr><th>#</th><th>Libellé</th></tr>
+                </thead>
+                <tbody>
+                <tr><td>0</td><td>ola</td></tr>
+                <tr><td>1</td><td>ole</td></tr>
+                <tr><td>2</td><td>oli</td></tr>
+                </tbody>
+            </table>'
+            , $tab
+        );
+    }
+
+    public function testToHtmlWithHeader()
+    {
+        $tab = [
+            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
+            , ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
+        ];
+        $tab = $this->ext->toHtml($tab);
+        $this->assertSimilar('
+            <table>
+            <thead>
+            <tr><th>name</th><th>year</th><th>genre</th></tr>
+            </thead>
+            <tbody>
+            <tr><td>Mathis</td><td>2007</td><td>male</td></tr>
+            <tr><td>Raphaël</td><td>2007</td><td>male</td></tr>
+            </tbody>
+            </table>'
+            , $tab);
     }
 }

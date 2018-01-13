@@ -20,24 +20,8 @@ class HtmlExtensionTest extends BaseTestCase {
     {
         $this->ekoTitre('Twig - HTML');
         $this->assertInstanceOf(HtmlExtension::class, $this->ext);
-    }
-
-    /**
-     * Obtenir la liste des filtres de l'extension
-     */
-    public function testGetFilters()
-    {
-        $filters = $this->ext->getFilters();
-        $this->assertNotEmpty($filters);
-    }
-
-    /**
-     * Obtenir la liste des fonctions de l'extension
-     */
-    public function testGetFunctions()
-    {
-        $functions = $this->ext->getFunctions();
-        $this->assertEmpty($functions);
+        $this->assertNotEmpty($this->ext->getFilters());
+        $this->assertEmpty($this->ext->getFunctions());
     }
 
     /**
@@ -54,5 +38,16 @@ class HtmlExtensionTest extends BaseTestCase {
     public function testGetCodeWithWrongParameter()
     {
         $this->assertNull($this->ext->code(['ola']));
+    }
+
+    public function testSurround()
+    {
+        $this->assertEquals('<code>ola</code>', $this->ext->surround('ola', 'code'));
+    }
+
+    public function testSurroundWithWrongParameter()
+    {
+        $this->assertNull($this->ext->surround(['ola'], 'code'));
+        $this->assertNull($this->ext->surround('ola', ['code']));
     }
 }

@@ -21,15 +21,8 @@ class DebugExtensionTest extends BaseTestCase {
     {
         $this->ekoTitre('Twig - Debug');
         $this->assertInstanceOf(DebugExtension::class, $this->ext);
-    }
-
-    /**
-     * Obtenir la liste des filtres de l'extension
-     */
-    public function testGetFilters()
-    {
-        $filters = $this->ext->getFilters();
-        $this->assertNotEmpty($filters);
+        $this->assertNotEmpty($this->ext->getFilters());
+        $this->assertNotEmpty($this->ext->getFunctions());
     }
 
     /**

@@ -20,15 +20,8 @@ class FileExtensionTest extends BaseTestCase {
     {
         $this->ekoTitre('Twig - Texte');
         $this->assertInstanceOf(FileExtension::class, $this->ext);
-    }
-
-    /**
-     * Obtenir la liste des filtres de l'extension
-     */
-    public function testGetFilters()
-    {
-        $filters = $this->ext->getFilters();
-        $this->assertNotEmpty($filters);
+        $this->assertNotEmpty($this->ext->getFilters());
+        $this->assertEmpty($this->ext->getFunctions());
     }
 
     /**

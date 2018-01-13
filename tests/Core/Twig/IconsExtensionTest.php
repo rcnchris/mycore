@@ -20,24 +20,8 @@ class IconsExtensionTest extends BaseTestCase {
     {
         $this->ekoTitre('Twig - Icônes');
         $this->assertInstanceOf(IconsExtension::class, $this->ext);
-    }
-
-    /**
-     * Obtenir la liste des filtres de l'extension
-     */
-    public function testGetFilters()
-    {
-        $filters = $this->ext->getFilters();
-        $this->assertNotEmpty($filters);
-    }
-
-    /**
-     * Obtenir la liste des fonctions de l'extension
-     */
-    public function testGetFunctions()
-    {
-        $functions = $this->ext->getFunctions();
-        $this->assertNotEmpty($functions);
+        $this->assertNotEmpty($this->ext->getFilters());
+        $this->assertNotEmpty($this->ext->getFunctions());
     }
 
     /**

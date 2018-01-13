@@ -3,6 +3,9 @@ namespace Tests\Rcnchris;
 
 use Faker\Factory;
 use Faker\Generator;
+use PHPUnit\DbUnit\Database\Connection;
+use PHPUnit\DbUnit\DataSet\IDataSet;
+use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\Framework\TestCase;
 use Rcnchris\Core\ORM\DbFactory;
 use Slim\App;
@@ -12,6 +15,8 @@ use Slim\Http\Response;
 
 class BaseTestCase extends TestCase
 {
+
+    use TestCaseTrait;
 
     /**
      * Emplacement des tests
@@ -38,13 +43,7 @@ class BaseTestCase extends TestCase
     public function setUp()
     {
         // Base de données des tests unitaires en mémoire
-        $this->db = $this->makeDb('dbTests', 0, '', '', '', 'sqlite');
-
-        // Base de données des tests unitaires dans un fichier
-        //$fileName = $this->rootPath() . $this::TESTS_FOLDER . '/ORM/dbTests.sqlite';
-        //$this->db = $this->makeDb('dbTests', 0, '', '', '', 'sqlite', $fileName);
-        //array_push($this->dbFiles, $fileName);
-
+        $this->db = $this->getConnection();
         $this->seeds();
     }
 
@@ -216,5 +215,28 @@ class BaseTestCase extends TestCase
                 unlink($file);
             }
         }
+    }
+
+    /**
+     * Returns the test database connection.
+     *
+     * @return Connection
+     */
+    protected function getConnection()
+    {
+        if (is_null($this->db)) {
+            $this->db = $this->makeDb('dbTests', 0, '', '', '', 'sqlite');
+        }
+        return $this->db;
+    }
+
+    /**
+     * Returns the test dataset.
+     *
+     * @return IDataSet
+     */
+    protected function getDataSet()
+    {
+        // TODO: Implement getDataSet() method.
     }
 }

@@ -20,24 +20,8 @@ class TextExtensionTest extends BaseTestCase{
     {
         $this->ekoTitre('Twig - Texte');
         $this->assertInstanceOf(TextExtension::class, $this->ext);
-    }
-
-    /**
-     * Obtenir la liste des filtres de l'extension
-     */
-    public function testGetFilters()
-    {
-        $filters = $this->ext->getFilters();
-        $this->assertNotEmpty($filters);
-    }
-
-    /**
-     * Obtenir la liste des fonctions de l'extension
-     */
-    public function testGetFunctions()
-    {
-        $functions = $this->ext->getFunctions();
-        $this->assertEmpty($functions);
+        $this->assertNotEmpty($this->ext->getFilters());
+        $this->assertEmpty($this->ext->getFunctions());
     }
 
     /**

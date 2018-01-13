@@ -7,13 +7,13 @@
  *
  * @category New
  *
- * @package Rcnchris\Core\Twig
+ * @package  Rcnchris\Core\Twig
  *
- * @author Raoul <rcn.chris@gmail.com>
+ * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license https://github.com/rcnchris GPL
+ * @license  https://github.com/rcnchris GPL
  *
- * @link https://github.com/rcnchris On Github
+ * @link     https://github.com/rcnchris On Github
  */
 
 namespace Rcnchris\Core\Twig;
@@ -23,18 +23,87 @@ namespace Rcnchris\Core\Twig;
  *
  * @category New
  *
- * @package Rcnchris\Core\Twig
+ * @package  Rcnchris\Core\Twig
  *
- * @author Raoul <rcn.chris@gmail.com>
+ * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license https://github.com/rcnchris/fmk-php GPL
+ * @license  https://github.com/rcnchris/fmk-php GPL
  *
- * @version Release: <1.0.0>
+ * @version  Release: <1.0.0>
  *
- * @link https://github.com/rcnchris/fmk-php on Github
+ * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class ArrayExtension extends \Twig_Extension
 {
+    /**
+     * Obtenir la liste des filtres
+     *
+     * @return array
+     */
+    public function getFilters()
+    {
+        return [
+            new \Twig_SimpleFilter('toHtml', [$this, 'toHtml'], ['is_safe' => ['html']])
+        ];
+    }
+
+    /**
+     * Obtenir un tableau HTML à partir d'un tableau PHP
+     *
+     * @param array $values  Tableau à afficher
+     * @param array $options Options du tableau
+     *
+     * @return string
+     */
+    public function toHtml(array $values, array $options = [])
+    {
+        $class = null;
+
+        // Application des options
+        if (array_key_exists('class', $options)) {
+            $class = ' class="' . $options['class'] . '"';
+        }
+        $withHeader = false;
+        if (array_key_exists('header', $options)) {
+            $withHeader = true;
+        }
+
+        $html = "<table$class>";
+        $keys = array_keys($values);
+        if (is_numeric($keys[0]) && !is_array(current($values))) {
+            // La valeur n'est pas un tableau, donc liste smple
+            if ($withHeader) {
+                $html .= "<thead>";
+                $html .= "<tr><th>#</th><th>Libellé</th></tr>";
+                $html .= "</thead>";
+            }
+            $html .= '<tbody>';
+            foreach ($values as $k => $value) {
+                $html .= "<tr><td>$k</td><td>$value</td></tr>";
+            }
+            $html .= '</tbody>';
+        } elseif (is_numeric($keys[0]) && is_array(current($values))) {
+            // La valeur est un tableau
+            $html .= '<thead><tr>';
+            $keys = array_keys(current($values));
+            foreach ($keys as $field) {
+                $html .= "<th>$field</th>";
+            }
+            $html .= '</tr></thead><tbody>';
+
+            foreach ($values as $k => $item) {
+                $html .= "<tr>";
+                foreach ($keys as $field) {
+                    $html .= "<td>" . $item[$field] . "</td>";
+                }
+                $html .= "</tr>";
+            }
+            $html .= '</tbody>';
+        }
+        $html .= '</table>';
+        return $html;
+    }
+
     /**
      * Obtenir la liste des fonctions
      *
@@ -83,8 +152,8 @@ class ArrayExtension extends \Twig_Extension
     /**
      * Vérifie la présence d'une valeur dans un tableau
      *
-     * @param       $value
-     * @param array $array
+     * @param mixed $value Valeur à chercher
+     * @param array $array Tableau de valeurs
      *
      * @return bool
      */

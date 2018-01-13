@@ -44,6 +44,7 @@ class HtmlExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('code', [$this, 'code'], ['is_safe' => ['html']])
+            , new \Twig_SimpleFilter('surround', [$this, 'surround'], ['is_safe' => ['html']])
         ];
     }
 
@@ -60,5 +61,24 @@ class HtmlExtension extends \Twig_Extension
             return null;
         }
         return '<code>' . $value . '</code>';
+    }
+
+    /**
+     * Entoure une valeur d'une balise HTML
+     *
+     * ### Exemple
+     * - `'montexte|surround('code')`
+     *
+     * @param string $value Valeur à entourer
+     * @param string $balise Balise HTML
+     *
+     * @return string
+     */
+    public function surround($value, $balise)
+    {
+        if(!is_string($value) || !is_string($balise)) {
+            return null;
+        }
+        return "<$balise>$value</$balise>";
     }
 }

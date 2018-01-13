@@ -11,42 +11,52 @@
 
 -------
 
-## Package Tools
+## Installation
+````
+# Pour l'utiliser dans son projet
+composer require rcnchris/core
+# ou créer un projet vide
+composer create-project -s rcnchris/core new-project
+````
+
+## Packages
+
+### Tools
 Package qui regroupe les classes utilisées de manière autonomes un peu partout.
 
-### Cmd
+#### Cmd
 Classe statique qui permet d'exécuter des commandes *shell*.
 ````
 $ls = Cmd::exec("cd $path && ls");
 ````
 
-### Collection
+#### Collection
 Facilite la manipulation d'un tableau via un objet.
 ````
 $col = new Collection('ola,ole,oli', "Liste de valeurs dans une chaîne avec séparateur");
 ````
 
-### Common
+#### Common
 Classe statique qui fournit des méthodes diverses.
 ````
 $m = Common::getMemoryUse();
 ````
 
-### Composer
+#### Composer
 Facilite la lecture d'un fichier composer.json.
 ````
 $composer = new Composer($path);
 $libs = $composer->show();
 ````
 
-### Folder
+#### Folder
 Facilite la manipulation de fichiers et dossiers.
 ````
 $folder = new Folder($path);
 $size = $folder->size();
 ````
 
-### Text
+#### Text
 Facilite la manipulation des chaînes de caractères.
 ````
 $slug = Text::slug('Le slug qui va bien !');
@@ -54,29 +64,29 @@ $slug = Text::slug('Le slug qui va bien !');
 
 -------
 
-## Package Apis
+## Apis
 
-### APITrait
+#### APITrait
 Comportement communs à toutes les APIs sur la base de **curl**
 
-### CurlResponse
+#### CurlResponse
 Représente une réponse de la commande <code>curl_exec()</code>
 
-### OneAPI
+#### OneAPI
 Utiliser n'importe quelle API à partir de son URL.
 ````
 $api = new OneAPI('https://randomuser.me/api');
 $users = $api->r(['results' => 3])->toArray('results');
 ````
 
-### AlloCiné
+#### AlloCiné
 Obtenir des informations de l'API.
 ````
 $api = new AlloCine();
 $search = $api->search('Le Parrain');
 ````
 
-### Synology
+#### Synology
 Utiliser les API d'un NAS Synology.
 ````
 $api = new AbstractSynology($config);
@@ -91,7 +101,7 @@ $movies = $api
 
 -------
 
-## Package ORM
+## ORM
 Abstraction des bases de données qui s'appuient sur `PDO`.
 ````
 // Obtenir une connexion PDO à MySQL
@@ -118,17 +128,28 @@ $items = $posts->findAll()->all()->toArray();
 
 -------
 
-## Package Twig
+## Twig
 Ajoute des extensions à Twig.
 
 - Debug
-- Tableaux
-- Bootstrap 4
 - Fichier et dossier
-- Formulaire
-- HTML
-- Icônes
 - Texte
 - Dates
+- Tableaux
+- HTML
+- Formulaire
+- Icônes
+- Bootstrap 4
+
+-------
+
+## Todo <progress></progress>
+- ORM
+ - Méthode find avec jointure, défaillante
+ - Relations d'un model
+- Synology
+ - Utilisation des cookies
+- Twig
+ - ArrayExtension : Améliorer toHml pour pouvoir déterminer le sens du tableau
 
 -------

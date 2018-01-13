@@ -67,10 +67,28 @@ class Bootstrap4Extension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('alert', [$this, 'alert'], ['is_safe' => ['html']])
+            , new \Twig_SimpleFilter('alertResult', [$this, 'alertResult'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('badge', [$this, 'badge'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('badgeBool', [$this, 'badgeBool'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('button', [$this, 'button'], ['is_safe' => ['html']])
         ];
+    }
+
+    /**
+     * Afficher une alerte de type résultat d'exécution de code
+     *
+     * @param string $value Valeur à afficher dans une alerte de type résultat
+     *
+     * @return null|string
+     */
+    public function alertResult($value)
+    {
+        try {
+            $value = (string)$value;
+        } catch (\Exception $e) {
+            return null;
+        }
+        return '<div class="alert alert-secondary"><samp>' . $value . '</samp></div>';
     }
 
     /**

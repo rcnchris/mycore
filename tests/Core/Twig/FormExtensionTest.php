@@ -20,24 +20,8 @@ class FormExtensionTest extends BaseTestCase {
     {
         $this->ekoTitre('Twig - Form');
         $this->assertInstanceOf(FormExtension::class, $this->ext);
-    }
-
-    /**
-     * Obtenir la liste des filtres de l'extension
-     */
-    public function testGetFilters()
-    {
-        $filters = $this->ext->getFilters();
-        $this->assertEmpty($filters);
-    }
-
-    /**
-     * Obtenir la liste des fonctions de l'extension
-     */
-    public function testGetFunctions()
-    {
-        $functions = $this->ext->getFunctions();
-        $this->assertNotEmpty($functions);
+        $this->assertEmpty($this->ext->getFilters());
+        $this->assertNotEmpty($this->ext->getFunctions());
     }
 
     /**
