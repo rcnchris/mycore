@@ -1,9 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\ORM;
 
-use Tests\Rcnchris\BaseTestCase;
-
-class DbFactoryTestCase extends BaseTestCase {
+class DbFactoryTest extends OrmTestCase {
 
     public function testGetDbSQLiteMemory()
     {

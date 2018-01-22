@@ -69,16 +69,43 @@ class HtmlExtension extends \Twig_Extension
      * ### Exemple
      * - `'montexte|surround('code')`
      *
-     * @param string $value Valeur à entourer
+     * @param string $value  Valeur à entourer
      * @param string $balise Balise HTML
      *
      * @return string
      */
     public function surround($value, $balise)
     {
-        if(!is_string($value) || !is_string($balise)) {
+        if (!is_string($value) || !is_string($balise)) {
             return null;
         }
         return "<$balise>$value</$balise>";
+    }
+
+    /**
+     * @return \Twig_SimpleFunction[]
+     */
+    public function getFunctions()
+    {
+        return [
+            new \Twig_SimpleFunction('details', [$this, 'details'], ['is_safe' => ['html']])
+        ];
+    }
+
+    /**
+     * Obtenir une balise details
+     *
+     * @param string $title   Titre
+     * @param string $content Contenu caché
+     *
+     * @return string
+     */
+    public function details($title, $content)
+    {
+        $html = '<details>';
+        $html .= "<summary>$title</summary>";
+        $html .= $content;
+        $html .= '</details>';
+        return $html;
     }
 }

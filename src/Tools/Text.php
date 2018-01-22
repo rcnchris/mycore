@@ -58,7 +58,8 @@ class Text
     /**
      * Compléter une chaîne de caractères
      *
-     * @exemple Common::compl('1', '0', 3); --> '0001'
+     * ### Exemple
+     * - `Common::compl('1', '0', 3);` --> '0001'
      *
      * @param string      $input  Chaîne à compléter
      * @param string      $compl  Complément
@@ -125,6 +126,16 @@ class Text
 
     /**
      * Tronquer une chaîne de caractères en traitant les entités html
+     *
+     * ### Exemple
+     * - `Text::truncate($text)`
+     * - `Text::truncate($text, 50, ['ellipsis' => '***'])`
+     *
+     * ### Options
+     * - 'ellipsis' => '...'
+     * - 'exact' => true
+     * - 'html' => false
+     * - 'trimWidth' => false
      *
      * @param string     $text    Rexte à tronquer
      * @param int        $length  Longueur
@@ -226,7 +237,7 @@ class Text
     /**
      * Tronquer une chaîne de caractères en commençant par la fin
      *
-     * ### Option
+     * ### Options
      * - `ellipsis` Préfixera la chaîne retournée
      * - `exact` Si faux, les mots ne sont pas coupés
      *
@@ -374,13 +385,17 @@ class Text
      */
     public static function transliterate($string, $transliteratorId = null)
     {
-        $transliteratorId = $transliteratorId
-            ?: static::$defaultTransliteratorId;
+        if (is_null($transliteratorId)) {
+            $transliteratorId = static::$defaultTransliteratorId;
+        }
         return transliterator_transliterate($transliteratorId, $string);
     }
 
     /**
      * Obtenir le slug d'une chaîne
+     *
+     * ### Exemple
+     * - `Text::slug('Oyé les gens');`
      *
      * @param string $string  Chaîne à traiter
      * @param array  $options Options de la demande
@@ -471,20 +486,21 @@ class Text
     /**
      * Obtenir une partie d'une chaîne
      *
-     * @param string $text    Texte en entrée
-     * @param int    $start   Position de départ dans la chaîne
-     * @param int    $length  Longueur de la chaîne à extraire
-     * @param array  $options Options de la demande
+     * @param string     $text    Texte en entrée
+     * @param int        $start   Position de départ dans la chaîne
+     * @param int        $length  Longueur de la chaîne à extraire
+     * @param array|null $options Options de la demande
      *
      * @return string
      */
-    protected static function substr($text, $start, $length, array $options)
+    public static function substr($text, $start, $length, array $options = [])
     {
         $substr = empty($options['trimWidth'])
             ? 'mb_substr'
             : 'mb_strimwidth';
 
         $maxPosition = self::strlen($text, ['trimWidth' => false] + $options);
+
         if ($start < 0) {
             $start += $maxPosition;
             if ($start < 0) {

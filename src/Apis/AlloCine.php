@@ -89,6 +89,9 @@ class AlloCine extends OneAPI
     /**
      * Constructeur
      *
+     * ### Exemple
+     * - `$allo = new AlloCine();`
+     *
      * Définit l'URL de base de l'API et les options de CURL
      */
     public function __construct()
@@ -100,6 +103,9 @@ class AlloCine extends OneAPI
 
     /**
      * Effectue une recherche sur AlloCine
+     *
+     * ### Exemple
+     * - `$allo->search('Scarface');`
      *
      * @param string $term Terme à chercher (personne, film, série...)
      *
@@ -120,10 +126,14 @@ class AlloCine extends OneAPI
     /**
      * Obtenir les informations sur un film à partir de son code AlloCiné
      *
-     * @exemple $allo->movie(27022, 'large')->toArray();
+     * ### Exemple
+     * - `$allo->movie(27022, 'large')->toArray();`
+     *
+     * ### Profile
+     * - small, medium or large
      *
      * @param int    $codeMovie Code du film
-     * @param string $profile   (small, medium, ou large)
+     * @param string $profile   Type de profil retourné
      *
      * @return \Rcnchris\Core\Apis\CurlResponse
      * @throws \Rcnchris\Core\Apis\ApiException
@@ -143,7 +153,11 @@ class AlloCine extends OneAPI
     /**
      * Obtenir les critiques d'un film par son code
      *
-     * @exemple $allo->reviewlist(27022, 'public');
+     * ### Exemple
+     * - `$allo->reviewlist(27022, 'public');`
+     *
+     * ### Filter
+     * - desk-press or public
      *
      * @param int         $codeMovie Code du film
      * @param string|null $filter    Type de critiques (desk-press ou public)
@@ -168,7 +182,8 @@ class AlloCine extends OneAPI
      * Obtenir les cinémas à partir d'un code postal
      * et dans un rayon donné
      *
-     * @exemple $allo->theaterlist('83190')->toArray();
+     * ### Exemple
+     * - `$allo->theaterlist('83190')->toArray();`
      *
      * @param string   $codeZip Code postal
      * @param int|null $radius  Rayon en nombre de kilomètres
@@ -384,11 +399,12 @@ class AlloCine extends OneAPI
      */
     private function makeUrl($method, array $params = [])
     {
-        if (!in_array($method, $this->methods)) {
-            throw new ApiException(
-                "Méthode $method introuvable ! Essayez plutôt avec une de celles-ci : " . implode(', ', $this->methods)
-            );
-        }
+//        if (!in_array($method, $this->methods)) {
+//            throw new ApiException(
+//                "Méthode $method introuvable ! Essayez plutôt avec une de celles-ci : "
+//                  . implode(', ', $this->methods)
+//            );
+//        }
         $this->addUrlPart($method);
         $this->addParams($params, null, true);
         $this->addParams([

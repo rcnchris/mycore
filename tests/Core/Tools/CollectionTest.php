@@ -244,14 +244,12 @@ class CollectionTest extends BaseTestCase {
             , ['id' => 14, 'username' => 'mcn', 'sport' => 'boxe']
         ]);
         $this->assertEquals(2, $c->count());
-        $this->assertEquals('items', $c->type());
 
         $c = $this->makeCollection([
             ['id' => 12, 'username' => 'rcn', 'sport' => 'foot']
             , ['id' => 14, 'username' => 'sra', 'taf' => 'camoin']
         ]);
         $this->assertCount(2, $c);
-        $this->assertEquals('list', $c->type());
     }
 
     /**
@@ -264,7 +262,6 @@ class CollectionTest extends BaseTestCase {
             , 'mcn' => ['id' => 14, 'username' => 'mcn', 'sport' => 'boxe']
         ], "testInstanceWithAssoTab");
         $this->assertCount(2, $c);
-        $this->assertEquals('items', $c->type());
         $this->assertEquals('boxe', $c->get('mcn.sport'));
     }
 
@@ -436,12 +433,6 @@ class CollectionTest extends BaseTestCase {
             ['jquery', 'foundation'],
             $this->cdn->keys()->toArray()
         );
-
-        $c = $this->makeCollection([
-            ['id' => 5, 'username' => 'rcn']
-            , ['id' => 7, 'username' => 'sra']
-        ]);
-        $this->assertEquals(['id', 'username'], $c->keys()->toArray());
     }
 
     /**
@@ -511,17 +502,6 @@ class CollectionTest extends BaseTestCase {
     }
 
     /**
-     * Obtenir le type de la collection (list, entity, items)
-     */
-    public function testGetTypeCollection()
-    {
-        $this->assertEquals('list', $this->list->type());
-        $this->assertEquals('entity', $this->user->type());
-        $this->assertEquals('items', $this->users->type());
-        $this->assertEquals('items', $this->cdn->type());
-    }
-
-    /**
      * Obtenir le type de la valeur d'une clé
      */
     public function testGetTypeOfValue()
@@ -547,8 +527,6 @@ class CollectionTest extends BaseTestCase {
     {
         $this->assertEquals('ola, ole, oli', $this->list->join());
         $this->assertEquals('ola;ole;oli', $this->list->join(';'));
-        $this->assertFalse($this->user->join());
-        $this->assertFalse($this->users->join());
     }
 
     /**
@@ -581,5 +559,15 @@ class CollectionTest extends BaseTestCase {
     public function testGetMax()
     {
         $this->assertEquals('oli', $this->list->max());
+    }
+
+    public function testGetTypesKeys()
+    {
+        $this->assertEquals(['integer'], $this->list->typesKeys()->toArray());
+    }
+
+    public function testGetTypesDatas()
+    {
+        $this->assertEquals(['string'], $this->list->typesDatas()->toArray());
     }
 }

@@ -8,7 +8,11 @@ class PagesTest extends BaseTestCase
     {
         $this->ekoTitre('App - Routing');
         $response = $this->runApp('GET', '/_lab/mycore/');
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals(
+            200
+            , $response->getStatusCode()
+            , $this->getMessage("Le statut de la réponse de la page d'accueil est incorrect")
+        );
     }
 
     public function testGetOnePage()

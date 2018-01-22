@@ -78,4 +78,12 @@ class TextExtensionTest extends BaseTestCase{
         $this->assertEquals('2 KB', $this->ext->bitsSize(2048));
         $this->assertEquals('0 B', $this->ext->bitsSize('fake'));
     }
+
+//    public function testToSlug()
+//    {
+//        $this->assertEquals(
+//            'oye-les-gens-comment-vont-ils'
+//            , $this->ext->toSlug('Oyé les gens, comment-vont-ils ?')
+//        );
+//    }
 }

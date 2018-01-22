@@ -2,9 +2,8 @@
 namespace Tests\Rcnchris\Core\ORM;
 
 use Rcnchris\Core\ORM\SourcesManager;
-use Tests\Rcnchris\BaseTestCase;
 
-class SourcesManagerTestCase extends BaseTestCase {
+class SourcesManagerTest extends OrmTestCase {
 
     /**
      * Sources de données des tests

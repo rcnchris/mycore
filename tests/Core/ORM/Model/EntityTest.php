@@ -1,8 +1,8 @@
 <?php
 namespace Tests\Rcnchris\Core\ORM\Model;
-use Tests\Rcnchris\BaseTestCase;
+use Tests\Rcnchris\Core\ORM\OrmTestCase;
 
-class EntityTest extends BaseTestCase
+class EntityTest extends OrmTestCase
 {
 
     /**

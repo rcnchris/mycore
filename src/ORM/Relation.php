@@ -40,33 +40,17 @@ class Relation
 {
 
     /**
-     * Modèle qui possède la relation
+     * Nom de la table
      *
-     * @var object
+     * @var string
      */
-    private $mainModel;
+    public $tableName;
 
-    /**
-     * Modèle à lier
-     *
-     * @var mixed
-     */
-    private $model;
-
-    /**
-     * Constructeur
-     *
-     * @param Model        $mainModel
-     * @param Model|string $model
-     * @param array|null   $options
-     */
-    public function __construct($mainModel, $model, array $options = [])
+    public function __construct($tableName, array $options)
     {
-        if (is_string($model) && class_exists($model)) {
-            $this->model = new $model($mainModel->getPdo());
-        } elseif ($model instanceof Model) {
-            $this->model = $model;
+        $this->tableName = $tableName;
+        foreach ($options as $k => $v) {
+            $this->$k = $v;
         }
-        $this->mainModel = $mainModel;
     }
 }

@@ -3,9 +3,8 @@ namespace Tests\Rcnchris\Core\ORM;
 
 use Rcnchris\Core\ORM\Query;
 use Rcnchris\Core\ORM\QueryResult;
-use Tests\Rcnchris\BaseTestCase;
 
-class QueryResultTestCase extends BaseTestCase {
+class QueryResultTest extends OrmTestCase {
 
     /**
      * Requête de base sur les posts

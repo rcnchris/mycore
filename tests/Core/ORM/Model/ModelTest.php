@@ -3,9 +3,9 @@ namespace Tests\Rcnchris\Core\ORM\Model;
 
 use Rcnchris\Core\ORM\Query;
 use Rcnchris\Core\ORM\QueryResult;
-use Tests\Rcnchris\BaseTestCase;
+use Tests\Rcnchris\Core\ORM\OrmTestCase;
 
-class ModelTest extends BaseTestCase
+class ModelTest extends OrmTestCase
 {
     /**
      * @var PostsModel
@@ -32,6 +32,11 @@ class ModelTest extends BaseTestCase
     public function testGetTable()
     {
         $this->assertEquals('posts', $this->Posts->getTable());
+    }
+
+    public function testGetAlias()
+    {
+        $this->assertEquals('p', $this->Posts->getAlias());
     }
 
     public function testGetNewEntity()

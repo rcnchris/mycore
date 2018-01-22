@@ -175,9 +175,11 @@ class Query implements \IteratorAggregate
      *
      * @return $this
      */
-    public function limit($length, $offset = 0)
+    public function limit($length, $offset = null)
     {
-        $this->limit = "$length, $offset";
+        $this->limit = is_null($offset)
+            ? $length
+            : "$length, $offset";
         return $this;
     }
 
@@ -202,8 +204,13 @@ class Query implements \IteratorAggregate
     public function count()
     {
         $query = clone $this;
-        $table = current($this->from);
-        return intval($query->select("COUNT($table.id)")->execute()->fetchColumn());
+
+        $parts = explode(' ', current($this->from));
+        $field = array_pop($parts);
+        //var_dump($field);
+        //var_dump($query->select("COUNT($field.id)")->__toString());
+
+        return intval($query->select("COUNT($field.id)")->execute()->fetchColumn());
     }
 
     /**

@@ -38,6 +38,9 @@ class Hydrator
     /**
      * Définir les valeurs des propriétés d'un objet avec les valeurs de la base de données
      *
+     * ### Exemple
+     * - `Hydrator::hydrate($this->records[$index], $this->entity);`
+     *
      * @param array         $array  Tableau de données
      * @param string|object $object Entité à hydrater
      *
@@ -63,6 +66,9 @@ class Hydrator
     /**
      * Obtenir le setter
      *
+     * ### Exemple
+     * - `self::getSetter($key);`
+     *
      * @param $fieldName
      *
      * @return string
@@ -74,6 +80,9 @@ class Hydrator
 
     /**
      * Obtenir la propriété
+     *
+     * ### Exemple
+     * - `self::getProperty($key);`
      *
      * @param $fieldName
      *

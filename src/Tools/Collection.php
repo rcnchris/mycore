@@ -59,13 +59,12 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
     /**
      * Constructeur
      *
-     * <ul>
-     * <li><code>$collection = new Collection('ola,ole,oli', "Liste simple vie une chaîne de caractères");</code></li>
-     * <li><code>$collection = new Collection(['ola', 'ole', 'oli'], "Liste simple via un tableau");</code></li>
-     * </ul>
+     * ### Exemple
+     * - `$collection = new Collection('ola,ole,oli', "Liste simple vie une chaîne de caractères");`
+     * - `$collection = new Collection(['ola', 'ole', 'oli'], "Liste simple via un tableau");`
      *
-     * @param string|array|null $items Liste de données (chaîne avec séparateur, json, array, objet)
-     * @param string|null       $name  Nom de la collection
+     * @param mixed|null  $items Liste de données (chaîne avec séparateur, json, array, objet)
+     * @param string|null $name  Nom de la collection
      */
     public function __construct($items = null, $name = null)
     {
@@ -166,11 +165,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      */
     public function join($glue = ', ')
     {
-        $type = $this->type();
-        if ($type === 'list') {
-            return implode($glue, $this->items);
-        }
-        return false;
+        return implode($glue, $this->items);
     }
 
     /**
@@ -247,19 +242,9 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
         if ($this->isEmpty()) {
             return null;
         }
-        $type = $this->type();
-        if ($type === 'list') {
-            end($this->items);
-            return current($this->items);
-        } elseif ($type === 'items') {
-            end($this->items);
-            $last = current($this->items);
-            return new self($last, "Dernier élément de \"" . $this->name() . "\"");
-        } else {
-            $keys = array_keys($this->items);
-            $lastKey = array_pop($keys);
-            return $this->get($lastKey);
-        }
+        $keys = $this->keys()->toArray();
+        $lastKey = array_pop($keys);
+        return $this->get($lastKey);
     }
 
     /**
@@ -279,12 +264,8 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      */
     public function keys()
     {
-        $type = $this->type();
         if ($this->isEmpty()) {
             return null;
-        }
-        if ($type === 'items' && isset($this->items[0])) {
-            return new self(array_keys($this->items[0]));
         }
         return new self(array_keys($this->items));
     }
@@ -365,49 +346,49 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      *
      * @return string
      */
-    public function type()
-    {
-        $type = 'entity';
-        $typesKeys = $this->typesKeys();
-        $typesDatas = $this->typesDatas();
-
-        if ($typesKeys->count() === 1 && in_array('integer', $typesKeys->toArray())) {
-            $type = 'list';
-            // Si la structure des valeurs est identique pour toutes les entrées de la collection, c'est un type items
-            if ($typesDatas->count() > 1) {
-                $type = 'entity';
-            } elseif ($typesDatas->count() === 1 && in_array('array', $typesDatas->toArray())) {
-                $structItems = [];
-                foreach ($this->items as $i => $item) {
-                    foreach ($item as $key => $value) {
-                        $structItems[$i][$key] = gettype($key);
-                    }
-                }
-                $refStruct = isset($structItems[0]) ? $structItems[0] : [];
-                $diff = [];
-                foreach ($structItems as $i => $itemStruct) {
-                    $diff['keyName'] = array_diff(
-                        array_keys($itemStruct),
-                        array_keys($refStruct)
-                    );
-                    $diff['keyType'] = array_diff($itemStruct, $refStruct);
-                }
-                if (!empty($diff['keyType'])) {
-                    $type = 'entity';
-                } elseif (empty($diff['keyName'])) {
-                    $type = 'items';
-                }
-            }
-        } elseif ($typesKeys->count() === 1 && in_array('string', $typesKeys->toArray())) {
-            if ($typesDatas->count() === 1) {
-                $type = 'items';
-            }
-        }
-        return $type;
-    }
+//    public function type()
+//    {
+//        $type = 'entity';
+//        $typesKeys = $this->typesKeys();
+//        $typesDatas = $this->typesDatas();
+//
+//        if ($typesKeys->count() === 1 && in_array('integer', $typesKeys->toArray())) {
+//            $type = 'list';
+//            // Si la structure des valeurs est identique pour toutes les entrées de la collection, c'est un type items
+//            if ($typesDatas->count() > 1) {
+//                $type = 'entity';
+//            } elseif ($typesDatas->count() === 1 && in_array('array', $typesDatas->toArray())) {
+//                $structItems = [];
+//                foreach ($this->items as $i => $item) {
+//                    foreach ($item as $key => $value) {
+//                        $structItems[$i][$key] = gettype($key);
+//                    }
+//                }
+//                $refStruct = isset($structItems[0]) ? $structItems[0] : [];
+//                $diff = [];
+//                foreach ($structItems as $i => $itemStruct) {
+//                    $diff['keyName'] = array_diff(
+//                        array_keys($itemStruct),
+//                        array_keys($refStruct)
+//                    );
+//                    $diff['keyType'] = array_diff($itemStruct, $refStruct);
+//                }
+//                if (!empty($diff['keyType'])) {
+//                    $type = 'entity';
+//                } elseif (empty($diff['keyName'])) {
+//                    $type = 'items';
+//                }
+//            }
+//        } elseif ($typesKeys->count() === 1 && in_array('string', $typesKeys->toArray())) {
+//            if ($typesDatas->count() === 1) {
+//                $type = 'items';
+//            }
+//        }
+//        return $type;
+//    }
 
     /**
-     * Obtenir ou définir le nom de la collcetion
+     * Obtenir ou définir le nom de la collection
      *
      * @param string|null $name Nom  à attribuer à la collection
      *
@@ -452,7 +433,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      *
      * @return Collection
      */
-    private function typesKeys()
+    public function typesKeys()
     {
         $typesKeys = [];
         foreach ($this->items as $key => $item) {
@@ -468,7 +449,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      *
      * @return Collection
      */
-    private function typesDatas()
+    public function typesDatas()
     {
         $typesValues = [];
         foreach ($this->items as $key => $item) {

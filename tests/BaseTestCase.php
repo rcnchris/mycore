@@ -3,11 +3,7 @@ namespace Tests\Rcnchris;
 
 use Faker\Factory;
 use Faker\Generator;
-use PHPUnit\DbUnit\Database\Connection;
-use PHPUnit\DbUnit\DataSet\IDataSet;
-use PHPUnit\DbUnit\TestCaseTrait;
 use PHPUnit\Framework\TestCase;
-use Rcnchris\Core\ORM\DbFactory;
 use Slim\App;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -16,36 +12,15 @@ use Slim\Http\Response;
 class BaseTestCase extends TestCase
 {
 
-    use TestCaseTrait;
-
     /**
      * Emplacement des tests
      */
     const TESTS_FOLDER = '/tests';
 
     /**
-     * @var \PDO
-     */
-    protected $db;
-
-    /**
-     * Liste des fichiers de bases de données utilisés pour les tests
-     *
-     * @var array
-     */
-    protected $dbFiles = [];
-
-    /**
      * @var Generator
      */
     private $faker;
-
-    public function setUp()
-    {
-        // Base de données des tests unitaires en mémoire
-        $this->db = $this->getConnection();
-        $this->seeds();
-    }
 
     /**
      * @return \Faker\Generator
@@ -56,37 +31,6 @@ class BaseTestCase extends TestCase
             $this->faker = Factory::create('fr_FR');
         }
         return $this->faker;
-    }
-
-    public function seeds()
-    {
-        // Catégories
-        $this->db->query('DROP TABLE IF EXISTS categories');
-        $this->db->query("CREATE TABLE IF NOT EXISTS categories (
-          id INTEGER PRIMARY KEY AUTOINCREMENT
-          , title VARCHAR(50));");
-        $this->db->query("INSERT INTO categories (title) VALUES ('Article'), ('Page');");
-
-        // Posts
-        $this->db->query('DROP TABLE IF EXISTS posts');
-        $this->db->query("CREATE TABLE IF NOT EXISTS posts (
-          id INTEGER PRIMARY KEY AUTOINCREMENT
-          , title VARCHAR(100)
-          , category_id INTEGER
-          , created DATETIME
-          , modified DATETIME
-        );");
-
-        $sql = 'INSERT INTO posts (title, category_id, created, modified) VALUES ';
-        for ($i = 1 ; $i <= 20 ; $i++) {
-            $sql = $sql
-                . "('" . $this->faker()->sentence(3) . "', "
-                . rand(1, 3) . ", '"
-                . $this->faker()->date("Y-m-d H:i:s") . "', '"
-                . $this->faker()->date("Y-m-d H:i:s") . "'),";
-        }
-        $sql = substr($sql, 0, strlen($sql) - 1);
-        $this->db->query($sql);
     }
 
     /**
@@ -122,6 +66,25 @@ class BaseTestCase extends TestCase
     }
 
     /**
+     * Obtenir le message d'erreur d'une assertion
+     *
+     * ### Exemple
+     * - `$this->assertEquals(
+     *      'ola'
+     *      , Text::substr($phrase, -12, 3)
+     *      , $this->getMessage('Démarrer avec une position négative et une longueur inférieure')
+     * );`
+     *
+     * @param string $message Message brut
+     *
+     * @return string
+     */
+    protected function getMessage($message)
+    {
+        return "\033[0;33m$message\033[m";
+    }
+
+    /**
      * Supprime les espaces et retours à la ligne
      *
      * @param $string
@@ -144,28 +107,6 @@ class BaseTestCase extends TestCase
     protected function assertSimilar($expected, $actual)
     {
         $this->assertEquals($this->trim($expected), $this->trim($actual));
-    }
-
-    /**
-     * Obtenir une instance de base de données
-     *
-     * @param string      $server
-     * @param int         $port
-     * @param string      $user
-     * @param string      $password
-     * @param string      $dbname
-     * @param string|null $sgbd
-     * @param string|null $file
-     *
-     * @return null|\PDO|string
-     * @throws \Exception
-     */
-    protected function makeDb($server = '', $port = 0, $user = '', $password = '', $dbname = '', $sgbd = null, $file = null)
-    {
-        chdir($this->rootPath() . $this::TESTS_FOLDER . '/Core/ORM');
-        $db = DbFactory::get($server, $port, $user, $password, $dbname, $sgbd, $file);
-        chdir($this->rootPath());
-        return $db;
     }
 
     /**
@@ -202,41 +143,5 @@ class BaseTestCase extends TestCase
         $response = $app->process($request, $response);
         // Return the response
         return $response;
-    }
-
-    /**
-     * Supprime les éléments utilisés pour les tests
-     */
-    public function tearDown()
-    {
-        // Fichiers des bases de données utilisés pour les tests
-        foreach ($this->dbFiles as $file) {
-            if (file_exists($file)) {
-                unlink($file);
-            }
-        }
-    }
-
-    /**
-     * Returns the test database connection.
-     *
-     * @return Connection
-     */
-    protected function getConnection()
-    {
-        if (is_null($this->db)) {
-            $this->db = $this->makeDb('dbTests', 0, '', '', '', 'sqlite');
-        }
-        return $this->db;
-    }
-
-    /**
-     * Returns the test dataset.
-     *
-     * @return IDataSet
-     */
-    protected function getDataSet()
-    {
-        // TODO: Implement getDataSet() method.
     }
 }

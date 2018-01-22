@@ -46,11 +46,12 @@ class Model
     private $pdo;
 
     /**
-     * Nom de la table
+     * Nom de la table avec son alias
+     * ['alias' => 'nomTable']
      *
-     * @var string
+     * @var array
      */
-    protected $table;
+    protected $table = [];
 
     /**
      * Classe à utiliser pour représenter un enregistrement
@@ -62,27 +63,21 @@ class Model
     /**
      * Liste des relations du model
      *
-     * @var array
+     * @var Relation[]
      */
     protected $relations = [];
 
     /**
      * Constructeur
      *
+     * ### Exemple
+     * - `$posts = new PostModel($pdo);`
+     *
      * @param \PDO $pdo
      */
     public function __construct(\PDO $pdo)
     {
         $this->pdo = $pdo;
-        $this->initialize();
-    }
-
-    /**
-     * Initialise le model
-     */
-    protected function initialize()
-    {
-        // Méthode utilisée par les modèles
     }
 
     /**
@@ -102,14 +97,14 @@ class Model
      * Obtenir l'instance d'une Query
      *
      * ### Exemple
-     * - `$model->makeQuery()`
+     * - `$model->makeQuery();`
      *
      * @return Query
      */
     public function makeQuery()
     {
         return (new Query($this->getPdo()))
-            ->from($this->table, $this->table[0])
+            ->from($this->getTable(true))
             ->into($this->entity);
     }
 
@@ -147,11 +142,15 @@ class Model
      */
     public function findList($field = null, $conditions = null)
     {
+        $list = [];
         if (is_null($field)) {
             $field = 'title';
         }
-        $results = $this->makeQuery()->select('id', $field)->where($conditions)->all()->toArray();
-        $list = [];
+        $results = $this->makeQuery()
+            ->select('id', $field)
+            ->where($conditions)
+            ->all()
+            ->toArray();
         foreach ($results as $result) {
             $list[$result['id']] = $result[$field];
         }
@@ -243,7 +242,7 @@ class Model
      * Vérifier la présence d'un id dans la table
      *
      * ### Exemple
-     * - `$posts->exists(12)`
+     * - `$posts->exists(12);`
      *
      * @param $id
      *
@@ -251,7 +250,7 @@ class Model
      */
     public function exists($id)
     {
-        $stmt = $this->pdo->prepare("select id from {$this->table} where id = ?");
+        $stmt = $this->pdo->prepare("select id from {$this->getTable()} where id = ?");
         $stmt->execute([$id]);
         return $stmt->fetchColumn() !== false;
     }
@@ -277,7 +276,7 @@ class Model
             return ':' . $field;
         }, $fields));
         $fields = join(', ', $fields);
-        $stmt = $this->pdo->prepare("insert into {$this->table} ($fields) values ($values)");
+        $stmt = $this->pdo->prepare("insert into {$this->getTable()} ($fields) values ($values)");
         return $stmt->execute($params);
     }
 
@@ -296,7 +295,7 @@ class Model
     {
         $fieldQuery = $this->buildFieldQuery($params);
         $params['id'] = $id;
-        $stmt = $this->pdo->prepare("UPDATE " . $this->table . " SET $fieldQuery WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE " . $this->getTable() . " SET $fieldQuery WHERE id = :id");
         return $stmt->execute($params);
     }
 
@@ -312,7 +311,7 @@ class Model
      */
     public function delete($id)
     {
-        $stmt = $this->pdo->prepare("delete from {$this->table} where id = ?");
+        $stmt = $this->pdo->prepare("delete from {$this->getTable()} where id = ?");
         return $stmt->execute([$id]);
     }
 
@@ -325,12 +324,33 @@ class Model
      *
      * ### Exemple
      * - `$posts->getTable();`
+     * - `$posts->getTable(true);`
+     *
+     * @param bool|null $withAlias Ajout de la mention 'as alias' après le nom de la table
      *
      * @return string
      */
-    public function getTable()
+    public function getTable($withAlias = false)
     {
-        return $this->table;
+        $tableName = current($this->table);
+        if ($withAlias) {
+            return $tableName . ' as ' . array_search($tableName, $this->table);
+        }
+        return $tableName;
+    }
+
+    /**
+     * Obtenir l'alias utilisé dans les requêtes
+     *
+     * ### Exemple
+     * - `$posts->getAlias();`
+     *
+     * @return string
+     */
+    public function getAlias()
+    {
+        $parts = explode(' ', $this->getTable(true));
+        return array_pop($parts);
     }
 
     /**
@@ -339,11 +359,15 @@ class Model
      * ### Exemple
      * - `$posts->setTable('posts');`
      *
-     * @param string $table Nom de la table du model
+     * @param string      $table Nom de la table du model
+     * @param string|null $alias Alias de la table dans les requêtes
      */
-    protected function setTable($table)
+    protected function setTable($table, $alias = null)
     {
-        $this->table = $table;
+        if (is_null($alias)) {
+            $alias = $table[0];
+        }
+        $this->table = [$alias => $table];
     }
 
     /**
@@ -432,37 +456,48 @@ class Model
     /**
      * Ajoute une relation belongsTo (appartient à)
      *
-     * @param mixed $model
-     * @param array $options
+     * @param string $tableName Nom de la table
+     * @param array  $options   Options de la relation
      */
-    protected function belongsTo($model, array $options = [])
+    protected function belongsTo($tableName, array $options = [])
     {
-        $this->addRelation(__FUNCTION__, $model, $options);
+        $options = array_merge(['type' => __FUNCTION__], $options);
+        $this->addRelation(strtolower($tableName), $options);
     }
 
     /**
      * Ajoute une relation hasMany (a plusieurs)
      *
-     * @param mixed $model
-     * @param array $options
+     * ### Exemple
+     * - `$this->hasMany('tags', [
+     *       'join' => 'left'
+     *      , 'joinTable' => 'images_tags'
+     *      , 'conditions' => ''
+     *    ]);`
+     *
+     * @param string $tableName Nom de la table
+     * @param array  $options   Options de la relation
      *
      * @return Relation
      */
-    protected function hasMany($model, array $options = [])
+    protected function hasMany($tableName, array $options = [])
     {
-        $this->addRelation(__FUNCTION__, $model, $options);
+        $options = array_merge(['type' => __FUNCTION__], $options);
+        $this->addRelation($tableName, $options);
     }
 
     /**
      * Ajoute une relation à la liste des relations
      *
-     * @param string        $type    Type de la relation (belongsTo, hasMany...)
-     * @param string|object $model   Model de données à relier
-     * @param array|null    $options Options de la relation
+     * ### Exemple
+     * - `$model->addRelation('tags', );`
+     *
+     * @param       $tableName
+     * @param array $options
      */
-    private function addRelation($type, $model, array $options = [])
+    private function addRelation($tableName, array $options = [])
     {
-        $this->relations[$type][] = new Relation($this, $model, $options);
+        $this->relations[] = new Relation($tableName, $options);
     }
 
     /**
@@ -471,7 +506,7 @@ class Model
      * ### Exemple
      * - `$posts->getRelations();`
      *
-     * @return array
+     * @return Relation[]
      */
     public function getRelations()
     {

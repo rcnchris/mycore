@@ -150,11 +150,11 @@ class DbFactory
     private static function setDsn(array $parts, $format = 'pilote')
     {
         $formats = ['pilote', 'uri'];
-        if (!in_array($format, $formats)) {
-            throw new \Exception(
-                "Le format du DSN est incorrect ! Essayez-plutôt un de ceux-ci :" . implode(', ', $formats)
-            );
-        }
+//        if (!in_array($format, $formats)) {
+//            throw new \Exception(
+//                "Le format du DSN est incorrect ! Essayez-plutôt un de ceux-ci :" . implode(', ', $formats)
+//            );
+//        }
         // Construction de la chaîne de caractères du DSN au format pilote
         // (existe aussi le format URI 'uri:file:///usr/local/dbconnect')
 

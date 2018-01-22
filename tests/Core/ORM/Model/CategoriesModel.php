@@ -9,5 +9,6 @@ class CategoriesModel extends Model
     protected function initialize()
     {
         $this->setTable('categories');
+        $this->setEntity(CategoryEntity::class);
     }
 }

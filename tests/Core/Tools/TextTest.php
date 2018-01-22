@@ -4,7 +4,8 @@ namespace Tests\Rcnchris\Core\Tools;
 use Rcnchris\Core\Tools\Text;
 use Tests\Rcnchris\BaseTestCase;
 
-class TextTest extends BaseTestCase {
+class TextTest extends BaseTestCase
+{
 
     /**
      * @var Text
@@ -204,10 +205,12 @@ class TextTest extends BaseTestCase {
         $this->assertEquals(
             "label",
             Text::getBefore('=', 'label=ola')
+            , $this->getMessage('La partie avant le séparateur est incorrecte')
         );
         $this->assertEquals(
             null,
             Text::getBefore('x', 'label=ola')
+            , $this->getMessage('Avec un séparateur absent de la chaîne')
         );
     }
 
@@ -219,10 +222,12 @@ class TextTest extends BaseTestCase {
         $this->assertEquals(
             "ola",
             Text::getAfter('=', 'label=ola')
+            , $this->getMessage('La partie après le séparateur est incorrecte')
         );
         $this->assertEquals(
             null,
             Text::getAfter('x', 'label=ola')
+            , $this->getMessage('Avec un séparateur absent de la chaîne')
         );
     }
 
@@ -238,7 +243,36 @@ class TextTest extends BaseTestCase {
     public function testRemoveLastWord()
     {
         $phrase = 'ola les gens';
-        $this->assertEquals('ola les', Text::removeLastWord($phrase));
-        $this->assertEquals('', Text::removeLastWord('olalesgens'));
+        $this->assertEquals('ola les', Text::removeLastWord($phrase), $this->getMessage('Le reste de la phrase, sans le dernier mot, est incorrecte'));
+        $this->assertEquals('', Text::removeLastWord('olalesgens'), $this->getMessage('Un seul mot dans la chaîne'));
+    }
+
+    public function testSubstr()
+    {
+        $phrase = 'ola les gens';
+
+        $this->assertEquals(
+            'gens'
+            , Text::substr($phrase, -4, 4)
+            , $this->getMessage('Démarrer avec une valeur négative')
+        );
+
+        $this->assertEquals(
+            '',
+            Text::substr($phrase, 0, 0)
+            , $this->getMessage('Longueur à zéro')
+        );
+
+        $this->assertEquals(
+            'ola'
+            , Text::substr($phrase, -12, 3)
+            , $this->getMessage('Démarrer avec une position négative et une longueur inférieure')
+        );
+
+        $this->assertEquals(
+            ''
+            , Text::substr($phrase, 15, 3)
+            , $this->getMessage('Démarrer à une position supérieure à la longueur demandée')
+        );
     }
 }

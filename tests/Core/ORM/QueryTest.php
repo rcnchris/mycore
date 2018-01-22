@@ -5,9 +5,8 @@ use Rcnchris\Core\ORM\NoRecordException;
 use Rcnchris\Core\ORM\Query;
 use Rcnchris\Core\ORM\QueryResult;
 use Rcnchris\Core\Tools\Collection;
-use Tests\Rcnchris\BaseTestCase;
 
-class QueryTestCase extends BaseTestCase {
+class QueryTest extends OrmTestCase {
 
     /**
      * Requête de base sur les posts
@@ -76,7 +75,15 @@ class QueryTestCase extends BaseTestCase {
     {
         $query = $this->postsQuery;
         $query = $query->limit(5);
-        $this->assertEquals('SELECT * FROM posts LIMIT 5, 0', $query->__toString());
+        $this->assertEquals('SELECT * FROM posts LIMIT 5', $query->__toString());
+    }
+
+    public function testLimitWithOffset()
+    {
+        $query = $this->postsQuery;
+        $query = $query->limit(5, 2);
+        $query = $query->limit(5, 2);
+        $this->assertEquals('SELECT * FROM posts LIMIT 5, 2', $query->__toString());
     }
 
     public function testOrder()
