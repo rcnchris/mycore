@@ -108,6 +108,7 @@ class TextExtension extends Twig_Extension
 
     /**
      * Obtenir une taille en bits
+     * - Filtre
      *
      * @param     $value
      * @param int $round

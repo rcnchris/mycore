@@ -61,6 +61,13 @@ class SynologyPackage
     private $definitions = [];
 
     /**
+     * Liste des APIs du package
+     *
+     * @var []
+     */
+    private $apis;
+
+    /**
      * Constructeur
      *
      * @param string                                        $name     Nom du package (API, AudioStation...)
@@ -103,22 +110,25 @@ class SynologyPackage
      */
     public function getApis($fullName = false)
     {
-        $a = $this->nas;
-        $prefix = $a::PREFIXE_API . '.' . $this->getName() . '.';
-        $keysForPackage = [];
-        $apis = $this->nas->getApis();
-        foreach ($apis as $key) {
-            $keyParts = explode('.', $key);
-            $prefixParts = array_filter(explode('.', $prefix));
-            if ($keyParts[0] === $prefixParts[0] && $keyParts[1] === $prefixParts[1]) {
-                if ($fullName) {
-                    $keysForPackage[] = $key;
-                } else {
-                    $keysForPackage[] = $keyParts[2];
+        if (is_null($this->apis)) {
+            $a = $this->nas;
+            $prefix = $a::PREFIXE_API . '.' . $this->getName() . '.';
+            $keysForPackage = [];
+            $apis = $this->nas->getApis();
+            foreach ($apis as $key) {
+                $keyParts = explode('.', $key);
+                $prefixParts = array_filter(explode('.', $prefix));
+                if ($keyParts[0] === $prefixParts[0] && $keyParts[1] === $prefixParts[1]) {
+                    if ($fullName) {
+                        $keysForPackage[] = $key;
+                    } else {
+                        $keysForPackage[] = $keyParts[2];
+                    }
                 }
             }
+            $this->apis = $keysForPackage;
         }
-        return $keysForPackage;
+        return $this->apis;
     }
 
     /**
@@ -131,6 +141,7 @@ class SynologyPackage
      */
     public function getDefinition($apiShortName, $key = null)
     {
+
         $a = $this->getNas();
         if (!array_key_exists($apiShortName, $this->definitions)) {
             $this->definitions[$apiShortName] = $this
@@ -146,6 +157,10 @@ class SynologyPackage
     /**
      * Obtenir les données d'une méthode
      *
+     * ### Exemple
+     * - `$pkg->get('Album')`
+     * - `$pkg->get('Album', 'list', ['limit' => 3])`
+     *
      * @param string      $apiShortName Nom court de l'API (Genre, Movie...)
      * @param string      $method       Nom de la méthode de l'API (list, getinfo...)
      * @param array|null  $params       Paramètres de la requête
@@ -158,32 +173,29 @@ class SynologyPackage
     public function get($apiShortName, $method = 'list', array $params = [], $key = null)
     {
         $sid = $this->login($apiShortName);
-        if ($sid) {
-            $a = $this->getNas();
-            $apiFullName = $a::PREFIXE_API . '.' . $this->getName() . '.' . $apiShortName;
-            $def = $this->getNas()->getApiDef($apiFullName);
-            $cgiPath = $def[$apiFullName]['path'];
-            $version = $def[$apiFullName]['minVersion'];
-            $this->getNas()->setUrl($this->getNas()->getBaseUrl());
-            $this->getNas()->addUrlPart($cgiPath);
-            $this->getNas()->addParams([
-                'api' => $apiFullName
-                , 'version' => $version
-                , 'method' => $method
-                , '_sid' => $sid
-            ], null, true);
-            $this->getNas()->addParams($params);
-            $response = $this->getNas()->r(null, $this->getName() . ' ' . $apiShortName . ' ' . $method);
-            $datas = $this->getNas()->parseResponse($response->toArray());
-            if ($key) {
-                return array_key_exists($key, $datas)
-                    ? $datas[$key]
-                    : false;
-            } else {
-                return $datas;
-            }
+        $a = $this->getNas();
+        $apiFullName = $a::PREFIXE_API . '.' . $this->getName() . '.' . $apiShortName;
+        $def = $this->getNas()->getApiDef($apiFullName);
+        $cgiPath = $def[$apiFullName]['path'];
+        $version = $def[$apiFullName]['minVersion'];
+        $this->getNas()->setUrl($this->getNas()->getBaseUrl());
+        $this->getNas()->addUrlPart($cgiPath);
+        $this->getNas()->addParams([
+            'api' => $apiFullName
+            , 'version' => $version
+            , 'method' => $method
+            , '_sid' => $sid
+        ], null, true);
+        $this->getNas()->addParams($params);
+        $response = $this->getNas()->r(null, $this->getName() . ' ' . $apiShortName . ' ' . $method);
+        $datas = $this->getNas()->parseResponse($response->toArray());
+        if ($key) {
+            return array_key_exists($key, $datas)
+                ? $datas[$key]
+                : false;
+        } else {
+            return $datas;
         }
-        return false;
     }
 
     /**
@@ -203,7 +215,12 @@ class SynologyPackage
     /**
      * Obtenir un identifiant de connexion pour un package
      *
-     * $sid = $this->login($apiShortName);
+     * ### Exemple
+     * - `$sid = $this->login($apiShortName);`
+     *
+     * ### Formats
+     * - sid
+     * - cookie
      *
      * @param string $apiShortName
      * @param string $format ('sid', 'cookie')
@@ -214,11 +231,11 @@ class SynologyPackage
     private function login($apiShortName, $format = 'sid')
     {
         $formats = ['sid', 'cookie'];
-        if (!in_array($format, $formats)) {
-            throw new SynologyException(
-                "Le format '$format' n'est pas accepté. Essayez plutôt un de ceux-ci : " . implode(', ', $formats)
-            );
-        }
+//        if (!in_array($format, $formats)) {
+//            throw new SynologyException(
+//                "Le format '$format' n'est pas accepté. Essayez plutôt un de ceux-ci : " . implode(', ', $formats)
+//            );
+//        }
         $sid = $this->nas->getSids($this->getName());
         if ($sid) {
             return $sid;
@@ -276,5 +293,10 @@ class SynologyPackage
     public function getNas()
     {
         return $this->nas;
+    }
+
+    public function getLog()
+    {
+        return $this->nas->getLog();
     }
 }

@@ -49,6 +49,7 @@ class DebugExtension extends \Twig_Extension
             , new \Twig_SimpleFilter('getParentClass', [$this, 'getParentClass'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('getParentMethods', [$this, 'getParentMethods'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('getImplements', [$this, 'getImplements'], ['is_safe' => ['html']])
+            , new \Twig_SimpleFilter('getTraits', [$this, 'getTraits'], ['is_safe' => ['html']])
         ];
     }
 
@@ -120,6 +121,22 @@ class DebugExtension extends \Twig_Extension
     public function getImplements($value)
     {
         return is_object($value) ? class_implements($value) : false;
+    }
+
+    /**
+     * Obtenir la liste des traits utilisés
+     * - Filtre
+     *
+     * ### Exemple
+     * - `o|getTraits`
+     *
+     * @param object $value Objet dont on veut connaître les traits utilisés
+     *
+     * @return array|bool
+     */
+    public function getTraits($value)
+    {
+        return is_object($value) ? class_uses($value) : false;
     }
 
     /**

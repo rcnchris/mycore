@@ -72,7 +72,7 @@ class Myvar
         } elseif ($this->isObject()) {
             if (property_exists($this->var, $key)) {
                 return $this->var->$key;
-            } elseif (method_exists($this->var, $key)) {
+            } elseif (method_exists($this->var, $key)){
                 return $this->var->$key();
             }
         }
@@ -250,6 +250,19 @@ class Myvar
     {
         if ($this->isObject()) {
             return get_parent_class(get_class($this->var));
+        }
+        return false;
+    }
+
+    /**
+     * Obtenir la liste des traits utilisés
+     *
+     * @return array|bool
+     */
+    public function getTraits()
+    {
+        if ($this->isObject()) {
+            return class_uses($this->var);
         }
         return false;
     }

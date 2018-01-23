@@ -41,8 +41,8 @@ class DbFactoryTest extends OrmTestCase {
         $this->assertInternalType('string', $this->makeDb('192.168.1.99', 3306, 'lan', 'vaccoune', 'home', 'mysql'));
     }
 
-    public function testGetDbWithSQLServer()
-    {
-        $this->assertInstanceOf(\PDO::class, $this->makeDb('192.168.1.7\SQLEXPRESS', 1433, 'php', 'php', 'DEMO', 'sqlsrv'));
-    }
+//    public function testGetDbWithSQLServer()
+//    {
+//        $this->assertInstanceOf(\PDO::class, $this->makeDb('192.168.1.7\SQLEXPRESS', 1433, 'php', 'php', 'DEMO', 'sqlsrv'));
+//    }
 }

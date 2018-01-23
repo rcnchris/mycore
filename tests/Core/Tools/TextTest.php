@@ -21,6 +21,7 @@ class TextTest extends BaseTestCase
     {
         $this->ekoTitre('Tools - Text');
         $this->assertInstanceOf(Text::class, $this->text);
+        $this->assertInstanceOf(Text::class, $this->text->getInstance());
     }
 
     public function testSlug()
@@ -166,28 +167,6 @@ class TextTest extends BaseTestCase
         $this->assertEquals(true, Text::isMultibyte('ù'));
     }
 
-    public function testGetUtf8Decimal()
-    {
-        $this->assertEquals(
-            [249, 10, 111, 82, 61, 53, 167],
-            Text::utf8("ù\noR=5§")
-        );
-    }
-
-    public function testGetAsciiValue()
-    {
-        $this->assertEquals('2', Text::ascii([50]));
-        $this->assertEquals('ù', Text::ascii([249]));
-    }
-
-    public function testValueTransliterator()
-    {
-        $this->assertEquals(
-            'Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove',
-            Text::getTransliteratorId()
-        );
-    }
-
     /**
      * Formater un nombre.
      */
@@ -229,15 +208,6 @@ class TextTest extends BaseTestCase
             Text::getAfter('x', 'label=ola')
             , $this->getMessage('Avec un séparateur absent de la chaîne')
         );
-    }
-
-    /**
-     * Définir le transliteratorId.
-     */
-    public function testSetTransliterator()
-    {
-        Text::setTransliteratorId('ola');
-        $this->assertEquals('ola', Text::getTransliteratorId());
     }
 
     public function testRemoveLastWord()

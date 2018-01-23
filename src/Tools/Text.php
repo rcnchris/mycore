@@ -56,10 +56,19 @@ class Text
     ];
 
     /**
+     * Instance
+     *
+     * @var self
+     */
+    private static $instance;
+
+    /**
      * Compléter une chaîne de caractères
      *
      * ### Exemple
-     * - `Common::compl('1', '0', 3);` --> '0001'
+     * - `Text::compl('1', '0');` --> '01'
+     * - `Text::compl('1', '0', 3);` --> '0001'
+     * - `Text::compl('1', '0', 3, 'right');` --> '1000'
      *
      * @param string      $input  Chaîne à compléter
      * @param string      $compl  Complément
@@ -298,7 +307,7 @@ class Text
      *
      * @return array
      */
-    public static function utf8($string)
+    private static function utf8($string)
     {
         $map = [];
         $values = [];
@@ -335,7 +344,7 @@ class Text
      *
      * @return string
      */
-    public static function ascii(array $array)
+    private static function ascii(array $array)
     {
         $ascii = '';
         foreach ($array as $utf8) {
@@ -358,7 +367,7 @@ class Text
      *
      * @return string
      */
-    public static function getTransliteratorId()
+    private static function getTransliteratorId()
     {
         return static::$defaultTransliteratorId;
     }
@@ -395,7 +404,8 @@ class Text
      * Obtenir le slug d'une chaîne
      *
      * ### Exemple
-     * - `Text::slug('Oyé les gens');`
+     * - `Text::slug('Oyé les gens, comment vont-ils ?');`
+     * - `Text::slug('Oyé les gens, comment vont-ils ?', '#');`
      *
      * @param string $string  Chaîne à traiter
      * @param array  $options Options de la demande
@@ -433,6 +443,10 @@ class Text
 
     /**
      * Obtenir un nombre formaté
+     *
+     * ### Exemple
+     * - `Text::formatNumber(123456.7892);`
+     * - `Text::formatNumber(123456.7892, 3, '.', ',');`
      *
      * @param mixed       $value Valeur à formater
      * @param int|null    $nbDec Nombre de décimales
@@ -623,5 +637,18 @@ class Text
             return trim(substr($text, $pos + 1, strlen($text)));
         }
         return null;
+    }
+
+    /**
+     * Instance
+     *
+     * @return self
+     */
+    public static function getInstance()
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
 }

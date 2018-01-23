@@ -45,6 +45,7 @@ class HtmlExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFilter('code', [$this, 'code'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('surround', [$this, 'surround'], ['is_safe' => ['html']])
+            , new \Twig_SimpleFilter('getList', [$this, 'getList'], ['is_safe' => ['html']])
         ];
     }
 
@@ -83,6 +84,8 @@ class HtmlExtension extends \Twig_Extension
     }
 
     /**
+     * Obtenir la liste des fonctions
+     *
      * @return \Twig_SimpleFunction[]
      */
     public function getFunctions()
@@ -94,6 +97,11 @@ class HtmlExtension extends \Twig_Extension
 
     /**
      * Obtenir une balise details
+     * - Fonction
+     *
+     * ### Exemple
+     * - `$ext->details($titre, $content);`
+     * - `{{ details(titre, content) }}`
      *
      * @param string $title   Titre
      * @param string $content Contenu caché
@@ -106,6 +114,27 @@ class HtmlExtension extends \Twig_Extension
         $html .= "<summary>$title</summary>";
         $html .= $content;
         $html .= '</details>';
+        return $html;
+    }
+
+    /**
+     * Obtenir une liste ul ou ol
+     *
+     * @param mixed  $value Liste
+     * @param string $type  ul ou ol
+     *
+     * @return string
+     */
+    public function getList($value, $type = 'ul')
+    {
+        $html = "<$type>";
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                $html .= "<li>$item</li>";
+            }
+
+            $html .= "</$type";
+        }
         return $html;
     }
 }

@@ -257,6 +257,19 @@ class MyvarTest extends BaseTestCase
         );
     }
 
+    public function testGetTraits()
+    {
+        $this->assertEmpty(
+            $this->makeVar($this)->getTraits()
+            , $this->getMessage("Cet objet ne devrait pas avoir de traits")
+        );
+
+        $this->assertFalse(
+            $this->makeVar('ola')->getTraits()
+            , $this->getMessage("Une chaîne de caractères ne peut pas avoir de trait")
+        );
+    }
+
     public function testGetProperties()
     {
         $this->assertFalse(

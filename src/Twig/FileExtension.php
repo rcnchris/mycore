@@ -44,6 +44,7 @@ class FileExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('baseName', [$this, 'baseName'])
+            , new \Twig_SimpleFilter('dirName', [$this, 'dirName'])
             , new \Twig_SimpleFilter('fileExtension', [$this, 'fileExtension'])
         ];
     }
@@ -60,6 +61,18 @@ class FileExtension extends \Twig_Extension
     {
         $parts = explode($sep, $value);
         return array_pop($parts);
+    }
+
+    /**
+     * Obtenir uniquement le nom du chemin sans le fichier
+     *
+     * @param string $value Chemin avec nom de fichier
+     *
+     * @return string
+     */
+    public function dirName($value)
+    {
+        return dirname($value);
     }
 
     /**

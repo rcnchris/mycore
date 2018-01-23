@@ -25,7 +25,7 @@ composer create-project -s rcnchris/core new-project
 Package qui regroupe les classes utilisées de manière autonomes un peu partout.
 
 #### Cmd
-Classe statique qui permet d'exécuter des commandes *shell*.
+Classe statique instanciable qui permet d'exécuter des commandes *shell*.
 ````
 $ls = Cmd::exec("cd $path && ls");
 ````
@@ -37,16 +37,9 @@ $col = new Collection('ola,ole,oli', "Liste de valeurs dans une chaîne avec sé
 ````
 
 #### Common
-Classe statique qui fournit des méthodes diverses.
+Classe statique instanciable qui fournit des méthodes diverses.
 ````
 $m = Common::getMemoryUse();
-````
-
-#### Composer
-Facilite la lecture d'un fichier composer.json.
-````
-$composer = new Composer($path);
-$libs = $composer->show();
 ````
 
 #### Folder
@@ -54,6 +47,13 @@ Facilite la manipulation de fichiers et dossiers.
 ````
 $folder = new Folder($path);
 $size = $folder->size();
+````
+
+#### Image
+Facilite la manipulation des images.
+````
+$img = new Image('path/to/file');
+$src = $img->getEncode();
 ````
 
 #### Text
@@ -65,9 +65,9 @@ $slug = Text::slug('Le slug qui va bien !');
 -------
 
 ## Apis
-
+Package qui permet d'utiliser n'importe qu'elle API facilement et quelques APIs dédiées.
 #### APITrait
-Comportement communs à toutes les APIs sur la base de **curl**
+Comportement communs à toutes les APIs sur la base de `curl`
 
 #### CurlResponse
 Représente une réponse de la commande <code>curl_exec()</code>

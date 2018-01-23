@@ -74,6 +74,11 @@ class SynologyPackageTest extends SynologyAbstractTest{
         $audio = $this->makePackage('AudioStation');
         $this->expectException(SynologyException::class);
         $audio->get('Genre', 'fake');
+
+        locale_set_default('en_EN');
+        $this->expectException(SynologyException::class);
+        $audio->get('Genre', 'fake');
+        locale_set_default('fr_FR');
     }
 
     public function testUseLoginWhenMultipleGet()
@@ -81,5 +86,12 @@ class SynologyPackageTest extends SynologyAbstractTest{
         $audio = $this->makePackage('AudioStation');
         $this->assertNotEmpty($audio->get('Genre', 'list', [], 'genres'));
         $this->assertNotEmpty($audio->get('Playlist', 'list', [], 'playlists'));
+    }
+
+    public function testGetLog()
+    {
+        $audio = $this->makePackage('AudioStation');
+        $audio->get('Playlist', 'list', [], 'playlists');
+        $this->assertNotEmpty($audio->getLog());
     }
 }

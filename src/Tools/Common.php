@@ -38,6 +38,12 @@ namespace Rcnchris\Core\Tools;
  */
 class Common
 {
+    /**
+     * Instance
+     *
+     * @var Common
+     */
+    private static $instance;
 
     /**
      * Obtenir un tableau à partir d'une variable.
@@ -77,11 +83,16 @@ class Common
             : memory_get_usage(true);
         return $octet
             ? $octets
-            : self::bitsSize($octets);
+            : self::bitsSize($octets, 2);
     }
 
     /**
      * Retourne une taille en Bits pour une valeur donnée
+     *
+     * ### Exemple
+     * - `$ext->bitsSize(123456)`
+     * - `$ext->bitsSize(123456, 2)`
+     * - `123456|bitsSize(2)`
      *
      * @param int      $value Valeur en octets
      * @param int|null $round Arrondi
@@ -95,5 +106,44 @@ class Common
             $value /= 1024;
         }
         return round($value, $round) . $sizes[$i];
+    }
+
+    /**
+     * Obtenir le contenur d'un fichier json sous la forme d'un objet
+     *
+     * @param string    $path    Chemin du fichier json
+     * @param bool|null $toArray Un tableau est retourné plutôt que un `stdClass`
+     *
+     * @return array|bool|\stdClass
+     */
+    public static function getJsonFileContent($path, $toArray = false)
+    {
+        if (file_exists($path)) {
+            $content = json_decode(file_get_contents($path), true);
+            if (is_array($content)) {
+                if ($toArray) {
+                    return $content;
+                }
+                $o = new \stdClass();
+                foreach ($content as $key => $value) {
+                    $o->$key = $value;
+                }
+                return $o;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Permet d'instancier une classe statique
+     *
+     * @return \Rcnchris\Core\Tools\Common
+     */
+    public static function getInstance()
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
 }
