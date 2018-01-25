@@ -18,7 +18,7 @@ class SynologyPackageTest extends SynologyAbstractTest{
 
     public function testInstance()
     {
-        $this->ekoTitre('API - Synology Package');
+        $this->ekoTitre('API - Package Synology');
         $this->assertInstanceOf(SynologyPackage::class, $this->makePackage('API'));
     }
 

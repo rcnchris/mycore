@@ -26,7 +26,7 @@ class SynologyAbstractTest extends BaseTestCase {
 
     public function testInstance()
     {
-        $this->ekoTitre('API - Abstraction Synology');
+        $this->ekoTitre('API - Synology');
         $this->assertInstanceOf(SynologyAbstract::class, $this->makeAbstract('nas'));
     }
 

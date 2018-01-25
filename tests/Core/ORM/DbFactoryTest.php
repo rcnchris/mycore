@@ -1,7 +1,8 @@
 <?php
 namespace Tests\Rcnchris\Core\ORM;
 
-class DbFactoryTest extends OrmTestCase {
+class DbFactoryTest extends OrmTestCase
+{
 
     public function testGetDbSQLiteMemory()
     {
@@ -38,11 +39,19 @@ class DbFactoryTest extends OrmTestCase {
 
     public function testGetDbWithWrongServer()
     {
-        $this->assertInternalType('string', $this->makeDb('192.168.1.99', 3306, 'lan', 'vaccoune', 'home', 'mysql'));
+        $this->assertInternalType(
+            'string'
+            , $this->makeDb('192.168.1.99', 3306, 'lan', 'vaccoune', 'home', 'mysql')
+            , $this->getMessage("La connexion à MySQL devrait échouer")
+        );
     }
 
-//    public function testGetDbWithSQLServer()
-//    {
-//        $this->assertInstanceOf(\PDO::class, $this->makeDb('192.168.1.7\SQLEXPRESS', 1433, 'php', 'php', 'DEMO', 'sqlsrv'));
-//    }
+    public function testGetDbWithSQLServer()
+    {
+        $this->assertInstanceOf(
+            \PDO::class
+            , $this->makeDb('192.168.1.7\SQLEXPRESS', 1433, 'php', 'php', 'DEMO', 'sqlsrv')
+            , $this->getMessage("La connexion à SQL Server est incorrrecte")
+        );
+    }
 }

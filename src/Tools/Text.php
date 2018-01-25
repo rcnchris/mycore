@@ -56,13 +56,6 @@ class Text
     ];
 
     /**
-     * Instance
-     *
-     * @var self
-     */
-    private static $instance;
-
-    /**
      * Compléter une chaîne de caractères
      *
      * ### Exemple
@@ -637,18 +630,5 @@ class Text
             return trim(substr($text, $pos + 1, strlen($text)));
         }
         return null;
-    }
-
-    /**
-     * Instance
-     *
-     * @return self
-     */
-    public static function getInstance()
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
     }
 }

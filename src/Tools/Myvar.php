@@ -72,7 +72,7 @@ class Myvar
         } elseif ($this->isObject()) {
             if (property_exists($this->var, $key)) {
                 return $this->var->$key;
-            } elseif (method_exists($this->var, $key)){
+            } elseif (method_exists($this->var, $key)) {
                 return $this->var->$key();
             }
         }

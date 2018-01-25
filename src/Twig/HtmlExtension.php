@@ -51,6 +51,7 @@ class HtmlExtension extends \Twig_Extension
 
     /**
      * Entourre une valeur d'une balise <code>
+     * - Filtre
      *
      * @param string $value
      *
@@ -66,6 +67,7 @@ class HtmlExtension extends \Twig_Extension
 
     /**
      * Entoure une valeur d'une balise HTML
+     * - Filtre
      *
      * ### Exemple
      * - `'montexte|surround('code')`
@@ -81,6 +83,27 @@ class HtmlExtension extends \Twig_Extension
             return null;
         }
         return "<$balise>$value</$balise>";
+    }
+
+    /**
+     * Obtenir une liste ul ou ol
+     * - Filtre
+     *
+     * @param mixed  $value Liste
+     * @param string $type  ul ou ol
+     *
+     * @return string
+     */
+    public function getList($value, $type = 'ul')
+    {
+        $html = "<$type>";
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                $html .= "<li>$item</li>";
+            }
+            $html .= "</$type";
+        }
+        return $html;
     }
 
     /**
@@ -114,27 +137,6 @@ class HtmlExtension extends \Twig_Extension
         $html .= "<summary>$title</summary>";
         $html .= $content;
         $html .= '</details>';
-        return $html;
-    }
-
-    /**
-     * Obtenir une liste ul ou ol
-     *
-     * @param mixed  $value Liste
-     * @param string $type  ul ou ol
-     *
-     * @return string
-     */
-    public function getList($value, $type = 'ul')
-    {
-        $html = "<$type>";
-        if (is_array($value)) {
-            foreach ($value as $item) {
-                $html .= "<li>$item</li>";
-            }
-
-            $html .= "</$type";
-        }
         return $html;
     }
 }

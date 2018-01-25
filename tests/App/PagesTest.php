@@ -6,7 +6,7 @@ class PagesTest extends BaseTestCase
 {
     public function testGetHomepage()
     {
-        $this->ekoTitre('App - Routing');
+        $this->ekoTitre('Application - Routing');
         $response = $this->runApp('GET', '/_lab/mycore/');
         $this->assertEquals(
             200

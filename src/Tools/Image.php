@@ -168,6 +168,9 @@ class Image
     /**
      * Obtenir les données exifs
      *
+     * ### Exemple
+     * - ``
+     *
      * @param string|null $key      Nom de la clé à retourner
      * @param bool|null   $toObject Obtenir le résultat dans un objet plutôt que dans un tableau
      *
@@ -217,8 +220,7 @@ class Image
             ->interlace()
             ->resize($size, null, function ($constraint) {
                 $constraint->aspectRatio();
-            })
-        );
+            }));
     }
 
     /**
@@ -238,9 +240,10 @@ class Image
         $img = clone($this->img);
         return new self(
             $img->encode(
-                $format
-                , $this->getQuality($quality)
-        ));
+                $format,
+                $this->getQuality($quality)
+            )
+        );
     }
 
     /**
@@ -260,8 +263,8 @@ class Image
         return new self(
             $this->img
                 ->save(
-                    is_null($path) ? $this->getPath() : $path
-                    , $this->getQuality($quality)
+                    is_null($path) ? $this->getPath() : $path,
+                    $this->getQuality($quality)
                 )
         );
     }

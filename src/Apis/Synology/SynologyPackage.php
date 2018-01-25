@@ -288,6 +288,9 @@ class SynologyPackage
     /**
      * Obtenir l'instance de l'abstration du NAS
      *
+     * ### Exemple
+     * - `$pkg->getNas();`
+     *
      * @return SynologyAbstract
      */
     public function getNas()
@@ -295,6 +298,14 @@ class SynologyPackage
         return $this->nas;
     }
 
+    /**
+     * Obtenir le journal des requêtes exécutées
+     *
+     * ### Exemple
+     * - `$pkg->getLog();`
+     *
+     * @return array
+     */
     public function getLog()
     {
         return $this->nas->getLog();

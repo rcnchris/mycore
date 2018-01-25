@@ -23,7 +23,7 @@ class CmdTest extends BaseTestCase {
      */
     public function makeCmd()
     {
-        return Cmd::getInstance();
+        return new Cmd();
     }
 
     public function testInstance()

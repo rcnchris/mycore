@@ -7,9 +7,19 @@ use Tests\Rcnchris\BaseTestCase;
 class CommonTest extends BaseTestCase
 {
 
-    public function testObjectToArray()
+    public function testGetInstance()
     {
         $this->ekoTitre('Tools - Common');
+        $common = new Common();
+        $this->assertInstanceOf(
+            Common::class
+            , $common
+            , $this->getMessage("L'instance retournée n'est pas la bonne")
+        );
+    }
+
+    public function testObjectToArray()
+    {
         $o = new \stdClass();
         $o->name = 'Mathis';
         $o->birthday = date('d-m-Y');
@@ -18,15 +28,6 @@ class CommonTest extends BaseTestCase
             ['name' => 'Mathis', 'birthday' => date('d-m-Y')]
             , $a
             , $this->getMessage("Le tableau n'est pas correct")
-        );
-    }
-
-    public function testGetInstance()
-    {
-        $this->assertInstanceOf(
-            Common::class
-            , Common::getInstance()
-            , $this->getMessage("L'instance retournée par getInstance n'est pas la bonne")
         );
     }
 
@@ -76,5 +77,19 @@ class CommonTest extends BaseTestCase
     public function testWithWrongContent()
     {
         $this->assertFalse(Common::getJsonFileContent('/fake.json'));
+    }
+
+    public function testGetColor()
+    {
+        $this->assertArrayHasKey('aqua', Common::getColor());
+        $this->assertEquals('#000000', Common::getColor('black'));
+        $this->assertFalse(Common::getColor('fake'));
+    }
+
+    public function testHexaToRgb()
+    {
+        $this->assertEquals(['r' => 0, 'g' => 0, 'b' => 0], Common::hexaToRgb('#000000'));
+        $this->expectException(\Exception::class);
+        Common::hexaToRgb('fake');
     }
 }

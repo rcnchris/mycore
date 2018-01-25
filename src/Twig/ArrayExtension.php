@@ -99,6 +99,17 @@ class ArrayExtension extends \Twig_Extension
                 $html .= "</tr>";
             }
             $html .= '</tbody>';
+        } elseif (is_string($keys[0])) {
+            // Tableau associatif
+            $html .= '<thead><tr><th>Clé</th><th>Valeur</th></tr></thead>';
+            $html .= '<tbody>';
+            foreach ($values as $field => $value) {
+                $html .= "<tr>";
+                $html .= "<th>$field</th>";
+                $html .= "<td>$value</td>";
+                $html .= "</tr>";
+            }
+            $html .= '</tbody>';
         }
         $html .= '</table>';
         return $html;

@@ -147,4 +147,21 @@ class ArrayExtensionTest extends BaseTestCase {
             </table>'
             , $tab);
     }
+
+    public function testToHtmlWithAssociativeArray()
+    {
+        $tab = $this->ext->toHtml(['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']);
+        $this->assertSimilar("
+            <table>
+            <thead>
+            <tr><th>Clé</th><th>Valeur</th></tr>
+            </thead>
+            <tbody>
+            <tr><th>name</th><td>Mathis</td></tr>
+            <tr><th>year</th><td>2007</td></tr>
+            <tr><th>genre</th><td>male</td></tr>
+            </tbody>
+            </table>
+        ", $tab);
+    }
 }

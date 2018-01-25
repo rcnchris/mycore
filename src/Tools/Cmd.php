@@ -46,13 +46,6 @@ class Cmd
     private static $cmds = [];
 
     /**
-     * Instance
-     *
-     * @var Cmd
-     */
-    private static $instance;
-
-    /**
      * Exécute une ou plusieurs commandes et retourne le résultat
      *
      * @param string    $cmd      La ou les commandes (séparées par des " && ")
@@ -252,18 +245,5 @@ class Cmd
         }
 
         return $size;
-    }
-
-    /**
-     * Instance
-     *
-     * @return Cmd
-     */
-    public static function getInstance()
-    {
-        if (is_null(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
     }
 }

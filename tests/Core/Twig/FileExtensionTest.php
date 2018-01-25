@@ -33,6 +33,18 @@ class FileExtensionTest extends BaseTestCase {
     }
 
     /**
+     * Obtenir uniquement le nom d'un fichier à partir d'un chemin
+     */
+    public function testGetDirName()
+    {
+        $this->assertEquals(
+            __DIR__
+            , $this->ext->dirName(__FILE__)
+            , $this->getMessage("Le chemin attendu est incorrect")
+        );
+    }
+
+    /**
      * Obtenir l'extension d'un fichier
      */
     public function testGetFileExtension()

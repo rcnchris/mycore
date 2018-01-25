@@ -21,7 +21,6 @@ class TextTest extends BaseTestCase
     {
         $this->ekoTitre('Tools - Text');
         $this->assertInstanceOf(Text::class, $this->text);
-        $this->assertInstanceOf(Text::class, $this->text->getInstance());
     }
 
     public function testSlug()
