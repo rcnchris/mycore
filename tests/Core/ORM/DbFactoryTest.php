@@ -16,7 +16,7 @@ class DbFactoryTest extends OrmTestCase
         $fileName = $this->rootPath() . $this::TESTS_FOLDER . '/Core/ORM/dbTests.sqlite';
         $db = $this->makeDb('dbTests', 0, '', '', '', 'sqlite', $fileName);
         $this->assertInstanceOf(\PDO::class, $db);
-        array_push($this->dbFiles, $fileName);
+        $this->addUsedFile($fileName);
     }
 
     public function testGetDbWithoutSgbd()

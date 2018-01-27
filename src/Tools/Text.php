@@ -331,13 +331,31 @@ class Text
     }
 
     /**
+     * Vérifie si la chaîne est au format ASCII
+     *
+     * @param string $s
+     *
+     * @return bool
+     */
+    public static function isAscii($s)
+    {
+        $nb = strlen($s);
+        for ($i = 0; $i < $nb; $i++) {
+            if (ord($s[$i]) > 127) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * Convertir la valeur décimale d'une chaîne de caractères multi-octets en chaîne
      *
      * @param array $array Tableau de caractères
      *
      * @return string
      */
-    private static function ascii(array $array)
+    private static function toAscii(array $array)
     {
         $ascii = '';
         foreach ($array as $utf8) {

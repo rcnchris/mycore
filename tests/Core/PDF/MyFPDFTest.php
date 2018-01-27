@@ -7,9 +7,14 @@ use Tests\Rcnchris\BaseTestCase;
 class MyFPDFTest extends BaseTestCase
 {
 
-    public function makePdf()
+    /**
+     * @param array $options
+     *
+     * @return \Rcnchris\Core\PDF\MyFPDF
+     */
+    public function makePdf(array $options = [])
     {
-        return new MyFPDF();
+        return new MyFPDF($options);
     }
 
     public function testInstance()
@@ -22,6 +27,24 @@ class MyFPDFTest extends BaseTestCase
         $this->assertEquals(10, $pdf->getMargin('left'), $this->getMessage("Le document doit avoir une marge gauche de 10"));
         $this->assertEquals(10, $pdf->getMargin('right'), $this->getMessage("Le document doit avoir une marge droite de 10"));
         $this->assertEquals(10, $pdf->getMargin('bottom'), $this->getMessage("Le document doit avoir une marge basse de 10"));
+    }
+
+    public function testParseOptionsWithWrongOrientation()
+    {
+        $this->expectException(\Exception::class);
+        $this->makePdf(['orientation' => 'F']);
+    }
+
+    public function testParseOptionsWithWrongUnit()
+    {
+        $this->expectException(\Exception::class);
+        $this->makePdf(['unit' => 'fa']);
+    }
+
+    public function testParseOptionsWithWrongFormat()
+    {
+        $this->expectException(\Exception::class);
+        $this->makePdf(['format' => 'Fake']);
     }
 
     public function testSetMargins()
@@ -181,5 +204,152 @@ class MyFPDFTest extends BaseTestCase
         $this->assertEquals(0.200025, $this->makePdf()->getWidth('line'));
         $this->assertEquals(0, $this->makePdf()->getWidth('lastCell'));
         $this->assertFalse($this->makePdf()->getWidth('fake'));
+    }
+
+    public function testGetPageBreak()
+    {
+        $this->assertEquals(276, $this->makePdf()->getPageBreak());
+    }
+
+    public function testAddLine()
+    {
+        $this->assertInstanceOf(MyFPDF::class, $this->makePdf()->addLine());
+    }
+
+    public function testAddBookmark()
+    {
+        $pdf = $this->makePdf();
+        $pdf->addBookmark('Title');
+        $pdf->addBookmark('SubTitle', 1);
+        $pdf->addBookmark('Phrase', 2, -1);
+        $this->assertInstanceOf(MyFPDF::class, $pdf);
+    }
+
+    public function testToFile()
+    {
+        $pdf = $this->makePdf();
+
+        $fileName = __DIR__ . '/test-' . date('YmdHi');
+
+        // Meta
+        $pdf->SetAuthor('rcn.chris@gmail.com');
+        $pdf->SetCreator('My Core');
+        $pdf->setMetadata('created', date('Y-m-d H:i'));
+
+        // Police
+        $pdf->SetFont('helvetica');
+
+        // Add Debug block et sauvegarde dans un fichier
+        $pdf->addDebug();
+        $pdf2 = clone($pdf);
+        $pdf->toFile($fileName);
+        $this->assertTrue(file_exists($fileName . '.pdf'));
+
+        $fileNameExpected = $this->rootPath() . '/MyCore_doc_' . date('Y-m-d-H-i') . '.pdf';
+        $pdf2->toFile();
+        $this->assertTrue(file_exists($fileNameExpected));
+        $this->addUsedFile($fileNameExpected);
+    }
+
+    public function testToView()
+    {
+        $response = $this->runApp('GET', '/_lab/mycore/pdf/home/toView');
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testToDownload()
+    {
+        $response = $this->runApp('GET', '/_lab/mycore/pdf/home/toDownload');
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testGetCursor()
+    {
+        $pdf = $this->makePdf();
+        $this->assertArrayHasKey(
+            'x'
+            , $pdf->getCursor()
+            , $this->getMessage("La clé x est absente")
+        );
+        $this->assertArrayHasKey(
+            'y'
+            , $pdf->getCursor()
+            , $this->getMessage("La clé y est absente")
+        );
+        $this->assertInternalType(
+            'float'
+            , $pdf->getCursor('x')
+            , $this->getMessage("Le type attendu est incorrect")
+        );
+    }
+
+    public function testGetBookmarks()
+    {
+        $pdf = $this->makePdf();
+        $pdf->addBookmark('Title', 0, -1);
+        $this->assertNotEmpty(
+            $pdf->getBookmarks()
+            , $this->getMessage("La liste des favoris ne doit pas être vide")
+        );
+    }
+
+    public function testToString()
+    {
+        $this->assertInternalType(
+            'string'
+            , (string)$this->makePdf()
+            , $this->getMessage("La conversion en chaîne de caractères est incorrecte")
+        );
+    }
+
+    public function testSetOptions()
+    {
+        $pdf = $this->makePdf();
+        $pdf->setOptions('ola', 'ole');
+        $this->assertTrue(
+            $pdf->hasOption('ola')
+            , $this->getMessage("La clé attendue est absente des options")
+        );
+        $this->assertEquals(
+            'ole'
+            , $pdf->getOptions('ola')
+            , $this->getMessage("La valeur attendue de l'option est incorrecte")
+        );
+
+        $options = [
+            'oli' => 'olu'
+            , 'oly' => 'olé'
+        ];
+        $pdf->setOptions($options);
+        $this->assertTrue(
+            $pdf->hasOption('oly')
+            , $this->getMessage("La clé ettendue est absente des options")
+        );
+        $this->assertEquals(
+            'olé'
+            , $pdf->getOptions('oly')
+            , $this->getMessage("La valeur attendue de l'option est incorrecte")
+        );
+    }
+
+    public function testGetOptionsWithWrongParameter()
+    {
+        $pdf = $this->makePdf();
+        $this->assertFalse($pdf->getOptions('fake'));
+    }
+
+    public function testSetCol()
+    {
+        $pdf = $this->makePdf();
+        $pdf->setCol(2);
+        $this->assertEquals(2, $pdf->col);
+    }
+
+    public function testSetColWithNumberCol()
+    {
+        $pdf = $this->makePdf();
+        $pdf->setCol(2, 4);
+        $this->assertEquals(2, $pdf->col);
+        $this->assertEquals(4, $pdf->colNb);
     }
 }

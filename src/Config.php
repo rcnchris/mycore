@@ -79,6 +79,7 @@ class Config implements ContainerInterface
     }
 
     /**
+     * Obtenir un propriété qui n'existe pas
      * @param $key
      *
      * @return mixed

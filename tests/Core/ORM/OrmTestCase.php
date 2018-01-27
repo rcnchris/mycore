@@ -175,15 +175,10 @@ class OrmTestCase extends BaseTestCase
     }
 
     /**
-     * Supprime les éléments utilisés pour les tests
+     * Est exécuté en fin de test
      */
     public function tearDown()
     {
-        // Fichiers des bases de données utilisés pour les tests
-        foreach ($this->dbFiles as $file) {
-            if (file_exists($file)) {
-                unlink($file);
-            }
-        }
+        parent::tearDown();
     }
 }

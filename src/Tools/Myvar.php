@@ -72,7 +72,7 @@ class Myvar
         } elseif ($this->isObject()) {
             if (property_exists($this->var, $key)) {
                 return $this->var->$key;
-            } elseif (method_exists($this->var, $key)) {
+            } elseif (method_exists($this->var, $key)){
                 return $this->var->$key();
             }
         }
@@ -209,7 +209,7 @@ class Myvar
     /**
      * Obtenir la liste des méthodes
      *
-     * @param bool $withoutParentMethods
+     * @param bool|null $withoutParentMethods Avec ou sans les méthodes du parent
      *
      * @return array|bool
      *

@@ -64,6 +64,23 @@ $slug = Text::slug('Le slug qui va bien !');
 
 -------
 
+## PDF
+Gestion des documents PDF.
+````
+$pdf = new MyFPDF();
+
+// Sauvegarder le fichier sur le serveur
+$pdf->toFile(/path/to/file/filename);
+
+// Télécharger via le navigateur
+$pdf->toDownload(ResponseInterface $response, 'filename');
+
+// Visualiser dans le navigateur
+$pdf->toView(ResponseInterface $response, 'filename');
+````
+
+-------
+
 ## Apis
 Package qui permet d'utiliser n'importe qu'elle API facilement et quelques APIs dédiées.
 #### APITrait

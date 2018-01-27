@@ -36,6 +36,13 @@ namespace Rcnchris\Core\PDF;
 class PDFFactory
 {
 
+    /**
+     * Obtenir une document PDF
+     *
+     * @param array|null $options
+     *
+     * @return \Rcnchris\Core\PDF\MyFPDF
+     */
     public static function make(array $options = [])
     {
         return new MyFPDF($options);

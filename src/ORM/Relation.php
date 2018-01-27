@@ -46,6 +46,12 @@ class Relation
      */
     public $tableName;
 
+    /**
+     * Constructeur
+     *
+     * @param string $tableName Nom de la table
+     * @param array  $options   Options de la relation
+     */
     public function __construct($tableName, array $options)
     {
         $this->tableName = $tableName;

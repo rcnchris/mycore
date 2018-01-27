@@ -12,6 +12,9 @@ $config = require '../app/config.php';
 // Application
 $app = new \Slim\App($config);
 
+// Middlewares
+require '../app/middlewares.php';
+
 // Routes
 require '../app/routes.php';
 

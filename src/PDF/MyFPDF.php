@@ -18,6 +18,9 @@
 
 namespace Rcnchris\Core\PDF;
 
+use Psr\Http\Message\ResponseInterface;
+use Rcnchris\Core\Tools\Myvar;
+
 require dirname(dirname(__DIR__)) . '/vendor/fpdf/fpdf.php';
 
 /**
@@ -90,11 +93,39 @@ class MyFPDF extends \FPDF
     ];
 
     /**
+     * Liste des orientations possibles
+     *
+     * @var array
+     */
+    private $orientations = ['P', 'L'];
+
+    /**
+     * Liste des unités de mesures possibles
+     *
+     * @var array
+     */
+    private $units = ['pt', 'mm', 'cm', 'in'];
+
+    /**
      * Types d'écriture
      *
      * @var array
      */
     private $writeTypes = ['text', 'fill', 'draw'];
+
+    /**
+     * Liste des formats possibles
+     *
+     * @var array
+     */
+    private $formats = ['A3', 'A4', 'A5', 'Letter', 'Legal'];
+
+    /**
+     * Options du document
+     *
+     * @var array
+     */
+    private $options = [];
 
     /**
      * Constructeur
@@ -107,14 +138,24 @@ class MyFPDF extends \FPDF
      */
     public function __construct(array $options = [])
     {
-        $options = array_merge($this->defaultOptions, $options);
-        parent::__construct($options['orientation'], $options['unit'], $options['format']);
+        $this->parseOptions(array_merge($this->defaultOptions, $options));
+        parent::__construct($this->options['orientation'], $this->options['unit'], $this->options['format']);
 
         $this->AddPage($this->getOrientation());
         $this->AliasNbPages();
 
-        $this->setMargin($this->defaultOptions['marges']);
+        $this->setMargin($this->options['marges']);
         $this->SetFont(current($this->getFonts()));
+    }
+
+    /**
+     * Obtenir le document au format string
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->Output('S');
     }
 
     /**
@@ -154,14 +195,15 @@ class MyFPDF extends \FPDF
      * Obtenir les marges du document ou l'une d'entre elles
      *
      * ### Exemple
-     * - `$pdf->getMagin();`
-     * - `$pdf->getMagin('top');`
+     * - `$pdf->getMargin();`
+     * - `$pdf->getMargin('top');`
      *
      * ### Type
      * - top
      * - left
      * - right
      * - bottom
+     * - cell
      *
      * @param string|null $type Type de marge
      *
@@ -348,6 +390,31 @@ class MyFPDF extends \FPDF
     }
 
     /**
+     * Obtenir les corrdonées du curseur
+     *
+     * ### Exemple
+     * - `$pdf->getCursor();`
+     * - `$pdf->getCursor('y');`
+     *
+     * @param string|null $type x ou y
+     *
+     * @return array|float
+     */
+    public function getCursor($type = null)
+    {
+        if (is_null($type)) {
+            return [
+                'x' => $this->GetX()
+                ,
+                'y' => $this->GetY()
+            ];
+        } else {
+            $method = 'Get' . strtoupper($type);
+            return $this->$method();
+        }
+    }
+
+    /**
      * Obtenir le style courant de la police
      *
      * @return string
@@ -380,8 +447,13 @@ class MyFPDF extends \FPDF
     /**
      * Défnir la couleur du texte, du trait ou du remplissage
      *
-     * @param string|null $hexaColor
-     * @param string|null $type
+     * ### Exemple
+     * - `$pdf->setColor();`
+     * - `$pdf->setColor('#123456');`
+     * - `$pdf->setColor('#123456', 'draw');`
+     *
+     * @param string|null $hexaColor Code héxadécimal d'une couleur
+     * @param string|null $type      (text, fill ou draw)
      *
      * @return bool
      */
@@ -395,6 +467,13 @@ class MyFPDF extends \FPDF
         return true;
     }
 
+    /**
+     * Obtenir la couleur d'un type d'écriture
+     *
+     * @param string|null $type text, fill ou draw
+     *
+     * @return string|bool
+     */
     public function getColor($type = 'text')
     {
         if (in_array($type, $this->writeTypes)) {
@@ -427,7 +506,7 @@ class MyFPDF extends \FPDF
     /**
      * Ajoute une ligne horizontale sur toute la largeur de la page
      *
-     * @param int|null $ln Saut de ligne après la ligne
+     * @param int|null $ln Sauts de ligne après la ligne
      *
      * @return $this
      */
@@ -442,15 +521,13 @@ class MyFPDF extends \FPDF
     }
 
     /**
-     * Ajoute le pied répété sur chaque page
+     * Obtenir la liste des bookmarks
+     *
+     * @return array
      */
-    public function Footer()
+    public function getBookmarks()
     {
-        $this->SetY($this->getMargin('bottom') * -1);
-        $this->addLine();
-        $this->SetFont($this->getFont(), 'I', 8);
-        $this->Cell(0, 10, 'Page ' . $this->PageNo() . ' sur ' . '{nb}', 0, 0, 'C');
-        return true;
+        return $this->outlines;
     }
 
     /**
@@ -460,7 +537,7 @@ class MyFPDF extends \FPDF
      * @param int|null $level   Niveau
      * @param int|null $y       Position dans le document
      *
-     * @return $this
+     * @return void
      */
     public function addBookmark($content, $level = 0, $y = 0)
     {
@@ -473,7 +550,56 @@ class MyFPDF extends \FPDF
             'y' => ($this->h - $y) * $this->k,
             'p' => $this->PageNo()
         ];
-        return $this;
+    }
+
+    /**
+     * Obtenir les options du document
+     *
+     * ### Exemple
+     * - `$pdf->getOptions();`
+     * - `$pdf->getOptions('unit');`
+     *
+     * @param string|null $key Nom de l'option à retourner
+     *
+     * @return array|bool
+     */
+    public function getOptions($key = null)
+    {
+        if (is_null($key)) {
+            return $this->options;
+        } elseif ($this->hasOption($key)) {
+            return $this->options[$key];
+        }
+        return false;
+    }
+
+    /**
+     * Vérifie la présence d'une option dans la liste
+     *
+     * @param string $name Nom de l'option
+     *
+     * @return bool
+     */
+    public function hasOption($name)
+    {
+        return array_key_exists($name, $this->options);
+    }
+
+    /**
+     * Définir une option ou un ensemble d'options
+     *
+     * @param string|array $key
+     * @param mixed|null   $value
+     */
+    public function setOptions($key, $value = null)
+    {
+        if (is_string($key)) {
+            $this->options[$key] = $value;
+        } elseif (is_array($key)) {
+            foreach ($key as $k => $v) {
+                $this->options[$k] = $v;
+            }
+        }
     }
 
     /**
@@ -483,7 +609,6 @@ class MyFPDF extends \FPDF
      */
     private function putBookmarks()
     {
-
         $nb = count($this->outlines);
         if ($nb == 0) {
             return;
@@ -579,9 +704,260 @@ class MyFPDF extends \FPDF
             $this->Error('Incorrect color: ' . $c);
         }
         return [
-            'r' => hexdec(substr($c, 1, 2))
-            , 'g' => hexdec(substr($c, 3, 2))
-            , 'b' => hexdec(substr($c, 5, 2))
+            'r' => hexdec(substr($c, 1, 2)),
+            'g' => hexdec(substr($c, 3, 2)),
+            'b' => hexdec(substr($c, 5, 2))
         ];
+    }
+
+    /**
+     * Imprime dans le document les informations de debug
+     *
+     * @return self
+     */
+    public function addDebug()
+    {
+        // Ajout de page si c'est la première
+        !$this->getTotalPages() == 0 ?: $this->AddPage();
+
+        // Titre
+        $this->addBookmark('Page ' . $this->PageNo(), 0, -1);
+        $this->SetFont($this->getFont(), 'B', 16);
+        $this->getMetadata('Title') ?: $this->SetTitle('Debug');
+        $this->Cell(0, 10, $this->getMetadata('Title'), 1, 1, 'C');
+
+        // Date
+        $this->Ln();
+        $this->addBookmark('Date', 1, -1);
+        $this->SetFont($this->getFont(), 'B', 14);
+        $this->Cell(50, 5, 'Le ' . date('d-m-Y H:i'), 0, 1, 'L');
+
+        // Tailles
+        $this->Ln();
+        $this->addBookmark('Tailles', 1, -1);
+        $this->SetFont($this->getFont(), 'B', 14);
+        $this->Cell(50, 5, 'Tailles du document', 0, 1, 'LU');
+
+        $this->SetFont($this->getFont(), '', 10);
+        $this->Cell(50, 5, 'Largeur de la page : ' . $this->getDocSize('width'), 0, 1, 'L');
+        $this->Cell(50, 5, 'Longueur de la page : ' . $this->getDocSize('height'), 0, 1, 'L');
+        $this->Cell(50, 5, 'Largeur du corps : ' . $this->getBodySize('width'), 0, 1, 'L');
+        $this->Cell(50, 5, 'Longueur du corps : ' . $this->getBodySize('height'), 0, 1, 'L');
+
+        // Pagination
+        $this->Ln();
+        $this->addBookmark('Pagination', 1, -1);
+        $this->SetFont($this->getFont(), 'B', 14);
+        $this->Cell(50, 5, 'Pagination', 0, 1, 'LU');
+
+        $this->SetFont($this->getFont(), '', 10);
+        $this->Cell(50, 5, 'Page courante : ' . $this->PageNo(), 0, 1, 'L');
+        $this->Cell(50, 5, 'Nombre total de page(s) : ' . $this->getTotalPages(), 0, 1, 'L');
+        $this->Cell(50, 5, utf8_decode('Saut de page à : ') . $this->getPageBreak(), 0, 1, 'L');
+
+        // Colonnes
+        $this->Ln();
+        $this->addBookmark('Colonnes', 1, -1);
+        $this->SetFont($this->getFont(), 'B', 14);
+        $this->Cell(50, 5, 'Colonnes', 0, 1, 'LU');
+
+        $this->SetFont($this->getFont(), '', 10);
+        $this->Cell(0, 5, 'Nombre de colonnes : ' . $this->colNb, 0, 1, 'L');
+        $this->Cell(0, 5, 'Largeur d\'une colonne : ' . $this->colWidth, 0, 1, 'L');
+        $this->Cell(0, 5, 'Colonne courante : ' . $this->col, 0, 1, 'L');
+
+        // Metadonnées
+        $this->Ln();
+        $this->addBookmark('Meta données', 1, -1);
+        $this->SetFont($this->getFont(), 'B', 14);
+        $this->Cell(50, 5, utf8_decode('Meta données'), 0, 1, 'LU');
+        $this->SetFont($this->getFont(), '', 10);
+        foreach ($this->getMetadata() as $name => $meta) {
+            $this->Cell(50, 5, $name . ' : ' . $meta, 0, 1, 'L');
+        }
+
+        // Options
+        $this->Ln();
+        $this->addBookmark('Options du document', 1, -1);
+        $this->SetFont($this->getFont(), 'B', 14);
+        $this->Cell(50, 5, utf8_decode('Options du document'), 0, 1, 'LU');
+        $this->SetFont($this->getFont(), '', 10);
+        foreach ($this->getOptions() as $name => $opt) {
+            if (!is_array($opt)) {
+                $this->Cell(50, 5, $name . ' : ' . $opt, 0, 1, 'L');
+            }
+        }
+
+        // Objet
+        $this->Ln();
+        $this->addBookmark('Objet', 1, -1);
+        $this->SetFont($this->getFont(), 'B', 14);
+        $this->Cell(50, 5, utf8_decode('Objet'), 0, 1, 'LU');
+        $this->SetFont($this->getFont(), '', 10);
+        $o = new Myvar($this);
+        $this->Cell(0, 5, 'Classe : ' . get_class($this), 0, 1, 'L');
+        $this->Cell(0, 5, 'Parent : ' . $o->getParent(), 0, 1, 'L');
+        $this->Cell(0, 5, 'Interfaces : ' . count($o->getImplements()), 0, 1, 'L');
+        $this->Cell(0, 5, 'Traits : ' . count($o->getTraits()), 0, 1, 'L');
+        $this->Cell(0, 5, 'Méthodes : ' . count($o->getMethods()), 0, 1, 'L');
+        $this->Cell(0, 5, 'Propriétés publiques : ' . count($o->getProperties()), 0, 1, 'L');
+
+        $this->Ln();
+        $this->addLine();
+
+        return $this;
+    }
+
+    /**
+     * Sauvegarder le document PDF dans un fichier
+     *
+     * ### Exemple
+     * - `$pdf->toFile();`
+     * - `$pdf->toFile('/path/to/file');`
+     *
+     * @param string|null $dest Emplacement et nom du fichier sans l'extension
+     *
+     * @return string
+     */
+    public function toFile($dest = null)
+    {
+        if (is_null($dest)) {
+            $dest = 'MyCore_doc_' . date('Y-m-d-H-i');
+        }
+        return $this->Output('F', trim($dest) . '.pdf');
+    }
+
+    /**
+     * Télécharger le document PDF via le navigateur
+     *
+     * ### Exemple
+     * - `$pdf->toDownload($response, 'ola');`
+     *
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param string|null                         $fileName Nom du fichier sans l'extension
+     *
+     * @return string
+     */
+    public function toDownload(ResponseInterface $response, $fileName = 'doc')
+    {
+        $fileName = trim($fileName) . '.pdf';
+        $body = $response->getBody();
+        $body->write((string)$this);
+        $newResponse = $response
+            ->withStatus(200)
+            ->withHeader('Content-type', 'application/x-download')
+            ->withAddedHeader('Content-Disposition', 'attachment; filename="' . $fileName . '"')
+            ->withAddedHeader('Cache-Control', 'private, max-age=0, must-revalidate')
+            ->withAddedHeader('Pragma', 'public')
+            ->withBody($body);
+        return $newResponse;
+    }
+
+    /**
+     * Voir le document dans le navigateur
+     *
+     * ### Exemple
+     * - `$pdf->toView($response, 'ola');`
+     *
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param string|null                         $fileName Nom du fichier PDF à générer
+     * @param bool|null                           $isUtf8   Le contenu est en utf-8
+     *
+     * @return string|static
+     */
+    public function toView(ResponseInterface $response, $fileName = 'doc', $isUtf8 = true)
+    {
+        $fileName = trim($fileName) . '.pdf';
+        $body = $response->getBody();
+        $body->write((string)$this);
+        $newResponse = $response
+            ->withStatus(200)
+            ->withHeader('Content-type', 'application/pdf')
+            ->withAddedHeader('Content-Disposition', 'inline; filename="' . $fileName . '"')
+            ->withAddedHeader('Cache-Control', 'private, max-age=0, must-revalidate')
+            ->withAddedHeader('Pragma', 'public')
+            ->withBody($body);
+        return $newResponse;
+    }
+
+    /**
+     * Vérifie les options du document
+     *
+     * @param array $options Options du document
+     *
+     * @return bool
+     * @throws \Exception
+     */
+    private function parseOptions(array $options)
+    {
+        foreach ($options as $key => $value) {
+            // Orientation
+            if ($key === 'orientation' && !in_array(strtoupper($value), $this->orientations)) {
+                throw new \Exception(
+                    "L'orientation du document PDF est incorrecte : $value. Essayez-plutôt une de celles-ci : "
+                    . implode(', ', $this->orientations)
+                );
+            }
+
+            // Unité
+            if ($key === 'unit' && !in_array(strtolower($value), $this->units)) {
+                throw new \Exception(
+                    "L'unité de mesure du document PDF est incorrecte : $value. Essayez-plutôt une de celles-ci : "
+                    . implode(', ', $this->units)
+                );
+            }
+
+            // Format
+            if ($key === 'format' && !in_array($value, $this->formats)) {
+                throw new \Exception(
+                    "Le format du document PDF est incorrecte : $value. Essayez-plutôt un de ceux-ci : "
+                    . implode(', ', $this->formats)
+                );
+            }
+        }
+        $this->options = $options;
+        return true;
+    }
+
+    /**
+     * Se positionne au début de la colonne souhaitée
+     *
+     * ### Exemple
+     * - `$pdf->setCol(1);`
+     * - `$pdf->setCol(2, 4);`
+     *
+     * @param int|null $col   Numéro de la colonne souhaitée
+     * @param int|null $colNb Nombre de colonnes souhaitées
+     *
+     * @return self
+     */
+    public function setCol($col = 0, $colNb = null)
+    {
+        // Colonne courante
+        $this->col = $col;
+        if (!is_null($colNb)) {
+            $this->colWidth = intval($this->getBodySize('width') / $colNb);
+            $this->colNb = $colNb;
+        } else {
+            $this->colWidth = $this->getBodySize('width');
+        }
+        // Définition de la position
+        $x = $this->getMargin('left') + ($this->col * $this->colWidth);
+        $this->setMargin('left', $x);
+        $this->SetX($x);
+        return $this;
+    }
+
+    /**
+     * Définit le pied du document
+     */
+    public function Footer()
+    {
+        // Pour addDebug
+        // Réecrire dans la classe du nouveau document
+        $this->SetY($this->getMargin('bottom') * -1);
+        $this->addLine();
+        $this->SetFont($this->getFont(), 'I', 8);
+        $this->Cell(0, 10, 'Page ' . $this->PageNo() . ' sur ' . '{nb}', 0, 0, 'C');
     }
 }

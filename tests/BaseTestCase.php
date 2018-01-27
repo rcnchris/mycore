@@ -18,6 +18,13 @@ class BaseTestCase extends TestCase
     const TESTS_FOLDER = '/tests';
 
     /**
+     * Liste des fichiers utilisés pour les tests
+     *
+     * @var array
+     */
+    private $usedFiles = [];
+
+    /**
      * @var Generator
      */
     private $faker;
@@ -44,7 +51,28 @@ class BaseTestCase extends TestCase
     }
 
     /**
-     * Affiche un titre coloré en début de test
+     * Obtenir la liste des fichiers utilisés pour les tests
+     *
+     * @return array
+     */
+    public function getUsedFiles()
+    {
+        return $this->usedFiles;
+    }
+
+    /**
+     * Ajoute un fichier à la liste des fichiers utilisés
+     *
+     * @param string $file Nom complet du fichier
+     */
+    public function addUsedFile($file)
+    {
+        $this->ekoMessage('Création du fichier ' . basename($file));
+        array_push($this->usedFiles, $file);
+    }
+
+    /**
+     * Affiche un titre coloré dans la console
      *
      * @param string $titre Titre
      * @param bool   $isTest
@@ -63,6 +91,17 @@ class BaseTestCase extends TestCase
         }
         $parts = explode(' - ', $titre);
         echo "\n\033[0;36m{$parts[0]}\033[m - {$parts[1]} (\033[0;32m$tests\033[m)\n";
+    }
+
+    /**
+     * Affiche un message coloré dans la console
+     *
+     * @param string $message Message à afficher
+     * @param string $color   Couleur du message
+     */
+    protected function ekoMessage($message, $color = "\n\033[0;35m")
+    {
+        echo "$color{$message}\033[m\n";
     }
 
     /**
@@ -143,5 +182,19 @@ class BaseTestCase extends TestCase
         $response = $app->process($request, $response);
         // Return the response
         return $response;
+    }
+
+    /**
+     * Est exécuté en fin de test
+     */
+    public function tearDown()
+    {
+        // Supprime les fichiers utilisés pour les tests
+        foreach ($this->usedFiles as $file) {
+            if (file_exists($file)) {
+                $this->ekoMessage('Suppression du fichier ' . basename($file));
+                unlink($file);
+            }
+        }
     }
 }
