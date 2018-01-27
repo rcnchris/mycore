@@ -62,6 +62,14 @@ Facilite la manipulation des chaînes de caractères.
 $slug = Text::slug('Le slug qui va bien !');
 ````
 
+#### RandomItems
+Obtenir des données aléatoires.
+````
+$item = RandomItems::users();
+$items = RandomItems::users(3);
+$items = RandomItems::users(3, 'fr_FR');
+````
+
 -------
 
 ## PDF

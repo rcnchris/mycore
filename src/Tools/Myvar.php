@@ -5,7 +5,7 @@
  *
  * PHP version 5
  *
- * @category New
+ * @category Debug
  *
  * @package  Rcnchris\Core\Tools
  *
@@ -20,8 +20,11 @@ namespace Rcnchris\Core\Tools;
 
 /**
  * Class Myvar
+ * <ul>
+ * <li>Permet de réprésenter n'importe quelle variable sous forme d'objet</li>
+ * </ul>
  *
- * @category New
+ * @category Debug
  *
  * @package  Rcnchris\Core\Tools
  *
@@ -72,7 +75,7 @@ class Myvar
         } elseif ($this->isObject()) {
             if (property_exists($this->var, $key)) {
                 return $this->var->$key;
-            } elseif (method_exists($this->var, $key)){
+            } elseif (method_exists($this->var, $key)) {
                 return $this->var->$key();
             }
         }

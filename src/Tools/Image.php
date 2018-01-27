@@ -22,6 +22,9 @@ use Intervention\Image\ImageManagerStatic;
 
 /**
  * Class Image
+ * <ul>
+ * <li>Facilite la maniulation des images</li>
+ * </ul>
  *
  * @category Images
  *
