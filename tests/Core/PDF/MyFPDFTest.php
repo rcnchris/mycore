@@ -244,6 +244,7 @@ class MyFPDFTest extends BaseTestCase
         $pdf2 = clone($pdf);
         $pdf->toFile($fileName);
         $this->assertTrue(file_exists($fileName . '.pdf'));
+        $this->addUsedFile($fileName . '.pdf');
 
         $fileNameExpected = $this->rootPath() . '/MyCore_doc_' . date('Y-m-d-H-i') . '.pdf';
         $pdf2->toFile();

@@ -8,9 +8,10 @@ session_start();
 
 // Configuration
 $config = require '../app/config.php';
+$dependances = require '../app/dependances.php';
 
 // Application
-$app = new \Slim\App($config);
+$app = new \Slim\App(array_merge($config, $dependances));
 
 // Middlewares
 require '../app/middlewares.php';
@@ -19,4 +20,6 @@ require '../app/middlewares.php';
 require '../app/routes.php';
 
 // Run app
-$app->run();
+if (php_sapi_name() !== 'cli') {
+    $app->run();
+}

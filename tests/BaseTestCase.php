@@ -3,7 +3,9 @@ namespace Tests\Rcnchris;
 
 use Faker\Factory;
 use Faker\Generator;
+use Michelf\MarkdownExtra;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -172,12 +174,60 @@ class BaseTestCase extends TestCase
         }
         // Set up a response object
         $response = new Response();
+
         // Configuration
-        $settings = require $this->rootPath() . '/app/config.php';
-        // Instantiate the application
-        $app = new App($settings);
+        $configFile = $this->rootPath() . '/app/config.php';
+        if (file_exists($configFile)) {
+            $settings = require $configFile;
+        } else {
+            $settings = [
+                'app.prefix' => '/',
+                'app.poweredBy' => 'MRC Consulting',
+                'app.name' => 'My Core',
+                'app.charset' => 'utf-8',
+                'app.timezone' => 'UTC',
+                'app.defaultLocale' => 'fr_FR',
+                'app.sep_decimal' => ',',
+                'app.sep_mil' => ' ',
+                'app.templates' => dirname(__DIR__) . '/app/Templates'
+            ];
+        }
+
+        // Dépendances
+        $dependancesFile = $this->rootPath() . '/app/dependances.php';
+        if (file_exists($dependancesFile)) {
+            $dependances = require $dependancesFile;
+        } else {
+            $dependances = [
+
+            ];
+        }
+
+        // Instantiation de Slim
+        $app = new App(array_merge($settings, $dependances));
+
         // Routes
-        require $this->rootPath() . '/app/routes.php';
+        $routesFile = $this->rootPath() . '/app/routes.php';
+        if (file_exists($routesFile)) {
+            $routes = require $routesFile;
+        } else {
+            $rootPath = $this->rootPath();
+            $app->get('/', function (Request $request, Response $response) use ($rootPath) {
+                $readmeFile = $rootPath . '/README.md';
+                if (file_exists($readmeFile)) {
+                    $content = file_get_contents($readmeFile);
+                    $readme = MarkdownExtra::defaultTransform($content);
+
+                    $body = $response->getBody();
+                    $body->write($readme);
+                    $newResponse = $response
+                        ->withStatus(200)
+                        ->withBody($body);
+                    return $newResponse;
+                }
+            })->setName('home');
+        }
+
         // Process the application
         $response = $app->process($request, $response);
         // Return the response

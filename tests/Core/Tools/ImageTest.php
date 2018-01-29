@@ -7,15 +7,47 @@ use Tests\Rcnchris\BaseTestCase;
 class ImageTest extends BaseTestCase {
 
     /**
+     * Chemin des images de tests
+     *
+     * @var string
+     */
+    private $dirPath;
+
+    /**
+     * Instance du dossier des images de tests
+     *
+     * @var \Directory
+     */
+    private $imgDir;
+
+    /**
+     * Liste des images du dossier img
+     *
+     * @var array
+     */
+    private $files;
+
+    /**
      * @var Image
      */
-    private $bob;
+    private $img;
 
     public function setUp()
     {
         parent::setUp();
-        $this->bob = $this->makeImage(__DIR__ . '/img/bob_marley_santa-barbara79.jpg');
+        $this->dirPath = __DIR__ . '/img';
+        $this->imgDir = dir($this->dirPath);
+        $this->files = [];
+        while (false !== ($item = $this->imgDir->read())) {
+            $fileName = $this->dirPath . DIRECTORY_SEPARATOR . $item;
+            if (is_file($fileName)) {
+                $this->files[] = $fileName;
+            }
+        }
+        $file = $this->files[array_rand($this->files)];
+        $this->img = $this->makeImage($file);
     }
+
     /**
      * @param null $source
      *
@@ -29,7 +61,8 @@ class ImageTest extends BaseTestCase {
     public function testInstanceWithoutParam()
     {
         $this->ekoTitre('Tools - Image');
-        $this->assertInstanceOf(Image::class, $this->makeImage());
+        $this->expectException(\Exception::class);
+        $this->makeImage();
     }
 
     public function testInstanceWithPathFile()
@@ -60,7 +93,7 @@ class ImageTest extends BaseTestCase {
     {
         $this->assertInstanceOf(
             \Intervention\Image\Image::class
-            , $this->bob->get()
+            , $this->img->get()
             , $this->getMessage("La fonction get doit retourner l'instance d'Intervention")
         );
     }
@@ -69,17 +102,18 @@ class ImageTest extends BaseTestCase {
     {
         $this->assertEquals(
             __DIR__ . '/img'
-            , $this->bob->getDirname()
+            , $this->img->getDirname()
             , $this->getMessage("Le chemin de l'image n'est pas celui attendu")
         );
     }
 
     public function testGetBasename()
     {
-        $this->assertEquals(
-            'bob_marley_santa-barbara79.jpg'
-            , $this->bob->getBasename()
-            , $this->getMessage("Le nom du fichier n'est pas celui d'origine")
+        $fileName = $this->img->getBasename();
+        $this->assertContains(
+            $this->img->getDirname() . DIRECTORY_SEPARATOR . $fileName
+            , $this->files
+            , $this->getMessage("Le nom du fichier est introuvable dans la liste des fichiers")
         );
     }
 
@@ -87,26 +121,26 @@ class ImageTest extends BaseTestCase {
     {
         $this->assertEquals(
             'jpg'
-            , $this->bob->getExtension()
+            , $this->img->getExtension()
             , $this->getMessage("L'extension n'est pas celle attendue")
         );
     }
 
     public function testGetWidth()
     {
-        $this->assertEquals(
-            1024
-            , $this->bob->getWidth()
+        $this->assertInternalType(
+            'integer'
+            , $this->img->getWidth()
             , $this->getMessage("La largeur n'est pas celle attendue")
         );
     }
 
     public function testGetHeight()
     {
-        $this->assertEquals(
-            576
-            , $this->bob->getHeight()
-            , $this->getMessage("La haiuteur n'est pas celle attendue")
+        $this->assertInternalType(
+            'integer'
+            , $this->img->getHeight()
+            , $this->getMessage("La hauteur n'est pas celle attendue")
         );
     }
 
@@ -114,32 +148,32 @@ class ImageTest extends BaseTestCase {
     {
         $this->assertInternalType(
             'integer'
-            , $this->bob->getSize()
+            , $this->img->getSize()
             , $this->getMessage("La taille du fichier n'a pas le type attendu"));
     }
 
     public function testGetMime()
     {
-        $this->assertEquals(
-            'image/jpeg'
-            , $this->bob->getMime()
-            , $this->getMessage("Le type mime n'est pas celui attendu"));
+        $this->assertInternalType(
+            'string'
+            , $this->img->getMime()
+            , $this->getMessage("Le type mime est incorrect"));
     }
 
     public function testGetExifs()
     {
         $this->assertNotEmpty(
-            $this->bob->getExifs()
+            $this->img->getExifs()
             , $this->getMessage("Cette image est censée avoir des données exif")
         );
         $this->assertInternalType(
             'integer'
-            , $this->bob->getExifs('FileDateTime')
+            , $this->img->getExifs('FileDateTime')
             , $this->getMessage("Le type attendu d'une donnée exif est incorrect")
         );
         $this->assertInstanceOf(
             \stdClass::class
-            , $this->bob->getExifs(null, true)
+            , $this->img->getExifs(null, true)
             , $this->getMessage("L'objet attendu est incorrect")
         );
     }
@@ -148,7 +182,7 @@ class ImageTest extends BaseTestCase {
     {
         $this->assertInstanceOf(
             Image::class
-            , $this->bob->getEncode()
+            , $this->img->getEncode()
             , $this->getMessage("L'objet attendu est incorrect")
         );
     }
@@ -157,14 +191,14 @@ class ImageTest extends BaseTestCase {
     {
         $this->assertInternalType(
             'string'
-            , (string)$this->bob
+            , (string)$this->img
             , $this->getMessage("Le type attendu est incorrect")
         );
     }
 
     public function testMakeThumb()
     {
-        $thumb = $this->bob->makeThumb();
+        $thumb = $this->img->makeThumb();
         $this->assertInstanceOf(
             Image::class
             , $thumb
@@ -175,17 +209,12 @@ class ImageTest extends BaseTestCase {
             , $thumb->getWidth()
             , $this->getMessage("La largeur attendue est incorrecte")
         );
-        $this->assertEquals(
-            1024
-            , $this->bob->getWidth()
-            , $this->getMessage("La largeur attendue est incorrecte")
-        );
     }
 
     public function testSave()
     {
-        $newFile = __DIR__ . '/img/save_' . $this->bob->getBasename();
-        $newImg = $this->bob->save($newFile);
+        $newFile = __DIR__ . '/img/save_' . $this->img->getBasename();
+        $newImg = $this->img->save($newFile);
         $this->assertInstanceOf(
             Image::class
             , $newImg

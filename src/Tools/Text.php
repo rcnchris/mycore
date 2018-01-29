@@ -355,33 +355,33 @@ class Text
      *
      * @return string
      */
-    private static function toAscii(array $array)
-    {
-        $ascii = '';
-        foreach ($array as $utf8) {
-            if ($utf8 < 128) {
-                $ascii .= chr($utf8);
-            } elseif ($utf8 < 2048) {
-                $ascii .= chr(192 + (($utf8 - ($utf8 % 64)) / 64));
-                $ascii .= chr(128 + ($utf8 % 64));
-            } else {
-                $ascii .= chr(224 + (($utf8 - ($utf8 % 4096)) / 4096));
-                $ascii .= chr(128 + ((($utf8 % 4096) - ($utf8 % 64)) / 64));
-                $ascii .= chr(128 + ($utf8 % 64));
-            }
-        }
-        return $ascii;
-    }
+//    private static function toAscii(array $array)
+//    {
+//        $ascii = '';
+//        foreach ($array as $utf8) {
+//            if ($utf8 < 128) {
+//                $ascii .= chr($utf8);
+//            } elseif ($utf8 < 2048) {
+//                $ascii .= chr(192 + (($utf8 - ($utf8 % 64)) / 64));
+//                $ascii .= chr(128 + ($utf8 % 64));
+//            } else {
+//                $ascii .= chr(224 + (($utf8 - ($utf8 % 4096)) / 4096));
+//                $ascii .= chr(128 + ((($utf8 % 4096) - ($utf8 % 64)) / 64));
+//                $ascii .= chr(128 + ($utf8 % 64));
+//            }
+//        }
+//        return $ascii;
+//    }
 
     /**
      * Obtenir le Transliterator
      *
      * @return string
      */
-    private static function getTransliteratorId()
-    {
-        return static::$defaultTransliteratorId;
-    }
+//    private static function getTransliteratorId()
+//    {
+//        return static::$defaultTransliteratorId;
+//    }
 
     /**
      * Définir le Transliterator
@@ -390,10 +390,10 @@ class Text
      *
      * @return void
      */
-    public static function setTransliteratorId($transliteratorId)
-    {
-        static::$defaultTransliteratorId = $transliteratorId;
-    }
+//    public static function setTransliteratorId($transliteratorId)
+//    {
+//        static::$defaultTransliteratorId = $transliteratorId;
+//    }
 
     /**
      * Appliquer une transliteration

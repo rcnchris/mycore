@@ -9,6 +9,17 @@
 # My Core
 > Mes librairies PHP.
 
+<div class="alert alert-info">
+    L'application s'appuie sur le framework <strong>Slim</strong> dans sa version 3.9.
+    <ul>
+        <li>La configuration est gérée par le <strong>conteneur de dépendances</strong> de Slim à partir de deux fichiers <code>config.php</code> et <code>dependances.php</code></li>
+        <li>Les routes sont stockées dans un fichier <code>routes.php</code></li>
+        <li>Structure <strong>MVC</strong></li>
+        <li>Moteur de rendu <strong>Twig</strong>, bien qu'il soit possible de rendre des vues
+            <strong>PHP</strong></li>
+    </ul>
+</div>
+
 -------
 
 ## Installation

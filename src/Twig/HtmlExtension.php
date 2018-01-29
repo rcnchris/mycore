@@ -101,7 +101,7 @@ class HtmlExtension extends \Twig_Extension
             foreach ($value as $item) {
                 $html .= "<li>$item</li>";
             }
-            $html .= "</$type";
+            $html .= "</$type>";
         }
         return $html;
     }

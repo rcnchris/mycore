@@ -244,4 +244,10 @@ class TextTest extends BaseTestCase
             , $this->getMessage('Démarrer à une position supérieure à la longueur demandée')
         );
     }
+
+    public function testIsAscii()
+    {
+        $this->assertTrue(Text::isAscii('ola'));
+        $this->assertFalse(Text::isAscii('ol§'));
+    }
 }
