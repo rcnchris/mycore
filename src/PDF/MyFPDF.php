@@ -21,8 +21,6 @@ namespace Rcnchris\Core\PDF;
 use Psr\Http\Message\ResponseInterface;
 use Rcnchris\Core\Tools\Myvar;
 
-require dirname(__DIR__) . '/Ext/fpdf/fpdf.php';
-
 /**
  * Class MyFPDF
  *
