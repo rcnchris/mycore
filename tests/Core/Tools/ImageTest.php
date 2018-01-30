@@ -119,8 +119,8 @@ class ImageTest extends BaseTestCase {
 
     public function testGetExtension()
     {
-        $this->assertEquals(
-            'jpg'
+        $this->assertInternalType(
+            'string'
             , $this->img->getExtension()
             , $this->getMessage("L'extension n'est pas celle attendue")
         );

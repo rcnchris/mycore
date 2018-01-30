@@ -13,7 +13,7 @@ class SynologyPackageTest extends SynologyAbstractTest{
      */
     public function makePackage($name)
     {
-        return $this->makeAbstract('nas')->getPackage($name);
+        return $this->makeAbstract()->getPackage($name);
     }
 
     public function testInstance()
