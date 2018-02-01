@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\Twig;
 
+use Faker\Factory;
 use Rcnchris\Core\Tools\Collection;
 use Rcnchris\Core\Twig\DebugExtension;
 use Tests\Rcnchris\BaseTestCase;
@@ -62,6 +63,13 @@ class DebugExtensionTest extends BaseTestCase {
     public function testGestMethodsWithWrongParameter()
     {
         $this->assertFalse($this->ext->getMethods('fake'));
+    }
+
+    public function testGetProperties()
+    {
+        $o = new \DateTime();
+        $this->assertNotEmpty($this->ext->getProperties($o));
+        $this->assertArrayHasKey('date', $this->ext->getProperties($o));
     }
 
     public function testGetParentClass()

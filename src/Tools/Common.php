@@ -274,7 +274,7 @@ class Common
     }
 
     /**
-     * Obtenir la laiste des couleurs ou l'une d'entre elle
+     * Obtenir la liste des couleurs ou l'une d'entre elle
      *
      * ### Exemple
      * - `Common::getColor();`

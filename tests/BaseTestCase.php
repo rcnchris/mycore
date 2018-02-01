@@ -5,7 +5,6 @@ use Faker\Factory;
 use Faker\Generator;
 use Michelf\MarkdownExtra;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Slim\App;
 use Slim\Http\Environment;
 use Slim\Http\Request;
@@ -148,6 +147,48 @@ class BaseTestCase extends TestCase
     protected function assertSimilar($expected, $actual)
     {
         $this->assertEquals($this->trim($expected), $this->trim($actual));
+    }
+
+    /**
+     * Vérifie le comportement d'un objet qui implémente ArrayAccess
+     *
+     * @param object $object Objet à tester
+     * @param string $key    Nom d'une clé du tableau
+     * @param mixed  $expect Valeur attendue
+     * @param array  $methods Liste des méthodes à tester
+     */
+    protected function assertArrayAccess($object, $key, $expect, array $methods = [])
+    {
+        if (empty($methods)) {
+            $methods = ['offsetExists', 'offsetGet', 'offsetSet', 'offsetUnset'];
+        }
+
+        foreach ($methods as $method) {
+
+            if ($method === 'offsetExists') {
+                // offsetExists
+                $this->assertTrue(
+                    isset($object[$key])
+                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetExists")
+                );
+            }
+            if ($method === 'offsetGet') {
+                // offsetGet
+                $this->assertEquals(
+                    $expect
+                    , $object[$key]
+                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetGet")
+                );
+            }
+            if ($method === 'offsetSet') {
+                $object[$key] = $expect;
+                $this->assertEquals($expect, $object[$key]);
+            }
+            if ($method === 'offsetUnset') {
+                unset($object[$key]);
+                $this->assertFalse(isset($object[$key]));
+            }
+        }
     }
 
     /**

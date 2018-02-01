@@ -19,23 +19,46 @@ class SynologyPackageTest extends SynologyAbstractTest{
     public function testInstance()
     {
         $this->ekoTitre('API - Package Synology');
-        $this->assertInstanceOf(SynologyPackage::class, $this->makePackage('API'));
+        $this->assertInstanceOf(
+            SynologyPackage::class
+            , $this->makePackage('API')
+            , $this->getMessage("L'instance attendue est incorrecte'")
+        );
     }
 
     public function testGetName()
     {
-        $this->assertEquals('API', $this->makePackage('API')->getName());
+        $this->assertEquals(
+            'API'
+            , $this->makePackage('API')->getName()
+            , $this->getMessage("Le nom de l'API est incorrect")
+        );
     }
 
     public function testGetApis()
     {
         $apis = $this->makePackage('API')->getApis();
-        $this->assertNotEmpty($apis);
-        $this->assertContains('Info', $apis);
+        $this->assertNotEmpty(
+            $apis
+            , $this->getMessage("L'API est censée avoir des APIs")
+        );
+
+        $this->assertContains(
+            'Info'
+            , $apis
+            , $this->getMessage("L'API doit avoir l'API Info")
+        );
 
         $apis = $this->makePackage('API')->getApis(true);
-        $this->assertNotEmpty($apis);
-        $this->assertContains('SYNO.API.Info', $apis);
+        $this->assertNotEmpty(
+            $apis
+            , $this->getMessage("L'API est censée avoir des APIs")
+        );
+        $this->assertContains(
+            'SYNO.API.Info'
+            , $apis
+            , $this->getMessage("")
+        );
     }
 
     public function testGetDefinition()

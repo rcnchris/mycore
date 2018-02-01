@@ -277,20 +277,15 @@ class MyvarTest extends BaseTestCase
             , $this->getMessage("Une chaîne de caractères ne peut pas retourner des propriétés")
         );
 
+        $o = new Folder(__DIR__);
         $this->assertEquals(
-            ['path' => null]
-            , $this->makeVar(new Folder(__DIR__))->getProperties()
+            ['path' => __DIR__]
+            , $this->makeVar($o)->getProperties()
             , $this->getMessage("Les propriétés retournées par un objet sont incorrectes")
         );
 
         $this->assertNotEmpty(
             $this->makeVar($this)->getProperties()
-            , $this->getMessage("La liste des propriétés de l'objet est incorrecte")
-        );
-
-        $this->assertEquals(
-            ['vars' => [], 'item' => null]
-            , $this->makeVar($this)->getProperties()
             , $this->getMessage("La liste des propriétés de l'objet est incorrecte")
         );
 

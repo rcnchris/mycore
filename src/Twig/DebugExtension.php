@@ -46,6 +46,7 @@ class DebugExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFilter('getClass', [$this, 'getClass'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('getMethods', [$this, 'getMethods'], ['is_safe' => ['html']])
+            , new \Twig_SimpleFilter('getProperties', [$this, 'getProperties'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('getParentClass', [$this, 'getParentClass'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('getParentMethods', [$this, 'getParentMethods'], ['is_safe' => ['html']])
             , new \Twig_SimpleFilter('getImplements', [$this, 'getImplements'], ['is_safe' => ['html']])
@@ -71,7 +72,7 @@ class DebugExtension extends \Twig_Extension
     /**
      * Obtenir les méthodes d'un objet
      *
-     * @param $object
+     * @param object $object Objet
      *
      * @return array|bool
      */
@@ -83,6 +84,22 @@ class DebugExtension extends \Twig_Extension
             return $methods;
         }
         return false;
+    }
+
+    /**
+     * Obtenir la liste des propriétés publiques d'un objet
+     * - Filtre
+     *
+     * ### Exemple
+     * * `o|getProperties`
+     *
+     * @param object $o Objet
+     *
+     * @return array
+     */
+    public function getProperties($o)
+    {
+        return get_object_vars($o);
     }
 
     /**

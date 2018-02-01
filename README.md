@@ -53,6 +53,13 @@ Classe statique instanciable qui fournit des méthodes diverses.
 $m = Common::getMemoryUse();
 ````
 
+#### Composer
+Facilite la manipulation d'un fichier composer.json
+````
+$composer = new Composer('/path/to/file/composer.json');
+$composer->get('name');
+````
+
 #### Folder
 Facilite la manipulation de fichiers et dossiers.
 ````

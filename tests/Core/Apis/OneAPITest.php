@@ -15,9 +15,15 @@ class OneAPITest extends BaseTestCase {
      */
     private $urlRandomUser;
 
+    /**
+     * @var string
+     */
+    private $urlAlloCine;
+
     public function setUp()
     {
         $this->urlRandomUser = 'https://randomuser.me/api';
+        $this->urlAlloCine = 'http://api.allocine.fr/rest/v3';
     }
 
     /**
@@ -35,20 +41,20 @@ class OneAPITest extends BaseTestCase {
     public function testInstance()
     {
         $this->ekoTitre('API - OneAPI');
-        $this->assertInstanceOf(OneAPI::class, $this->makeApi($this->urlRandomUser));
+        $this->assertInstanceOf(OneAPI::class, $this->makeApi($this->urlAlloCine));
     }
 
     public function testGetCurl()
     {
-        $api = $this->makeApi($this->urlRandomUser);
+        $api = $this->makeApi($this->urlAlloCine);
         $this->assertNotEmpty($api->getCurl());
     }
 
     public function testGetCurlOptions()
     {
-        $api = $this->makeApi($this->urlRandomUser);
+        $api = $this->makeApi($this->urlAlloCine);
         $this->assertNotEmpty($api->getCurlInfos());
-        $this->assertEquals('https://randomuser.me/api', $api->getCurlInfos('url'));
+        $this->assertEquals($this->urlAlloCine, $api->getCurlInfos('url'));
     }
 
     public function testAddQueryWithStringParam()

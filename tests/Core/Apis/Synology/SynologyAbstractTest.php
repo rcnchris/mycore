@@ -19,13 +19,13 @@ class SynologyAbstractTest extends BaseTestCase
             $config = [
                 'name' => 'nas',
                 'description' => 'Nas du salon',
-                'address' => 'mozaik.myds.me',
+                'address' => '192.168.1.2',
                 'port' => 5551,
                 'protocol' => 'http',
                 'version' => 1,
                 'ssl' => false,
-                'user' => 'phpunit',
-                'pwd' => 'phpunit'
+                'user' => 'rcn',
+                'pwd' => 'maracla'
             ];
         }
         return new SynologyAbstract($config);

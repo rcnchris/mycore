@@ -291,46 +291,6 @@ class Text
     }
 
     /**
-     * Convertir une chaîne de caractères multi-octets en valeur décimale
-     *
-     * ### Exemple
-     * - `Text::utf8("ù\no");` --> [249, 10, 111]
-     *
-     * @param string $string Chaîne dont les caractères doivent être convertis
-     *
-     * @return array
-     */
-    private static function utf8($string)
-    {
-        $map = [];
-        $values = [];
-        $find = 1;
-        $length = strlen($string);
-        for ($i = 0; $i < $length; $i++) {
-            $value = ord($string[$i]);
-
-            if ($value < 128) {
-                $map[] = $value;
-            } else {
-                if (empty($values)) {
-                    $find = ($value < 224) ? 2 : 3;
-                }
-                $values[] = $value;
-                if (count($values) === $find) {
-                    if ($find == 3) {
-                        $map[] = (($values[0] % 16) * 4096) + (($values[1] % 64) * 64) + ($values[2] % 64);
-                    } else {
-                        $map[] = (($values[0] % 32) * 64) + ($values[1] % 64);
-                    }
-                    $values = [];
-                    $find = 1;
-                }
-            }
-        }
-        return $map;
-    }
-
-    /**
      * Vérifie si la chaîne est au format ASCII
      *
      * @param string $s
@@ -347,53 +307,6 @@ class Text
         }
         return true;
     }
-
-    /**
-     * Convertir la valeur décimale d'une chaîne de caractères multi-octets en chaîne
-     *
-     * @param array $array Tableau de caractères
-     *
-     * @return string
-     */
-//    private static function toAscii(array $array)
-//    {
-//        $ascii = '';
-//        foreach ($array as $utf8) {
-//            if ($utf8 < 128) {
-//                $ascii .= chr($utf8);
-//            } elseif ($utf8 < 2048) {
-//                $ascii .= chr(192 + (($utf8 - ($utf8 % 64)) / 64));
-//                $ascii .= chr(128 + ($utf8 % 64));
-//            } else {
-//                $ascii .= chr(224 + (($utf8 - ($utf8 % 4096)) / 4096));
-//                $ascii .= chr(128 + ((($utf8 % 4096) - ($utf8 % 64)) / 64));
-//                $ascii .= chr(128 + ($utf8 % 64));
-//            }
-//        }
-//        return $ascii;
-//    }
-
-    /**
-     * Obtenir le Transliterator
-     *
-     * @return string
-     */
-//    private static function getTransliteratorId()
-//    {
-//        return static::$defaultTransliteratorId;
-//    }
-
-    /**
-     * Définir le Transliterator
-     *
-     * @param string $transliteratorId Transliterator id.
-     *
-     * @return void
-     */
-//    public static function setTransliteratorId($transliteratorId)
-//    {
-//        static::$defaultTransliteratorId = $transliteratorId;
-//    }
 
     /**
      * Appliquer une transliteration

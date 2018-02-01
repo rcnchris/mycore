@@ -210,7 +210,7 @@ class Myvar
     }
 
     /**
-     * Obtenir la liste des méthodes
+     * Obtenir la liste des méthodes publiques
      *
      * @param bool|null $withoutParentMethods Avec ou sans les méthodes du parent
      *
@@ -227,6 +227,21 @@ class Myvar
                 return $diffMethods;
             }
             return $allMethods;
+        }
+        return false;
+    }
+
+    /**
+     * Obtenir les propriétés publiques de l'objet
+     *
+     * @return array|bool
+     */
+    public function getProperties()
+    {
+        if ($this->isArray()) {
+            return array_keys($this->var);
+        } elseif ($this->isObject()) {
+            return get_object_vars($this->var);
         }
         return false;
     }
@@ -266,21 +281,6 @@ class Myvar
     {
         if ($this->isObject()) {
             return class_uses($this->var);
-        }
-        return false;
-    }
-
-    /**
-     * Obtenir les propriétés de l'objet
-     *
-     * @return array|bool
-     */
-    public function getProperties()
-    {
-        if ($this->isArray()) {
-            return array_keys($this->var);
-        } elseif ($this->isObject()) {
-            return get_class_vars(get_class($this->var));
         }
         return false;
     }
