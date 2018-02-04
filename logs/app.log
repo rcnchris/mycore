@@ -18,3 +18,14 @@
 [2018-02-01 12:26:21] My Core.INFO: GET /_lab/mycore/application/show : 200 [] {"uid":"8b913de"}
 [2018-02-01 15:04:18] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"c497b36"}
 [2018-02-02 08:34:15] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"305bca6"}
+[2018-02-02 08:45:07] My Core.INFO: GET /_lab/mycore/application/show : 200 [] {"uid":"d5b8669"}
+[2018-02-02 08:54:30] My Core.INFO: GET /_lab/mycore/application/show : 200 [] {"uid":"00c84a2"}
+[2018-02-02 08:54:34] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"1f827fc"}
+[2018-02-02 08:56:39] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"ce98639"}
+[2018-02-02 08:59:56] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"09c61ed"}
+[2018-02-02 09:00:55] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"4a5d83f"}
+[2018-02-02 09:01:45] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"d11980e"}
+[2018-02-02 09:02:17] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"678c081"}
+[2018-02-02 09:02:47] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"9c88096"}
+[2018-02-02 09:03:54] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"d8b2dc0"}
+[2018-02-02 09:04:26] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"8637cf3"}
