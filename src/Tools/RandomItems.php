@@ -517,6 +517,36 @@ class RandomItems
     }
 
     /**
+     * Obtenir des factures
+     *
+     * ### Exemple
+     * - `RandomItems::invoices(3);`
+     *
+     * @param int $number Nombre d'items à retourner
+     *
+     * @return array|mixed
+     */
+    public static function invoices($number = 1)
+    {
+        $faker = self::getFaker();
+        for ($i = 0; $i < $number; $i++) {
+            self::$datas[] = [
+                'nature' => 'Facture',
+                'numero' => rand(1, 9999),
+                'datePiece' => $faker->date('d-m-Y'),
+                'tiersPrincipal' => self::companies(),
+                'tiersFacture' => self::companies(),
+                'tiersLivre' => self::companies(),
+                'tiersPayeur' => self::companies(),
+                'totalHtEur' => rand(1, 9999),
+                'totalTvaEur' => rand(1, 9999),
+                'totalTtcEur' => rand(1, 9999),
+            ];
+        }
+        return self::getResults();
+    }
+
+    /**
      * Obtenir le générateur de données aléatoires
      *
      * ### Exemple

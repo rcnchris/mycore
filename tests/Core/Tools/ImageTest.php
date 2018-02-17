@@ -49,7 +49,7 @@ class ImageTest extends BaseTestCase {
     }
 
     /**
-     * @param null $source
+     * @param mixed|null $source
      *
      * @return \Rcnchris\Core\Tools\Image
      */
@@ -149,7 +149,8 @@ class ImageTest extends BaseTestCase {
         $this->assertInternalType(
             'integer'
             , $this->img->getSize()
-            , $this->getMessage("La taille du fichier n'a pas le type attendu"));
+            , $this->getMessage("La taille du fichier n'a pas le type attendu")
+        );
     }
 
     public function testGetMime()
@@ -162,18 +163,19 @@ class ImageTest extends BaseTestCase {
 
     public function testGetExifs()
     {
+        $img = $this->makeImage($this->files[2]);
         $this->assertNotEmpty(
-            $this->img->getExifs()
+            $img->getExifs()
             , $this->getMessage("Cette image est censée avoir des données exif")
         );
         $this->assertInternalType(
             'integer'
-            , $this->img->getExifs('FileDateTime')
+            , $img->getExifs('FileDateTime')
             , $this->getMessage("Le type attendu d'une donnée exif est incorrect")
         );
         $this->assertInstanceOf(
             \stdClass::class
-            , $this->img->getExifs(null, true)
+            , $img->getExifs(null, true)
             , $this->getMessage("L'objet attendu est incorrect")
         );
     }
@@ -221,6 +223,6 @@ class ImageTest extends BaseTestCase {
             , $this->getMessage("L'objet attendu est incorrect")
         );
         $this->assertTrue(file_exists($newFile));
-        unlink($newFile);
+        $this->addUsedFile($newFile);
     }
 }

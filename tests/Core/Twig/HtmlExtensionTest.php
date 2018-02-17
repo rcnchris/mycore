@@ -55,4 +55,13 @@ class HtmlExtensionTest extends BaseTestCase {
     {
         $this->assertSimilar('<details><summary>ola</summary>oli</details>', $this->ext->details('ola', 'oli'));
     }
+
+    public function testGetList()
+    {
+        $this->assertSimilar(
+            '<ul><li>0 : ola</li><li>1 : ole</li></ul>'
+            , $this->ext->getList(['ola', 'ole'])
+            , $this->getMessage("La liste est incorrecte")
+        );
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\Twig;
 
-use Faker\Factory;
+use Rcnchris\Core\Apis\OneAPI;
 use Rcnchris\Core\Tools\Collection;
 use Rcnchris\Core\Twig\DebugExtension;
 use Tests\Rcnchris\BaseTestCase;
@@ -94,6 +94,12 @@ class DebugExtensionTest extends BaseTestCase {
             class_implements($this->ext),
             $this->ext->getImplements($this->ext)
         );
+    }
+
+    public function testGetTraits()
+    {
+        $o = new OneAPI();
+        $this->assertNotEmpty($this->ext->getTraits($o));
     }
 
     public function testGetPhpRef()

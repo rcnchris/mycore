@@ -200,20 +200,16 @@ class BaseTestCase extends TestCase
      */
     public function runApp($requestMethod, $requestUri, $requestData = null)
     {
-        // Create a mock environment for testing with
         $environment = Environment::mock(
             [
                 'REQUEST_METHOD' => $requestMethod,
                 'REQUEST_URI' => $requestUri
             ]
         );
-        // Set up a request object based on the environment
         $request = Request::createFromEnvironment($environment);
-        // Add request data, if it exists
         if (isset($requestData)) {
             $request = $request->withParsedBody($requestData);
         }
-        // Set up a response object
         $response = new Response();
 
         // Configuration
@@ -222,7 +218,7 @@ class BaseTestCase extends TestCase
             $settings = require $configFile;
         } else {
             $settings = [
-                'app.prefix' => '/',
+                'app.prefix' => '/_lab/mycore/',
                 'app.poweredBy' => 'MRC Consulting',
                 'app.name' => 'My Core',
                 'app.charset' => 'utf-8',
@@ -230,7 +226,8 @@ class BaseTestCase extends TestCase
                 'app.defaultLocale' => 'fr_FR',
                 'app.sep_decimal' => ',',
                 'app.sep_mil' => ' ',
-                'app.templates' => dirname(__DIR__) . '/app/Templates'
+                'app.templates' => dirname(__DIR__) . '/app/Templates',
+                'app.logsPath' => dirname(__DIR__) . '/logs/app.log'
             ];
         }
 
@@ -239,9 +236,7 @@ class BaseTestCase extends TestCase
         if (file_exists($dependancesFile)) {
             $dependances = require $dependancesFile;
         } else {
-            $dependances = [
-
-            ];
+            $dependances = [];
         }
 
         // Instantiation de Slim

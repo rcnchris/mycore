@@ -188,7 +188,7 @@ class ComposerTest extends BaseTestCase {
             , $this->getMessage("La clé 'dev' doit être dans le retour de getRequires sans paramètre")
         );
         $this->assertArrayHasKey(
-            'php'
+            'setasign/fpdf'
             , $this->composer->getRequires('req')
             , $this->getMessage("La clé 'php' doit être dans le retour de getRequires avec le paramètre 'req'")
         );
@@ -203,33 +203,46 @@ class ComposerTest extends BaseTestCase {
         );
     }
 
-    public function testCallMissingMethod()
+    public function testCallMethod()
     {
+        $requires = $this->composer->require();
         $this->assertNotEmpty(
-            $this->composer->require()
+            $requires
             , $this->getMessage("Le retour de '__call' sans paramètre est incorrect")
         );
+        $this->assertArrayHasKey('setasign/fpdf', $requires);
+
+        $email = $this->composer->support('email');
         $this->assertEquals(
-            '>=7.0'
-            , $this->composer->require('php')
+            'rcn.chris@gmail.com'
+            , $email
             , $this->getMessage("Le retour de '__call' avec paramètre valide est incorrect")
         );
+
+        $version = $this->composer->require('setasign/fpdf');
         $this->assertEquals(
-            ['php' => '>=7.0', 'intervention/image' => '^2.4']
-            , $this->composer->require(['php', 'intervention/image'])
+            '^1.8'
+            , $version
+            , $this->getMessage("Le retour de '__call' est incorrect")
+        );
+
+        $requires = $this->composer->require('setasign/fpdf', 'intervention/image');
+        $this->assertEquals(
+            ['setasign/fpdf' => '^1.8', 'intervention/image' => '^2.4']
+            , $requires
             , $this->getMessage("Le retour de '__call' avec plusieurs paramètres est incorrect")
         );
     }
 
-    public function testCallWrongMethod()
-    {
-        $this->assertFalse(
-            $this->composer->fake()
-            , $this->getMessage("Le retour de '__call' lors d'une propriété inexistante est incorrect")
-        );
-        $this->assertFalse(
-            $this->composer->fake('fake')
-            , $this->getMessage("Le retour de '__call' lors d'une propriété inexistante et un paramètre inexistant est incorrect")
-        );
-    }
+//    public function testCallWrongMethod()
+//    {
+//        $this->assertFalse(
+//            $this->composer->fake()
+//            , $this->getMessage("Le retour de '__call' lors d'une propriété inexistante est incorrect")
+//        );
+//        $this->assertFalse(
+//            $this->composer->fake('fake')
+//            , $this->getMessage("Le retour de '__call' lors d'une propriété inexistante et un paramètre inexistant est incorrect")
+//        );
+//    }
 }

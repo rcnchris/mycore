@@ -1,11 +1,11 @@
 <?php
 /**
- * Fichier Common.php du 28/10/2017
- * Description : Fichier de la classe Common
+ * Fichier Colors.php du 13/02/2018
+ * Description : Fichier de la classe Colors
  *
  * PHP version 5
  *
- * @category Outils
+ * @category Couleurs
  *
  * @package  Rcnchris\Core\Tools
  *
@@ -19,12 +19,9 @@
 namespace Rcnchris\Core\Tools;
 
 /**
- * Class Common<br/>
- * <ul>
- * <li>Classe statique qui fournit des méthodes diverses.</li>
- * </ul>
+ * Class Colors
  *
- * @category Outils
+ * @category Couleurs
  *
  * @package  Rcnchris\Core\Tools
  *
@@ -32,21 +29,20 @@ namespace Rcnchris\Core\Tools;
  *
  * @license  https://github.com/rcnchris/fmk-php GPL
  *
- * @version  Release: <0.0.1>
+ * @version  Release: <1.0.0>
  *
  * @link     https://github.com/rcnchris/fmk-php on Github
  */
-class Common
+class Colors
 {
     /**
-     * Couleurs HTML
+     * Liste des couleurs
      *
      * @var array
      */
-    protected static $colors = [
+    private $colors = [
         'aliceblue' => '#F0F8FF',
         'antiquewhite' => '#FAEBD7',
-        'aqua' => '#00FFFF',
         'aquamarine' => '#7FFFD4',
         'azure' => '#F0FFFF',
         'beige' => '#F5F5DC',
@@ -124,7 +120,6 @@ class Common
         'lime' => '#00FF00',
         'limegreen' => '#32CD32',
         'linen' => '#FAF0E6',
-        'magenta' => '#FF00FF',
         'maroon' => '#800000',
         'mediumaquamarine' => '#66CDAA',
         'mediumblue' => '#0000CD',
@@ -160,7 +155,8 @@ class Common
         'red' => '#FF0000',
         'rosybrown' => '#BC8F8F',
         'royalblue' => '#4169E1',
-        'saddlebrown' => '#8B4513', 'salmon' => '#FA8072',
+        'saddlebrown' => '#8B4513',
+        'salmon' => '#FA8072',
         'sandybrown' => '#F4A460',
         'seagreen' => '#2E8B57',
         'seashell' => '#FFF5EE',
@@ -185,156 +181,159 @@ class Common
     ];
 
     /**
-     * Obtenir un tableau à partir d'une variable.
-     *
-     * @param object|mixed $var Objet à transformer
-     *
-     * @return array
-     */
-    public static function toArray($var)
-    {
-        if (is_array($var)) {
-            return $var;
-        }
-        $ret = [];
-        if (is_object($var)) {
-            foreach ($var as $properties => $value) {
-                $ret[$properties] = $value;
-            }
-        }
-        return $ret;
-    }
-
-    /**
-     * Retourne la quantité de mémoire allouée par PHP
-     *
-     * <code>$m = Common::getMemoryUse();</code>
-     *
-     * @param bool|null $peak  Mémoire max
-     * @param bool|null $octet Retour en octets
-     *
-     * @return int|string
-     */
-    public static function getMemoryUse($peak = true, $octet = false)
-    {
-        $octets = $peak
-            ? memory_get_peak_usage(true)
-            : memory_get_usage(true);
-        return $octet
-            ? $octets
-            : self::bitsSize($octets, 2);
-    }
-
-    /**
-     * Retourne une taille en Bits pour une valeur donnée
+     * Constructeur
      *
      * ### Exemple
-     * - `$ext->bitsSize(123456)`
-     * - `$ext->bitsSize(123456, 2)`
-     * - `123456|bitsSize(2)`
+     * - `$colors = new Colors();`
+     * - `$colors = new Colors($palette)`;
      *
-     * @param int      $value Valeur en octets
-     * @param int|null $round Arrondi
-     *
-     * @return string
+     * @param array $colors Liste des couleurs dans un tableau dont la clé est le nom de la couleur et la valeur le
+     *                      code héxadécimal
      */
-    public static function bitsSize($value, $round = 0)
+    public function __construct(array $colors = [])
     {
-        $sizes = [' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
-        for ($i = 0; $value > 1024 && $i < count($sizes) - 1; $i++) {
-            $value /= 1024;
+        if (!empty($colors)) {
+            $this->colors = $colors;
         }
-        return round($value, $round) . $sizes[$i];
     }
 
     /**
-     * Obtenir le contenur d'un fichier json sous la forme d'un objet
-     *
-     * @param string    $path    Chemin du fichier json
-     * @param bool|null $toArray Un tableau est retourné plutôt que un `stdClass`
-     *
-     * @return array|bool|\stdClass
-     */
-    public static function getJsonFileContent($path, $toArray = false)
-    {
-        if (file_exists($path)) {
-            $content = json_decode(file_get_contents($path), true);
-            if (is_array($content)) {
-                if ($toArray) {
-                    return $content;
-                }
-                $o = new \stdClass();
-                foreach ($content as $key => $value) {
-                    $o->$key = $value;
-                }
-                return $o;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Obtenir la liste des couleurs ou l'une d'entre elle
+     * Obtenir le nom, le code héxadécimal ou les valeurs RGB d'une couleur de la liste
      *
      * ### Exemple
-     * - `Common::getColors();`
-     * - `Common::getColors('aqua');`
+     * - `$colors->get('aquamarine');`
+     * - `$colors->get('#12DE71');`
+     * - `$colors->get('aquamarine', true);`
      *
-     * @param string $c Nom de la couleur
+     * @param string    $name  Nom ou code de la couleur
+     * @param bool|null $toRgb Obtenir les valeurs RGB de la couleur dans un tableau
      *
-     * @return array|string|bool
+     * @return array|bool|string
+     * @throws \Exception
      */
-    public static function getColors($c = null)
+    public function get($name, $toRgb = false)
     {
-        if (is_null($c)) {
-            return self::$colors;
-        } else {
-            if ($c[0] === '#' && in_array($c, self::$colors)) {
-                // recherche inversée
-                return array_search($c, self::$colors);
+        $color = null;
+        if ($name[0] === '#') {
+            $color = array_search(strtoupper($name), $this->colors);
+            if ($toRgb) {
+                $color = $this->hexaToRgb($this->get($color));
             }
-            $c = strtolower($c);
-            if (array_key_exists($c, self::$colors)) {
-                return self::$colors[$c];
+        } elseif ($this->has($name)) {
+            $color = $this->colors[$name];
+            if ($toRgb) {
+                $color = $this->hexaToRgb($color);
             }
         }
-        return false;
+        return $color;
     }
 
     /**
-     * Obtenir une couleur aléatoire parmi celle du tableau des couleurs
+     * Vérifie la présence d'une couleur dans la liste
      *
      * ### Exemple
-     * - `Common::getRandColor();`
+     * - `$colors->has('aquamarine');`
      *
-     * @return string
+     * @param string $name Nom de la couleur
+     *
+     * @return bool
      */
-    public static function getRandColor()
+    public function has($name)
     {
-        return self::$colors[array_rand(self::$colors)];
+        return $name[0] === '#'
+            ? in_array(strtoupper($name), $this->colors)
+            : array_key_exists(strtolower($name), $this->colors);
     }
 
     /**
-     * Obtenir les valeurs RGB d'une couleur à partir de son code hexadécimal
+     * Obtenir les valeurs RGB depuis un code couleur héxadécimal
      *
      * ### Exemple
-     * - `Common::hexaToRgb('#A52A2A');`
+     * - `$colors->hexaToRgb('#45EF4B');`
      *
-     * @param string $c Code hexadécimal d'une couleur (#000000)
+     * @param string $hexa Code héxadécimal sur 7 caractères
      *
      * @return array
      * @throws \Exception
      */
-    public static function hexaToRgb($c)
+    public function hexaToRgb($hexa)
     {
-        $c = strtolower($c);
-        if ($c[0] != '#' || strlen($c) != 7) {
-            throw new \Exception("Couleur incorrecte");
+        $hexa = strtolower($hexa);
+        if ($hexa[0] != '#' || strlen($hexa) != 7) {
+            throw new \Exception('code héxadécimal incorrect : ' . $hexa);
         }
         return [
-            'r' => hexdec(substr($c, 1, 2))
-            , 'g' => hexdec(substr($c, 3, 2))
-            , 'b' => hexdec(substr($c, 5, 2))
+            'r' => hexdec(substr($hexa, 1, 2)),
+            'g' => hexdec(substr($hexa, 3, 2)),
+            'b' => hexdec(substr($hexa, 5, 2))
         ];
+    }
+
+    /**
+     * Obtenir la liste des couleurs
+     *
+     * ### Exemple
+     * - `$colors->getList();`
+     * - `$colors->getList(true);`
+     *
+     * @param bool|null $inverse Les codes héxadécimaux deviennent les clés
+     *
+     * @return array
+     */
+    public function getList($inverse = false)
+    {
+        if ($inverse) {
+            return array_flip($this->colors);
+        }
+        return $this->colors;
+    }
+
+    /**
+     * Ajoute ou remplace une couleur
+     *
+     * ### Exemple
+     * - `$colors->addColor('deeplilac', '#BD58JU');`
+     *
+     * @param string $name Nom de la couleur
+     * @param string $hexa Code héxadécimal de la couleur
+     *
+     * @return bool
+     */
+    public function addColor($name, $hexa)
+    {
+        $this->colors[$name] = strtoupper($hexa);
+    }
+
+    /**
+     * Définir une nouvelle palette de couleurs
+     *
+     * ### Exemple
+     * - `$colors->setColors(['deeplilac' => '#ABC45D']);`
+     *
+     * @param array $palette Tableau des nouvelles couleurs
+     */
+    public function setColors(array $palette)
+    {
+        if (!empty($palette)) {
+            $this->colors = $palette;
+        }
+    }
+
+    /**
+     * Obtenir une ou plusieurs couleurs aléatoires
+     *
+     * ### Exemple
+     * - `$colors->rand();`
+     * - `$colors->rand(3);`
+     * - `$colors->rand(1, true);`
+     *
+     * @param int|null  $nb      Nombre de couleurs à obtenir
+     * @param bool|null $inverse Retourne le code héxadécimal au lieu du nom
+     *
+     * @return string
+     */
+    public function rand($nb = 1, $inverse = false)
+    {
+        return array_rand($this->getList($inverse), $nb);
     }
 }

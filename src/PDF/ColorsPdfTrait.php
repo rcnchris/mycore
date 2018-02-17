@@ -1,13 +1,13 @@
 <?php
 /**
- * Fichier Common.php du 28/10/2017
- * Description : Fichier de la classe Common
+ * Fichier ColorsPdfTrait.php du 15/02/2018
+ * Description : Fichier de la classe ColorsPdfTrait
  *
  * PHP version 5
  *
- * @category Outils
+ * @category PDF
  *
- * @package  Rcnchris\Core\Tools
+ * @package  Rcnchris\CorePDF
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -16,37 +16,20 @@
  * @link     https://github.com/rcnchris On Github
  */
 
-namespace Rcnchris\Core\Tools;
+namespace Rcnchris\Core\PDF;
 
-/**
- * Class Common<br/>
- * <ul>
- * <li>Classe statique qui fournit des méthodes diverses.</li>
- * </ul>
- *
- * @category Outils
- *
- * @package  Rcnchris\Core\Tools
- *
- * @author   Raoul <rcn.chris@gmail.com>
- *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
- * @version  Release: <0.0.1>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
- */
-class Common
+trait ColorsPdfTrait
 {
+
     /**
-     * Couleurs HTML
+     * Liste des couleurs
      *
      * @var array
      */
-    protected static $colors = [
+    private $colors = [
         'aliceblue' => '#F0F8FF',
+        'aloha' => '#1ABC9C',
         'antiquewhite' => '#FAEBD7',
-        'aqua' => '#00FFFF',
         'aquamarine' => '#7FFFD4',
         'azure' => '#F0FFFF',
         'beige' => '#F5F5DC',
@@ -54,10 +37,13 @@ class Common
         'black' => '#000000',
         'blanchedalmond' => '#FFEBCD',
         'blue' => '#0000FF',
+        'blueamalficoast' => '#2980b9',
+        'bluedayflower' => '#3498db',
         'blueviolet' => '#8A2BE2',
         'brown' => '#A52A2A',
         'burlywood' => '#DEB887',
         'cadetblue' => '#5F9EA0',
+        'cadillaccoupe' => '#c0392b',
         'chartreuse' => '#7FFF00',
         'chocolate' => '#D2691E',
         'coral' => '#FF7F50',
@@ -67,6 +53,7 @@ class Common
         'cyan' => '#00FFFF',
         'darkblue' => '#00008B',
         'darkcyan' => '#008B8B',
+        'darkdenim' => '#34495e',
         'darkgoldenrod' => '#B8860B',
         'darkgray' => '#A9A9A9',
         'darkgreen' => '#006400',
@@ -80,6 +67,7 @@ class Common
         'darkseagreen' => '#8DBC8F',
         'darkslateblue' => '#483D8B',
         'darkslategray' => '#2F4F4F',
+        'darksnaphot' => '#2c3e50',
         'darkturquoise' => '#00DED1',
         'darkviolet' => '#9400D3',
         'deeppink' => '#FF1493',
@@ -95,8 +83,15 @@ class Common
         'gold' => '#FFD700',
         'goldenrod' => '#DAA520',
         'gray' => '#808080',
+        'grayanon' => '#bdc3c7',
+        'graydustysky' => '#95a5a6',
+        'grayfrostedglass' => '#ecf0f1',
+        'grayghost' => '#7f8c8d',
         'graylight' => '#CCCCCC',
         'green' => '#008000',
+        'greenflamboyant' => '#16a085',
+        'greenisland' => '#27ae60',
+        'greenufo' => '#2ECC71',
         'greenyellow' => '#ADFF2F',
         'honeydew' => '#F0FFF0',
         'hotpink' => '#FF69B4',
@@ -124,7 +119,6 @@ class Common
         'lime' => '#00FF00',
         'limegreen' => '#32CD32',
         'linen' => '#FAF0E6',
-        'magenta' => '#FF00FF',
         'maroon' => '#800000',
         'mediumaquamarine' => '#66CDAA',
         'mediumblue' => '#0000CD',
@@ -144,7 +138,10 @@ class Common
         'oldlace' => '#FDF5E6',
         'olive' => '#808000',
         'orange' => '#FFA500',
+        'orangedarkcheddar' => '#e67e22',
+        'orangedodgerollgold' => '#f39c12',
         'orangered' => '#FF4500',
+        'orangetenne' => '#d35400',
         'orchid' => '#DA70D6',
         'palegoldenrod' => '#EEE8AA',
         'palegreen' => '#98FB98',
@@ -157,10 +154,15 @@ class Common
         'plum' => '#DDA0DD',
         'powderblue' => '#B0E0E6',
         'purple' => '#800080',
+        'purpledeeplilac' => '#9b59b6',
+        'purplemoonshadow' => '#8e44ad',
         'red' => '#FF0000',
+        'redcadillaccoupe' => '#c0392b',
+        'redcarminepink' => '#e74c3c',
         'rosybrown' => '#BC8F8F',
         'royalblue' => '#4169E1',
-        'saddlebrown' => '#8B4513', 'salmon' => '#FA8072',
+        'saddlebrown' => '#8B4513',
+        'salmon' => '#FA8072',
         'sandybrown' => '#F4A460',
         'seagreen' => '#2E8B57',
         'seashell' => '#FFF5EE',
@@ -181,160 +183,136 @@ class Common
         'white' => '#FFFFFF',
         'whitesmoke' => '#F5F5F5',
         'yellow' => '#FFFF00',
-        'yellowgreen' => '#9ACD32'
+        'yellowgreen' => '#9ACD32',
+        'yellowtannedleather' => '#f1c40f'
     ];
 
     /**
-     * Obtenir un tableau à partir d'une variable.
-     *
-     * @param object|mixed $var Objet à transformer
-     *
-     * @return array
-     */
-    public static function toArray($var)
-    {
-        if (is_array($var)) {
-            return $var;
-        }
-        $ret = [];
-        if (is_object($var)) {
-            foreach ($var as $properties => $value) {
-                $ret[$properties] = $value;
-            }
-        }
-        return $ret;
-    }
-
-    /**
-     * Retourne la quantité de mémoire allouée par PHP
-     *
-     * <code>$m = Common::getMemoryUse();</code>
-     *
-     * @param bool|null $peak  Mémoire max
-     * @param bool|null $octet Retour en octets
-     *
-     * @return int|string
-     */
-    public static function getMemoryUse($peak = true, $octet = false)
-    {
-        $octets = $peak
-            ? memory_get_peak_usage(true)
-            : memory_get_usage(true);
-        return $octet
-            ? $octets
-            : self::bitsSize($octets, 2);
-    }
-
-    /**
-     * Retourne une taille en Bits pour une valeur donnée
-     *
-     * ### Exemple
-     * - `$ext->bitsSize(123456)`
-     * - `$ext->bitsSize(123456, 2)`
-     * - `123456|bitsSize(2)`
-     *
-     * @param int      $value Valeur en octets
-     * @param int|null $round Arrondi
-     *
-     * @return string
-     */
-    public static function bitsSize($value, $round = 0)
-    {
-        $sizes = [' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
-        for ($i = 0; $value > 1024 && $i < count($sizes) - 1; $i++) {
-            $value /= 1024;
-        }
-        return round($value, $round) . $sizes[$i];
-    }
-
-    /**
-     * Obtenir le contenur d'un fichier json sous la forme d'un objet
-     *
-     * @param string    $path    Chemin du fichier json
-     * @param bool|null $toArray Un tableau est retourné plutôt que un `stdClass`
-     *
-     * @return array|bool|\stdClass
-     */
-    public static function getJsonFileContent($path, $toArray = false)
-    {
-        if (file_exists($path)) {
-            $content = json_decode(file_get_contents($path), true);
-            if (is_array($content)) {
-                if ($toArray) {
-                    return $content;
-                }
-                $o = new \stdClass();
-                foreach ($content as $key => $value) {
-                    $o->$key = $value;
-                }
-                return $o;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Obtenir la liste des couleurs ou l'une d'entre elle
+     * La recherche par code hexadécimale est gérée
      *
      * ### Exemple
-     * - `Common::getColors();`
-     * - `Common::getColors('aqua');`
+     * - `$pdf->getColors();`
+     * - `$pdf->getColors('gray');`
+     * - `$pdf->getColors('#1ABC9C');`
      *
-     * @param string $c Nom de la couleur
-     *
-     * @return array|string|bool
-     */
-    public static function getColors($c = null)
-    {
-        if (is_null($c)) {
-            return self::$colors;
-        } else {
-            if ($c[0] === '#' && in_array($c, self::$colors)) {
-                // recherche inversée
-                return array_search($c, self::$colors);
-            }
-            $c = strtolower($c);
-            if (array_key_exists($c, self::$colors)) {
-                return self::$colors[$c];
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Obtenir une couleur aléatoire parmi celle du tableau des couleurs
-     *
-     * ### Exemple
-     * - `Common::getRandColor();`
-     *
-     * @return string
-     */
-    public static function getRandColor()
-    {
-        return self::$colors[array_rand(self::$colors)];
-    }
-
-    /**
-     * Obtenir les valeurs RGB d'une couleur à partir de son code hexadécimal
-     *
-     * ### Exemple
-     * - `Common::hexaToRgb('#A52A2A');`
-     *
-     * @param string $c Code hexadécimal d'une couleur (#000000)
+     * @param string|null $name Nom ou code héxadécimal d'une couleur
+     * @param bool        $toRgb
      *
      * @return array
      * @throws \Exception
      */
-    public static function hexaToRgb($c)
+    public function getColors($name = null, $toRgb = false)
     {
-        $c = strtolower($c);
-        if ($c[0] != '#' || strlen($c) != 7) {
+        $color = null;
+        if (is_null($name)) {
+            return $this->colors;
+        }
+
+        if ($name[0] === '#') {
+            $color = array_search(strtoupper($name), $this->colors);
+            if ($toRgb) {
+                $color = $this->hexaToRgb($this->getColors($color));
+            }
+        } elseif (array_key_exists($name, $this->colors)) {
+            $color = $this->colors[$name];
+            if ($toRgb) {
+                $color = $this->hexaToRgb($color);
+            }
+        }
+        return $color;
+    }
+
+    /**
+     * Obtenir les valeurs RGB d'une couleur au format héxadécimal
+     *
+     * ### Exemple
+     * - `$pdf->hexaToRgb('#CCCCCC');`
+     *
+     * @param string $hexa Code héxadécimal de 7 caractères
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function hexaToRgb($hexa)
+    {
+        $hexa = strtolower($hexa);
+        if ($hexa[0] != '#' || strlen($hexa) != 7) {
             throw new \Exception("Couleur incorrecte");
         }
         return [
-            'r' => hexdec(substr($c, 1, 2))
-            , 'g' => hexdec(substr($c, 3, 2))
-            , 'b' => hexdec(substr($c, 5, 2))
+            'r' => hexdec(substr($hexa, 1, 2)),
+            'g' => hexdec(substr($hexa, 3, 2)),
+            'b' => hexdec(substr($hexa, 5, 2))
         ];
+    }
+
+    /**
+     * Ajoute ou remplace une couleur
+     *
+     * ### Exemple
+     * - `$colors->addColor('deeplilac', '#BD58JU');`
+     *
+     * @param string $name Nom de la couleur
+     * @param string $hexa Code héxadécimal de la couleur
+     *
+     * @return bool
+     */
+    public function addColor($name, $hexa)
+    {
+        $this->colors[$name] = strtoupper($hexa);
+    }
+
+    /**
+     * Définir de nouvelles couleurs
+     *
+     * @param array $colors
+     */
+    public function setColors(array $colors)
+    {
+        if (!empty($colors)) {
+            $this->colors = $colors;
+        }
+    }
+
+    /**
+     * Définir la couleur du type d'outil
+     *
+     * ### Exemple
+     * - `$pdf->setColor('gray');`
+     * - `$pdf->setColor('#CCCCCC');`
+     * - `$pdf->setColor('beige', 'fill');`
+     *
+     * @param string      $color Nom de la couleur
+     * @param string|null $tool  Type d'outil à colorer (text, fill, draw)
+     *
+     * @return $this
+     * @throws \Exception
+     */
+    public function setColor($color, $tool = 'text')
+    {
+        if (!$this->hasTool($tool)) {
+            throw new \Exception(
+                "Type '$tool' inconnu dans la fonction setColor, essayez plutôt un de ceux-ci : "
+                . implode(', ', $this->getTools())
+            );
+        }
+        $method = 'Set' . strtolower($tool) . 'Color';
+        $rgb = $this->hexaToRgb($this->getColors($color));
+        $this->$method($rgb['r'], $rgb['g'], $rgb['b']);
+        return $this;
+    }
+
+    /**
+     * @param $name
+     *
+     * @return bool
+     */
+    public function hasColor($name)
+    {
+        if (!$this->getColors($name)) {
+            return false;
+        }
+        return true;
     }
 }

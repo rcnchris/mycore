@@ -81,9 +81,15 @@ class CommonTest extends BaseTestCase
 
     public function testGetColor()
     {
-        $this->assertArrayHasKey('aqua', Common::getColor());
-        $this->assertEquals('#000000', Common::getColor('black'));
-        $this->assertFalse(Common::getColor('fake'));
+        $this->assertArrayHasKey('aqua', Common::getColors());
+        $this->assertEquals('#000000', Common::getColors('black'));
+        $this->assertEquals('black', Common::getColors('#000000'));
+        $this->assertFalse(Common::getColors('fake'));
+    }
+
+    public function testGetRandomColor()
+    {
+        $this->assertNotEmpty(Common::getRandColor());
     }
 
     public function testHexaToRgb()

@@ -162,29 +162,20 @@ class Composer implements \IteratorAggregate, \ArrayAccess
      */
     public function __call($key, array $args = [])
     {
+        $content = $this->get($key);
+        //var_dump($key, $args, $content);
+
         if (empty($args)) {
-            return $this->get($key);
-        } else {
-            $content = $this->get($key);
-            if (is_array($content)) {
-                $ret = [];
-                foreach ($args as $k => $values) {
-                    if (is_string($values) && array_key_exists($values, $content)) {
-                        $ret[$values] = $content[$values];
-                    } elseif (is_array($values)) {
-                        foreach ($values as $value) {
-                            $ret[$value] = $content[$value];
-                        }
-                    } else {
-                        return false;
-                    }
-                }
-                if (count($ret) === 1) {
-                    return current($ret);
-                }
-                return $ret;
-            }
             return $content;
+        } else {
+            $ret = [];
+            foreach ($args as $arg) {
+                if (array_key_exists($arg, $content)) {
+                    $ret[$arg] = $content[$arg];
+                }
+            }
+
+            return count($ret) === 1 ? current($ret) : $ret;
         }
     }
 

@@ -10,17 +10,6 @@
 # My Core
 > Mes librairies PHP.
 
-<div class="alert alert-info">
-    L'application s'appuie sur le framework <strong>Slim</strong> dans sa version 3.9.
-    <ul>
-        <li>La configuration est gérée par le <strong>conteneur de dépendances</strong> de Slim à partir de deux fichiers <code>config.php</code> et <code>dependances.php</code></li>
-        <li>Les routes sont stockées dans un fichier <code>routes.php</code></li>
-        <li>Structure <strong>MVC</strong></li>
-        <li>Moteur de rendu <strong>Twig</strong>, bien qu'il soit possible de rendre des vues
-            <strong>PHP</strong></li>
-    </ul>
-</div>
-
 -------
 
 ## Installation
@@ -48,8 +37,15 @@ Facilite la manipulation d'un tableau via un objet.
 $col = new Collection('ola,ole,oli', "Liste de valeurs dans une chaîne avec séparateur");
 ````
 
+#### Colors
+Facilite la manipulation d'une palette de couleurs.
+````
+$colors = new Colors();
+$colors->get('blue');
+````
+
 #### Common
-Classe statique instanciable qui fournit des méthodes diverses.
+Méthodes communes diverses.
 ````
 $m = Common::getMemoryUse();
 ````
@@ -94,7 +90,7 @@ $items = RandomItems::users(3, 'fr_FR');
 ## PDF
 Gestion des documents PDF.
 ````
-$pdf = new MyFPDF();
+$pdf = new AbstractPDF();
 
 // Sauvegarder le fichier sur le serveur
 $pdf->toFile(/path/to/file/filename);

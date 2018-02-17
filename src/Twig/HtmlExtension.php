@@ -98,8 +98,8 @@ class HtmlExtension extends \Twig_Extension
     {
         $html = "<$type>";
         if (is_array($value)) {
-            foreach ($value as $item) {
-                $html .= "<li>$item</li>";
+            foreach ($value as $key => $value) {
+                $html .= "<li>$key : $value</li>";
             }
             $html .= "</$type>";
         }
