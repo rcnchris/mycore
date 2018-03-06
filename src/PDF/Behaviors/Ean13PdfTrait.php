@@ -15,7 +15,7 @@
 namespace Rcnchris\Core\PDF\Behaviors;
 
 /**
- * Class Ean13PdfTrait
+ * Trait Ean13PdfTrait
  * <ul>
  * <li>Permet d'imprimer des codes à barres selon la norme EAN13 et UPCA.</li>
  * </ul>

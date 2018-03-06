@@ -19,7 +19,7 @@
 namespace Rcnchris\Core\PDF\Behaviors;
 
 /**
- * Class JoinedFilePdfTrait
+ * Trait JoinedFilePdfTrait
  * <ul>
  * <li>Permet de joindre des fichiers au PDF</li>
  * </ul>
@@ -50,6 +50,8 @@ trait JoinedFilePdfTrait
     protected $n_files;
 
     /**
+     * Forcer l'affichage du panneau latéral des fichiers attachés
+     *
      * @var bool
      */
     protected $attachPane = false;
@@ -80,6 +82,9 @@ trait JoinedFilePdfTrait
         $this->files[] = array('file' => $file, 'name' => $name, 'desc' => $desc);
     }
 
+    /**
+     * Ajoute les fichiers attachés au document
+     */
     protected function _putfiles()
     {
         $s = '';
@@ -134,6 +139,9 @@ trait JoinedFilePdfTrait
         $this->attachPane = $view;
     }
 
+    /**
+     * Ajoute les ressources au document
+     */
     protected function _putresources()
     {
         parent::_putresources();
@@ -142,6 +150,9 @@ trait JoinedFilePdfTrait
         }
     }
 
+    /**
+     * Ajoute le catalogue au document
+     */
     protected function _putcatalog()
     {
         parent::_putcatalog();

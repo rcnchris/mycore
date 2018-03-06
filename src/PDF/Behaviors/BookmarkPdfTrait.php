@@ -21,7 +21,7 @@ namespace Rcnchris\Core\PDF\Behaviors;
 /**
  * Trait ColorsPdfTrait
  * <ul>
- * <li>Ajouter des bookmarks dans un document PDF</li>
+ * <li>Ajouter des signets hiérarchisables dans un document PDF</li>
  * </ul>
  *
  * @category PDF

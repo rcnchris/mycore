@@ -24,6 +24,9 @@ use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class Config
+ * <ul>
+ * <li>Permet la gestion d'un conteneur de dépendances.</li>
+ * </ul>
  *
  * @category Configuration
  *
@@ -31,11 +34,7 @@ use Psr\Container\NotFoundExceptionInterface;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class Config implements ContainerInterface
 {

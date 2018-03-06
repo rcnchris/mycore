@@ -35,6 +35,8 @@ class FlashExtension extends \Twig_Extension
 {
 
     /**
+     * Instance du service
+     *
      * @var \Rcnchris\Core\Session\FlashService
      */
     private $flash;
@@ -50,6 +52,8 @@ class FlashExtension extends \Twig_Extension
     }
 
     /**
+     * Obtenir la liste des fonctions
+     *
      * @return array[\Twig_SimpleFunction]
      */
     public function getFunctions()

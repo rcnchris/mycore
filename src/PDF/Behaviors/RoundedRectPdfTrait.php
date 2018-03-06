@@ -15,7 +15,7 @@
 namespace Rcnchris\Core\PDF\Behaviors;
 
 /**
- * Class RoundedRectPdfTrait
+ * Trait RoundedRectPdfTrait
  * <ul>
  * <li>Permet de tracer un rectangle avec les bords arrondis</li>
  * </ul>

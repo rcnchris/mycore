@@ -19,7 +19,7 @@
 namespace Rcnchris\Core\PDF\Behaviors;
 
 /**
- * Class GrillePdfTrait
+ * Trait GrillePdfTrait
  * <ul>
  * <li>Ajoute une grille pour aider à positionner les élements lors du développement.</li>
  * </ul>
@@ -28,13 +28,9 @@ namespace Rcnchris\Core\PDF\Behaviors;
  *
  * @package  Rcnchris\Core\PDF\Behaviors
  *
- * @author   ${USER} <rcn.chris@gmail.com>
- *
- * @license  https://github.com/rcnchris/fmk-php GPL
+ * @author   <rcn.chris@gmail.com>
  *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 trait GridPdfTrait
 {

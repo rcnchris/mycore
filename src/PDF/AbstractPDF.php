@@ -20,6 +20,10 @@ namespace Rcnchris\Core\PDF;
 
 /**
  * Class AbstractPDF
+ * <ul>
+ * <li>Classe parente de tous les documents PDF.</li>
+ * <li>Pour créer nouveau document, créer une classe qui hérite de <code>AbstractPDF</code> et lui associer les traits qui correspondent aux fonctionnalités souhaitées</li>
+ * </ul>
  *
  * @category PDF
  *

@@ -114,7 +114,8 @@ class DebugExtension extends \Twig_Extension
      * ### Exemple
      * - `object|getParentClass`
      *
-     * @param object $value Objet dont il faut récupérer le nom du parent
+     * @param object    $value  Objet dont il faut récupérer le nom du parent
+     * @param bool|null $recurs Remonte tous les parents
      *
      * @return bool|string
      */

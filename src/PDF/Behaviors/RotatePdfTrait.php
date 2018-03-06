@@ -19,7 +19,10 @@
 namespace Rcnchris\Core\PDF\Behaviors;
 
 /**
- * Class RotatePdfTrait
+ * Trait RotatePdfTrait
+ * <ul>
+ * <li>Permet d'effectuer une rotation à du texte ou une image.</li>
+ * </ul>
  *
  * @category PDF
  *
@@ -31,12 +34,19 @@ namespace Rcnchris\Core\PDF\Behaviors;
  */
 trait RotatePdfTrait
 {
+    /**
+     * Angle de l'arc
+     *
+     * @var int
+     */
     private $angle = 0;
 
     /**
-     * @param     $angle
-     * @param int $x
-     * @param int $y
+     * Effectue une rotation
+     *
+     * @param int $angle Angle de l'arc
+     * @param int $x     Abscisse du centre de rotation
+     * @param int $y     Ordonnée du centre de rotation
      */
     private function rotate($angle, $x = -1, $y = -1)
     {
@@ -64,7 +74,7 @@ trait RotatePdfTrait
     }
 
     /**
-     *
+     * Définit l'état du document à 1
      */
     protected function _endpage()
     {

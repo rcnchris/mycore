@@ -18,6 +18,20 @@
 
 namespace Rcnchris\Core\PDF\Behaviors;
 
+/**
+ * Trait EllipsePdfTrait
+ * <ul>
+ * <li>Permet de dessiner des cercles et ellipses.</li>
+ * </ul>
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF\Behaviors
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 trait EllipsePdfTrait
 {
     /**

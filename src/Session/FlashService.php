@@ -33,12 +33,14 @@ class FlashService
 {
 
     /**
+     * Instance de la session
+     *
      * @var \Rcnchris\Core\Session\SessionInterface
      */
     private $session;
 
     /**
-     * Nom de clé des messages flash en session
+     * Nom de la clé des messages flash en session
      *
      * @var string
      */

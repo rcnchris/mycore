@@ -19,7 +19,7 @@
 namespace Rcnchris\Core\PDF\Behaviors;
 
 /**
- * Class LayoutsPdfTrait
+ * Trait LayoutsPdfTrait
  * <ul>
  * <li>Permet l'utilisation de composants imprimables</li>
  * </ul>
@@ -48,7 +48,14 @@ trait LayoutsPdfTrait
             ['color' => 'brown', 'size' => 12, 'style' => 'B', 'align' => 'L', 'fill' => false, 'heightLine' => 7],
             ['color' => 'black', 'size' => 10, 'style' => 'BI', 'align' => 'L', 'fill' => false, 'heightLine' => 7],
             ['color' => 'aloha', 'size' => 10, 'style' => 'B', 'align' => 'L', 'fill' => false, 'heightLine' => 7],
-            ['color' => 'blueamalficoast', 'size' => 10, 'style' => 'B', 'align' => 'L', 'fill' => false, 'heightLine' => 7]
+            [
+                'color' => 'blueamalficoast',
+                'size' => 10,
+                'style' => 'B',
+                'align' => 'L',
+                'fill' => false,
+                'heightLine' => 7
+            ]
         ];
         $withBookmark ? $this->addBookmark($label, $level) : null;
         $this->SetFont(
@@ -90,7 +97,8 @@ trait LayoutsPdfTrait
     /**
      * Imprime une alerte avec du texte
      *
-     * @param string $info texte de l'alerte
+     * @param string      $info    texte de l'alerte
+     * @param string|null $context Contexte de l'alerte
      */
     public function alert($info, $context = 'info')
     {

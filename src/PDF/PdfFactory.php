@@ -32,66 +32,209 @@ use Rcnchris\Core\PDF\Behaviors\RotatePdfTrait;
 use Rcnchris\Core\PDF\Behaviors\RoundedRectPdfTrait;
 use Rcnchris\Core\PDF\Behaviors\RowPdfTrait;
 
+/**
+ * Class BookmarkPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class BookmarkPdf extends AbstractPDF
 {
     use BookmarkPdfTrait;
 }
 
+/**
+ * Class ColorsPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class ColorsPdf extends AbstractPDF
 {
     use ColorsPdfTrait;
 }
 
+/**
+ * Class DataPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class DataPdf extends AbstractPDF
 {
     use DataPdfTrait;
 }
 
+/**
+ * Class EanPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class EanPdf extends AbstractPDF
 {
     use Ean13PdfTrait;
 }
 
+/**
+ * Class EllipsePdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class EllipsePdf extends AbstractPDF
 {
     use EllipsePdfTrait;
 }
 
+/**
+ * Class GridPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class GridPdf extends AbstractPDF
 {
     use GridPdfTrait;
 }
 
+/**
+ * Class IconPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class IconPdf extends AbstractPDF
 {
     use IconsPdfTrait;
 }
 
+/**
+ * Class JoinPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class JoinPdf extends AbstractPDF
 {
     use JoinedFilePdfTrait;
 }
 
+/**
+ * Class LayoutPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class LayoutPdf extends AbstractPDF
 {
     use LayoutsPdfTrait;
 }
 
+/**
+ * Class Psr7Pdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class Psr7Pdf extends AbstractPDF
 {
     use Psr7PdfTrait;
 }
 
+/**
+ * Class RoundPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class RoundPdf extends AbstractPDF
 {
     use RoundedRectPdfTrait;
 }
 
+/**
+ * Class RotatePdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class RotatePdf extends AbstractPDF
 {
     use RotatePdfTrait;
 }
 
+/**
+ * Class RowPdf
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 class RowPdf extends AbstractPDF
 {
     use RowPdfTrait;
@@ -115,12 +258,18 @@ class PdfFactory
 {
 
     /**
+     * Instance du document PDF
+     *
      * @var object
      */
     protected static $pdf;
 
     /**
      * Obtenir une instance d'un document PDF qui utilise un trait
+     *
+     * ### Exemple
+     * - `PdfFactory::make();`
+     * - `PdfFactory::make('grid');`
      *
      * @param string|null $type    Type de document PDF
      * @param array|null  $options Options du document
