@@ -7,7 +7,7 @@
  *
  * @category PDF
  *
- * @package  Rcnchris\CorePDF
+ * @package  Rcnchris\Core\PDF\Behaviors
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -16,8 +16,22 @@
  * @link     https://github.com/rcnchris On Github
  */
 
-namespace Rcnchris\Core\PDF;
+namespace Rcnchris\Core\PDF\Behaviors;
 
+/**
+ * Trait ColorsPdfTrait
+ * <ul>
+ * <li>Utiliser une palette de couleurs standard ou personnalisée dans un document PDF</li>
+ * </ul>
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF\Behaviors
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 trait ColorsPdfTrait
 {
 
@@ -199,7 +213,7 @@ trait ColorsPdfTrait
      * @param string|null $name Nom ou code héxadécimal d'une couleur
      * @param bool        $toRgb
      *
-     * @return array
+     * @return array|string|bool
      * @throws \Exception
      */
     public function getColors($name = null, $toRgb = false)
@@ -212,12 +226,13 @@ trait ColorsPdfTrait
         if ($name[0] === '#') {
             $color = array_search(strtoupper($name), $this->colors);
             if ($toRgb) {
-                $color = $this->hexaToRgb($this->getColors($color));
+                $color = $this->colorToRgb($this->getColors($color));
             }
         } elseif (array_key_exists($name, $this->colors)) {
             $color = $this->colors[$name];
+
             if ($toRgb) {
-                $color = $this->hexaToRgb($color);
+                $color = $this->colorToRgb($color);
             }
         }
         return $color;
@@ -227,18 +242,24 @@ trait ColorsPdfTrait
      * Obtenir les valeurs RGB d'une couleur au format héxadécimal
      *
      * ### Exemple
-     * - `$pdf->hexaToRgb('#CCCCCC');`
+     * - `$pdf->colorToRgb('#CCCCCC');`
      *
-     * @param string $hexa Code héxadécimal de 7 caractères
+     * @param string $color Code héxadécimal de 7 caractères ou nom d'une couleur de la palette
      *
      * @return array
      * @throws \Exception
      */
-    public function hexaToRgb($hexa)
+    public function colorToRgb($color)
     {
-        $hexa = strtolower($hexa);
-        if ($hexa[0] != '#' || strlen($hexa) != 7) {
-            throw new \Exception("Couleur incorrecte");
+        $hexa = null;
+        $hexa = is_string($color) && $color[0] != '#'
+            ? $this->getColors($color)
+            : $color;
+
+        if (is_null($hexa) || !$hexa) {
+            throw new \Exception("Couleur $color introuvable");
+        } elseif (strlen($hexa) != 7) {
+            throw new \Exception("Code héxadécimal : '$hexa' de mauvaise longueur");
         }
         return [
             'r' => hexdec(substr($hexa, 1, 2)),
@@ -289,22 +310,23 @@ trait ColorsPdfTrait
      * @return $this
      * @throws \Exception
      */
-    public function setColor($color, $tool = 'text')
+    protected function setColor($color, $tool = 'text')
     {
-        if (!$this->hasTool($tool)) {
-            throw new \Exception(
-                "Type '$tool' inconnu dans la fonction setColor, essayez plutôt un de ceux-ci : "
-                . implode(', ', $this->getTools())
-            );
-        }
+//        if (!$this->hasTool($tool)) {
+//            throw new \Exception(
+//                "Type '$tool' inconnu dans la fonction setColor, essayez plutôt un de ceux-ci : "
+//                . implode(', ', $this->getTools())
+//            );
+//        }
         $method = 'Set' . strtolower($tool) . 'Color';
-        $rgb = $this->hexaToRgb($this->getColors($color));
+        $rgb = $this->colorToRgb($color);
         $this->$method($rgb['r'], $rgb['g'], $rgb['b']);
-        return $this;
     }
 
     /**
-     * @param $name
+     * Vérifie la présence d'une couleur dans la palette
+     *
+     * @param string $name Nom ou code héxadécimal d'une couleur
      *
      * @return bool
      */

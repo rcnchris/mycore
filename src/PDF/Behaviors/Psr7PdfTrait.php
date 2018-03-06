@@ -7,7 +7,7 @@
  *
  * @category New
  *
- * @package Rcnchris\Core\PDF
+ * @package Rcnchris\Core\PDF\Behaviors
  *
  * @author Raoul <rcn.chris@gmail.com>
  *
@@ -16,10 +16,24 @@
  * @link https://github.com/rcnchris On Github
  */
 
-namespace Rcnchris\Core\PDF;
+namespace Rcnchris\Core\PDF\Behaviors;
 
 use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Trait Psr7PdfTrait
+ * <ul>
+ * <li>Utilisation de la norme PSR7 pour produire la visualisation dans le navigateur et le téléchargement de document PDF</li>
+ * </ul>
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF\Behaviors
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 trait Psr7PdfTrait
 {
 

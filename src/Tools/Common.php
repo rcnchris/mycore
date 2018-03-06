@@ -318,7 +318,7 @@ class Common
      * Obtenir les valeurs RGB d'une couleur à partir de son code hexadécimal
      *
      * ### Exemple
-     * - `Common::hexaToRgb('#A52A2A');`
+     * - `Common::colorToRgb('#A52A2A');`
      *
      * @param string $c Code hexadécimal d'une couleur (#000000)
      *

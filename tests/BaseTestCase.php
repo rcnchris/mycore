@@ -124,6 +124,11 @@ class BaseTestCase extends TestCase
         return "\033[0;33m$message\033[m";
     }
 
+    protected function ekoMsgInfo($message)
+    {
+        echo "\033[0;34m$message\n\033[m";
+    }
+
     /**
      * Supprime les espaces et retours à la ligne
      *
@@ -159,8 +164,21 @@ class BaseTestCase extends TestCase
      */
     protected function assertArrayAccess($object, $key, $expect, array $methods = [])
     {
+        $class = get_class($object);
+        $this->ekoMsgInfo("Implémentation ArrayAccess de $class");
+
+        $this->assertArrayHasKey(
+            'ArrayAccess'
+            , class_implements($object)
+            , $this->getMessage("L'instance de $class n'implémente pas l'interface ArrayAccess")
+        );
+
         if (empty($methods)) {
             $methods = ['offsetExists', 'offsetGet', 'offsetSet', 'offsetUnset'];
+        } else {
+            $methods = array_map(function ($method) {
+                return 'offset' . ucfirst($method);
+            }, $methods);
         }
 
         foreach ($methods as $method) {
@@ -169,7 +187,7 @@ class BaseTestCase extends TestCase
                 // offsetExists
                 $this->assertTrue(
                     isset($object[$key])
-                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetExists")
+                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetExists pour $class")
                 );
             }
             if ($method === 'offsetGet') {
@@ -177,18 +195,54 @@ class BaseTestCase extends TestCase
                 $this->assertEquals(
                     $expect
                     , $object[$key]
-                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetGet")
+                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetGet pour $class")
                 );
             }
             if ($method === 'offsetSet') {
                 $object[$key] = $expect;
-                $this->assertEquals($expect, $object[$key]);
+                $this->assertEquals(
+                    $expect
+                    , $object[$key]
+                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetSet pour $class")
+                );
             }
             if ($method === 'offsetUnset') {
                 unset($object[$key]);
-                $this->assertFalse(isset($object[$key]));
+                $this->assertFalse(
+                    isset($object[$key])
+                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetUnset pour $class")
+                );
             }
         }
+    }
+
+
+    /**
+     * Vérifie si un objet est sérialisable
+     *
+     * @param $object
+     */
+    public function assertSerializable($object)
+    {
+        $class = get_class($object);
+        $this->ekoMsgInfo("Implémentation Serializable de $class");
+
+        $this->assertArrayHasKey(
+            'Serializable'
+            , class_implements($object)
+            , $this->getMessage("L'instance de $class n'implémente pas l'interface Serializable")
+        );
+
+        $this->assertInternalType(
+            'string'
+            , $object->serialize()
+            , $this->getMessage("Le retour de la méthode 'serialize' n'est pas au format string pour l'instance de $class")
+        );
+
+        $this->assertTrue(
+            method_exists($object, 'unserialize')
+            , $this->getMessage("La méthode 'unserialize est absente de l'instance de $class")
+        );
     }
 
     /**

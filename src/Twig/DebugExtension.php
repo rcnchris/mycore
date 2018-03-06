@@ -45,12 +45,18 @@ class DebugExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('getClass', [$this, 'getClass'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('getMethods', [$this, 'getMethods'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('getProperties', [$this, 'getProperties'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('getParentClass', [$this, 'getParentClass'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('getParentMethods', [$this, 'getParentMethods'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('getImplements', [$this, 'getImplements'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('getTraits', [$this, 'getTraits'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('getMethods', [$this, 'getMethods'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('getProperties', [$this, 'getProperties'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('getParentClass', [$this, 'getParentClass'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('getParentMethods', [$this, 'getParentMethods'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('getImplements', [$this, 'getImplements'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('getTraits', [$this, 'getTraits'], ['is_safe' => ['html']])
         ];
     }
 
@@ -105,15 +111,30 @@ class DebugExtension extends \Twig_Extension
     /**
      * Nom du parent de la classe de l'objet passé en paramètre
      *
-     * @exemple object|getParentClass
+     * ### Exemple
+     * - `object|getParentClass`
      *
      * @param object $value Objet dont il faut récupérer le nom du parent
      *
      * @return bool|string
      */
-    public function getParentClass($value)
+    public function getParentClass($value, $recurs = false)
     {
-        return is_object($value) ? get_parent_class($value) : false;
+        $parents = [];
+        if (is_object($value)) {
+            if ($recurs) {
+                $parent = null;
+                while (get_parent_class($value) != null) {
+                    $parent = get_parent_class($value);
+                    $parents[] = $parent;
+                    $value = $parent;
+                }
+                return $parents;
+            } else {
+                return get_parent_class($value);
+            }
+        }
+        return false;
     }
 
     /**
@@ -131,7 +152,10 @@ class DebugExtension extends \Twig_Extension
     /**
      * Obtenir les interfaces utilisées par un objet
      *
-     * @param $value
+     * ### Exemple
+     * - `o|getImplements`
+     *
+     * @param object $value Objet
      *
      * @return array|bool
      */
@@ -153,19 +177,22 @@ class DebugExtension extends \Twig_Extension
      */
     public function getTraits($value)
     {
-        return is_object($value) ? class_uses($value) : false;
+        $ret = is_object($value) ? class_uses($value) : false;
+        sort($ret);
+        return $ret;
     }
 
     /**
      * Obtenir la liste des fonctions
      *
-     * @return array
+     * @return array[\Twig_SimpleFunction]
      */
     public function getFunctions()
     {
         return [
             new \Twig_SimpleFunction('r', [$this, 'phpRef'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFunction('vd', [$this, 'vd'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFunction('vd', [$this, 'vd'], ['is_safe' => ['html']])
         ];
     }
 

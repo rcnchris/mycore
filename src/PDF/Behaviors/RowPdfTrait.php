@@ -7,7 +7,7 @@
  *
  * @category PDF
  *
- * @package  Rcnchris\Core\PDF
+ * @package  Rcnchris\Core\PDF\Behaviors
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -16,11 +16,30 @@
  * @link     https://github.com/rcnchris On Github
  */
 
-namespace Rcnchris\Core\PDF;
+namespace Rcnchris\Core\PDF\Behaviors;
 
+/**
+ * Trait RowPdfTrait
+ * <ul>
+ * <li>Définition de tableaux et écriture d'une ligne</li>
+ * </ul>
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 trait RowPdfTrait
 {
-
+    /**
+     * Hauteur de ligne
+     *
+     * @var int
+     */
+    private $heightLine = 5;
 
     /**
      * Tableau des largeurs de colonnes
@@ -72,6 +91,20 @@ trait RowPdfTrait
     private $colsFill;
 
     /**
+     * Tableau des polices par colonne
+     *
+     * @var array
+     */
+    private $colsFont = [];
+
+    /**
+     * Tableau des tailles de polices de chaque colonne
+     *
+     * @var array
+     */
+    private $colsFontSize = [];
+
+    /**
      * Définir le nombre et la largeur des colonnes en unité
      *
      * ### Exemple
@@ -90,7 +123,7 @@ trait RowPdfTrait
     public function setColsWidthInPourc()
     {
         foreach (func_get_args() as $k => $w) {
-            $this->colsWidth[$k] = $this->w * ($w / 100);
+            $this->colsWidth[$k] = $this->getBodySize('width') * ($w / 100);
         }
     }
 
@@ -136,7 +169,7 @@ trait RowPdfTrait
     public function setColsTextColors()
     {
         foreach (func_get_args() as $k => $c) {
-            $this->colsTextColors[$k] = is_null($c) ? 'black' : $c;
+            $this->colsTextColors[$k] = is_null($c) ? 0 : $c;
         }
     }
 
@@ -146,7 +179,7 @@ trait RowPdfTrait
     public function setColsFillColors()
     {
         foreach (func_get_args() as $k => $c) {
-            $this->colsFillColors[$k] = is_null($c) ? 'black' : $c;
+            $this->colsFillColors[$k] = is_null($c) ? 0 : $c;
         }
     }
 
@@ -156,12 +189,32 @@ trait RowPdfTrait
     public function setColsDrawColors()
     {
         foreach (func_get_args() as $k => $c) {
-            $this->colsDrawColors[$k] = is_null($c) ? 'black' : $c;
+            $this->colsDrawColors[$k] = is_null($c) ? 0 : $c;
         }
     }
 
     /**
-     * Imprime un ligne selon le colonnage définit avec setColsWidth
+     * Définir la police de chaque colonne
+     */
+    public function setColsFont()
+    {
+        foreach (func_get_args() as $k => $f) {
+            $this->colsFont[$k] = is_null($f) ? 'courier' : $f;
+        }
+    }
+
+    /**
+     * Définir la taille de la police de chaque colonne
+     */
+    public function setColsFontSize()
+    {
+        foreach (func_get_args() as $k => $s) {
+            $this->colsFontSize[$k] = is_null($s) ? $this->font->size : $s;
+        }
+    }
+
+    /**
+     * Imprime une ligne selon le colonnage définit avec setColsWidth
      *
      * ### Exemple :
      * - `$pdf->rowCols('Ola', 'les', 'gens');`
@@ -184,14 +237,14 @@ trait RowPdfTrait
             $align = isset($this->colsAlign[$i]) ? $this->colsAlign[$i] : 'L';
             $border = isset($this->colsBorder[$i]) ? $this->colsBorder[$i] : 0;
 
-            $textColor = isset($this->colsTextColors[$i]) ? $this->colsTextColors[$i] : 'black';
-            $this->setColor($textColor);
+            $textColor = isset($this->colsTextColors[$i]) ? $this->colsTextColors[$i] : 0;
+            $this->setToolColor($textColor);
 
-            $fillColor = isset($this->colsFillColors[$i]) ? $this->colsFillColors[$i] : 'black';
-            $this->setColor($fillColor, 'fill');
+            $fillColor = isset($this->colsFillColors[$i]) ? $this->colsFillColors[$i] : 0;
+            $this->setToolColor($fillColor, 'fill');
 
-            $drawColor = isset($this->colsDrawColors[$i]) ? $this->colsDrawColors[$i] : 'black';
-            $this->setColor($drawColor, 'draw');
+            $drawColor = isset($this->colsDrawColors[$i]) ? $this->colsDrawColors[$i] : 0;
+            $this->setToolColor($drawColor, 'draw');
 
             $fill = isset($this->colsFill[$i]) ? $this->colsFill[$i] : false;
 
@@ -200,11 +253,11 @@ trait RowPdfTrait
             $y = $this->GetY();
 
             // Imprime le texte
-            $this->MultiCell($width, 5, utf8_decode($data[$i]), $border, $align, $fill);
+            $this->MultiCell($width, $this->heightLine, utf8_decode($data[$i]), $border, $align, $fill);
 
-            $this->setColor('black');
-            $this->setColor('graylight', 'fill');
-            $this->setColor('black', 'draw');
+            $this->SetTextColor(0);
+            $this->SetFillColor(0);
+            $this->SetDrawColor(0);
             // Repositionne à droite
             $this->SetXY($x + $width, $y);
         }
@@ -229,7 +282,7 @@ trait RowPdfTrait
      *
      * @param int $indice Indice de la colonne
      *
-     * @return bool
+     * @return double|bool
      */
     public function getColWidth($indice)
     {
@@ -237,6 +290,34 @@ trait RowPdfTrait
             return $this->colsWidth[$indice];
         }
         return false;
+    }
+
+    /**
+     * Obtenir toutes propriétés des colonnes ou celles de l'une d'entre elle
+     *
+     * @param int|null $indice Numéro de la colonne
+     *
+     * @return array
+     */
+    public function getColsProperties($indice = null)
+    {
+        $p = [];
+        for ($i = 0; $i < $this->getNbCols(); $i++) {
+            $p[$i] = [
+                'width' => $this->getColWidth($i),
+                'align' => isset($this->colsAlign[$i]) ? $this->colsAlign[$i] : 'L',
+                'border' => isset($this->colsBorder[$i]) ? $this->colsBorder[$i] : 0,
+                'fill' => isset($this->colsFill[$i]) ? $this->colsFill[$i] : false,
+                'fillColor' => isset($this->colsFillColors[$i]) ? $this->colsFillColors[$i] : $this->getToolColor('fill'),
+                'textColor' => isset($this->colsTextColors[$i]) ? $this->colsTextColors[$i] : $this->getToolColor('text'),
+                'drawColor' => isset($this->colsDrawColors[$i]) ? $this->colsDrawColors[$i] : $this->getToolColor('draw'),
+                'font' => isset($this->colsFont[$i]) ? $this->colsFont[$i] : $this->getFontProperty('family'),
+                'fontSize' => isset($this->colsFontSize[$i]) ? $this->colsFontSize[$i] : $this->getFontProperty('size'),
+            ];
+        }
+        return !is_null($indice) && array_key_exists($indice, $p)
+            ? $p[$indice]
+            : $p;
     }
 
     /**
@@ -310,5 +391,15 @@ trait RowPdfTrait
             }
         }
         return $nl;
+    }
+
+    /**
+     * Définir la hauteur de ligne
+     *
+     * @param int $heightLine Hauteur des ligness
+     */
+    public function setHeightLine($heightLine)
+    {
+        $this->heightLine = $heightLine;
     }
 }

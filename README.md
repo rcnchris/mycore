@@ -71,6 +71,13 @@ $img = new Image('path/to/file');
 $src = $img->getEncode();
 ````
 
+#### Session
+Facilite la manipulation des sessions utilisateurs.
+````
+$session = new PHPSession();
+$ip = $session->get('ip');
+````
+
 #### Text
 Facilite la manipulation des chaînes de caractères.
 ````
@@ -101,6 +108,22 @@ $pdf->toDownload(ResponseInterface $response, 'filename');
 // Visualiser dans le navigateur
 $pdf->toView(ResponseInterface $response, 'filename');
 ````
+
+Les comportements sont gérés via des traits :
+
+- Signets
+- Couleurs
+- Données
+- Codes à barres
+- Cercles et ellipses
+- Grille graduée
+- Icônes
+- Fichier joint
+- Layouts HTML
+- PSR7
+- Rotation de texte et d'image
+- Rectangle arrondis
+- Colonnes et lignes
 
 -------
 
@@ -180,6 +203,7 @@ Ajoute des extensions à Twig.
 - Formulaire
 - Icônes
 - Bootstrap 4
+- Messages flash
 
 -------
 

@@ -249,7 +249,7 @@ class Colors
      * Obtenir les valeurs RGB depuis un code couleur héxadécimal
      *
      * ### Exemple
-     * - `$colors->hexaToRgb('#45EF4B');`
+     * - `$colors->colorToRgb('#45EF4B');`
      *
      * @param string $hexa Code héxadécimal sur 7 caractères
      *

@@ -359,12 +359,19 @@ class RandomItemsTest extends BaseTestCase {
         $this->assertCount(
             3
             , $items
-            , $this->getMessage("Il devrait y avoir trois dates dans le tableau")
+            , $this->getMessage("Il devrait y avoir trois extensions dans le tableau")
         );
         $this->assertInternalType(
             'string'
             , current($items)
             , $this->getMessage("Le type attendu d'un item est incorrect")
         );
+    }
+
+    public function testGetInvoices()
+    {
+        $invoice = RandomItems::invoices();
+        $this->assertInternalType('array', $invoice);
+        $this->assertArrayHasKey('numero', $invoice);
     }
 }

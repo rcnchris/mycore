@@ -4,18 +4,12 @@ namespace Tests\Rcnchris\Core\PDF;
 use Rcnchris\Core\PDF\AbstractPDF;
 use Tests\Rcnchris\BaseTestCase;
 
-class AbstractPDFTest extends BaseTestCase {
+class AbstractPDFTest extends BaseTestCase
+{
 
-    private function makePdf($options = [], $data = null)
+    private function makePdf($options = [])
     {
-        if (is_null($data)) {
-            $data = [
-                ['name' => 'Mathis', 'year' => 2007],
-                ['name' => 'Rapahël', 'year' => 2007],
-                ['name' => 'Clara', 'year' => 2009],
-            ];
-        }
-        return new AbstractPDF($options, $data);
+        return new AbstractPDF($options);
     }
 
     public function testInstance()
@@ -37,27 +31,6 @@ class AbstractPDFTest extends BaseTestCase {
         );
     }
 
-    public function testGetFont()
-    {
-        $this->assertEquals(
-            'courier'
-            , $this->makePdf()->getFont()
-            , $this->getMessage("La police par défaut est incorrecte")
-        );
-
-        $this->assertEquals(
-            10
-            , $this->makePdf()->getFont('size')
-            , $this->getMessage("La taille de la police par défaut est incorrecte")
-        );
-
-        $this->assertEquals(
-            ['family', 'style', 'size', 'sizeInUnit', 'color', 'isUnderline']
-            , array_keys($this->makePdf()->getFont(null, true))
-            , $this->getMessage("Les clés du retour de getFont sont incorrectes")
-        );
-    }
-
     public function testGetFonts()
     {
         $this->assertContains(
@@ -69,74 +42,169 @@ class AbstractPDFTest extends BaseTestCase {
 
     public function testGetBodySize()
     {
+        // Document A4 portrait
         $pdf = $this->makePdf();
         $this->assertEquals(
-            ['width' => 189, 'height' => 266]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document par défaut est incorrecte")
+            ['width', 'height']
+            , array_keys($pdf->getBodySize())
+            , $this->getMessage("Les clés retournées sont incorrectes")
         );
+    }
 
-        $pdf = $this->makePdf(['orientation' => 'P', 'unit' => 'mm', 'format' => 'A3']);
+    public function testSizeA4_P()
+    {
+        // Document A4 portrait
+        $pdf = $this->makePdf();
         $this->assertEquals(
-            ['width' => 276, 'height' => 389]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document au format A3 est incorrecte")
+            189
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document est incorrecte")
         );
-
-        $pdf = $this->makePdf(['orientation' => 'P', 'unit' => 'mm', 'format' => 'A5']);
         $this->assertEquals(
-            ['width' => 128, 'height' => 179]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document au format A5 est incorrecte")
+            266
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document est incorrecte")
         );
+    }
 
-        $pdf = $this->makePdf(['orientation' => 'P', 'unit' => 'mm', 'format' => 'Letter']);
-        $this->assertEquals(
-            ['width' => 195, 'height' => 249]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document au format Letter est incorrecte")
-        );
-
-        $pdf = $this->makePdf(['orientation' => 'P', 'unit' => 'mm', 'format' => 'Legal']);
-        $this->assertEquals(
-            ['width' => 195, 'height' => 325]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document au format Legal est incorrecte")
-        );
-
+    public function testSizeA4_L()
+    {
         $pdf = $this->makePdf(['orientation' => 'L', 'unit' => 'mm', 'format' => 'A4']);
         $this->assertEquals(
-            ['width' => 276, 'height' => 179]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document avec l'orientation paysage est incorrecte")
+            276
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document A4 en paysage est incorrecte")
         );
+        $this->assertEquals(
+            179
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document A4 en paysage est incorrecte")
+        );
+    }
 
+    public function testSizeA3_P()
+    {
+        // Document A3 paysage
+        $pdf = $this->makePdf(['orientation' => 'P', 'unit' => 'mm', 'format' => 'A3']);
+        $this->assertEquals(
+            276
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document est incorrecte")
+        );
+        $this->assertEquals(
+            389
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document est incorrecte")
+        );
+    }
+
+    public function testSizeA3_L()
+    {
+        // Document A3 paysage
         $pdf = $this->makePdf(['orientation' => 'L', 'unit' => 'mm', 'format' => 'A3']);
         $this->assertEquals(
-            ['width' => 399, 'height' => 266]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document avec l'orientation paysage au format A3 est incorrecte")
+            399
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document avec l'orientation paysage au format A3 est incorrecte")
         );
+        $this->assertEquals(
+            266
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document avec l'orientation paysage au format A3 est incorrecte")
+        );
+    }
 
+    public function testSizeA5_P()
+    {
+        // Document A5 portrait
+        $pdf = $this->makePdf(['orientation' => 'P', 'unit' => 'mm', 'format' => 'A5']);
+        $this->assertEquals(
+            128
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document A5 est incorrecte")
+        );
+        $this->assertEquals(
+            179
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document A5 est incorrecte")
+        );
+    }
+
+    public function testSizeA5_L()
+    {
+        // Document A5 paysage
         $pdf = $this->makePdf(['orientation' => 'L', 'unit' => 'mm', 'format' => 'A5']);
         $this->assertEquals(
-            ['width' => 189, 'height' => 118]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document avec l'orientation paysage au format A5 est incorrecte")
+            189
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document avec l'orientation paysage au format A5 est incorrecte")
         );
+        $this->assertEquals(
+            118
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document avec l'orientation paysage au format A5 est incorrecte")
+        );
+    }
 
+    public function testSizeLetter_P()
+    {
+        // Document Letter paysage
+        $pdf = $this->makePdf(['orientation' => 'P', 'unit' => 'mm', 'format' => 'Letter']);
+        $this->assertEquals(
+            195
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document est incorrecte")
+        );
+        $this->assertEquals(
+            249
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document est incorrecte")
+        );
+    }
+
+    public function testSizeLetter_L()
+    {
+        // Document Letter paysage
         $pdf = $this->makePdf(['orientation' => 'L', 'unit' => 'mm', 'format' => 'Letter']);
         $this->assertEquals(
-            ['width' => 259, 'height' => 185]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document avec l'orientation paysage au format Letter est incorrecte")
+            259
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document avec l'orientation paysage au format Letter est incorrecte")
         );
+        $this->assertEquals(
+            185
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document avec l'orientation paysage au format Letter est incorrecte")
+        );
+    }
 
+    public function testSizeLegal_P()
+    {
+        $pdf = $this->makePdf(['orientation' => 'P', 'unit' => 'mm', 'format' => 'Legal']);
+        $this->assertEquals(
+            195
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document Legal en portrait est incorrecte")
+        );
+        $this->assertEquals(
+            325
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document Legal en portrait est incorrecte")
+        );
+    }
+
+    public function testSizeLegal_L()
+    {
         $pdf = $this->makePdf(['orientation' => 'L', 'unit' => 'mm', 'format' => 'Legal']);
         $this->assertEquals(
-            ['width' => 335, 'height' => 185]
-            , $pdf->getBodySize()
-            , $this->getMessage("La taille du document avec l'orientation paysage au format Legal est incorrecte")
+            335
+            , intval($pdf->GetBodySize('width'))
+            , $this->getMessage("La largeur du document avec l'orientation paysage au format Legal est incorrecte")
+        );
+        $this->assertEquals(
+            185
+            , intval($pdf->GetBodySize('height'))
+            , $this->getMessage("La longueur du document avec l'orientation paysage au format Legal est incorrecte")
         );
     }
 
@@ -158,20 +226,26 @@ class AbstractPDFTest extends BaseTestCase {
     public function testGetCursor()
     {
         $this->assertEquals(
-            ['x' => 10, 'y' => 10]
-            , $this->makePdf()->getCursor()
-            , $this->getMessage("La position du curseur est incorrecte")
+            ['x', 'y']
+            , array_keys($this->makePdf()->getCursor())
+            , $this->getMessage("Les clés retournées sont incorrectes")
         );
+    }
 
+    public function testGetCursorX()
+    {
         $this->assertEquals(
             10
-            , $this->makePdf()->getCursor('x')
+            , intval($this->makePdf()->getCursor('x'))
             , $this->getMessage("La position X du curseur est incorrecte")
         );
+    }
 
+    public function testGetCursorY()
+    {
         $this->assertEquals(
             10
-            , $this->makePdf()->getCursor('y')
+            , intval($this->makePdf()->getCursor('y'))
             , $this->getMessage("La position Y du curseur est incorrecte")
         );
     }
@@ -191,64 +265,6 @@ class AbstractPDFTest extends BaseTestCase {
         $this->assertEquals(5, $pdf->GetY());
     }
 
-    public function testGetColor()
-    {
-        $this->assertInternalType(
-            'string'
-            , $this->makePdf()->getToolColor()
-            , $this->getMessage("Le type de retour de getToolColor est incorrect sans paramètre")
-        );
-        $this->assertInternalType(
-            'string'
-            , $this->makePdf()->getToolColor('text')
-            , $this->getMessage("Le type de retour de getToolColor est incorrect avec 'text'")
-        );
-        $this->assertInternalType(
-            'string'
-            , $this->makePdf()->getToolColor('fill')
-            , $this->getMessage("Le type de retour de getToolColor est incorrect avec 'fill'")
-        );
-        $this->assertInternalType(
-            'string'
-            , $this->makePdf()->getToolColor('draw')
-            , $this->getMessage("Le type de retour de getToolColor est incorrect avec 'draw'")
-        );
-
-        $this->assertFalse($this->makePdf()->getToolColor('fake'));
-    }
-
-    public function testGetColors()
-    {
-        $pdf = $this->makePdf();
-        $this->assertArrayHasKey('aloha', $pdf->getColors());
-        $this->assertEquals('#1ABC9C', $pdf->getColors('aloha'));
-        $this->assertEquals('aloha', $pdf->getColors('#1ABC9C'));
-    }
-
-    public function testHexaToRgb()
-    {
-        $pdf = $this->makePdf();
-        $this->assertEquals(
-            ['r' => 26, 'g' => 188, 'b' => 156]
-            , $pdf->hexaToRgb('#1ABC9C')
-            , $this->getMessage("Les valeurs RGB de la couleur 'aloha' sont incorrectes")
-        );
-    }
-
-    public function testHexaToRgbWithWrongParameterText()
-    {
-        $pdf = $this->makePdf();
-        $this->expectException(\Exception::class);
-        $pdf->hexaToRgb('fake');
-    }
-
-    public function testHexaToRgbWithWrongParameterCodeHexa()
-    {
-        $pdf = $this->makePdf();
-        $this->expectException(\Exception::class);
-        $pdf->hexaToRgb('#45');
-    }
-
     public function testGetMetadata()
     {
         $pdf = $this->makePdf();
@@ -260,26 +276,26 @@ class AbstractPDFTest extends BaseTestCase {
         $this->assertFalse($pdf->getMetadata('Fake'));
     }
 
-    public function testSetColorWithoutType()
-    {
-        $pdf = $this->makePdf();
-        $pdf->setColor('aloha');
-        $this->assertEquals('0.102 0.737 0.612 rg', $pdf->getToolColor());
-        $this->assertEquals('0.102 0.737 0.612 rg', $pdf->getToolColor('text'));
-    }
-
-    public function testSetColorWithType()
-    {
-        $pdf = $this->makePdf();
-        $pdf->setColor('aloha', 'fill');
-        $this->assertEquals('0.102 0.737 0.612 rg', $pdf->getToolColor('fill'));
-    }
-
     public function testSetMargin()
     {
-        $pdf  = $this->makePdf();
+        $pdf = $this->makePdf();
         $pdf->setMargin('right', 25);
         $this->assertEquals(25, $pdf->getMargin('r'));
+    }
+
+    public function testSetMetatdataWithString()
+    {
+        $pdf = $this->makePdf();
+        $pdf->setMetadata('tests', 'unitaires');
+        $this->assertEquals('unitaires', $pdf->getMetadata('tests'));
+    }
+
+    public function testSetMetatdataWithArray()
+    {
+        $pdf = $this->makePdf();
+        //$pdf->setMetadata('tests', 'unitaires');
+        $pdf->setMetadata(['tests' => 'unitaires']);
+        $this->assertEquals('unitaires', $pdf->getMetadata('tests'));
     }
 
     public function testToString()
@@ -301,11 +317,8 @@ class AbstractPDFTest extends BaseTestCase {
 
     public function testAddLine()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class
-            , $this->makePdf()->addLine()
-            , $this->getMessage("L'ajout d'une ligne doit retournée l'instance")
-        );
+        $this->makePdf()->addLine();
+        $this->assertTrue(true);
     }
 
     public function testHasToolType()
@@ -332,64 +345,6 @@ class AbstractPDFTest extends BaseTestCase {
     public function testGetOrientation()
     {
         $this->assertEquals('P', $this->makePdf()->getOrientation());
-    }
-
-    public function testSetFont()
-    {
-        $pdf = $this->makePdf();
-
-        $pdf->SetFont();
-        $this->assertEquals('courier', $pdf->getFont());
-
-        $pdf->SetFont('helvetica');
-        $this->assertEquals('helvetica', $pdf->getFont());
-
-        $pdf->SetFont('helvetica', 'B');
-        $this->assertEquals('helvetica', $pdf->getFont('family'));
-        $this->assertEquals('B', $pdf->getFont('style'));
-        $this->assertFalse($pdf->getFont('isUnderline'));
-
-        $pdf->SetFont('helvetica', 'B', 15);
-        $this->assertEquals('helvetica', $pdf->getFont('family'));
-        $this->assertEquals('B', $pdf->getFont('style'));
-        $this->assertEquals(15, $pdf->getFont('size'));
-        $this->assertFalse($pdf->getFont('isUnderline'));
-
-        $pdf->SetFont('helvetica', 'B', 15, 'blue');
-        $this->assertEquals('helvetica', $pdf->getFont('family'));
-        $this->assertEquals('B', $pdf->getFont('style'));
-        $this->assertEquals(15, $pdf->getFont('size'));
-        $this->assertEquals('0.000 0.000 1.000 rg', $pdf->getToolColor('text'));
-        $this->assertFalse($pdf->getFont('isUnderline'));
-
-        $pdf->SetFont('helvetica', 'B', 15, 'blue', true);
-        $this->assertEquals('helvetica', $pdf->getFont('family'));
-        $this->assertEquals('B', $pdf->getFont('style'));
-        $this->assertEquals(15, $pdf->getFont('size'));
-        $this->assertEquals('0.000 0.000 1.000 rg', $pdf->getToolColor('text'));
-        $this->assertTrue($pdf->getFont('isUnderline'));
-
-        $pdf->SetFont('helvetica', 'B', 15, 'blue', false, 'blue');
-        $this->assertEquals('helvetica', $pdf->getFont('family'));
-        $this->assertEquals('B', $pdf->getFont('style'));
-        $this->assertEquals(15, $pdf->getFont('size'));
-        $this->assertEquals('0.000 0.000 1.000 rg', $pdf->getToolColor('text'));
-        $this->assertFalse($pdf->getFont('isUnderline'));
-        $this->assertEquals('0.000 0.000 1.000 rg', $pdf->getToolColor('fill'));
-
-        $pdf->SetFont('helvetica', 'B', 15, 123);
-        $this->assertEquals('helvetica', $pdf->getFont('family'));
-        $this->assertEquals('B', $pdf->getFont('style'));
-        $this->assertEquals(15, $pdf->getFont('size'));
-        $this->assertEquals('0.482 g', $pdf->getToolColor('text'));
-        $this->assertFalse($pdf->getFont('isUnderline'));
-
-        $pdf->SetFont('helvetica', 'B', 15, [123, 105, 45]);
-        $this->assertEquals('helvetica', $pdf->getFont('family'));
-        $this->assertEquals('B', $pdf->getFont('style'));
-        $this->assertEquals(15, $pdf->getFont('size'));
-        $this->assertEquals('0.482 0.412 0.176 rg', $pdf->getToolColor('text'));
-        $this->assertFalse($pdf->getFont('isUnderline'));
     }
 
     public function testToFileWithFileName()
@@ -473,57 +428,140 @@ class AbstractPDFTest extends BaseTestCase {
         $this->assertFalse($pdf->hasFormat('fake'));
     }
 
-    public function testHasColor()
-    {
-        $pdf = $this->makePdf();
-        $this->assertTrue($pdf->hasColor('aloha'));
-        $this->assertFalse($pdf->hasColor('fake'));
-    }
-
-    public function testAddColor()
-    {
-        $pdf = $this->makePdf();
-        $pdf->addColor('flatflesh', '#fad390');
-        $this->assertEquals('#FAD390', $pdf->getColors('flatflesh'));
-    }
-
-    public function testSetColors()
-    {
-        $palette = [
-            'livid' => '#6a89cc',
-            'spray' => '#82ccdd'
-        ];
-        $pdf = $this->makePdf();
-        $pdf->setColors($palette);
-        $this->assertTrue($pdf->hasColor('spray'));
-    }
-
-    public function testSetColor()
-    {
-        $pdf = $this->makePdf();
-        $pdf->setColor('black');
-        $this->assertEquals('0.000 g', $pdf->getToolColor('text'));
-
-        $pdf->setColor('black', 'draw');
-        $this->assertEquals('0.000 G', $pdf->getToolColor('draw'));
-
-        $pdf->setColor('black', 'fill');
-        $this->assertEquals('0.000 g', $pdf->getToolColor('fill'));
-
-        $pdf->setColor('black', 'text');
-        $this->assertEquals('0.000 g', $pdf->getToolColor('text'));
-
-        $this->expectException(\Exception::class);
-        $pdf->setColor('black', 'fake');
-    }
-
     public function testGetPageBreak()
     {
         $pdf = $this->makePdf();
         $this->assertEquals(
             276
-            , $pdf->getPageBreak()
+            , intval($pdf->getPageBreak())
             , $this->getMessage("La valeur du saut de page est incorrecte")
         );
     }
+
+    public function testGetToolColor()
+    {
+        $pdf = $this->makePdf();
+        $this->assertEquals(['draw', 'fill', 'text'], array_keys($pdf->getToolColor()));
+        $this->assertEquals('0 G', $pdf->getToolColor('draw'));
+        $this->assertEquals('0 g', $pdf->getToolColor('fill'));
+        $this->assertEquals('0 g', $pdf->getToolColor('text'));
+        $this->assertFalse($pdf->getToolColor('fake'));
+    }
+
+    public function testGetFontProperties()
+    {
+        $pdf = $this->makePdf();
+        $this->assertEquals('helvetica', $pdf->getFontProperty('family'));
+        $this->assertEquals('', $pdf->getFontProperty('style'));
+        $this->assertEquals(10, $pdf->getFontProperty('size'));
+    }
+
+    public function testGetFontPropertiesWithoutParameter()
+    {
+        $this->assertEquals(
+            [
+                'family', 'style', 'size', 'sizeInUnit'
+            ]
+            , array_keys($this->makePdf()->getFontProperty())
+            , $this->getMessage("Les propriétés de la police courante sont incorrectes")
+        );
+    }
+
+    public function testGetFontPropertiesWithWrongParameter()
+    {
+        $this->assertFalse($this->makePdf()->getFontProperty('fake'));
+    }
+
+    public function testSetFontWithoutParameter()
+    {
+        $pdf = $this->makePdf();
+        $pdf->SetFont();
+        $this->assertEquals('helvetica', $pdf->getFontProperty('family'));
+        $this->assertEquals('', $pdf->getFontProperty('style'));
+        $this->assertEquals(10, $pdf->getFontProperty('size'));
+    }
+
+    public function testSetFontWithOnlyFontFamily()
+    {
+        $pdf = $this->makePdf();
+        $pdf->SetFont('helvetica');
+
+        $this->assertEquals(
+            'helvetica'
+            , $pdf->getFontProperty('family')
+            , $this->getMessage("La police courante n'est pas celle définit")
+        );
+
+        $this->assertEquals('', $pdf->getFontProperty('style'));
+        $this->assertEquals(10, $pdf->getFontProperty('size'));
+    }
+
+    public function testIsUnderline()
+    {
+        $this->assertFalse(
+            $this->makePdf()->isUnderline()
+            , $this->getMessage("Le document est instancié avec une police soulignable")
+        );
+    }
+
+    public function testHexaToRgbWithCodeHexa()
+    {
+        $blackRgb = ['r' => 0, 'g' => 0, 'b' => 0];
+        $pdf = $this->makePdf();
+        $this->assertEquals($blackRgb, $pdf->hexaToRgb('#000000'));
+    }
+
+    public function testHexaToRgbWithWrongParameter()
+    {
+        $this->expectException(\Exception::class);
+        $this->makePdf()->hexaToRgb('fake');
+    }
+
+    public function testSetToolColorWithoutParameter()
+    {
+        $pdf = $this->makePdf();
+        $pdf->setToolColor(0);
+        $this->assertEquals('0.000 g', $pdf->getToolColor('text'));
+    }
+
+    public function testSetToolColorWithToolParameter()
+    {
+        $pdf = $this->makePdf();
+        $pdf->setToolColor(0, 'draw');
+        $this->assertEquals('0.000 G', $pdf->getToolColor('draw'));
+    }
+
+    public function testSetToolColorWithRgbArray()
+    {
+        $pdf = $this->makePdf();
+        $pdf->setToolColor(['r' => 0, 'g' => 0, 'b' => 0], 'draw');
+        $this->assertEquals('0.000 G', $pdf->getToolColor('draw'));
+    }
+
+    public function testSetToolColorWithCodeHexa()
+    {
+        $pdf = $this->makePdf();
+        $pdf->setToolColor('#000000', 'draw');
+        $this->assertEquals('0.000 G', $pdf->getToolColor('draw'));
+    }
+
+    public function testSetToolColorWithWrongTool()
+    {
+        $pdf = $this->makePdf();
+        $this->expectException(\Exception::class);
+        $pdf->setToolColor('#000000', 'fake');
+    }
+
+    public function testSetToolColorWithNamedColor()
+    {
+        $pdf = $this->makePdf();
+        $this->expectException(\Exception::class);
+        $pdf->setToolColor('black');
+    }
+
+//    public function testFileToPdf()
+//    {
+//        $pdf = $this->makePdf();
+//        $pdf->fileToPdf(__DIR__ .'/textFile.txt');
+//    }
 }

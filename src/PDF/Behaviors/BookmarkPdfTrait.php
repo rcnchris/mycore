@@ -7,7 +7,7 @@
  *
  * @category PDF
  *
- * @package  Rcnchris\Core\PDF
+ * @package  Rcnchris\Core\PDF\Behaviors
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -16,8 +16,22 @@
  * @link     https://github.com/rcnchris On Github
  */
 
-namespace Rcnchris\Core\PDF;
+namespace Rcnchris\Core\PDF\Behaviors;
 
+/**
+ * Trait ColorsPdfTrait
+ * <ul>
+ * <li>Ajouter des bookmarks dans un document PDF</li>
+ * </ul>
+ *
+ * @category PDF
+ *
+ * @package  Rcnchris\Core\PDF\Behaviors
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @version  Release: <1.0.0>
+ */
 trait BookmarkPdfTrait
 {
 
@@ -38,15 +52,34 @@ trait BookmarkPdfTrait
     /**
      * Obtenir la liste des bookmarks
      *
-     * @return array
+     * ### Exemple
+     * - `$pdf->getBookmarks();`
+     * - `$pdf->getBookmarks(2);`
+     *
+     * @param int|null    $ind Indice du tableau des favoris
+     * @param string|null $key Clé du favori à retourner
+     *
+     * @return array|bool
      */
-    public function getBookmarks()
+    public function getBookmarks($ind = null, $key = null)
     {
-        return $this->outlines;
+        if (is_null($ind)) {
+            return $this->outlines;
+        } elseif (array_key_exists($ind, $this->outlines)) {
+            if (!is_null($key) && array_key_exists($key, $this->outlines[$ind])) {
+                return $this->outlines[$ind][$key];
+            }
+            return $this->outlines[$ind];
+        }
+        return false;
     }
 
     /**
      * Ajoute un favoris au document
+     *
+     * ### Exemple
+     * - `$pdf->addBookmark('Page' . $pdf->PageNo);`
+     * - `$pdf->addBookmark('Titre 1', 1);`
      *
      * @param string   $label Label du favoris
      * @param int|null $level Niveau

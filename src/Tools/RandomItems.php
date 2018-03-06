@@ -7,7 +7,7 @@
  *
  * @category Données aléatoires
  *
- * @package  Rcnchris\CoreRandom
+ * @package  Rcnchris\Core\Tools
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -28,15 +28,11 @@ use Faker\Factory;
  *
  * @category Données aléatoires
  *
- * @package  Rcnchris\CoreRandom
+ * @package  Rcnchris\Core\Tools
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class RandomItems
 {
@@ -520,15 +516,16 @@ class RandomItems
      * Obtenir des factures
      *
      * ### Exemple
-     * - `RandomItems::invoices(3);`
+     * - `RandomItems::invoices(3, 'fr_FR');`
      *
-     * @param int $number Nombre d'items à retourner
+     * @param int         $number Nombre d'items à retourner
+     * @param string|null $locale
      *
      * @return array|mixed
      */
-    public static function invoices($number = 1)
+    public static function invoices($number = 1, $locale = null)
     {
-        $faker = self::getFaker();
+        $faker = self::getFaker($locale);
         for ($i = 0; $i < $number; $i++) {
             self::$datas[] = [
                 'nature' => 'Facture',
@@ -538,9 +535,15 @@ class RandomItems
                 'tiersFacture' => self::companies(),
                 'tiersLivre' => self::companies(),
                 'tiersPayeur' => self::companies(),
-                'totalHtEur' => rand(1, 9999),
-                'totalTvaEur' => rand(1, 9999),
-                'totalTtcEur' => rand(1, 9999),
+                'totalHtEur' => mt_rand(1, 9999),
+                'totalTvaEur' => mt_rand(1, 9999),
+                'totalTtcEur' => mt_rand(1, 9999),
+                'devise' => 'USD',
+                'totalHtDev' => mt_rand(1, 9999),
+                'totalTvaDev' => mt_rand(1, 9999),
+                'totalTtcDev' => mt_rand(1, 9999),
+                'adresses' => [],
+                'lignes' => [],
             ];
         }
         return self::getResults();

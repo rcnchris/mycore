@@ -27,16 +27,10 @@ namespace Rcnchris\Core\PDF;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class AbstractPDF extends \FPDF
 {
-    use ColorsPdfTrait, Psr7PdfTrait, BookmarkPdfTrait;
-
     /**
      * Options par défaut d'un document
      *
@@ -54,12 +48,14 @@ class AbstractPDF extends \FPDF
             'right' => 10
         ],
         'font' => [
-            'family' => 'courier',
+            'family' => 'helvetica',
             'style' => '',
             'size' => 10,
-            'color' => 'black'
+            'align' => 'L',
+            'color' => '#000000'
         ],
-        'fillColor' => 'graylight'
+        'fillColor' => '#CCCCCC',
+        'drawColor' => '#CCCCCC'
     ];
 
     /**
@@ -88,7 +84,6 @@ class AbstractPDF extends \FPDF
      *
      * ### Exemple
      * - `$pdf = new AbstractPDF($options);`
-     * - `$pdf = new AbstractPDF($options, $items);`
      * - `$pdf = new AbstractPDF(['format' => [150, 100]);`
      *
      * @param array|null $options
@@ -100,12 +95,13 @@ class AbstractPDF extends \FPDF
 
         parent::AddPage($options['orientation'], $options['format']);
         parent::AliasNbPages();
+
+        $font = $options['font'];
         parent::SetFont(
-            $options['font']['family'],
-            $options['font']['style'],
-            $options['font']['size']
+            $font['family'],
+            $font['style'],
+            $font['size']
         );
-        //$this->pu
     }
 
     /**
@@ -137,13 +133,13 @@ class AbstractPDF extends \FPDF
      *
      * @param string|null $type (width ou height)
      *
-     * @return array[int]|int
+     * @return array|double
      */
     public function getBodySize($type = null)
     {
         $sizes = [
-            'width' => intval(parent::GetPageWidth() - ($this->lMargin + $this->rMargin)),
-            'height' => intval(parent::GetPageHeight() - ($this->tMargin + $this->bMargin))
+            'width' => parent::GetPageWidth() - ($this->lMargin + $this->rMargin),
+            'height' => parent::GetPageHeight() - ($this->tMargin + $this->bMargin)
         ];
         return is_null($type) ? $sizes : $sizes[$type];
     }
@@ -157,21 +153,21 @@ class AbstractPDF extends \FPDF
      *
      * @param string|null $type (r, l, t, b)
      *
-     * @return mixed
+     * @return double|array
      */
     public function getMargin($type = null)
     {
         if (is_null($type)) {
             return [
-                'top' => intval($this->tMargin),
-                'bottom' => intval($this->bMargin),
-                'right' => intval($this->rMargin),
-                'left' => intval($this->lMargin),
-                'cell' => intval($this->cMargin)
+                'top' => $this->tMargin,
+                'bottom' => $this->bMargin,
+                'right' => $this->rMargin,
+                'left' => $this->lMargin,
+                'cell' => $this->cMargin
             ];
         }
         $property = strtolower($type) . 'Margin';
-        return intval($this->$property);
+        return $this->$property;
     }
 
     /**
@@ -184,13 +180,12 @@ class AbstractPDF extends \FPDF
      * @param string $type  Type de marge (top, bottom, left, right)
      * @param double $value Valeur de la marge
      *
-     * @return mixed
+     * @return $this
      */
     public function setMargin($type, $value)
     {
         $methodName = 'Set' . ucfirst($type) . 'Margin';
         $this->$methodName($value);
-        return $this;
     }
 
     /**
@@ -202,18 +197,19 @@ class AbstractPDF extends \FPDF
      *
      * @param string|null $type x ou y
      *
-     * @return array|int
+     * @return array|float
+     * @throws \Exception
      */
     public function getCursor($type = null)
     {
         if (is_null($type)) {
             return [
-                'x' => intval(parent::GetX()),
-                'y' => intval(parent::GetY())
+                'x' => parent::GetX(),
+                'y' => parent::GetY()
             ];
         } else {
             $method = 'Get' . strtoupper($type);
-            return intval($this->$method());
+            return $this->$method();
         }
     }
 
@@ -234,7 +230,7 @@ class AbstractPDF extends \FPDF
      */
     public function getPageBreak()
     {
-        return intval($this->PageBreakTrigger);
+        return $this->PageBreakTrigger;
     }
 
     /**
@@ -252,41 +248,10 @@ class AbstractPDF extends \FPDF
     public function setCursor($x, $y = null)
     {
         if (is_null($y)) {
-            $y = intval(parent::GetY());
+            $y = parent::GetY();
         }
         parent::SetXY($x, $y);
         return $this;
-    }
-
-    /**
-     * Obtenir les informations sur la police courante
-     *
-     * ### Exemple
-     * - `$pdf->getFont();`
-     * - `$pdf->getFont('size');`
-     *
-     * @param bool|null   $all
-     * @param string|null $key
-     *
-     * @return string|array
-     */
-    public function getFont($key = null, $all = false)
-    {
-        $font = [
-            'family' => $this->FontFamily,
-            'style' => $this->FontStyle,
-            'size' => $this->FontSizePt,
-            'sizeInUnit' => $this->FontSize,
-            'color' => $this->TextColor,
-            'isUnderline' => $this->underline
-        ];
-        if ($all) {
-            return $font;
-        }
-        if (!is_null($key) && array_key_exists($key, $font)) {
-            return $font[$key];
-        }
-        return $font['family'];
     }
 
     /**
@@ -322,9 +287,15 @@ class AbstractPDF extends \FPDF
      *
      * @return string|bool
      */
-    public function getToolColor($tool = 'text')
+    public function getToolColor($tool = null)
     {
-        if ($this->hasTool($tool)) {
+        if (is_null($tool)) {
+            return [
+                'draw' => $this->DrawColor,
+                'fill' => $this->FillColor,
+                'text' => $this->TextColor
+            ];
+        } elseif ($this->hasTool($tool)) {
             $property = ucfirst($tool) . 'Color';
             return $this->$property;
         }
@@ -348,6 +319,23 @@ class AbstractPDF extends \FPDF
             }
         }
         return false;
+    }
+
+    /**
+     * Définir une meta-donnée
+     *
+     * @param string     $key   Nom de la clé ou tableau
+     * @param mixed|null $value Valeur de la clé
+     */
+    public function setMetadata($key, $value = null)
+    {
+        if (is_string($key)) {
+            $this->metadata[$key] = $value;
+        } elseif (is_array($key)) {
+            foreach ($key as $k => $v) {
+                $this->metadata[$k] = $v;
+            }
+        }
     }
 
     /**
@@ -376,7 +364,6 @@ class AbstractPDF extends \FPDF
     {
         $this->Line($this->GetX(), $this->GetY(), $this->GetPageWidth() - 10, $this->GetY());
         $this->Ln(intval($ln));
-        return $this;
     }
 
     /**
@@ -388,7 +375,7 @@ class AbstractPDF extends \FPDF
      */
     public function hasTool($name)
     {
-        return in_array($name, $this->tools);
+        return in_array(strtolower($name), $this->tools);
     }
 
     /**
@@ -432,7 +419,7 @@ class AbstractPDF extends \FPDF
      */
     public function hasFormat($name)
     {
-        return in_array($name, $this->formats);
+        return in_array(ucfirst($name), $this->formats);
     }
 
     /**
@@ -448,55 +435,193 @@ class AbstractPDF extends \FPDF
     /**
      * Définit la police
      *
-     * @param string|null $family
-     * @param string|null $style
-     * @param int|null    $size
-     * @param int|null    $color
-     * @param bool|null   $underline
-     * @param string|null $fillColor Couleur de remplissage
+     * @param string|null $family     Nom de la police
+     * @param string|null $style      Styles de la police
+     * @param int|null    $size       Taille de la police
+     * @param array|null  $properties Autres propriétés de la police (couleur, couleur de remplissage, couleur du trait)
      *
      * @throws \Exception
      */
-    public function SetFont(
-        $family = null,
-        $style = null,
-        $size = null,
-        $color = null,
-        $underline = false,
-        $fillColor = null
-    ) {
-        if (!$this->hasFont($family)) {
-            $family = $this->defaultOptions['font']['family'];
+    public function SetFont($family = null, $style = null, $size = null, array $properties = null)
+    {
+        $font = $this->defaultOptions['font'];
+        if (is_null($family) || !$this->hasFont($family)) {
+            $family = $font['family'];
         }
         if (is_null($style)) {
-            $style = $this->defaultOptions['font']['style'];
+            $style = $font['style'];
         }
         if (is_null($size)) {
-            $size = $this->defaultOptions['font']['size'];
+            $size = $font['size'];
         }
-
         parent::SetFont($family, $style, $size);
 
-        if (is_null($color)) {
-            $color = $this->defaultOptions['font']['color'];
-        }
-        if (!is_null($fillColor) && $this->hasColor($fillColor)) {
-            $this->setColor($fillColor, 'fill');
-        } else {
-            $this->setColor($this->defaultOptions['fillColor'], 'fill');
-        }
-
-        if (!is_null($color)) {
-            if (is_array($color)) {
-                list($r, $g, $b) = $color;
-                parent::SetTextColor(intval($r), intval($g), intval($b));
-            } elseif (is_numeric($color)) {
-                parent::SetTextColor(intval($color));
-            } elseif (is_string($color) && $this->hasColor($color)) {
-                $rgb = $this->getColors($color, true);
-                parent::SetTextColor($rgb['r'], $rgb['g'], $rgb['b']);
+        if (is_array($properties) && !empty($properties)) {
+            // Couleur du texte
+            if (array_key_exists('color', $properties)) {
+                if (method_exists($this, 'setColor')) {
+                    $this->setColor($properties['color']);
+                } else {
+                    $this->setToolColor($this->hexaToRgb($properties['color']));
+                }
+            }
+            // Couleur du trait
+            if (array_key_exists('drawColor', $properties)) {
+                if (method_exists($this, 'setColor')) {
+                    $this->setColor($properties['color'], 'draw');
+                } else {
+                    $this->setToolColor($this->hexaToRgb($properties['drawColor']), 'draw');
+                }
+            }
+            // Couleur de remplissage
+            if (array_key_exists('fillColor', $properties)) {
+                if (method_exists($this, 'setColor')) {
+                    $this->setColor($properties['fillColor'], 'fill');
+                } else {
+                    $this->setToolColor($this->hexaToRgb($properties['fillColor']), 'fill');
+                }
             }
         }
-        $this->underline = $underline;
+
+        if (count(func_get_args()) === 0) {
+            $this->setToolColor($this->hexaToRgb($font['color']));
+            $this->setToolColor($this->hexaToRgb($this->defaultOptions['fillColor']), 'fill');
+            $this->setToolColor($this->hexaToRgb($this->defaultOptions['drawColor']), 'draw');
+        }
+    }
+
+    /**
+     * Vérifie si le style courant est souligné
+     *
+     * @return bool
+     */
+    public function isUnderline()
+    {
+        return $this->underline;
+    }
+
+    /**
+     * Obtenir toutes les propriétés de la police courante ou l'une d'entre elle
+     *
+     * @param string|null $property Nom de la propriété souhaitée
+     *
+     * @return array|string|bool
+     */
+    public function getFontProperty($property = null)
+    {
+        $properties = [
+            'family' => $this->FontFamily,
+            'style' => $this->FontStyle,
+            'size' => $this->FontSizePt,
+            'sizeInUnit' => $this->FontSize
+        ];
+        if (is_null($property)) {
+            return $properties;
+        } elseif (array_key_exists($property, $properties)) {
+            return $properties[$property];
+        }
+        return false;
+    }
+
+    /**
+     * Imprimer le contenu d'un fichier source dans un PDF
+     *
+     * @param string $file Nom du fichier source
+     * @param string $dest Type de destination du PDF généré
+     *
+     * @return bool
+     */
+    public function fileToPdf($file, $dest = 'file')
+    {
+        $dests = ['file', 'view', 'download'];
+        if (!file_exists($file) || !in_array($dest, $dests)) {
+            return false;
+        }
+
+        $content = file_get_contents($file);
+        if (is_null($content)) {
+            return false;
+        }
+
+        switch ($dests) {
+            case 'file':
+                $this->Write(10, $content);
+                $this->toFile();
+                break;
+
+            case 'view':
+                break;
+
+            case 'download':
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * Obtenir les valeurs RGB à partir d'un code couleur au formar héxadécimal
+     *
+     * @param string $hexa Code héxadécimal d'une couleur
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public function hexaToRgb($hexa)
+    {
+        if ($hexa[0] != '#' || strlen($hexa) != 7) {
+            throw new \Exception("Code héxadécimal : '$hexa' de mauvaise longueur ou erroné");
+        }
+        return [
+            'r' => hexdec(substr($hexa, 1, 2)),
+            'g' => hexdec(substr($hexa, 3, 2)),
+            'b' => hexdec(substr($hexa, 5, 2))
+        ];
+    }
+
+    /**
+     * Définir la couleur d'un outil
+     *
+     * ### Exemple
+     * - `$pdf->setToolColor(0, 'fill')`
+     * - `$pdf->setToolColor('#3498db', 'fill')`
+     * - `$pdf->setToolColor('graylight', 'fill')`
+     *
+     * @param string|array|int $color Code héxadécimal, valeur 'r' ou tableau rgb
+     * @param string|null      $tool  Nom de l'outil à colorer, si null c'est le text qui est coloré par défaut
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function setToolColor($color, $tool = 'text')
+    {
+        if (!$this->hasTool($tool)) {
+            throw new \Exception("Impossible de définir la couleur de l'outil '$tool'");
+        }
+        $method = 'Set' . ucfirst($tool) . 'Color';
+        $rgb = ['r' => 0, 'g' => 0, 'b' => 0];
+
+
+        if (is_int($color) && ($color >= 0 && $color <= 255)) {
+            $rgb['r'] = $color;
+        }
+
+        if (is_array($color) && array_keys($color) === array_keys($rgb)) {
+            $rgb = $color;
+        }
+
+        if (is_string($color)) {
+            if ($color[0] === '#' && strlen($color) === 7) {
+                $rgb = $this->hexaToRgb($color);
+            } elseif ($color[0] != '#') {
+                if (method_exists($this, 'setColor')) {
+                    $this->setColor($color, $tool);
+                    return;
+                } else {
+                    throw new \Exception("Le trait 'ColorsPdfTrait' doit être implémenté pour utiliser les couleurs nommées");
+                }
+            }
+        }
+        $this->$method($rgb['r'], $rgb['g'], $rgb['b']);
     }
 }
