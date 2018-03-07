@@ -29,15 +29,35 @@ interface SessionInterface
     /**
      * Obtenir la valeur d'une clé de la Session
      *
-     * @param string $key     Nom de la clé
-     * @param mixed  $default Valeur par défaut
+     * ### Exemple
+     * - `$session->get();`
+     * - `$session->get('id');`
+     * - `$session->get('nav', 'Firefox');`
+     *
+     * @param string|null $key     Nom de la clé, si null toute les clés/valeurs sont retournées
+     * @param mixed       $default Valeur par défaut
      *
      * @return mixed
      */
-    public function get($key, $default = null);
+    public function get($key = null, $default = null);
+
+    /**
+     * Obtenir la valeur d'une clé de la session lors de l'appel sous forme d'objet
+     *
+     * ### Exemple
+     * - `$session->ip;`
+     *
+     * @param string $key Nom de la clé
+     *
+     * @return mixed
+     */
+    public function __get($key);
 
     /**
      * Ajoute une information en Session
+     *
+     * ### Exemple
+     * - `$session->set('ip', '192.168.1.99');`
      *
      * @param string $key   Nom de la clé
      * @param mixed  $value Valeur de la clé
@@ -48,6 +68,9 @@ interface SessionInterface
 
     /**
      * Supprime une clé de la Session
+     *
+     * ### Exemple
+     * - `$session->delete('nav');`
      *
      * @param string $key Nom de la clé
      *

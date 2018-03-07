@@ -37,22 +37,47 @@ class PHPSession implements SessionInterface
     /**
      * Obtenir la valeur d'une clé de la Session
      *
+     * ### Exemple
+     * - `$session->get();`
+     * - `$session->get('id');`
+     * - `$session->get('nav', 'Firefox');`
+     *
      * @param string $key     Nom de la clé
      * @param mixed  $default Valeur par défaut
      *
      * @return mixed
      */
-    public function get($key, $default = null)
+    public function get($key = null, $default = null)
     {
         $this->ensureStarted();
-        if (array_key_exists($key, $_SESSION)) {
+        if (is_null($key)) {
+            return $_SESSION;
+        } elseif (array_key_exists($key, $_SESSION)) {
             return $_SESSION[$key];
         }
         return $default;
     }
 
     /**
+     * Obtenir la valeur d'une clé de la session lors de l'appel sous forme d'objet
+     *
+     * ### Exemple
+     * - `$session->ip;`
+     *
+     * @param string $key Nom de la clé
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    /**
      * Ajoute une information en Session
+     *
+     * ### Exemple
+     * - `$session->set('ip', '192.168.1.99');`
      *
      * @param string $key   Nom de la clé
      * @param mixed  $value Valeur de la clé
@@ -68,6 +93,9 @@ class PHPSession implements SessionInterface
     /**
      * Supprimme une clé de la Session
      *
+     * ### Exemple
+     * - `$session->delete('nav');`
+     *
      * @param string $key Nom de la clé
      *
      * @return void
@@ -79,23 +107,14 @@ class PHPSession implements SessionInterface
     }
 
     /**
-     * Obtenir l'identifiant de la session
-     *
-     * @return string
-     */
-    public function getId()
-    {
-        $this->ensureStarted();
-        return session_id();
-    }
-
-    /**
      * Assure que la session est démarrée
+     * Ajoute l'id de session en tant que clé de la session
      */
     private function ensureStarted()
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
+            $this->set('id', session_id());
         }
     }
 }
