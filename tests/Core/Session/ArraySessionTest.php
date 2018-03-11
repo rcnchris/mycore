@@ -34,10 +34,9 @@ class ArraySessionTest extends BaseTestCase
 
     public function testGetAll()
     {
-        $this->assertEquals([
-            'ip' => '192.168.1.99',
-            'nav' => 'Opera'
-        ], $this->session->get());
+        $this->assertArrayHasKey('id', $this->session->get());
+        $this->assertArrayHasKey('ip', $this->session->get());
+        $this->assertArrayHasKey('nav', $this->session->get());
     }
 
     public function testGetUniqId()

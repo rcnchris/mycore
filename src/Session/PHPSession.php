@@ -34,6 +34,14 @@ namespace Rcnchris\Core\Session;
 class PHPSession implements SessionInterface
 {
 
+    public function __construct($name = null)
+    {
+        if (!is_null($name)) {
+            $name = strtoupper(str_replace(' ', '', $name));
+            session_name($name);
+        }
+    }
+
     /**
      * Obtenir la valeur d'une clé de la Session
      *
@@ -59,18 +67,13 @@ class PHPSession implements SessionInterface
     }
 
     /**
-     * Obtenir la valeur d'une clé de la session lors de l'appel sous forme d'objet
+     * Obtenir le nom de la session
      *
-     * ### Exemple
-     * - `$session->ip;`
-     *
-     * @param string $key Nom de la clé
-     *
-     * @return mixed
+     * @return string
      */
-    public function __get($key)
+    public function getName()
     {
-        return $this->get($key);
+        return $this->getParams('name');
     }
 
     /**
@@ -91,7 +94,7 @@ class PHPSession implements SessionInterface
     }
 
     /**
-     * Supprimme une clé de la Session
+     * Supprime une clé de la Session
      *
      * ### Exemple
      * - `$session->delete('nav');`
@@ -107,14 +110,98 @@ class PHPSession implements SessionInterface
     }
 
     /**
+     * Retourne la configuration actuelle du délai d'expiration du cache
+     *
+     * @return int
+     */
+    public function getCacheExpired()
+    {
+        return session_cache_expire();
+    }
+
+    /**
+     * Définit le nombre de minutes de conservation du cache
+     *
+     * @param int $value
+     */
+    public function setCacheExpired($value = 180)
+    {
+        session_cache_expire($value);
+    }
+
+    /**
      * Assure que la session est démarrée
      * Ajoute l'id de session en tant que clé de la session
      */
     private function ensureStarted()
     {
         if (session_status() === PHP_SESSION_NONE) {
+            $this->setCacheExpired();
             session_start();
             $this->set('id', session_id());
         }
+    }
+
+    /**
+     * Obtenir la valeur d'une clé de la session lors de l'appel sous forme d'objet
+     *
+     * ### Exemple
+     * - `$session->ip;`
+     *
+     * @param string $key Nom de la clé
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * Obtenir la valeur d'une clé de la session lors de l'appel d'une méthode inaccessible
+     *
+     * @param       $key
+     * @param array $params
+     *
+     * @return mixed
+     */
+    public function __call($key, array $params = [])
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * Obtenir les données de session au format json
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return json_encode($this->get());
+    }
+
+    /**
+     * Obtenir les paramètres de session ou l'un d'entre eux
+     *
+     * @param string|null $key Nom de la clé recherchée
+     *
+     * @return array|mixed|bool
+     */
+    public function getParams($key = null)
+    {
+        $values = [
+            'name' => session_name(),
+            'cache_expire' => session_cache_expire(),
+            'cache_limiter' => session_cache_limiter(),
+            'cookie_params' => session_get_cookie_params(),
+            'module_name' => session_module_name(),
+            'save_path' => session_save_path(),
+        ];
+        if (is_null($key)) {
+            return $values;
+        } elseif (array_key_exists($key, $values)) {
+            return $values[$key];
+        }
+        return false;
     }
 }
