@@ -34,6 +34,11 @@ namespace Rcnchris\Core\Session;
 class PHPSession implements SessionInterface
 {
 
+    /**
+     * Constructeur
+     *
+     * @param string|null $name Nom de la session
+     */
     public function __construct($name = null)
     {
         if (!is_null($name)) {
@@ -136,7 +141,7 @@ class PHPSession implements SessionInterface
     private function ensureStarted()
     {
         if (session_status() === PHP_SESSION_NONE) {
-            $this->setCacheExpired();
+            //$this->setCacheExpired();
             session_start();
             $this->set('id', session_id());
         }
@@ -193,7 +198,6 @@ class PHPSession implements SessionInterface
             'name' => session_name(),
             'cache_expire' => session_cache_expire(),
             'cache_limiter' => session_cache_limiter(),
-            'cookie_params' => session_get_cookie_params(),
             'module_name' => session_module_name(),
             'save_path' => session_save_path(),
         ];

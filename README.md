@@ -72,10 +72,11 @@ $src = $img->getEncode();
 ````
 
 #### Session
-Facilite la manipulation des sessions utilisateurs.
+Facilite la manipulation des sessions et cookies.
 ````
 $session = new PHPSession();
 $ip = $session->get('ip');
+$cookies = $session->getCookies();
 ````
 
 #### Text

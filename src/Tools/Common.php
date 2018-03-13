@@ -160,7 +160,8 @@ class Common
         'red' => '#FF0000',
         'rosybrown' => '#BC8F8F',
         'royalblue' => '#4169E1',
-        'saddlebrown' => '#8B4513', 'salmon' => '#FA8072',
+        'saddlebrown' => '#8B4513',
+        'salmon' => '#FA8072',
         'sandybrown' => '#F4A460',
         'seagreen' => '#2E8B57',
         'seashell' => '#FFF5EE',
@@ -333,8 +334,37 @@ class Common
         }
         return [
             'r' => hexdec(substr($c, 1, 2))
-            , 'g' => hexdec(substr($c, 3, 2))
-            , 'b' => hexdec(substr($c, 5, 2))
+            ,
+            'g' => hexdec(substr($c, 3, 2))
+            ,
+            'b' => hexdec(substr($c, 5, 2))
         ];
+    }
+
+    /**
+     * Obtenir la liste des ports utilisés par les services ou l'en d'entre eux
+     *
+     * @param string|null   $serviceName Nom du service
+     * @param string|null $protocol Nom du protocole (tcp ou udp)
+     *
+     * @return array|int
+     */
+    public static function getPortOfServices($serviceName = null, $protocol = 'tcp')
+    {
+        $services = ['http', 'ftp', 'ssh', 'telnet', 'imap', 'smtp', 'nicname', 'gopher', 'finger', 'pop3', 'www'];
+        $protocoles = ['tcp', 'udp'];
+        if (!is_null($protocol) && !in_array($protocol, $protocoles)) {
+            $protocol = 'tcp';
+        }
+        if (is_null($serviceName)) {
+            $items = [];
+            foreach ($services as $service) {
+                $items[$service] = getservbyname($service, $protocol);
+            }
+            return $items;
+        } elseif (in_array($serviceName, $services)) {
+            return getservbyname($serviceName, $protocol);
+        }
+        return false;
     }
 }

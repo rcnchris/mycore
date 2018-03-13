@@ -98,4 +98,27 @@ class CommonTest extends BaseTestCase
         $this->expectException(\Exception::class);
         Common::hexaToRgb('fake');
     }
+
+    public function testGetPortsOfServices()
+    {
+        $services = Common::getPortOfServices();
+        $this->assertNotEmpty($services);
+        $this->assertArrayHasKey('http', $services);
+        $this->assertEquals(80, $services['http']);
+    }
+
+    public function testGetPortsOfServicesWithServiceName()
+    {
+        $this->assertEquals(80, Common::getPortOfServices('http'));
+    }
+
+    public function testGetPortsOfServicesWithWrongServiceName()
+    {
+        $this->assertFalse(Common::getPortOfServices('fake'));
+    }
+
+    public function testGetPortsOfServicesWithProtocol()
+    {
+        $this->assertEquals(80, Common::getPortOfServices('http', 'udp'));
+    }
 }
