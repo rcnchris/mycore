@@ -20,6 +20,9 @@ namespace Rcnchris\Core\Session;
 
 /**
  * Class ArraySession
+ * <ul>
+ * <li>Gestion des sessions utilisateurs sous la forme de tableau</li>
+ * </ul>
  *
  * @category Session
  *

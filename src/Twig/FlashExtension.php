@@ -5,7 +5,7 @@
  *
  * PHP version 5
  *
- * @category New
+ * @category Twig
  *
  * @package  Rcnchris\Core\Twig
  *
@@ -22,14 +22,18 @@ use Rcnchris\Core\Session\FlashService;
 
 /**
  * Class FlashExtension
+ * <ul>
+ * <li>Helper messages Flash</li>
+ * </ul>
  *
- * @category New
+ * @category Twig
  *
  * @package  Rcnchris\Core\Twig
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
  * @version  Release: <1.0.0>
+ * @since    Release: <0.1.0>
  */
 class FlashExtension extends \Twig_Extension
 {

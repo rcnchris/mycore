@@ -22,6 +22,9 @@ use Traversable;
 
 /**
  * Class Query
+ * <ul>
+ * <li>Gestion des requêtes sur les bases de données PDO</li>
+ * </ul>
  *
  * @category Base de données
  *
@@ -29,13 +32,9 @@ use Traversable;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.4.7>
  *
- * @link     https://github.com/rcnchris/fmk-php on Github
- *
- * @since    Release: <1.0.0>
+ * @since    Release: <0.1.1>
  */
 class Query implements \IteratorAggregate
 {

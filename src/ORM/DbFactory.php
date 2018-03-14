@@ -19,8 +19,7 @@
 namespace Rcnchris\Core\ORM;
 
 /**
- * Class DbFactory<br/>
- *
+ * Class DbFactory
  * <ul>
  * <li>Fournit l'instance d'une base de données</li>
  * <li>Pour l'instant seul PDO est géré</li>
@@ -32,11 +31,7 @@ namespace Rcnchris\Core\ORM;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class DbFactory
 {

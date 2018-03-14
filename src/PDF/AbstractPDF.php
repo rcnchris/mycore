@@ -22,7 +22,8 @@ namespace Rcnchris\Core\PDF;
  * Class AbstractPDF
  * <ul>
  * <li>Classe parente de tous les documents PDF.</li>
- * <li>Pour créer nouveau document, créer une classe qui hérite de <code>AbstractPDF</code> et lui associer les traits qui correspondent aux fonctionnalités souhaitées</li>
+ * <li>Pour créer nouveau document, créer une classe qui hérite de <code>AbstractPDF</code>
+ * et lui associer les traits qui correspondent aux fonctionnalités souhaitées</li>
  * </ul>
  *
  * @category PDF
@@ -622,7 +623,9 @@ class AbstractPDF extends \FPDF
                     $this->setColor($color, $tool);
                     return;
                 } else {
-                    throw new \Exception("Le trait 'ColorsPdfTrait' doit être implémenté pour utiliser les couleurs nommées");
+                    throw new \Exception(
+                        "Le trait 'ColorsPdfTrait' doit être implémenté pour utiliser les couleurs nommées"
+                    );
                 }
             }
         }

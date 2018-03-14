@@ -5,7 +5,7 @@
  *
  * PHP version 5
  *
- * @category Extension
+ * @category Twig
  *
  * @package  Rcnchris\Core\Twig
  *
@@ -20,18 +20,18 @@ namespace Rcnchris\Core\Twig;
 
 /**
  * Class Bootstrap4Extension
+ * <ul>
+ * <li>Helper sur Bootstrap 4</li>
+ * </ul>
  *
- * @category Extension
+ * @category Twig
  *
  * @package  Rcnchris\Core\Twig
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
+ * @since    Release: <0.1.0>
  */
 class Bootstrap4Extension extends \Twig_Extension
 {
@@ -42,13 +42,20 @@ class Bootstrap4Extension extends \Twig_Extension
      */
     private $contexts = [
         'primary'
-        , 'secondary'
-        , 'success'
-        , 'danger'
-        , 'warning'
-        , 'info'
-        , 'light'
-        , 'dark'
+        ,
+        'secondary'
+        ,
+        'success'
+        ,
+        'danger'
+        ,
+        'warning'
+        ,
+        'info'
+        ,
+        'light'
+        ,
+        'dark'
     ];
 
     /**
@@ -67,10 +74,14 @@ class Bootstrap4Extension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('alert', [$this, 'alert'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('alertResult', [$this, 'alertResult'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('badge', [$this, 'badge'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('badgeBool', [$this, 'badgeBool'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFilter('button', [$this, 'button'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('alertResult', [$this, 'alertResult'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('badge', [$this, 'badge'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('badgeBool', [$this, 'badgeBool'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFilter('button', [$this, 'button'], ['is_safe' => ['html']])
         ];
     }
 
@@ -223,7 +234,8 @@ class Bootstrap4Extension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('progress', [$this, 'progress'], ['is_safe' => ['html']])
-            , new \Twig_SimpleFunction('checkbox', [$this, 'checkbox'], ['is_safe' => ['html']])
+            ,
+            new \Twig_SimpleFunction('checkbox', [$this, 'checkbox'], ['is_safe' => ['html']])
         ];
     }
 

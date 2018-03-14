@@ -19,9 +19,10 @@
 namespace Rcnchris\Core\ORM;
 
 /**
- * Class SourcesManager<br/>
+ * Class SourcesManager
  * <ul>
  * <li>Responsable de la fourniture des configurations des sources de données</li>
+ * <li>Connexion aux sources de données</li>
  * </ul>
  *
  * @category Bases de données
@@ -30,11 +31,8 @@ namespace Rcnchris\Core\ORM;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
+ * @since    Release: <0.2.0>
  */
 class SourcesManager
 {
@@ -80,7 +78,7 @@ class SourcesManager
      * Définit les sources de données
      *
      * @param array $sources Liste des sources de données avec leur configuration
-     * @param bool  $add Si vrai, les sources sont ajoutées à celles existantes
+     * @param bool  $add     Si vrai, les sources sont ajoutées à celles existantes
      */
     public function setSources($sources, $add = false)
     {

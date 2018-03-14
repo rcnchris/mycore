@@ -20,6 +20,9 @@ namespace Rcnchris\Core\Session;
 
 /**
  * Class FlashService
+ * <ul>
+ * <li>Gestion des messages flash</li>
+ * </ul>
  *
  * @category Service
  *

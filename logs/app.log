@@ -576,3 +576,5 @@
 [2018-03-13 09:46:30] My Core.INFO: GET /_lab/mycore/tests/cookies : 200 [] {"uid":"5e2fced"}
 [2018-03-13 10:22:07] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"7946bee"}
 [2018-03-13 10:22:27] My Core.INFO: GET /_lab/mycore/tests/cookies : 200 [] {"uid":"403b3ce"}
+[2018-03-13 11:37:00] My Core.INFO: GET /_lab/mycore/tests/cookies : 200 [] {"uid":"edf6fc8"}
+[2018-03-14 08:41:40] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"eb3e6de"}

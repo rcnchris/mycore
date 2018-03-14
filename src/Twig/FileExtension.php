@@ -20,6 +20,9 @@ namespace Rcnchris\Core\Twig;
 
 /**
  * Class FileExtension
+ * <ul>
+ * <li>Helper sur fichiers et dossiers</li>
+ * </ul>
  *
  * @category Twig
  *
@@ -27,11 +30,8 @@ namespace Rcnchris\Core\Twig;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
+ * @since    Release: <0.1.0>
  */
 class FileExtension extends \Twig_Extension
 {
@@ -44,8 +44,10 @@ class FileExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFilter('baseName', [$this, 'baseName'])
-            , new \Twig_SimpleFilter('dirName', [$this, 'dirName'])
-            , new \Twig_SimpleFilter('fileExtension', [$this, 'fileExtension'])
+            ,
+            new \Twig_SimpleFilter('dirName', [$this, 'dirName'])
+            ,
+            new \Twig_SimpleFilter('fileExtension', [$this, 'fileExtension'])
         ];
     }
 
@@ -53,7 +55,7 @@ class FileExtension extends \Twig_Extension
      * Obtenir uniquement le nom du fichier à partir d'un chemin.
      *
      * @param string $value Chemin avec fichier
-     * @param string $sep Séparateur de parties
+     * @param string $sep   Séparateur de parties
      *
      * @return string
      */

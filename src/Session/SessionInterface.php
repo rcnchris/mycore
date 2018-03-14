@@ -20,6 +20,9 @@ namespace Rcnchris\Core\Session;
 
 /**
  * Interface SessionInterface
+ * <ul>
+ * <li>Gestion des sessions utilisateurs</li>
+ * </ul>
  *
  * @package Rcnchris\Core\Session
  */

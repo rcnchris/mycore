@@ -20,6 +20,10 @@ namespace Rcnchris\Core\Session;
 
 /**
  * Class PHPSession
+ * <ul>
+ * <li>Manipulation des sessions PHP</li>
+ * <li>Implémentation de l'interface <code>SessionInterface</code>.</li>
+ * </ul>
  *
  * @category Session
  *

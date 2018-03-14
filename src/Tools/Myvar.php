@@ -30,11 +30,8 @@ namespace Rcnchris\Core\Tools;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
+ * @since    Release: <0.1.0>
  */
 class Myvar
 {

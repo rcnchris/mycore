@@ -19,7 +19,7 @@
 namespace Rcnchris\Core\Tools;
 
 /**
- * Class Common<br/>
+ * Class Common
  * <ul>
  * <li>Classe statique qui fournit des méthodes diverses.</li>
  * </ul>
@@ -30,11 +30,8 @@ namespace Rcnchris\Core\Tools;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
- * @version  Release: <0.0.1>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
+ * @version  Release: <1.0.0>
+ * @since    Release: <0.0.1>
  */
 class Common
 {
@@ -344,8 +341,8 @@ class Common
     /**
      * Obtenir la liste des ports utilisés par les services ou l'en d'entre eux
      *
-     * @param string|null   $serviceName Nom du service
-     * @param string|null $protocol Nom du protocole (tcp ou udp)
+     * @param string|null $serviceName Nom du service
+     * @param string|null $protocol    Nom du protocole (tcp ou udp)
      *
      * @return array|int
      */

@@ -5,7 +5,7 @@
  *
  * PHP version 5
  *
- * @category Texte
+ * @category Twig
  *
  * @package  Rcnchris\Core\Twig
  *
@@ -24,8 +24,11 @@ use Twig_SimpleFilter;
 
 /**
  * Class TextExtension
+ * <ul>
+ * <li>Helper sur chaînes de caractères</li>
+ * </ul>
  *
- * @category Texte
+ * @category Twig
  *
  * @package  Rcnchris\Core\Twig
  *

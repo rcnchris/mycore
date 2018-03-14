@@ -19,7 +19,7 @@
 namespace Rcnchris\Core\Apis;
 
 /**
- * Class AlloCine<br/>
+ * Class AlloCine
  * <ul>
  * <li>Interrogation de l'API AlloCiné</li>
  * </ul>
@@ -30,11 +30,7 @@ namespace Rcnchris\Core\Apis;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class AlloCine extends OneAPI
 {

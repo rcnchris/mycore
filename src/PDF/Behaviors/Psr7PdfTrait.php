@@ -23,7 +23,8 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Trait Psr7PdfTrait
  * <ul>
- * <li>Utilisation de la norme PSR7 pour produire la visualisation dans le navigateur et le téléchargement de document PDF</li>
+ * <li>Utilisation de la norme PSR7 pour produire
+ * la visualisation dans le navigateur et le téléchargement de document PDF</li>
  * </ul>
  *
  * @category PDF

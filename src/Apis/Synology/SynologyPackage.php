@@ -19,9 +19,9 @@
 namespace Rcnchris\Core\Apis\Synology;
 
 /**
- * Class SynologyPackage<br/>
+ * Class SynologyPackage
  * <ul>
- * <li>Classe parente de tous les packages d'un NAS Synology (AudioStation, FileStation...)</li>
+ * <li>Classe parente de tous les packages d'un NAS Synology (AudioStation, FileStation, etc)</li>
  * </ul>
  *
  * @category Synology
@@ -30,11 +30,7 @@ namespace Rcnchris\Core\Apis\Synology;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class SynologyPackage
 {

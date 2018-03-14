@@ -21,7 +21,7 @@ namespace Rcnchris\Core\Session;
 /**
  * Class PHPCookies
  * <ul>
- * <li>manipulation des cookies.</li>
+ * <li>Manipulation des cookies</li>
  * <li>Implémentation de l'interface <code>CookiesInterface</code>.</li>
  * </ul>
  *

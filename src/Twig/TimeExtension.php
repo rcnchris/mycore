@@ -5,7 +5,7 @@
  *
  * PHP version 5
  *
- * @category Extension
+ * @category Twig
  *
  * @package  Rcnchris\Core\Twig
  *
@@ -20,18 +20,18 @@ namespace Rcnchris\Core\Twig;
 
 /**
  * Class TimeExtension
+ * <ul>
+ * <li>Helper sur les dates</li>
+ * </ul>
  *
- * @category Extension
+ * @category Twig
  *
  * @package  Rcnchris\Core\Twig
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
+ * @since    Release: <0.1.0>
  */
 class TimeExtension extends \Twig_Extension
 {

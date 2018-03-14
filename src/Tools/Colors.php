@@ -20,6 +20,9 @@ namespace Rcnchris\Core\Tools;
 
 /**
  * Class Colors
+ * <ul>
+ * <li>Facilite la manipulation des couleurs</li>
+ * </ul>
  *
  * @category Couleurs
  *
@@ -27,11 +30,8 @@ namespace Rcnchris\Core\Tools;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
+ * @since    Release: <0.2.5>
  */
 class Colors
 {

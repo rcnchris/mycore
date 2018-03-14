@@ -20,6 +20,9 @@ namespace Rcnchris\Core\ORM;
 
 /**
  * Class NoRecordException
+ * <ul>
+ * <li>Erreur si enregistrement non trouvé</li>
+ * </ul>
  *
  * @category Base de données
  *
@@ -27,11 +30,7 @@ namespace Rcnchris\Core\ORM;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class NoRecordException extends \Exception
 {

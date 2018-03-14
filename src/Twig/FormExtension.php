@@ -5,33 +5,33 @@
  *
  * PHP version 5
  *
- * @category HTML
+ * @category Twig
  *
- * @package Rcnchris\Core\Twig
+ * @package  Rcnchris\Core\Twig
  *
- * @author Raoul <rcn.chris@gmail.com>
+ * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license https://github.com/rcnchris GPL
+ * @license  https://github.com/rcnchris GPL
  *
- * @link https://github.com/rcnchris On Github
+ * @link     https://github.com/rcnchris On Github
  */
 
 namespace Rcnchris\Core\Twig;
 
 /**
  * Class FormExtension
+ * <ul>
+ * <li>Helper sur les formulaires</li>
+ * </ul>
  *
- * @category HTML
+ * @category Twig
  *
- * @package Rcnchris\Core\Twig
+ * @package  Rcnchris\Core\Twig
  *
- * @author Raoul <rcn.chris@gmail.com>
+ * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license https://github.com/rcnchris/fmk-php GPL
- *
- * @version Release: <1.0.0>
- *
- * @link https://github.com/rcnchris/fmk-php on Github
+ * @version  Release: <1.0.0>
+ * @since    Release: <0.1.0>
  */
 class FormExtension extends \Twig_Extension
 {
@@ -70,9 +70,12 @@ class FormExtension extends \Twig_Extension
         $classInput = isset($options['class']) ? $options['class'] : '';
         $attributes = [
             'class' => trim('form-control ' . $classInput)
-            , 'name' => $key
-            , 'id' => $key
-            , 'type' => $type
+            ,
+            'name' => $key
+            ,
+            'id' => $key
+            ,
+            'type' => $type
         ];
 
         if ($error) {

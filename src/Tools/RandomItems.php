@@ -33,6 +33,7 @@ use Faker\Factory;
  * @author   Raoul <rcn.chris@gmail.com>
  *
  * @version  Release: <1.0.0>
+ * @since  Release: <0.1.0>
  */
 class RandomItems
 {

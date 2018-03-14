@@ -35,6 +35,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * @author   Raoul <rcn.chris@gmail.com>
  *
  * @version  Release: <1.0.0>
+ * @since    Release: <0.2.0>
  */
 class Config implements ContainerInterface
 {
@@ -79,6 +80,7 @@ class Config implements ContainerInterface
 
     /**
      * Obtenir un propriété qui n'existe pas
+     *
      * @param $key
      *
      * @return mixed

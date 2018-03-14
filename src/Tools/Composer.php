@@ -23,7 +23,7 @@ use ArrayIterator;
 /**
  * Class Composer
  * <ul>
- * <li>Facilite la manipulation d'un fichier composer.json</li>
+ * <li>Facilite la manipulation d'un fichier **composer.json**</li>
  * </ul>
  *
  * @category Composer
@@ -32,11 +32,7 @@ use ArrayIterator;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class Composer implements \IteratorAggregate, \ArrayAccess
 {

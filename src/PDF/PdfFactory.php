@@ -243,7 +243,7 @@ class RowPdf extends AbstractPDF
 /**
  * Class PdfFactory
  * <ul>
- * <li>Est chargé d'instancier l'objet qui correspond au type demandé</li>
+ * <li>Est chargée d'instancier l'objet qui correspond au type demandé</li>
  * </ul>
  *
  * @category PDF

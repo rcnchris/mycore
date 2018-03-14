@@ -21,7 +21,7 @@ namespace Rcnchris\Core\Apis\Synology;
 use Rcnchris\Core\Apis\OneAPI;
 
 /**
- * Class SynologyAbstract<br/>
+ * Class SynologyAbstract
  * <ul>
  * <li>Abstraction des API d'un NAS Synology</li>
  * </ul>
@@ -32,11 +32,7 @@ use Rcnchris\Core\Apis\OneAPI;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class SynologyAbstract extends OneAPI
 {

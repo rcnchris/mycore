@@ -20,6 +20,9 @@ namespace Rcnchris\Core\Session;
 
 /**
  * Interface CookiesInterface
+ * <ul>
+ * <li>Gestion des cookies</li>
+ * </ul>
  *
  * @package Rcnchris\Core\Session
  */

@@ -19,7 +19,7 @@
 namespace Rcnchris\Core\Tools;
 
 /**
- * Class Cmd<br/>
+ * Class Cmd
  * <ul>
  * <li>Classe statique qui permet d'exécuter des commandes shell.</li>
  * </ul>
@@ -30,11 +30,8 @@ namespace Rcnchris\Core\Tools;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
- * @version  Release: <0.0.1>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
+ * @version  Release: <1.0.0>
+ * @since    Release: <0.0.1>
  */
 class Cmd
 {

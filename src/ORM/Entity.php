@@ -19,7 +19,7 @@
 namespace Rcnchris\Core\ORM;
 
 /**
- * Class Entity<br/>
+ * Class Entity
  * <ul>
  * <li>Représente un enregistrement au sein d'un Model</li>
  * </ul>
@@ -30,11 +30,7 @@ namespace Rcnchris\Core\ORM;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class Entity
 {

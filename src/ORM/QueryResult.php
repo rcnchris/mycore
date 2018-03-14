@@ -19,8 +19,7 @@
 namespace Rcnchris\Core\ORM;
 
 /**
- * Class QueryResult<br/>
- *
+ * Class QueryResult
  * <ul>
  * <li>Représente le résultat d'une requête</li>
  * </ul>
@@ -31,11 +30,8 @@ namespace Rcnchris\Core\ORM;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
+ * @since    Release: <0.1.1>
  */
 class QueryResult implements \ArrayAccess, \Iterator
 {

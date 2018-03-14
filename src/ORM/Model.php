@@ -19,7 +19,7 @@
 namespace Rcnchris\Core\ORM;
 
 /**
- * Class Model<br/>
+ * Class Model
  * <ul>
  * <li>Représente un modèle de données qui s'appuie sur une connexion PDO</li>
  * </ul>

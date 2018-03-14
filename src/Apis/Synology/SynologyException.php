@@ -23,6 +23,9 @@ use Exception;
 
 /**
  * Class SynologyException
+ * <ul>
+ * <li>Gestion des erreurs de l'API Synology</li>
+ * </ul>
  *
  * @category Synology
  *
@@ -30,11 +33,7 @@ use Exception;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class SynologyException extends Exception
 {
