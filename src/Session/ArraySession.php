@@ -120,4 +120,19 @@ class ArraySession implements SessionInterface
     {
         unset($this->session[$key]);
     }
+
+    /**
+     * Vérifie la présence d'une clé en session
+     *
+     * ### Exemple
+     * - `$session->has('ip');`
+     *
+     * @param string $key Nom de la clé en session
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        return array_key_exists($key, $this->session);
+    }
 }

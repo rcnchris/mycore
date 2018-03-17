@@ -42,7 +42,7 @@ class SynologyAbstract extends OneAPI
      *
      * @var array
      */
-    private $config;
+    private $config = [];
 
     /**
      * Préfixe du nom des APIs
@@ -58,7 +58,7 @@ class SynologyAbstract extends OneAPI
      */
     private $configKeys = [
         'address' => '',
-        'port' => 0,
+        'port' => 5000,
         'protocol' => '',
         'version' => 0,
         'ssl' => false,

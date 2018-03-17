@@ -212,4 +212,19 @@ class PHPSession implements SessionInterface
         }
         return false;
     }
+
+    /**
+     * Vérifie la présence d'une clé en session
+     *
+     * ### Exemple
+     * - `$session->has('ip');`
+     *
+     * @param string $key Nom de la clé en session
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        return array_key_exists($key, $_SESSION);
+    }
 }

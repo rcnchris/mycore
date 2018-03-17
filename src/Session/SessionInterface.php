@@ -57,6 +57,18 @@ interface SessionInterface
     public function __get($key);
 
     /**
+     * Vérifie la présence d'une clé en session
+     *
+     * ### Exemple
+     * - `$session->has('ip');`
+     *
+     * @param string $key Nom de la clé en session
+     *
+     * @return bool
+     */
+    public function has($key);
+
+    /**
      * Ajoute une information en Session
      *
      * ### Exemple

@@ -150,13 +150,15 @@ class PHPCookies implements CookiesInterface
     public function set(
         $name,
         $value = null,
-        $expire = 0,
+        $expire = null,
         $path = null,
         $domain = null,
         $secure = false,
         $httponly = false
     ) {
-        //return setrawcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
+//        if (is_null($expire)) {
+//            $expire = $this->defaultOptions['lifetime'];
+//        }
         return setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
     }
 
@@ -226,5 +228,20 @@ class PHPCookies implements CookiesInterface
     public function setParams($lifetime, $path, $domain, $secure = false, $httponly = false)
     {
         session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly);
+    }
+
+    /**
+     * Vérifie la présence d'une clé dans les cookies
+     *
+     * ### Exemple
+     * - `$cookies->has('ip');`
+     *
+     * @param string $key Nom de la clé dans les cookies
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        return array_key_exists($key, $_COOKIE);
     }
 }
