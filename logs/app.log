@@ -627,3 +627,12 @@
 [2018-03-17 15:09:14] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"96e4e0a"}
 [2018-03-17 15:09:14] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"832e9f2"}
 [2018-03-17 15:09:18] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"2044530"}
+[2018-03-22 11:02:12] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"aaf5b63"}
+[2018-03-22 16:13:50] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"2eed039"}
+[2018-03-23 00:00:59] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"9e3d699"}
+[2018-03-23 00:01:01] My Core.INFO: GET /_lab/mycore/tests/composer : 200 [] {"uid":"6571ada"}
+[2018-03-23 23:27:48] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"2cf5e34"}
+[2018-03-23 23:28:25] My Core.INFO: GET /_lab/mycore/application/show : 200 [] {"uid":"b61c555"}
+[2018-03-24 10:19:07] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"8f2ab9c"}
+[2018-03-24 10:25:21] My Core.INFO: GET /_lab/mycore/application/show : 200 [] {"uid":"d60f6aa"}
+[2018-03-24 10:26:54] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"896bc15"}

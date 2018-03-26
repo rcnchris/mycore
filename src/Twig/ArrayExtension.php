@@ -71,7 +71,7 @@ class ArrayExtension extends \Twig_Extension
         $html = "<table$class>";
         $keys = array_keys($values);
         if (is_numeric($keys[0]) && !is_array(current($values))) {
-            // La valeur n'est pas un tableau, donc liste smple
+            // La valeur n'est pas un tableau, donc liste simple
             if ($withHeader) {
                 $html .= "<thead>";
                 $html .= "<tr><th>#</th><th>Libellé</th></tr>";

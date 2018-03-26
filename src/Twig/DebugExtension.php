@@ -44,18 +44,12 @@ class DebugExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('getClass', [$this, 'getClass'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFilter('getMethods', [$this, 'getMethods'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFilter('getProperties', [$this, 'getProperties'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFilter('getParentClass', [$this, 'getParentClass'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFilter('getParentMethods', [$this, 'getParentMethods'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFilter('getImplements', [$this, 'getImplements'], ['is_safe' => ['html']])
-            ,
+            new \Twig_SimpleFilter('getClass', [$this, 'getClass'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('getMethods', [$this, 'getMethods'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('getProperties', [$this, 'getProperties'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('getParentClass', [$this, 'getParentClass'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('getParentMethods', [$this, 'getParentMethods'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('getImplements', [$this, 'getImplements'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('getTraits', [$this, 'getTraits'], ['is_safe' => ['html']])
         ];
     }
@@ -112,7 +106,8 @@ class DebugExtension extends \Twig_Extension
      * Nom du parent de la classe de l'objet passé en paramètre
      *
      * ### Exemple
-     * - `object|getParentClass`
+     * - `object|getParentClass;`
+     * - `object|getParentClass(true);`
      *
      * @param object    $value  Objet dont il faut récupérer le nom du parent
      * @param bool|null $recurs Remonte tous les parents

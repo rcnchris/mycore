@@ -364,4 +364,20 @@ class Common
         }
         return false;
     }
+
+    /**
+     * Obtenir le service Internet qui correspond au port et protocole
+     *
+     * @param int         $port     Numéro de port
+     * @param string|null $protocol Protocole du service (tcp ou udp)
+     *
+     * @return bool|string
+     */
+    public static function getServiceOfPort($port = 0, $protocol = 'tcp')
+    {
+        if (in_array($protocol, ['tcp', 'udp'])) {
+            return getservbyport($port, $protocol);
+        }
+        return false;
+    }
 }
