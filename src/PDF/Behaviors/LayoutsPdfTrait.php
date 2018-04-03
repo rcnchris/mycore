@@ -64,7 +64,7 @@ trait LayoutsPdfTrait
             $colorLevel[$level]['size'],
             ['color' => $colorLevel[$level]['color']]
         );
-        parent::MultiCell(
+        $this->MultiCell(
             0,
             $colorLevel[$level]['heightLine'],
             utf8_decode($label),
@@ -72,7 +72,7 @@ trait LayoutsPdfTrait
             $colorLevel[$level]['align'],
             $colorLevel[$level]['fill']
         );
-        $this->SetFont();
+        $this->SetFont(null, '', null, ['color' => '#000000']);
     }
 
     /**
@@ -89,9 +89,9 @@ trait LayoutsPdfTrait
             $code = [$code];
         }
         foreach ($code as $line) {
-            parent::MultiCell(0, 10, $line, 0, 'L', true);
+            $this->MultiCell(0, 10, $line, 0, 'L', true);
         }
-        $this->SetFont($initFont);
+        $this->SetFont($initFont, '', null, ['color' => '#000000']);
     }
 
     /**

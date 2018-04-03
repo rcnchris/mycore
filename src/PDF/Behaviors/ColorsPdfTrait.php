@@ -337,4 +337,93 @@ trait ColorsPdfTrait
         }
         return true;
     }
+
+    /**
+     * Imprime les informations du trait
+     *
+     * @throws \Exception
+     */
+    public function infosColorsPdfTrait()
+    {
+        $this->AddPage();
+
+        $this->title('Couleurs', 1);
+        $this->alert(
+            "Permet de disposer d'une palette de couleurs et de faire référence à des couleurs nommées." .
+            " Il est possible de définir une tablette personnalisée."
+        );
+
+        $this->printInfoClass(ColorsPdfTrait::class);
+
+        $this->title('getColors', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Obtenir toutes les couleurs"));
+        $this->codeBloc("\$pdf->getColors();");
+
+        $this->title('Couleurs disponibles', 3);
+        $ln = 0;
+        foreach ($this->getColors() as $name => $hexa) {
+            $this->setToolColor($hexa, 'fill');
+            $this->Cell(10, 5, '', 0, $ln, '', true);
+            if ($this->GetX() + 10 > 190) {
+                $ln = 1;
+            } else {
+                $ln = 0;
+            }
+        }
+        $this->Ln();
+
+        $this->MultiCell(0, 10, utf8_decode("Obtenir le code héxadécimal d'une couleur par son nom"));
+        $this->codeBloc("\$pdf->getColors('aloha');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->getColors('aloha')));
+
+        $this->MultiCell(0, 10, utf8_decode("Obtenir le nom d'une couleur par son code héxadécimal"));
+        $this->codeBloc("\$pdf->getColors('#1ABC9C');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->getColors('#1ABC9C')));
+
+        $this->MultiCell(0, 10, utf8_decode("Obtenir les valeurs RGB d'une couleur."));
+        $this->codeBloc("\$pdf->getColors('aloha', true);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->getColors('aloha', true)));
+        $this->Ln();
+
+        $this->title('colorToRgb', 2);
+        $this->MultiCell(0, 10, utf8_decode("Obtenir les valeurs RGB d'une couleur au format héxadécimal."));
+        $this->codeBloc("\$pdf->colorToRgb('#CCCCCC');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->colorToRgb('#CCCCCC')));
+        $this->Ln();
+
+        $this->title('hasColor', 2);
+        $this->addLine();
+        $this->MultiCell(
+            0,
+            10,
+            utf8_decode("Vérifier la présence d'une couleur. Accepte le nom ou le code héxadécimal.")
+        );
+        $this->codeBloc("\$pdf->hasColor('aloha');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->hasColor('aloha')));
+        $this->Ln();
+
+        $this->title('addColor', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Ajouter une couleur."));
+        $this->codeBloc("\$pdf->addColor('pinkjigglypuff', '#ff9ff3');");
+        $this->addColor('pinkjigglypuff', '#ff9ff3');
+        $this->Ln();
+
+        $this->title('setColors', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir une palette personnalisée."));
+        $this->codeBloc("\$pdf->setColors(['pinkjigglypuff' => '#ff9ff3', 'yellowcasandora' => '#feca57');");
+        $this->Ln();
+    }
 }

@@ -181,6 +181,7 @@ class RowTraitTest extends PdfTestCase
     public function testToFileWithCol()
     {
         $pdf = $this->makePdf('row');
+        $pdf->AddPage();
         $this->assertPdfToFile(
             __FUNCTION__,
             "Définir trois colonnes.",

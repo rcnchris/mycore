@@ -24,7 +24,7 @@ namespace Rcnchris\Core\PDF\Behaviors;
  * <li>Ajoute une grille pour aider à positionner les élements lors du développement.</li>
  * </ul>
  *
- * @category New
+ * @category PDF
  *
  * @package  Rcnchris\Core\PDF\Behaviors
  *
@@ -84,5 +84,36 @@ trait GridPdfTrait
     public function setGrid($activated = 5)
     {
         $this->grid = $activated;
+    }
+
+    /**
+     * Imprime les informations du trait
+     */
+    public function infosGridPdfTrait()
+    {
+        $this->AddPage();
+        $this->setGrid(10);
+
+        $this->title('Grille', 1);
+        $this->alert("Ajoute une grille pour aider à positionner les élements lors du développement.");
+        $this->printInfoClass(GridPdfTrait::class);
+
+        $this->title('setGrid', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir la taille de l'échelle de la grille (5mm par défaut)."));
+        $this->codeBloc("\$pdf->setGrid(10);");
+
+        $this->MultiCell(0, 10, utf8_decode("Arrêter l'impression de la grille."));
+        $this->codeBloc("\$pdf->setGrid(false);");
+
+        $this->Ln();
+
+        $this->title('drawGrid', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Dessiner la grille."));
+        $this->codeBloc("\$pdf->drawGrid();");
+
+        $this->drawGrid();
+        $this->setGrid(false);
     }
 }

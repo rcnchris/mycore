@@ -87,4 +87,26 @@ trait Psr7PdfTrait
             ->withBody($body);
         return $newResponse;
     }
+
+    /**
+     * Imprime les informations du trait
+     */
+    public function infosPsr7PdfTrait()
+    {
+        $this->AddPage();
+        $this->title('PSR7', 1);
+        $this->alert("Permet de visualiser et télécharger le document PDF via le navigateur en respectant la norme PSR7.");
+        $this->printInfoClass(Psr7PdfTrait::class);
+
+        $this->title('toView', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Voir le document dans le navigateur.'));
+        $this->codeBloc("\$pdf->toView(response);");
+        $this->Ln();
+
+        $this->title('toDownload', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Voir le document dans le navigateur.'));
+        $this->codeBloc("\$pdf->toDownload(response, 'doc');");
+    }
 }

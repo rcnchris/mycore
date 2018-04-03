@@ -186,4 +186,40 @@ trait BookmarkPdfTrait
             $this->_put('/PageMode /UseOutlines');
         }
     }
+
+    /**
+     * Imprime les informations du trait
+     */
+    public function infosBookmarkPdfTrait()
+    {
+        $this->AddPage();
+        $this->title('Signets', 1);
+        $this->alert("Permet d'ajouter des favoris au document.");
+
+        $this->printInfoClass(BookmarkPdfTrait::class);
+
+        $this->title('addBookmark', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Ajouter un signet."));
+        $this->codeBloc("\$pdf->addBookmark('Sous-Titre', 1);");
+        $this->Ln();
+
+        $this->title('getBookmarks', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Obtenir tous les signets."));
+        $this->codeBloc("\$pdf->getBookmarks();");
+
+        $this->MultiCell(0, 10, utf8_decode("Obtenir un signet."));
+        $this->codeBloc("\$pdf->getBookmarks(3);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->getBookmarks(3)));
+
+        $this->MultiCell(0, 10, utf8_decode("Obtenir la valeur d'une clé d'un signet."));
+        $this->codeBloc("\$pdf->getBookmarks(3, 't');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->getBookmarks(3, 't')));
+        $this->Ln();
+    }
 }

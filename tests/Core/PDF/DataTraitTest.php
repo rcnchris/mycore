@@ -128,6 +128,8 @@ class DataTraitTest extends PdfTestCase
     public function testData()
     {
         $pdf = $this->makePdf('data');
+        $pdf->AddPage();
+        $pdf->SetFont();
         $this->assertPdfToFile(
             __FUNCTION__,
             "Document avec des données.",

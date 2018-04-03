@@ -418,4 +418,119 @@ trait RowPdfTrait
     {
         $this->heightLine = $heightLine;
     }
+
+    /**
+     * Imprime les informations du trait
+     */
+    public function infosRowPdfTrait()
+    {
+        $this->AddPage();
+        $this->title('Colonnes', 1);
+        $this->alert("Permet de faciliter l'écriture d'une ligne au sein d'aun tableau définit.");
+        $this->printInfoClass(RowPdfTrait::class);
+
+        $this->title('setColsWidth', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Définir trois colonnes avec une largeur en unité.'));
+        $this->codeBloc("\$pdf->setColsWidth(30, 20, 50);");
+        $this->Ln();
+
+        $this->title('setColsWidthInPourc', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Définir trois colonnes avec une largeur en pourcentage du corps.'));
+        $this->codeBloc("\$pdf->setColsWidthInPourc(30, 20, 50);");
+        $this->Ln();
+
+        $this->title('setColsAlign', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir l'alignement de chaque colonne."));
+        $this->codeBloc("\$pdf->setColsAlign('L', 'C', 'R');");
+        $this->Ln();
+
+        $this->title('setColsBorder', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir la bordure de chaque colonne."));
+        $this->codeBloc("\$pdf->setColsBorder(0, 'B', 'R');");
+        $this->Ln();
+
+        $this->title('setColsFill', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir le remplissage de chaque colonne."));
+        $this->codeBloc("\$pdf->setColsFill(false, true, false);");
+        $this->Ln();
+
+        $this->title('setColsTextColors', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir le remplissage de chaque colonne."));
+        $this->codeBloc("\$pdf->setColsTextColors('black', 'red', 'graylight');");
+        $this->Ln();
+
+        $this->title('setColsFillColors', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir la couleur de remplissage de chaque colonne."));
+        $this->codeBloc("\$pdf->setColsFillColors('black', 'red', 'graylight');");
+        $this->Ln();
+
+        $this->title('setColsDrawColors', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir la couleur du trait de chaque colonne."));
+        $this->codeBloc("\$pdf->setColsDrawColors('black', 'red', 'graylight');");
+        $this->Ln();
+
+        $this->title('setColsFont', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir la police de chaque colonne."));
+        $this->codeBloc("\$pdf->setColsFont('helvetica', 'courier', 'helvetica');");
+        $this->Ln();
+
+        $this->title('setColsFontSize', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir la taille de la police de chaque colonne."));
+        $this->codeBloc("\$pdf->setColsFontSize(10, 8, 6);");
+        $this->Ln();
+
+        $this->title('setHeightLine', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Définir la hauteur de toutes les lignes."));
+        $this->codeBloc("\$pdf->setHeightLine(10);");
+        $this->Ln();
+
+        $this->title('getNbCols', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Obtenir le nombre de colonnes."));
+        $this->codeBloc("\$pdf->getNbCols();");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->getNbCols()));
+        $this->Ln();
+
+        $this->title('getColWidth', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Obtenir la largeur d'une colonne."));
+        $this->codeBloc("\$pdf->getColWidth(1);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->getColWidth(1)));
+        $this->Ln();
+
+        $this->title('getColsProperties', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Obtenir les propriétés de toutes les colonnes."));
+        $this->codeBloc("\$pdf->getColsProperties();");
+
+        $this->MultiCell(0, 10, utf8_decode("Obtenir les propriétés d'une colonne."));
+        $this->codeBloc("\$pdf->getColsProperties(1);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->codeBloc(serialize($this->getColsProperties(1)));
+        $this->Ln();
+
+        $this->title('rowCols', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Ajouter une ligne au tableau."));
+        $this->codeBloc("\$pdf->rowCols('ola', 'les', 'gens');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Exemple :");
+        $this->rowCols('ola', 'les', 'gens');
+    }
 }

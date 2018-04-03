@@ -1077,6 +1077,7 @@ class AllPdfBehaviorsTest extends BaseTestCase
     {
         $fileName = __DIR__ . DIRECTORY_SEPARATOR . 'res' . DIRECTORY_SEPARATOR . 'Report_Tests_AllPdfBehaviors';
 
+        $this->pdf->AddPage();
         $this->pdf->printDebugClass();
         $this->pdf->printNativesProperties();
         $this->pdf->printNativesMethods();

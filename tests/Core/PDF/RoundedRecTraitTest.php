@@ -34,6 +34,7 @@ class RoundedRecTraitTest extends PdfTestCase
 
     public function testRoundedRectWithNoRounded()
     {
+        $this->pdf->AddPage();
         $this->pdf->roundedRect(60, 60, 68, 46, 5, null, "DF");
         $this->assertPdfToFile(
             __FUNCTION__,
@@ -46,6 +47,7 @@ class RoundedRecTraitTest extends PdfTestCase
 
     public function testRoundedRect()
     {
+        $this->pdf->AddPage();
         $this->pdf->roundedRect(60, 60, 68, 46, 5, "13", "F");
         $this->assertPdfToFile(
             __FUNCTION__,
@@ -57,6 +59,7 @@ class RoundedRecTraitTest extends PdfTestCase
 
     public function testRoundedRectWithCorners()
     {
+        $this->pdf->AddPage();
         $this->pdf->roundedRect(60, 60, 68, 46, 5, "24", "F");
         $this->assertPdfToFile(
             __FUNCTION__,

@@ -109,4 +109,34 @@ trait EllipsePdfTrait
             $op
         ));
     }
+
+    /**
+     * Imprime les informations du trait
+     */
+    public function infosEllipsePdfTrait()
+    {
+        $this->AddPage();
+        $this->title('Ellipse', 1);
+        $this->SetFont(null, 'I', 10, ['color' => 'black', 'fillColor' => 'graylight']);
+        $this->alert("Permet de tracer cercles et ellipses sans images.");
+        $this->printInfoClass(EllipsePdfTrait::class);
+
+        $this->title('circle', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Dessiner une cercle.'));
+        $this->codeBloc("\$pdf->circle(100, 25, 7, 'F');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Exemple :");
+        $this->circle($this->lMargin + 7, $this->GetY() + 7, 7, 'F');
+        $this->Ln();
+        $this->Ln();
+
+        $this->title('ellipse', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Dessiner une ellipse.'));
+        $this->codeBloc("\$pdf->ellipse(100, 50, 7, 7, 10);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Exemple :");
+        $this->ellipse($this->lMargin + 7, $this->GetY() + 7, 7, 10);
+    }
 }

@@ -195,4 +195,42 @@ trait Ean13PdfTrait
         $this->SetFont('Arial', '', 12);
         $this->Text($x, $y + $h + 11 / $this->k, substr($barcode, -$len));
     }
+
+    /**
+     * Imprime les informations du trait
+     */
+    public function infosEan13PdfTrait()
+    {
+        $this->AddPage();
+        $this->title('Codes à barres', 1);
+        $this->alert("Permet d'imprimer des codes à barres selon la norme EAN13 et UPCA.");
+        $this->printInfoClass(Ean13PdfTrait::class);
+
+        $this->title('ean13', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Code à barres EAN13'));
+        $this->codeBloc("\$pdf->ean13(100, 60, '123456789012', 5);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Exemple :");
+        $this->ean13(
+            $this->lMargin,
+            $this->GetY(),
+            '123456789012',
+            5
+        );
+        $this->Ln();
+
+        $this->title('upca', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Code à barres UPCA.'));
+        $this->codeBloc("\$pdf->upca(100, 60, '123456789012', 5);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Exemple :");
+        $this->upca(
+            $this->lMargin,
+            $this->GetY(),
+            '123456789012',
+            5
+        );
+    }
 }

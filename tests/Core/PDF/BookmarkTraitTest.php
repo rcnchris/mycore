@@ -97,6 +97,8 @@ class BookmarkTraitTest extends PdfTestCase
     public function testWithoutBookmark()
     {
         $pdf = $this->makePdf('bookmark');
+        $pdf->AddPage();
+        $pdf->SetFont();
         $this->assertPdfToFile(
             __FUNCTION__,
             "Générer un fichier sans signet.",
@@ -109,6 +111,7 @@ class BookmarkTraitTest extends PdfTestCase
     public function testBookmarks()
     {
         $pdf = $this->makePdf('bookmark');
+        $pdf->AddPage();
         $pdf->addBookmark('Le titre');
         $pdf->addBookmark('Le sous-titre', 1);
         $pdf->addBookmark('Le contenu', 2);

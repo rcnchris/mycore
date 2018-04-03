@@ -34,6 +34,7 @@ class IconsTraitTest extends PdfTestCase
 
     public function testIcon()
     {
+        $this->pdf->AddPage();
         $this->pdf->printIcon('envelop');
         $this->pdf->printIcon('envelop', 15, 25);
         $this->pdf->printIcon('envelop', 25, 15, 'B');

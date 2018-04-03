@@ -34,6 +34,7 @@ class LayoutsTraitTest extends PdfTestCase
 
     public function testLayouts()
     {
+        $this->pdf->AddPage();
         $this->pdf->codeBloc('echo "ola les gens";');
         $this->assertPdfToFile(
             __FUNCTION__,

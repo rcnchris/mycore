@@ -636,3 +636,12 @@
 [2018-03-24 10:19:07] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"8f2ab9c"}
 [2018-03-24 10:25:21] My Core.INFO: GET /_lab/mycore/application/show : 200 [] {"uid":"d60f6aa"}
 [2018-03-24 10:26:54] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"896bc15"}
+[2018-03-30 08:21:11] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"73e7033"}
+[2018-04-01 09:31:21] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"7df87cd"}
+[2018-04-01 11:21:45] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"4866b46"}
+[2018-04-03 09:12:59] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"d721031"}
+[2018-04-03 09:14:25] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"19fb7b2"}
+[2018-04-03 09:14:36] My Core.INFO: GET /_lab/mycore/application/show : 200 [] {"uid":"d07e7a6"}
+[2018-04-03 09:32:58] My Core.INFO: GET /_lab/mycore/application/show : 200 [] {"uid":"ebd85c8"}
+[2018-04-03 09:37:51] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"be13be6"}
+[2018-04-03 10:30:48] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"4c57d18"}

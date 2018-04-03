@@ -37,6 +37,7 @@ class GridTraitTest extends PdfTestCase
     public function testGrid()
     {
         $this->pdf->setGrid();
+        $this->pdf->AddPage();
         $this->pdf->drawGrid();
         $code = [
             '$this->pdf->setGrid()',
@@ -52,6 +53,7 @@ class GridTraitTest extends PdfTestCase
     public function testGrid10()
     {
         $this->pdf->setGrid(10);
+        $this->pdf->AddPage();
         $this->pdf->drawGrid();
         $code = [
             '$this->pdf->setGrid()',
@@ -69,6 +71,7 @@ class GridTraitTest extends PdfTestCase
     public function testGridTrue()
     {
         $this->pdf->setGrid(true);
+        $this->pdf->AddPage();
         $this->pdf->drawGrid();
         $code = [
             '$this->pdf->setGrid()',

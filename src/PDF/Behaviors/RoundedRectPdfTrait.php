@@ -129,4 +129,32 @@ trait RoundedRectPdfTrait
             )
         );
     }
+
+    /**
+     * Imprime les informations du trait
+     */
+    public function infosRoundedRectPdfTrait()
+    {
+        $this->AddPage();
+        $this->title('Rectangles arrondis', 1);
+        $this->SetFont(null, 'I', 10, ['color' => 'black', 'fillColor' => 'graylight']);
+        $this->alert("Permet de tracer un rectangle avec les bords arrondis.");
+        $this->printInfoClass(RoundedRectPdfTrait::class);
+
+        $this->title('roundedRect', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Dessiner un rectangle arrondi.'));
+        $this->codeBloc("\$pdf->roundedRect(100, 25, 7, 'F');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Exemple :");
+        $this->roundedRect(
+            $this->GetX(),
+            $this->GetY() + 7,
+            $this->getColWidth(2),
+            46,
+            5,
+            '13',
+            'D'
+        );
+    }
 }

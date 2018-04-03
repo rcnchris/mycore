@@ -163,4 +163,25 @@ trait JoinedFilePdfTrait
             $this->_put('/PageMode /UseAttachments');
         }
     }
+
+    /**
+     * Imprime les informations du trait
+     */
+    public function infosJoinedFilePdfTrait()
+    {
+        $this->AddPage();
+        $this->title('Fichier joint', 1);
+        $this->SetFont(null, 'I', 10, ['color' => 'black', 'fillColor' => 'graylight']);
+        $this->alert("Permet de joindre des fichiers au PDF.");
+        $this->printInfoClass(JoinedFilePdfTrait::class);
+        $this->setColsWidthInPourc(30, 30, 40);
+        $this->setColsTextColors('black', 'red', 'black');
+        $this->setColsAlign('L', 'L', 'L');
+        $this->rowCols(
+            'Joindre un fichier',
+            'attach(/path/to/file.txt)',
+            serialize(null)
+        );
+        $this->attach(dirname(__DIR__) . '/files/textFile.txt');
+    }
 }

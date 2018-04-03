@@ -187,6 +187,7 @@ class ColorsTraitTest extends PdfTestCase
     public function testColors()
     {
         $pdf = $this->makePdf('colors');
+        $pdf->AddPage();
         $ln = 0;
         foreach ($pdf->getColors() as $name => $hexa) {
             $pdf->setToolColor($hexa, 'fill');

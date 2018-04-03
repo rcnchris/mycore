@@ -46,6 +46,7 @@ class AbstractPDF extends \FPDF
         'unit' => 'mm',
         'format' => 'A4',
         'heightLine' => 10,
+        'rotation' => 0,
         'marges' => [
             'top' => 10,
             'bottom' => 10,
@@ -73,16 +74,30 @@ class AbstractPDF extends \FPDF
     /**
      * Liste des unités de mesures possibles
      *
-     * @var array
+     * @var array[string]
      */
     protected $units = ['pt', 'mm', 'cm', 'in'];
 
     /**
      * Liste des formats possibles
      *
-     * @var array
+     * @var array[string]
      */
     protected $formats = ['A3', 'A4', 'A5', 'Letter', 'Legal'];
+
+    /**
+     * Niveaux de zoom
+     *
+     * @var array[string]
+     */
+    protected $zoomModes = ['default', 'fullpage', 'fullwidth', 'real'];
+
+    /**
+     * Dispositions des pages
+     *
+     * @var array[string]
+     */
+    protected $layoutModes = ['default', 'single', 'two', 'continuous'];
 
     /**
      * Constructeur
@@ -97,15 +112,37 @@ class AbstractPDF extends \FPDF
     {
         $options = array_merge($this->defaultOptions, $options);
         parent::__construct($options['orientation'], $options['unit'], $options['format']);
+    }
 
-        parent::AddPage($options['orientation'], $options['format']);
+    /**
+     * Ajoute une page
+     *
+     * @param string $orientation
+     * @param string $size
+     * @param int    $rotation
+     */
+    public function AddPage($orientation = '', $size = '', $rotation = 0)
+    {
+        if ($orientation === '') {
+            $orientation = $this->defaultOptions['orientation'];
+        }
+        if ($size === '') {
+            $size = $this->defaultOptions['format'];
+        }
+        if ($rotation === '') {
+            $rotation = $this->defaultOptions['rotation'];
+        }
+        parent::AddPage($orientation, $size, $rotation);
         parent::AliasNbPages();
-
-        $font = $options['font'];
-        parent::SetFont(
-            $font['family'],
-            $font['style'],
-            $font['size']
+        $this->SetFont(
+            $this->getFontProperty('family'),
+            $this->getFontProperty('style'),
+            $this->getFontProperty('size'),
+            [
+                'color' => '#000000',
+                'drawColor' => '#000000',
+                'fillColor' => '#CCCCCC'
+            ]
         );
     }
 
@@ -507,6 +544,10 @@ class AbstractPDF extends \FPDF
 
     /**
      * Obtenir toutes les propriétés de la police courante ou l'une d'entre elle
+     *
+     * ### Exemple
+     * - `$pdf->getFontProperty();`
+     * - `$pdf->getFontProperty('family');`
      *
      * @param string|null $property Nom de la propriété souhaitée
      *

@@ -132,4 +132,56 @@ trait DataPdfTrait
     {
         return is_array($this->data);
     }
+
+    public function infosDataPdfTrait()
+    {
+        $this->setData(['name' => 'Mathis', 'year' => 2007]);
+        $this->AddPage();
+        $this->title('Données', 1);
+        $this->alert("Permet de disposer de données au sein du document.");
+        $this->printInfoClass(DataPdfTrait::class);
+
+        $this->title('setData', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Définir les données du document'));
+        $this->codeBloc("\$pdf->setData(['name' => 'Mathis', 'year' => 2007]);");
+        $this->Ln();
+
+        $this->title('getData', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Obtenir la liste de toutes les données'));
+        $this->codeBloc("\$pdf->getData();");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->SetFont();
+        $this->codeBloc(serialize($this->getData()));
+
+        $this->MultiCell(0, 10, utf8_decode('Obtenir la valeur d\'une clé'));
+        $this->codeBloc("\$pdf->getData('name');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->SetFont();
+        $this->codeBloc(serialize($this->getData('name')));
+        $this->Ln();
+
+        $this->title('hasKey', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Vérifier la présence d'une clé"));
+        $this->codeBloc("\$pdf->hasKey('name');");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->SetFont();
+        $this->codeBloc(serialize($this->hasKey('name')));
+        $this->Ln();
+
+        $this->title('hasValue', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Vérifier la présence d'une valeur"));
+        $this->codeBloc("\$pdf->hasValue(2007);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Retourne :");
+        $this->SetFont();
+        $this->codeBloc(serialize($this->hasValue(2007)));
+        $this->Ln();
+    }
 }

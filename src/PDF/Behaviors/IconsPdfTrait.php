@@ -75,4 +75,25 @@ trait IconsPdfTrait
         $this->SetXY($initPos['x'], $initPos['y']);
         $this->SetFont($initFont['family'], $initFont['style'], $initFont['size']);
     }
+
+    public function infosIconsPdfTrait()
+    {
+        $this->AddPage();
+        $this->title('Icônes', 1);
+        $this->alert("Permet d'imprimer des icônes.");
+        $this->printInfoClass(IconsPdfTrait::class);
+
+        $this->title('printIcon', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode('Obtenir une icône par son nom'));
+        $this->codeBloc("\$pdf->printIcon('envelop', x, y, width, style);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Exemple :");
+        $this->printIcon(
+            'envelop',
+            $this->getColWidth(0) + $this->getColWidth(1) + $this->lMargin,
+            $this->GetY() - 2,
+            20
+        );
+    }
 }

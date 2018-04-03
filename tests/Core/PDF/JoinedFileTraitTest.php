@@ -35,6 +35,7 @@ class JoinedFileTraitTest extends PdfTestCase
     public function testJoinedFile()
     {
         $fileName = __DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'textFile.txt';
+        $this->pdf->AddPage();
         $this->pdf->setAttachPane(true);
         $this->pdf->attach($fileName);
         $this->assertPdfToFile(

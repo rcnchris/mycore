@@ -131,4 +131,32 @@ trait RotatePdfTrait
         $this->Image($file, $x, $y, $w, $h);
         $this->Rotate(0);
     }
+
+    /**
+     * Imprime les informations du trait
+     */
+    public function infosRotatePdfTrait()
+    {
+        $this->AddPage();
+        $this->title('Rotation', 1);
+        $this->alert("Permet d'appliquer une rotation sur un texte ou une image.");
+        $this->printInfoClass(RotatePdfTrait::class);
+
+        $this->title('rotatedText', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Rotation du texte autour de son origine."));
+        $this->codeBloc("\$pdf->rotatedText(100, 60, 'Hello !', 45);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Exemple :");
+        $this->rotatedText($this->GetX(), $this->GetY() + 7, 'Hello !', 45);
+        $this->Ln();
+
+        $this->title('rotatedImage', 2);
+        $this->addLine();
+        $this->MultiCell(0, 10, utf8_decode("Rotation de l'image autour du coin supérieur gauche."));
+        $this->codeBloc("\$pdf->rotatedImage('circle.png', 85, 60, 40, 16, 45);");
+        $this->SetFont(null, 'BI');
+        $this->MultiCell(0, 10, "Exemple :");
+        $this->rotatedImage(dirname(__DIR__) . '/files/circle.png', $this->GetX(), $this->GetY() + 35, 40, 16, 45);
+    }
 }

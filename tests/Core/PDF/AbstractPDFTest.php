@@ -7,6 +7,11 @@ use Tests\Rcnchris\BaseTestCase;
 class AbstractPDFTest extends BaseTestCase
 {
 
+    /**
+     * @param array $options
+     *
+     * @return \Rcnchris\Core\PDF\AbstractPDF
+     */
     private function makePdf($options = [])
     {
         return new AbstractPDF($options);
@@ -24,10 +29,12 @@ class AbstractPDFTest extends BaseTestCase
 
     public function testGetTotalPages()
     {
+        $pdf = $this->makePdf();
+        $pdf->AddPage();
         $this->assertEquals(
             1
-            , $this->makePdf()->getTotalPages()
-            , $this->getMessage("Le nombre total de page est incorrect à l'instanciation")
+            , $pdf->getTotalPages()
+            , $this->getMessage("Le nombre total ne correspond pas")
         );
     }
 
@@ -234,18 +241,22 @@ class AbstractPDFTest extends BaseTestCase
 
     public function testGetCursorX()
     {
+        $pdf = $this->makePdf();
+        $pdf->AddPage();
         $this->assertEquals(
             10
-            , intval($this->makePdf()->getCursor('x'))
+            , intval($pdf->getCursor('x'))
             , $this->getMessage("La position X du curseur est incorrecte")
         );
     }
 
     public function testGetCursorY()
     {
+        $pdf = $this->makePdf();
+        $pdf->AddPage();
         $this->assertEquals(
             10
-            , intval($this->makePdf()->getCursor('y'))
+            , intval($pdf->getCursor('y'))
             , $this->getMessage("La position Y du curseur est incorrecte")
         );
     }
@@ -317,7 +328,9 @@ class AbstractPDFTest extends BaseTestCase
 
     public function testAddLine()
     {
-        $this->makePdf()->addLine();
+        $pdf = $this->makePdf();
+        $pdf->AddPage();
+        $pdf->addLine();
         $this->assertTrue(true);
     }
 
@@ -350,6 +363,8 @@ class AbstractPDFTest extends BaseTestCase
     public function testToFileWithFileName()
     {
         $pdf = $this->makePdf();
+        $pdf->AddPage();
+        $pdf->SetFont();
         $pdf->MultiCell(0, 10, 'ola les gens');
         $fileName = __DIR__ . '/test_to_file';
         $pdf->toFile($fileName);
@@ -361,6 +376,8 @@ class AbstractPDFTest extends BaseTestCase
     public function testToFileWithoutFileName()
     {
         $pdf = $this->makePdf();
+        $pdf->AddPage();
+        $pdf->SetFont();
         $pdf->MultiCell(0, 10, 'ola les gens');
         $pdf->toFile();
         $fileName = 'MyCore_doc_' . date('Y-m-d-H-i') . '.pdf';
@@ -451,6 +468,7 @@ class AbstractPDFTest extends BaseTestCase
     public function testGetFontProperties()
     {
         $pdf = $this->makePdf();
+        $pdf->SetFont();
         $this->assertEquals('helvetica', $pdf->getFontProperty('family'));
         $this->assertEquals('', $pdf->getFontProperty('style'));
         $this->assertEquals(10, $pdf->getFontProperty('size'));

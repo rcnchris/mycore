@@ -36,6 +36,7 @@ class EllipseTraitTest extends PdfTestCase
 
     public function testCircle()
     {
+        $this->pdf->AddPage();
         $this->pdf->circle(110, 50, 7, 'F');
         $this->assertPdfToFile(
             __FUNCTION__,
@@ -46,6 +47,7 @@ class EllipseTraitTest extends PdfTestCase
 
     public function testEllipse()
     {
+        $this->pdf->AddPage();
         $this->pdf->ellipse(110, 80, 30, 20);
         $this->assertPdfToFile(
             __FUNCTION__,
@@ -56,6 +58,7 @@ class EllipseTraitTest extends PdfTestCase
 
     public function testEllipseWithStyle()
     {
+        $this->pdf->AddPage();
         $this->pdf->ellipse(110, 80, 30, 20, 'FD');
         $this->assertPdfToFile(
             __FUNCTION__,
