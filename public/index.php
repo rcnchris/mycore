@@ -4,7 +4,7 @@ ini_set("display_errors", 1);
 
 require '../vendor/autoload.php';
 
-// Configuration
+// Configuration & dépendances
 $config = require '../app/config.php';
 $dependances = require '../app/dependences.php';
 
