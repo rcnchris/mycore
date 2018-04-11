@@ -307,6 +307,22 @@ trait RecordSetPdfTrait
     }
 
     /**
+     * Obtenir la position X de départ d'une colonne
+     *
+     * @param double $pos Colonne du RS
+     *
+     * @return double
+     */
+    public function getRsX($pos)
+    {
+        $x = $this->lMargin;
+        for ($i = 0 ; $i < $pos ; $i++) {
+            $x = $x + $this->getRsPropertiesByCol($i)['w'];
+        }
+        return $x;
+    }
+
+    /**
      * Imprime les informations du traits
      * @throws \Exception
      */

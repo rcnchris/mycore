@@ -6,7 +6,7 @@ require '../vendor/autoload.php';
 
 // Configuration
 $config = require '../app/config.php';
-$dependances = require '../app/dependances.php';
+$dependances = require '../app/dependences.php';
 
 // Application
 $app = new \Slim\App(array_merge($config, $dependances));

@@ -510,7 +510,7 @@ class AbstractPDF extends \FPDF
             // Couleur du trait
             if (array_key_exists('drawColor', $properties)) {
                 if (method_exists($this, 'setColor')) {
-                    $this->setColor($properties['color'], 'draw');
+                    $this->setColor($properties['drawColor'], 'draw');
                 } else {
                     $this->setToolColor($this->hexaToRgb($properties['drawColor']), 'draw');
                 }

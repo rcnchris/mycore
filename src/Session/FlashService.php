@@ -52,7 +52,7 @@ class FlashService
     /**
      * Tableau des messages stockés
      *
-     * @var array
+     * @var array[string]
      */
     private $messages = null;
 
@@ -69,7 +69,7 @@ class FlashService
     /**
      * Définir un message de succès
      *
-     * @param string $message
+     * @param string $message Contenu du message
      *
      * @return void
      */
@@ -77,6 +77,33 @@ class FlashService
     {
         $flash = $this->session->get($this->sessionKey, []);
         $flash['success'] = $message;
+        $this->session->set($this->sessionKey, $flash);
+    }
+
+    /**
+     * Définir un message d'erreur
+     *
+     * @param string $message Contenu du message
+     *
+     * @return void
+     */
+    public function error($message)
+    {
+        $flash = $this->session->get($this->sessionKey, []);
+        $flash['error'] = $message;
+        $this->session->set($this->sessionKey, $flash);
+    }
+
+    /**
+     * Définir un message
+     *
+     * @param string $type    Type de message
+     * @param string $message Contenu du message
+     */
+    public function set($type, $message)
+    {
+        $flash = $this->session->get($this->sessionKey, []);
+        $flash[$type] = $message;
         $this->session->set($this->sessionKey, $flash);
     }
 
