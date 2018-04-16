@@ -79,29 +79,25 @@ class CommonTest extends BaseTestCase
         $this->assertFalse(Common::getJsonFileContent('/fake.json'));
     }
 
-    public function testGetColor()
-    {
-        $this->assertArrayHasKey('aqua', Common::getColors());
-        $this->assertEquals('#000000', Common::getColors('black'));
-        $this->assertEquals('black', Common::getColors('#000000'));
-        $this->assertFalse(Common::getColors('fake'));
-    }
-
-    public function testGetRandomColor()
-    {
-        $this->assertNotEmpty(Common::getRandColor());
-    }
-
-    public function testHexaToRgb()
-    {
-        $this->assertEquals(['r' => 0, 'g' => 0, 'b' => 0], Common::hexaToRgb('#000000'));
-        $this->expectException(\Exception::class);
-        Common::hexaToRgb('fake');
-    }
-
     public function testGetPortsOfServices()
     {
         $services = Common::getPortOfServices();
+        $this->assertNotEmpty($services);
+        $this->assertArrayHasKey('http', $services);
+        $this->assertEquals(80, $services['http']);
+    }
+
+    public function testGetPortsOfUDPServices()
+    {
+        $services = Common::getPortOfServices(null, 'udp');
+        $this->assertNotEmpty($services);
+        $this->assertArrayHasKey('http', $services);
+        $this->assertEquals(80, $services['http']);
+    }
+
+    public function testGetPortsOfServicesWithWrongProtocol()
+    {
+        $services = Common::getPortOfServices(null, 'fake');
         $this->assertNotEmpty($services);
         $this->assertArrayHasKey('http', $services);
         $this->assertEquals(80, $services['http']);
@@ -120,5 +116,24 @@ class CommonTest extends BaseTestCase
     public function testGetPortsOfServicesWithProtocol()
     {
         $this->assertEquals(80, Common::getPortOfServices('http', 'udp'));
+    }
+
+    public function testGetServiceOfPort()
+    {
+        $this->assertEquals('ftp', Common::getServiceOfPort(21));
+    }
+
+    public function testGetServiceOfWrongProtocol()
+    {
+        $this->assertFalse(Common::getServiceOfPort(21, 'fake'));
+    }
+
+    public function testGetUrlParts()
+    {
+        $url = 'http://www.google.fr/ola/les/gens?p=12&user=3';
+        $parts = Common::getUrlParts($url);
+        $this->assertArrayHasKey('scheme', $parts);
+        $this->assertEquals('http', Common::getUrlParts($url, 'scheme'));
+        $this->assertFalse(Common::getUrlParts($url, 'fake'));
     }
 }

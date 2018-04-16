@@ -183,6 +183,28 @@ class Common
     ];
 
     /**
+     * Retourne une taille en Bits pour une valeur donnée
+     *
+     * ### Exemple
+     * - `$ext->bitsSize(123456)`
+     * - `$ext->bitsSize(123456, 2)`
+     * - `123456|bitsSize(2)`
+     *
+     * @param int      $value Valeur en octets
+     * @param int|null $round Arrondi
+     *
+     * @return string
+     */
+    public static function bitsSize($value, $round = 0)
+    {
+        $sizes = [' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
+        for ($i = 0; $value > 1024 && $i < count($sizes) - 1; $i++) {
+            $value /= 1024;
+        }
+        return round($value, $round) . $sizes[$i];
+    }
+
+    /**
      * Obtenir un tableau à partir d'une variable.
      *
      * @param object|mixed $var Objet à transformer
@@ -224,28 +246,6 @@ class Common
     }
 
     /**
-     * Retourne une taille en Bits pour une valeur donnée
-     *
-     * ### Exemple
-     * - `$ext->bitsSize(123456)`
-     * - `$ext->bitsSize(123456, 2)`
-     * - `123456|bitsSize(2)`
-     *
-     * @param int      $value Valeur en octets
-     * @param int|null $round Arrondi
-     *
-     * @return string
-     */
-    public static function bitsSize($value, $round = 0)
-    {
-        $sizes = [' B', ' KB', ' MB', ' GB', ' TB', ' PB', ' EB', ' ZB', ' YB'];
-        for ($i = 0; $value > 1024 && $i < count($sizes) - 1; $i++) {
-            $value /= 1024;
-        }
-        return round($value, $round) . $sizes[$i];
-    }
-
-    /**
      * Obtenir le contenur d'un fichier json sous la forme d'un objet
      *
      * @param string    $path    Chemin du fichier json
@@ -269,73 +269,6 @@ class Common
             }
         }
         return false;
-    }
-
-    /**
-     * Obtenir la liste des couleurs ou l'une d'entre elle
-     *
-     * ### Exemple
-     * - `Common::getColors();`
-     * - `Common::getColors('aqua');`
-     *
-     * @param string $c Nom de la couleur
-     *
-     * @return array|string|bool
-     */
-    public static function getColors($c = null)
-    {
-        if (is_null($c)) {
-            return self::$colors;
-        } else {
-            if ($c[0] === '#' && in_array($c, self::$colors)) {
-                // recherche inversée
-                return array_search($c, self::$colors);
-            }
-            $c = strtolower($c);
-            if (array_key_exists($c, self::$colors)) {
-                return self::$colors[$c];
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Obtenir une couleur aléatoire parmi celle du tableau des couleurs
-     *
-     * ### Exemple
-     * - `Common::getRandColor();`
-     *
-     * @return string
-     */
-    public static function getRandColor()
-    {
-        return self::$colors[array_rand(self::$colors)];
-    }
-
-    /**
-     * Obtenir les valeurs RGB d'une couleur à partir de son code hexadécimal
-     *
-     * ### Exemple
-     * - `Common::colorToRgb('#A52A2A');`
-     *
-     * @param string $c Code hexadécimal d'une couleur (#000000)
-     *
-     * @return array
-     * @throws \Exception
-     */
-    public static function hexaToRgb($c)
-    {
-        $c = strtolower($c);
-        if ($c[0] != '#' || strlen($c) != 7) {
-            throw new \Exception("Couleur incorrecte");
-        }
-        return [
-            'r' => hexdec(substr($c, 1, 2))
-            ,
-            'g' => hexdec(substr($c, 3, 2))
-            ,
-            'b' => hexdec(substr($c, 5, 2))
-        ];
     }
 
     /**
@@ -368,6 +301,10 @@ class Common
     /**
      * Obtenir le service Internet qui correspond au port et protocole
      *
+     * ### Exemple
+     * - `Common::getServiceOfPort(21);`
+     * - `Common::getServiceOfPort(80, 'udp');`
+     *
      * @param int         $port     Numéro de port
      * @param string|null $protocol Protocole du service (tcp ou udp)
      *
@@ -377,6 +314,26 @@ class Common
     {
         if (in_array($protocol, ['tcp', 'udp'])) {
             return getservbyport($port, $protocol);
+        }
+        return false;
+    }
+
+    /**
+     * Obtenir les parties d'une URL
+     *
+     * @param string      $url  URL
+     * @param string|null $part Partie de l'URL à retourner
+     *
+     * @return string|bool
+     */
+    public static function getUrlParts($url, $part = null)
+    {
+        $partsKeys = ['scheme', 'host', 'path', 'query'];
+        $parts = parse_url($url);
+        if (is_null($part)) {
+            return $parts;
+        } elseif (in_array($part, $partsKeys)) {
+            return $parts[$part];
         }
         return false;
     }

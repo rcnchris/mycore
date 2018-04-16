@@ -2,7 +2,110 @@
 namespace Tests\Rcnchris\Core\PDF;
 
 use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\Behaviors\ComponentsPdfTrait;
 use Tests\Rcnchris\BaseTestCase;
+
+class PrintInfosAbstractPDF extends AbstractPDF
+{
+    use ComponentsPdfTrait;
+
+    public function Header()
+    {
+        parent::SetCreator('My Core');
+        parent::SetAuthor('rcn');
+        parent::SetTitle('Tests unitaires du ' . (new \DateTime())->format('d-m-Y à H:i:s'));
+        parent::SetSubject('Tests unitaires ' . get_class($this));
+        $this->SetFont($this->getFontProperty('family'), 'B', 14, ['color' => '#000000']);
+        $this->Cell(0, 10, utf8_decode($this->getMetadata('Title')), 0, 1, 'C', false);
+        $this->addLine();
+        $this->SetFont();
+    }
+
+    public function Footer()
+    {
+        $this->SetY($this->getMargin('b') * -1);
+        $this->addLine();
+        $this->SetFont(null, 'I', 8, ['color' => '#000000']);
+        $this->Cell(0, 10, 'Page ' . $this->PageNo() . ' sur ' . '{nb}', 0, 0, 'C');
+        $this->SetFont();
+    }
+
+    public function demo()
+    {
+        if ($this->getTotalPages() === 0) {
+            $this->AddPage();
+        }
+        $this->Ln(2);
+        $fullName = get_parent_class(get_class($this));
+        $shortName = explode('\\', $fullName);
+        $shortName = array_pop($shortName);
+        $this->SetFont(null, 'B', 20, ['color' => '#2980b9', 'fillColor' => '#bdc3c7', 'drawColor' => '#2c3e50']);
+        $this->Cell(0, 12, utf8_decode("Démonstration de l'utilisation de $shortName"), 1, 1, 'C', true);
+        $this->Ln();
+        $this->printInfoClass($fullName);
+
+        // Méthodes natives surchargées
+        $this->AddPage();
+        $this->title('Méthodes natives à FPDF surchargées');
+
+        $this->Ln();
+        $this->title('SetFont', 1);
+        $desc = "Fixe la police utilisée pour imprimer les chaînes de caractères. Il est obligatoire d'appeler cette méthode au moins une fois avant d'imprimer du texte, sinon le document résultant ne sera pas valide. ".
+            "La police peut être soit une police standard, soit une police ajoutée à l'aide de la méthode AddFont(). Les polices standard utilisent l'encodage Windows cp1252 (Europe de l'ouest). ".
+            "La méthode peut être appelée avant que la première page ne soit créée et la police est conservée de page en page. ".
+            "Si vous souhaitez juste changer la taille courante, il est plus simple d'appeler SetFontSize().";
+        $this->MultiCell(0, 10, utf8_decode($desc), 0, 'J');
+        $this->MultiCell(0, 10, utf8_decode("Paramètres"), 0, 'L');
+        $this->MultiCell(0, 10, utf8_decode("Exemple"), 0, 'L');
+        $this->codeBloc("\$pdf->SetFont()");
+        $this->MultiCell(0, 10, utf8_decode("Résultat"), 0, 'L');
+
+        // Méthodes locales
+        $this->AddPage();
+        $this->title("Méthodes propres à $shortName");
+
+        $this->Ln();
+        $this->title('addLine', 1);
+        $desc = "Imprime une ligne sur toute la largeur du corps.";
+        $this->MultiCell(0, 10, utf8_decode($desc), 0, 'J');
+        $this->MultiCell(0, 10, utf8_decode("Paramètres"), 0, 'L');
+        $this->codeBloc(utf8_decode("@param int \$ln Saut de ligne après la ligne"));
+        $this->MultiCell(0, 10, utf8_decode("Exemple"), 0, 'L');
+        $this->codeBloc("\$pdf->addLine()");
+        $this->MultiCell(0, 10, utf8_decode("Résultat"), 0, 'L');
+        $this->addLine();
+
+        // Méthodes natives non surchargées
+        $this->AddPage();
+        $this->title('Méthodes natives à FPDF non surchargées');
+
+        $this->Ln();
+        $this->title('AcceptPageBreak', 1);
+        $desc = "Lorsqu'une condition de saut de page est remplie, la méthode est appelée, et en fonction de la valeur de retour, le saut est effectué ou non. " .
+            "L'implémentation par défaut renvoie une valeur selon le mode sélectionné par SetAutoPageBreak(). " .
+            " Cette méthode est appelée automatiquement et ne devrait donc pas être appelée directement par l'application.";
+        $this->MultiCell(0, 10, utf8_decode($desc), 0, 'J');
+        $this->MultiCell(0, 10, utf8_decode("Exemple"), 0, 'L');
+        $this->codeBloc("\$pdf->AcceptPageBreak()");
+        $this->MultiCell(0, 10, utf8_decode("Résultat"), 0, 'L');
+        $this->codeBloc(serialize($this->AcceptPageBreak()));
+
+        $this->Ln();
+        $this->title('AddFont', 1);
+        $desc = "Importe une police TrueType, OpenType ou Type1 et la rend disponible. " .
+            "Il faut au préalable avoir généré un fichier de définition de police avec l'utilitaire MakeFont. " .
+            " Le fichier de définition (ainsi que le fichier de police en cas d'incorporation) doit être présent dans le répertoire des polices. " .
+            " S'il n'est pas trouvé, l'erreur \"Could not include font definition file\" est renvoyée.";
+        $this->MultiCell(0, 10, utf8_decode($desc), 0, 'J');
+        $this->MultiCell(0, 10, utf8_decode("Paramètres"), 0, 'L');
+
+        $this->MultiCell(0, 10, utf8_decode("Exemple"), 0, 'L');
+        $this->codeBloc("\$pdf->AddFont('Comic','I')");
+        $this->MultiCell(0, 10, utf8_decode("Résultat"), 0, 'L');
+
+        return $this;
+    }
+}
 
 class AbstractPDFTest extends BaseTestCase
 {
@@ -27,6 +130,14 @@ class AbstractPDFTest extends BaseTestCase
         );
     }
 
+    public function testGetOptions()
+    {
+        $pdf = $this->makePdf();
+        $this->assertNotEmpty($pdf->getOptions());
+        $this->assertEquals('P', $pdf->getOptions('orientation'));
+        $this->assertFalse($pdf->getOptions('fake'));
+    }
+
     public function testGetTotalPages()
     {
         $pdf = $this->makePdf();
@@ -34,7 +145,7 @@ class AbstractPDFTest extends BaseTestCase
         $this->assertEquals(
             1
             , $pdf->getTotalPages()
-            , $this->getMessage("Le nombre total ne correspond pas")
+            , $this->getMessage("Le nombre total de pages ne correspond pas")
         );
     }
 
@@ -478,7 +589,15 @@ class AbstractPDFTest extends BaseTestCase
     {
         $this->assertEquals(
             [
-                'family', 'style', 'size', 'sizeInUnit'
+                'family',
+                'style',
+                'size',
+                'sizeInUnit',
+                'color',
+                'underline',
+                'fill',
+                'fillColor',
+                'drawColor'
             ]
             , array_keys($this->makePdf()->getFontProperty())
             , $this->getMessage("Les propriétés de la police courante sont incorrectes")
@@ -494,9 +613,9 @@ class AbstractPDFTest extends BaseTestCase
     {
         $pdf = $this->makePdf();
         $pdf->SetFont();
-        $this->assertEquals('helvetica', $pdf->getFontProperty('family'));
-        $this->assertEquals('', $pdf->getFontProperty('style'));
-        $this->assertEquals(10, $pdf->getFontProperty('size'));
+        $this->assertEquals($pdf->getOptions('font')['family'], $pdf->getFontProperty('family'));
+        $this->assertEquals($pdf->getOptions('font')['style'], $pdf->getFontProperty('style'));
+        $this->assertEquals($pdf->getOptions('font')['size'], $pdf->getFontProperty('size'));
     }
 
     public function testSetFontWithOnlyFontFamily()
@@ -577,9 +696,36 @@ class AbstractPDFTest extends BaseTestCase
         $pdf->setToolColor('black');
     }
 
-//    public function testFileToPdf()
-//    {
-//        $pdf = $this->makePdf();
-//        $pdf->fileToPdf(__DIR__ .'/textFile.txt');
-//    }
+    public function testFileToPdf()
+    {
+        $fileDest = __DIR__ . '/res/test_to_file';
+        $fileSrc = __DIR__ . '/files/textFile.txt';
+        $pdf = $this->makePdf();
+        $pdf->fileToPdf($fileSrc)->toFile($fileDest);
+        $fileDest .= '.pdf';
+        $this->assertTrue(file_exists($fileDest));
+        $this->addUsedFile($fileDest);
+    }
+
+    public function testFileToPdfWithWrongFile()
+    {
+        $fileSrc = __DIR__ . '/fake.txt';
+        $pdf = $this->makePdf();
+        $this->assertFalse($pdf->fileToPdf($fileSrc));
+    }
+
+    public function testFileToPdfWithEmptyFile()
+    {
+        $fileSrc = __DIR__ . '/files/EmptyFile.txt';
+        $pdf = $this->makePdf();
+        $this->assertFalse($pdf->fileToPdf($fileSrc));
+    }
+
+    public function testPrintInfosAbstractPDF()
+    {
+        $fileDest = __DIR__ . '/res/AbstractPDFDemo';
+        $pdf = new PrintInfosAbstractPDF();
+        $pdf->demo()->toFile($fileDest);
+        $this->assertTrue(file_exists($fileDest . '.pdf'));
+    }
 }

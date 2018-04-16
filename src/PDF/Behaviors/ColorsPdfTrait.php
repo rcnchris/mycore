@@ -34,7 +34,6 @@ namespace Rcnchris\Core\PDF\Behaviors;
  */
 trait ColorsPdfTrait
 {
-
     /**
      * Liste des couleurs
      *

@@ -65,4 +65,9 @@ class PHPCookiesTest extends BaseTestCase
     {
         $this->assertInternalType('string', (string)$this->cookies);
     }
+
+    public function testHasKey()
+    {
+        $this->assertFalse($this->cookies->has('ip'));
+    }
 }

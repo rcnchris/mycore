@@ -202,4 +202,15 @@ class ColorsTraitTest extends PdfTestCase
             true
         );
     }
+
+//    public function testInfosTrait()
+//    {
+//        $pdf = $this->makePdf('colors');
+//        $pdf->infosColorsPdfTrait();
+//        $fileDest = __DIR__ . '/res/ColorsTraits';
+//        $pdf->toFile($fileDest);
+//        $fileDest .= '.pdf';
+//        $this->assertTrue(file_exists($fileDest));
+//        //$this->addUsedFile($fileDest);
+//    }
 }

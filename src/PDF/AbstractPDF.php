@@ -45,7 +45,6 @@ class AbstractPDF extends \FPDF
         'orientation' => 'P',
         'unit' => 'mm',
         'format' => 'A4',
-        'heightLine' => 10,
         'rotation' => 0,
         'marges' => [
             'top' => 10,
@@ -56,12 +55,19 @@ class AbstractPDF extends \FPDF
         'font' => [
             'family' => 'helvetica',
             'style' => '',
-            'size' => 10,
-            'align' => 'L',
-            'color' => '#000000'
+            'size' => 10
         ],
-        'fillColor' => '#CCCCCC',
-        'drawColor' => '#CCCCCC'
+        'write' => [
+            'underline' => false,
+            'heightLine' => 10,
+            'border' => 0,
+            'align' => 'L',
+            'fill' => false,
+            'ln' => 0,
+            'textColor' => '#000000',
+            'fillColor' => '#ecf0f1',
+            'drawColor' => '#2c3e50'
+        ]
     ];
 
     /**
@@ -100,6 +106,13 @@ class AbstractPDF extends \FPDF
     protected $layoutModes = ['default', 'single', 'two', 'continuous'];
 
     /**
+     * Options de construction du document
+     *
+     * @var array
+     */
+    private $options;
+
+    /**
      * Constructeur
      *
      * ### Exemple
@@ -110,27 +123,35 @@ class AbstractPDF extends \FPDF
      */
     public function __construct(array $options = [])
     {
-        $options = array_merge($this->defaultOptions, $options);
-        parent::__construct($options['orientation'], $options['unit'], $options['format']);
+        $this->options = array_merge($this->defaultOptions, $options);
+        parent::__construct(
+            $this->options['orientation'],
+            $this->options['unit'],
+            $this->options['format']
+        );
     }
 
     /**
      * Ajoute une page
      *
-     * @param string $orientation
-     * @param string $size
-     * @param int    $rotation
+     * ### Exemple
+     * - `$pdf->AddPage();`
+     * - `$pdf->AddPage('P', 'A4', 0);`
+     *
+     * @param string|null $orientation Orientation du document
+     * @param string|null $size        Format du document
+     * @param int|null    $rotation    Angle de rotation
      */
     public function AddPage($orientation = '', $size = '', $rotation = 0)
     {
         if ($orientation === '') {
-            $orientation = $this->defaultOptions['orientation'];
+            $orientation = $this->options['orientation'];
         }
         if ($size === '') {
-            $size = $this->defaultOptions['format'];
+            $size = $this->options['format'];
         }
-        if ($rotation === '') {
-            $rotation = $this->defaultOptions['rotation'];
+        if ($rotation === 0) {
+            $rotation = $this->options['rotation'];
         }
         parent::AddPage($orientation, $size, $rotation);
         parent::AliasNbPages();
@@ -226,8 +247,12 @@ class AbstractPDF extends \FPDF
      */
     public function setMargin($type, $value)
     {
-        $methodName = 'Set' . ucfirst($type) . 'Margin';
-        $this->$methodName($value);
+        if ($type != 'bottom') {
+            $methodName = 'Set' . ucfirst($type) . 'Margin';
+            $this->$methodName($value);
+        } else {
+            $this->bMargin = $value;
+        }
     }
 
     /**
@@ -477,6 +502,11 @@ class AbstractPDF extends \FPDF
     /**
      * Définit la police
      *
+     * ### Exemple
+     * - `$pdf->SetFont();`
+     * - `$pdf->SetFont('courier', 'BI', 12);`
+     * - `$pdf->SetFont('courier', 'BI', 12, ['color' => '#e74c3c']);`
+     *
      * @param string|null $family     Nom de la police
      * @param string|null $style      Styles de la police
      * @param int|null    $size       Taille de la police
@@ -486,7 +516,7 @@ class AbstractPDF extends \FPDF
      */
     public function SetFont($family = null, $style = null, $size = null, array $properties = null)
     {
-        $font = $this->defaultOptions['font'];
+        $font = $this->getOptions('font');
         if (is_null($family) || !$this->hasFont($family)) {
             $family = $font['family'];
         }
@@ -498,7 +528,12 @@ class AbstractPDF extends \FPDF
         }
         parent::SetFont($family, $style, $size);
 
-        if (is_array($properties) && !empty($properties)) {
+        if (count(func_get_args()) === 0) {
+            $write = $this->getOptions('write');
+            $this->setToolColor($this->hexaToRgb($write['textColor']), 'text');
+            $this->setToolColor($this->hexaToRgb($write['fillColor']), 'fill');
+            $this->setToolColor($this->hexaToRgb($write['drawColor']), 'draw');
+        } elseif (is_array($properties) && !empty($properties)) {
             // Couleur du texte
             if (array_key_exists('color', $properties)) {
                 if (method_exists($this, 'setColor')) {
@@ -523,12 +558,6 @@ class AbstractPDF extends \FPDF
                     $this->setToolColor($this->hexaToRgb($properties['fillColor']), 'fill');
                 }
             }
-        }
-
-        if (count(func_get_args()) === 0) {
-            $this->setToolColor($this->hexaToRgb($font['color']));
-            $this->setToolColor($this->hexaToRgb($this->defaultOptions['fillColor']), 'fill');
-            $this->setToolColor($this->hexaToRgb($this->defaultOptions['drawColor']), 'draw');
         }
     }
 
@@ -559,7 +588,12 @@ class AbstractPDF extends \FPDF
             'family' => $this->FontFamily,
             'style' => $this->FontStyle,
             'size' => $this->FontSizePt,
-            'sizeInUnit' => $this->FontSize
+            'sizeInUnit' => $this->FontSize,
+            'color' => $this->getToolColor('text'),
+            'underline' => $this->isUnderline(),
+            'fill' => false,
+            'fillColor' => $this->getToolColor('fill'),
+            'drawColor' => $this->getToolColor('draw')
         ];
         if (is_null($property)) {
             return $properties;
@@ -573,40 +607,31 @@ class AbstractPDF extends \FPDF
      * Imprimer le contenu d'un fichier source dans un PDF
      *
      * @param string $file Nom du fichier source
-     * @param string $dest Type de destination du PDF généré
      *
-     * @return bool
+     * @return $this|bool
      */
-    public function fileToPdf($file, $dest = 'file')
+    public function fileToPdf($file)
     {
-        $dests = ['file', 'view', 'download'];
-        if (!file_exists($file) || !in_array($dest, $dests)) {
+
+        if (!file_exists($file)) {
             return false;
         }
-
         $content = file_get_contents($file);
-        if (is_null($content)) {
+        if (is_null($content) || $content === '') {
             return false;
         }
-
-        switch ($dests) {
-            case 'file':
-                $this->Write(10, $content);
-                $this->toFile();
-                break;
-
-            case 'view':
-                break;
-
-            case 'download':
-                break;
+        if ($this->getTotalPages() === 0) {
+            $this->AddPage();
         }
-
-        return false;
+        $this->Write(10, $content);
+        return $this;
     }
 
     /**
-     * Obtenir les valeurs RGB à partir d'un code couleur au formar héxadécimal
+     * Obtenir les valeurs RGB à partir d'un code couleur au format héxadécimal
+     *
+     * ### Exemple
+     * - `$pdf->hexaToRgb('#000000');`
      *
      * @param string $hexa Code héxadécimal d'une couleur
      *
@@ -647,16 +672,11 @@ class AbstractPDF extends \FPDF
         $method = 'Set' . ucfirst($tool) . 'Color';
         $rgb = ['r' => 0, 'g' => 0, 'b' => 0];
 
-
         if (is_int($color) && ($color >= 0 && $color <= 255)) {
             $rgb['r'] = $color;
-        }
-
-        if (is_array($color) && array_keys($color) === array_keys($rgb)) {
+        } elseif (is_array($color) && array_keys($color) === array_keys($rgb)) {
             $rgb = $color;
-        }
-
-        if (is_string($color)) {
+        } elseif (is_string($color)) {
             if ($color[0] === '#' && strlen($color) === 7) {
                 $rgb = $this->hexaToRgb($color);
             } elseif ($color[0] != '#') {
@@ -671,5 +691,26 @@ class AbstractPDF extends \FPDF
             }
         }
         $this->$method($rgb['r'], $rgb['g'], $rgb['b']);
+    }
+
+    /**
+     * Obtenir les options par défaut de construction du document
+     *
+     * ### Exemple
+     * - `$pdf->getOptions();`
+     * - `$pdf->getOptions('format');`
+     *
+     * @param string|null $key Clé de la l'option à retourner
+     *
+     * @return array|mixed
+     */
+    public function getOptions($key = null)
+    {
+        if (is_null($key)) {
+            return $this->options;
+        } elseif (array_key_exists($key, $this->options)) {
+            return $this->options[$key];
+        }
+        return false;
     }
 }

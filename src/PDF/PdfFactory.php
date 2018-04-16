@@ -161,22 +161,6 @@ class JoinPdf extends AbstractPDF
 }
 
 /**
- * Class LayoutPdf
- *
- * @category PDF
- *
- * @package  Rcnchris\Core\PDF
- *
- * @author   <rcn.chris@gmail.com>
- *
- * @version  Release: <1.0.0>
- */
-class LayoutPdf extends AbstractPDF
-{
-    use LayoutsPdfTrait;
-}
-
-/**
  * Class Psr7Pdf
  *
  * @category PDF

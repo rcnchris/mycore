@@ -133,6 +133,9 @@ trait DataPdfTrait
         return is_array($this->data);
     }
 
+    /**
+     * Imprime les informations du trait
+     */
     public function infosDataPdfTrait()
     {
         $this->setData(['name' => 'Mathis', 'year' => 2007]);

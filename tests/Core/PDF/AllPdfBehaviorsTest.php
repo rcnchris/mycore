@@ -1014,6 +1014,7 @@ class AllBehaviorsPdfDoc extends AbstractPDF
         $this->alert($message);
         $this->printTraitBookmark();
         $this->printTraitColors();
+        //$this->infosColorsPdfTrait();
         $this->printTraitData();
         $this->printTraitIcons();
         $this->printTraitPsr7();

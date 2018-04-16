@@ -264,6 +264,11 @@ trait RecordSetPdfTrait
         }
     }
 
+    /**
+     * Imprimer le corps du recordset
+     *
+     * @param null $items
+     */
     public function printRsBody($items = null)
     {
         $this->SetFont();
@@ -316,7 +321,7 @@ trait RecordSetPdfTrait
     public function getRsX($pos)
     {
         $x = $this->lMargin;
-        for ($i = 0 ; $i < $pos ; $i++) {
+        for ($i = 0; $i < $pos; $i++) {
             $x = $x + $this->getRsPropertiesByCol($i)['w'];
         }
         return $x;

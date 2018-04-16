@@ -80,6 +80,19 @@ class DebugExtensionTest extends BaseTestCase {
         );
     }
 
+    public function testGetParentClassRecurs()
+    {
+        $this->assertContains(
+            get_parent_class($this->ext),
+            $this->ext->getParentClass($this->ext, true)
+        );
+    }
+
+    public function testGetParentClassWithNonObjectParameter()
+    {
+        $this->assertFalse($this->ext->getParentClass([]));
+    }
+
     public function testGetParentMethods()
     {
         $this->assertEquals(

@@ -76,6 +76,9 @@ trait IconsPdfTrait
         $this->SetFont($initFont['family'], $initFont['style'], $initFont['size']);
     }
 
+    /**
+     * Imprime les informations du trait
+     */
     public function infosIconsPdfTrait()
     {
         $this->AddPage();

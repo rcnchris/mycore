@@ -95,7 +95,9 @@ trait Psr7PdfTrait
     {
         $this->AddPage();
         $this->title('PSR7', 1);
-        $this->alert("Permet de visualiser et télécharger le document PDF via le navigateur en respectant la norme PSR7.");
+        $this->alert(
+            "Permet de visualiser et télécharger le document PDF via le navigateur en respectant la norme PSR7."
+        );
         $this->printInfoClass(Psr7PdfTrait::class);
 
         $this->title('toView', 2);

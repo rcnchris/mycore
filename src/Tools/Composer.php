@@ -248,22 +248,55 @@ class Composer implements \IteratorAggregate, \ArrayAccess
      * - `$composer->getRequires();`
      * - `$composer->getRequires('dev');`
      *
-     * @param string|null $type
+     * @param string|null $type   Type de require (req, dev, all)
+     * @param bool|null   $recurs Obtenir toutes les librairies enfants
      *
      * @return array|bool
      */
-    public function getRequires($type = 'all')
+    public function getRequires($type = 'all', $recurs = false)
     {
         $requires = [
-            'req' => $this->get('require')
-            , 'dev' => $this->get('require-dev')
+            'req' => $this->get('require'),
+            'dev' => $this->get('require-dev')
         ];
-        if ($type === 'req') {
-            return $requires['req'];
-        } elseif ($type === 'dev') {
-            return $requires['dev'];
-        } elseif ($type === 'all') {
-            return $requires;
+
+        if ($recurs) {
+            $libPath = null;
+            $ret = [];
+            foreach ($requires as $type => $libs) {
+                if (is_array($libs)) {
+                    foreach ($libs as $lib => $version) {
+                        $ret[$type][$lib]['version'] = $version;
+                        $libPath = $this->getRequirePath($lib);
+                        if (is_dir($libPath)) {
+                            $folder = new Folder($libPath);
+                            $ret[$type][$lib]['size'] = $folder->size();
+                            if ($folder->hasFile('composer.json')) {
+                                $libComposer = $this->getComposerOf($lib);
+                                if ($libComposer->has('description')) {
+                                    $ret[$type][$lib]['description'] = $libComposer->get('description');
+                                }
+                                if ($libComposer->has('type')) {
+                                    $ret[$type][$lib]['type'] = $libComposer->get('type');
+                                }
+                                if ($libComposer->has('license')) {
+                                    $ret[$type][$lib]['license'] = $libComposer->get('license');
+                                }
+                                $ret[$type][$lib]['requires'] = $libComposer->getRequires('all', true);
+                            }
+                        }
+                    }
+                }
+            }
+            return $ret;
+        } else {
+            if ($type === 'req') {
+                return $requires['req'];
+            } elseif ($type === 'dev') {
+                return $requires['dev'];
+            } elseif ($type === 'all') {
+                return $requires;
+            }
         }
         return false;
     }

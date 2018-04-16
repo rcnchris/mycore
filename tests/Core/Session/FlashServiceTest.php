@@ -56,6 +56,12 @@ class FlashServiceTest extends BaseTestCase
         $this->flashService = new FlashService($this->session);
     }
 
+    public function testSetMessage()
+    {
+        $this->flashService->set('success', 'Bravo');
+        $this->assertEquals('Bravo', $this->flashService->get('success'));
+    }
+
     public function testDeleteFlashAfterGettingIt()
     {
         $this->ekoTitre("Session - Messages Flash");
@@ -64,6 +70,16 @@ class FlashServiceTest extends BaseTestCase
         $this->assertNull($this->session->get('flash'));
         $this->assertEquals('Bravo', $this->flashService->get('success'));
         $this->assertEquals('Bravo', $this->flashService->get('success'));
+    }
+
+    public function testDeleteFlashAfterGettingItError()
+    {
+        $this->ekoTitre("Session - Messages Flash");
+        $this->flashService->error('Erreur');
+        $this->assertEquals('Erreur', $this->flashService->get('error'));
+        $this->assertNull($this->session->get('flash'));
+        $this->assertEquals('Erreur', $this->flashService->get('error'));
+        $this->assertEquals('Erreur', $this->flashService->get('error'));
     }
 
     public function testGetWithWrongType()

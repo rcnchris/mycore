@@ -61,4 +61,9 @@ class ArraySessionTest extends BaseTestCase
         $this->session->delete('nav');
         $this->assertNull($this->session->nav);
     }
+
+    public function testHasKey()
+    {
+        $this->assertTrue($this->session->has('ip'));
+    }
 }
