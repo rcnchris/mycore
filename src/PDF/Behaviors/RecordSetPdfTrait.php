@@ -74,8 +74,20 @@ trait RecordSetPdfTrait
     /**
      * Définir le nombre de colonnes et le style du recordset
      *
+     * ### Exemple
+     * - `$pdf->setRs([
+     * 'wInPourc' => [30, 20, 50],
+     * 'headerNames' => [utf8_decode('Méthode'), 'Syntaxe', 'Description'],
+     * 'headerFont' => 'courier',
+     * 'headerFontSize' => 14,
+     * 'headerFontStyle' => 'B',
+     * 'headerFill' => true,
+     * 'headerAlign' => 'L'
+     * ]);`
+     *
      * @param array $params Paramètres du recordset
      *
+     * @return $this
      * @throws \Exception
      */
     public function setRs(array $params = [])
@@ -124,7 +136,11 @@ trait RecordSetPdfTrait
                 $this->propertiesByCol[$i]['header']['name'] = $headerName;
 
                 // Police
-                if (!is_null($this->properties['headerFont']) && $this->hasFont($this->properties['headerFont'])) {
+                if (!is_null($this->properties['headerFont']) && in_array(
+                    $this->properties['headerFont'],
+                    $this->getFonts()
+                )
+                ) {
                     $this->propertiesByCol[$i]['header']['fontFamily'] = $this->properties['headerFont'];
                 } else {
                     $this->propertiesByCol[$i]['header']['fontFamily'] = $this->getFontProperty('family');
@@ -185,9 +201,7 @@ trait RecordSetPdfTrait
             }
         }
 
-        if (isset($this->properties['items'])) {
-            $this->setData($this->properties['items']);
-        }
+        return $this;
     }
 
     /**
@@ -195,7 +209,7 @@ trait RecordSetPdfTrait
      *
      * @param string|null $key Nom de la clé de la propriété
      *
-     * @return array
+     * @return array|bool
      */
     public function getRsProperties($key = null)
     {
@@ -208,22 +222,28 @@ trait RecordSetPdfTrait
     }
 
     /**
-     * Obtenir les propriétés de toutes colonnes ou l'une d'entre elle
+     * Obtenir les propriétés de toutes colonnes ou de l'une d'entre elle
      *
      * @param int|null $indice Indice de la colonne (commence à 0)
      *
-     * @return array
+     * @return array|bool
+     * @throws \Exception
      */
     public function getRsPropertiesByCol($indice = null)
     {
         if (is_null($indice)) {
             return $this->propertiesByCol;
+        } elseif (array_key_exists($indice, $this->propertiesByCol)) {
+            return $this->propertiesByCol[$indice];
         }
-        return $this->propertiesByCol[$indice];
+        throw new \Exception("Le numéro de colonne $indice est inconnu !");
     }
 
     /**
      * Obtenir le nombre de colonnes du recorset
+     *
+     * ### Exemple
+     * - `$pdf->getRsNbCols();`
      *
      * @return int|void
      */
@@ -247,6 +267,8 @@ trait RecordSetPdfTrait
 
     /**
      * Imprime l'entête du recordset
+     *
+     * @return $this
      */
     public function printRsHeader()
     {
@@ -262,20 +284,19 @@ trait RecordSetPdfTrait
                 $this->getRsPropertiesByCol($indice)['header']['fill']
             );
         }
+        return $this;
     }
 
     /**
      * Imprimer le corps du recordset
      *
-     * @param null $items
+     * @param mixed $items
+     *
+     * @return $this
      */
-    public function printRsBody($items = null)
+    public function printRsBody($items)
     {
         $this->SetFont();
-        if (is_null($items)) {
-            $items = $this->properties['items'];
-        }
-
         foreach ($items as $item) {
             foreach ($this->getRsPropertiesByCol() as $indCol => $confCol) {
                 $this->SetFont(
@@ -299,10 +320,11 @@ trait RecordSetPdfTrait
             $this->Ln();
         }
         $this->SetFont();
+        return $this;
     }
 
     /**
-     * Obtenir les noms des colonnes
+     * Obtenir les noms des colonnes du RecordSet
      *
      * @return array
      */
@@ -325,85 +347,5 @@ trait RecordSetPdfTrait
             $x = $x + $this->getRsPropertiesByCol($i)['w'];
         }
         return $x;
-    }
-
-    /**
-     * Imprime les informations du traits
-     * @throws \Exception
-     */
-    public function infosRecordSetPdfTrait()
-    {
-        $this->AddPage();
-        $this->title('RecordSet', 1);
-        $this->alert("Permet de disposer d'un recorset et de l'imprimer.");
-        $this->printInfoClass(RecordSetPdfTrait::class);
-
-        $this->title('setRs', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode("Définir les propriétés du recorset."));
-        $this->codeBloc(
-            "\$pdf->setRs([\n\t'wInPourc' => [20, 15, 15, 15, 15, 20],\n"
-            . "\t'headerNames' => ['#', 'username', 'email', 'birthday', 'phone', 'mobile'],\n"
-            . "\t'headerFontSize' => 8,\n"
-            . "\t'headerFontStyle' => 'B',\n"
-            . "\t'itemProperties' => [\n"
-            . "\t\t[\n"
-            . "\t\t\t'fontFamily' => 'courier',\n"
-            . "\t\t\t'fontSize' => 6,\n"
-            . "\t\t\t'fontStyle' => ''\n"
-            . "\t\t],\n"
-            . "\t\t[\n"
-            . "\t\t\t'fontSize' => 8,\n"
-            . "\t\t\t'fontStyle' => 'B'\n"
-            . "\t\t]\n"
-            . "\t]\n);"
-        );
-
-
-
-        $this->title('getRsNbCols', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode("Obtenir le nombre de colonne."));
-        $this->codeBloc("\$pdf->getRsNbCols();");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Retourne :");
-        $this->codeBloc(serialize($this->getRsNbCols()));
-        $this->Ln();
-
-        $this->title('getRsProperties', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode("Obtenir les propriétés des colonnes."));
-        $this->codeBloc("\$pdf->getRsProperties();");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Retourne :");
-        $this->codeBloc(serialize($this->getRsProperties()));
-        $this->Ln();
-
-        $this->title('getRsPropertiesByCol', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode("Obtenir les propriétés d'une colonne."));
-        $this->codeBloc("\$pdf->getRsPropertiesByCol(1);");
-        $this->SetFont(null, 'BI', null, ['color' => 'black']);
-        $this->MultiCell(0, 10, "Retourne :");
-        $this->codeBloc(serialize($this->getRsPropertiesByCol(1)));
-        $this->Ln();
-
-        $this->title('printRsHeader', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode("Imprimer l'entête."));
-        $this->codeBloc("\$pdf->printRsHeader();");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Retourne :");
-        $this->printRsHeader();
-        $this->Ln();
-
-        $this->title('printRsBody', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode("Imprimer le détail."));
-        $this->codeBloc("\$pdf->printRsBody();");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Retourne :");
-        $this->printRsBody($this->properties['items']);
-        $this->Ln();
     }
 }

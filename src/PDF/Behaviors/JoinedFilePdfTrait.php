@@ -59,10 +59,15 @@ trait JoinedFilePdfTrait
     /**
      * Attache un fichier au document PDF
      *
+     * ### Exemple
+     * - `$pdf->attach('path/to/file/filename');`
+     *
      * @param string      $file Emplacement du fichier
      * @param string|null $name Nom du fichier dans le document
      * @param string|null $desc Description
      * @param bool|null   $isUTF8
+     *
+     * @return $this
      */
     public function attach($file, $name = '', $desc = '', $isUTF8 = false)
     {
@@ -80,6 +85,7 @@ trait JoinedFilePdfTrait
             $desc = utf8_encode($desc);
         }
         $this->files[] = array('file' => $file, 'name' => $name, 'desc' => $desc);
+        return $this;
     }
 
     /**
@@ -132,11 +138,14 @@ trait JoinedFilePdfTrait
     /**
      * Forcer l'affichage du panneau des fichiers attachés
      *
-     * @param bool $view
+     * @param bool $view Afficher le panneau latéral ?
+     *
+     * @return $this
      */
     public function setAttachPane($view = true)
     {
         $this->attachPane = $view;
+        return $this;
     }
 
     /**
@@ -162,26 +171,5 @@ trait JoinedFilePdfTrait
         if ($this->attachPane) {
             $this->_put('/PageMode /UseAttachments');
         }
-    }
-
-    /**
-     * Imprime les informations du trait
-     */
-    public function infosJoinedFilePdfTrait()
-    {
-        $this->AddPage();
-        $this->title('Fichier joint', 1);
-        $this->SetFont(null, 'I', 10, ['color' => 'black', 'fillColor' => 'graylight']);
-        $this->alert("Permet de joindre des fichiers au PDF.");
-        $this->printInfoClass(JoinedFilePdfTrait::class);
-        $this->setColsWidthInPourc(30, 30, 40);
-        $this->setColsTextColors('black', 'red', 'black');
-        $this->setColsAlign('L', 'L', 'L');
-        $this->rowCols(
-            'Joindre un fichier',
-            'attach(/path/to/file.txt)',
-            serialize(null)
-        );
-        $this->attach(dirname(__DIR__) . '/files/textFile.txt');
     }
 }

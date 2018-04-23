@@ -34,29 +34,39 @@ trait Ean13PdfTrait
     /**
      * Imprime un code à barre de type EAN13
      *
-     * @param double $x       Position de X
-     * @param double $y       Position de Y
-     * @param string $barcode Valeur du code à barres
-     * @param int    $h       Hauteur du code à barres
-     * @param float  $w       Epaisseur d'une barre
-     */
-    public function ean13($x, $y, $barcode, $h = 16, $w = .35)
-    {
-        $this->barcode($x, $y, $barcode, $h, $w, 13);
-    }
-
-    /**
-     * Imprime un code à barre de type UPCA
+     * ### Exemple
+     * - `$pdf->ean13(10, 25, '1234567890123');`
+     * - `$pdf->ean13(10, 25, '1234567890123', 16, .35);`
      *
      * @param double $x       Position de X
      * @param double $y       Position de Y
      * @param string $barcode Valeur du code à barres
      * @param int    $h       Hauteur du code à barres
      * @param float  $w       Epaisseur d'une barre
+     *
+     * @return $this
+     */
+    public function ean13($x, $y, $barcode, $h = 16, $w = .35)
+    {
+        $this->barcode($x, $y, $barcode, $h, $w, 13);
+        return $this;
+    }
+
+    /**
+     * Imprime un code à barre de type UPC-A
+     *
+     * @param double $x       Position de X
+     * @param double $y       Position de Y
+     * @param string $barcode Valeur du code à barres
+     * @param int    $h       Hauteur du code à barres
+     * @param float  $w       Epaisseur d'une barre
+     *
+     * @return $this
      */
     public function upca($x, $y, $barcode, $h = 16, $w = .35)
     {
         $this->barcode($x, $y, $barcode, $h, $w, 12);
+        return $this;
     }
 
     /**
@@ -194,43 +204,5 @@ trait Ean13PdfTrait
         //Imprime le texte sous le code-barres
         $this->SetFont('Arial', '', 12);
         $this->Text($x, $y + $h + 11 / $this->k, substr($barcode, -$len));
-    }
-
-    /**
-     * Imprime les informations du trait
-     */
-    public function infosEan13PdfTrait()
-    {
-        $this->AddPage();
-        $this->title('Codes à barres', 1);
-        $this->alert("Permet d'imprimer des codes à barres selon la norme EAN13 et UPCA.");
-        $this->printInfoClass(Ean13PdfTrait::class);
-
-        $this->title('ean13', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode('Code à barres EAN13'));
-        $this->codeBloc("\$pdf->ean13(100, 60, '123456789012', 5);");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Exemple :");
-        $this->ean13(
-            $this->lMargin,
-            $this->GetY(),
-            '123456789012',
-            5
-        );
-        $this->Ln();
-
-        $this->title('upca', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode('Code à barres UPCA.'));
-        $this->codeBloc("\$pdf->upca(100, 60, '123456789012', 5);");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Exemple :");
-        $this->upca(
-            $this->lMargin,
-            $this->GetY(),
-            '123456789012',
-            5
-        );
     }
 }

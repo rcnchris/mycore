@@ -37,24 +37,41 @@ trait EllipsePdfTrait
     /**
      * Dessiner un cercle
      *
+     * ### Exemple
+     * - `$pdf->circle$this->lMargin + 7, $this->GetY() + 7, 7, 'F');`
+     *
      * @param double $x     Abscisse du centre
      * @param double $y     Ordonnée du centre
      * @param double $r     Rayon du cercle
      * @param string $style Style de dessin, comme pour Rect (D, F ou FD)
+     *                      - D ou chaîne vide : contour (draw). C'est la valeur par défaut.
+     *                      - F : remplissage (fill)
+     *                      - DF ou FD : contour et remplissage
+     *
+     * @return $this
      */
     public function circle($x, $y, $r, $style = 'D')
     {
         $this->ellipse($x, $y, $r, $r, $style);
+        return $this;
     }
 
     /**
      * Dessiner une ellipse
+     *
+     * ### Exemple
+     * - `$pdf->ellipse($this->lMargin + 7, $this->GetY() + 7, 7, 10);`
      *
      * @param double $x     Abscisse du centre
      * @param double $y     Ordonnée du centre
      * @param double $rx    Rayon horizontal
      * @param double $ry    Rayon vertical
      * @param string $style Style de dessin, comme pour Rect (D, F ou FD)
+     *                      - D ou chaîne vide : contour (draw). C'est la valeur par défaut.
+     *                      - F : remplissage (fill)
+     *                      - DF ou FD : contour et remplissage
+     *
+     * @return $this
      */
     public function ellipse($x, $y, $rx, $ry, $style = 'D')
     {
@@ -108,35 +125,7 @@ trait EllipsePdfTrait
             ($h - $y) * $k,
             $op
         ));
-    }
-
-    /**
-     * Imprime les informations du trait
-     */
-    public function infosEllipsePdfTrait()
-    {
-        $this->AddPage();
-        $this->title('Ellipse', 1);
-        $this->SetFont(null, 'I', 10, ['color' => 'black', 'fillColor' => 'graylight']);
-        $this->alert("Permet de tracer cercles et ellipses sans images.");
-        $this->printInfoClass(EllipsePdfTrait::class);
-
-        $this->title('circle', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode('Dessiner une cercle.'));
-        $this->codeBloc("\$pdf->circle(100, 25, 7, 'F');");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Exemple :");
-        $this->circle($this->lMargin + 7, $this->GetY() + 7, 7, 'F');
-        $this->Ln();
-        $this->Ln();
-
-        $this->title('ellipse', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode('Dessiner une ellipse.'));
-        $this->codeBloc("\$pdf->ellipse(100, 50, 7, 7, 10);");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Exemple :");
-        $this->ellipse($this->lMargin + 7, $this->GetY() + 7, 7, 10);
+        $this->SetY($y + $ry);
+        return $this;
     }
 }

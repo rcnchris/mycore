@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\PDF;
 
+use Rcnchris\Core\Tools\Collection;
+
 /**
  * Class AbstractPDF
  * <ul>
@@ -37,7 +39,7 @@ namespace Rcnchris\Core\PDF;
 class AbstractPDF extends \FPDF
 {
     /**
-     * Options par défaut d'un document
+     * Options par défaut du document
      *
      * @var array
      */
@@ -52,26 +54,22 @@ class AbstractPDF extends \FPDF
             'left' => 10,
             'right' => 10
         ],
-        'font' => [
-            'family' => 'helvetica',
-            'style' => '',
-            'size' => 10
-        ],
-        'write' => [
-            'underline' => false,
-            'heightLine' => 10,
-            'border' => 0,
-            'align' => 'L',
-            'fill' => false,
-            'ln' => 0,
-            'textColor' => '#000000',
-            'fillColor' => '#ecf0f1',
-            'drawColor' => '#2c3e50'
-        ]
+        'fontFamily' => 'helvetica',
+        'fontStyle' => '',
+        'fontSize' => 10,
+        'underline' => false,
+        'heightline' => 10,
+        'border' => 0,
+        'align' => 'L',
+        'fill' => false,
+        'ln' => 0,
+        'textColor' => '#000000',
+        'fillColor' => '#CCCCCC',
+        'drawColor' => '#000000'
     ];
 
     /**
-     * Types d'écriture
+     * Types d'outil
      *
      * @var array[string]
      */
@@ -108,9 +106,16 @@ class AbstractPDF extends \FPDF
     /**
      * Options de construction du document
      *
-     * @var array
+     * @var \Rcnchris\Core\Tools\Collection
      */
-    private $options;
+    public $options;
+
+    /**
+     * Writer
+     *
+     * @var \Rcnchris\Core\PDF\Writer
+     */
+    public $writer;
 
     /**
      * Constructeur
@@ -119,16 +124,21 @@ class AbstractPDF extends \FPDF
      * - `$pdf = new AbstractPDF($options);`
      * - `$pdf = new AbstractPDF(['format' => [150, 100]);`
      *
-     * @param array|null $options
+     * @param array|null $options Options par défaut de construction du document
      */
     public function __construct(array $options = [])
     {
-        $this->options = array_merge($this->defaultOptions, $options);
-        parent::__construct(
-            $this->options['orientation'],
-            $this->options['unit'],
-            $this->options['format']
+        $this->options = new Collection(
+            array_merge($this->defaultOptions, $options),
+            "Options de construction par défaut du document PDF"
         );
+        parent::__construct(
+            $this->options->get('orientation'),
+            $this->options->get('unit'),
+            $this->options->get('format')
+        );
+        $this->SetFont();
+        $this->writer = new Writer($this);
     }
 
     /**
@@ -141,30 +151,24 @@ class AbstractPDF extends \FPDF
      * @param string|null $orientation Orientation du document
      * @param string|null $size        Format du document
      * @param int|null    $rotation    Angle de rotation
+     *
+     * @return void
      */
     public function AddPage($orientation = '', $size = '', $rotation = 0)
     {
         if ($orientation === '') {
-            $orientation = $this->options['orientation'];
+            $orientation = $this->options->get('orientation');
         }
         if ($size === '') {
-            $size = $this->options['format'];
+            $size = $this->options->get('format');
         }
         if ($rotation === 0) {
-            $rotation = $this->options['rotation'];
+            $rotation = $this->options->get('rotation');
         }
         parent::AddPage($orientation, $size, $rotation);
-        parent::AliasNbPages();
-        $this->SetFont(
-            $this->getFontProperty('family'),
-            $this->getFontProperty('style'),
-            $this->getFontProperty('size'),
-            [
-                'color' => '#000000',
-                'drawColor' => '#000000',
-                'fillColor' => '#CCCCCC'
-            ]
-        );
+        if ($this->getTotalPages() === 1) {
+            parent::AliasNbPages();
+        }
     }
 
     /**
@@ -208,7 +212,7 @@ class AbstractPDF extends \FPDF
     }
 
     /**
-     * Obtenir une marge
+     * Obtenir toutes les marges ou l'une d'entre elle
      *
      * ### Exemple
      * - `$pdf->getMargin();`
@@ -228,13 +232,15 @@ class AbstractPDF extends \FPDF
                 'left' => $this->lMargin,
                 'cell' => $this->cMargin
             ];
+        } elseif (strlen($type) > 1) {
+            $type = $type[0];
         }
         $property = strtolower($type) . 'Margin';
         return $this->$property;
     }
 
     /**
-     * Définit la valeur d'une marge
+     * Définir la valeur d'une marge
      *
      * ### Exemple
      * - `$pdf->setMargin('top', 15);`
@@ -253,6 +259,7 @@ class AbstractPDF extends \FPDF
         } else {
             $this->bMargin = $value;
         }
+        return $this;
     }
 
     /**
@@ -291,16 +298,6 @@ class AbstractPDF extends \FPDF
     }
 
     /**
-     * Obtenir l'ordonnée du saut de page
-     *
-     * @return int
-     */
-    public function getPageBreak()
-    {
-        return $this->PageBreakTrigger;
-    }
-
-    /**
      * Se positionner dans le document
      *
      * ### Exemple
@@ -317,7 +314,7 @@ class AbstractPDF extends \FPDF
         if (is_null($y)) {
             $y = parent::GetY();
         }
-        parent::SetXY($x, $y);
+        $this->SetXY($x, $y);
         return $this;
     }
 
@@ -344,7 +341,7 @@ class AbstractPDF extends \FPDF
     }
 
     /**
-     * Obtenir la couleur d'un outil
+     * Obtenir la commande de la couleur courante d'un outil
      *
      * ### Exemple
      * - `$pdf->getToolColor();`
@@ -352,7 +349,7 @@ class AbstractPDF extends \FPDF
      *
      * @param string|null $tool text, fill ou draw
      *
-     * @return string|bool
+     * @return array|string|bool
      */
     public function getToolColor($tool = null)
     {
@@ -393,6 +390,8 @@ class AbstractPDF extends \FPDF
      *
      * @param string     $key   Nom de la clé ou tableau
      * @param mixed|null $value Valeur de la clé
+     *
+     * @return void
      */
     public function setMetadata($key, $value = null)
     {
@@ -408,16 +407,21 @@ class AbstractPDF extends \FPDF
     /**
      * Enregistrer le document PDF sur le serveur
      *
-     * @param string|null $dest Chemin et nom du fichier PDF (sans l'extension)
+     * ### Exemple
+     * - `$pdf->toFile('patht/to/file/filename');`
+     *
+     * @param string|null $fileName Chemin et nom du fichier PDF (sans l'extension)
      *
      * @return string
      */
-    public function toFile($dest = null)
+    public function toFile($fileName = null)
     {
-        if (is_null($dest)) {
-            $dest = 'MyCore_doc_' . date('Y-m-d-H-i');
+        if (is_null($fileName)) {
+            $fileName = get_class($this);
+            $fileName = explode('\\', $fileName);
+            $fileName = array_pop($fileName);
         }
-        return $this->Output('F', trim($dest) . '.pdf');
+        return $this->Output('F', trim($fileName) . '.pdf');
     }
 
     /**
@@ -431,6 +435,7 @@ class AbstractPDF extends \FPDF
     {
         $this->Line($this->GetX(), $this->GetY(), $this->GetPageWidth() - 10, $this->GetY());
         $this->Ln(intval($ln));
+        return $this;
     }
 
     /**
@@ -440,63 +445,9 @@ class AbstractPDF extends \FPDF
      *
      * @return bool
      */
-    public function hasTool($name)
+    private function hasTool($name)
     {
         return in_array(strtolower($name), $this->tools);
-    }
-
-    /**
-     * Obtenir la liste des outils
-     *
-     * @return array
-     */
-    public function getTools()
-    {
-        return $this->tools;
-    }
-
-    /**
-     * Vérifier la présence d'une unité de mesure
-     *
-     * @param string $name Nom de l'unité
-     *
-     * @return bool
-     */
-    public function hasUnit($name)
-    {
-        return in_array($name, $this->units);
-    }
-
-    /**
-     * Obtenir la liste des unités de mesures
-     *
-     * @return array
-     */
-    public function getUnits()
-    {
-        return $this->units;
-    }
-
-    /**
-     * Vérifier la présence d'un format de document
-     *
-     * @param string $name Nom du format
-     *
-     * @return bool
-     */
-    public function hasFormat($name)
-    {
-        return in_array(ucfirst($name), $this->formats);
-    }
-
-    /**
-     * Obtenir la liste des formats
-     *
-     * @return array
-     */
-    public function getFormats()
-    {
-        return $this->formats;
     }
 
     /**
@@ -516,30 +467,42 @@ class AbstractPDF extends \FPDF
      */
     public function SetFont($family = null, $style = null, $size = null, array $properties = null)
     {
-        $font = $this->getOptions('font');
+        if (count(func_get_args()) === 0) {
+            parent::SetFont(
+                $this->options->get('fontFamily'),
+                $this->options->get('fontStyle'),
+                $this->options->get('fontSize')
+            );
+        }
         if (is_null($family) || !$this->hasFont($family)) {
-            $family = $font['family'];
+            $family = $this->options->get('fontFamily');
         }
         if (is_null($style)) {
-            $style = $font['style'];
+            $style = $this->options->get('fontStyle');
         }
         if (is_null($size)) {
-            $size = $font['size'];
+            $size = $this->options->get('fontSize');
         }
         parent::SetFont($family, $style, $size);
 
         if (count(func_get_args()) === 0) {
-            $write = $this->getOptions('write');
-            $this->setToolColor($this->hexaToRgb($write['textColor']), 'text');
-            $this->setToolColor($this->hexaToRgb($write['fillColor']), 'fill');
-            $this->setToolColor($this->hexaToRgb($write['drawColor']), 'draw');
-        } elseif (is_array($properties) && !empty($properties)) {
+
+            // Couleurs
+            $this->setToolColor($this->hexaToRgb($this->options->get('textColor'), 'text'));
+            $this->setToolColor($this->hexaToRgb($this->options->get('fillColor'), 'fill'));
+            $this->setToolColor($this->hexaToRgb($this->options->get('drawColor'), 'draw'));
+
+            // Souligné ?
+            $this->underline = $this->options->get('underline');
+
+        } elseif (!empty($properties)) {
+
             // Couleur du texte
-            if (array_key_exists('color', $properties)) {
+            if (array_key_exists('textColor', $properties)) {
                 if (method_exists($this, 'setColor')) {
-                    $this->setColor($properties['color']);
+                    $this->setColor($properties['textColor']);
                 } else {
-                    $this->setToolColor($this->hexaToRgb($properties['color']));
+                    $this->setToolColor($this->hexaToRgb($properties['textColor']), 'text');
                 }
             }
             // Couleur du trait
@@ -558,17 +521,28 @@ class AbstractPDF extends \FPDF
                     $this->setToolColor($this->hexaToRgb($properties['fillColor']), 'fill');
                 }
             }
-        }
-    }
 
-    /**
-     * Vérifie si le style courant est souligné
-     *
-     * @return bool
-     */
-    public function isUnderline()
-    {
-        return $this->underline;
+            // Souligné ?
+            if (array_key_exists('underline', $properties) && is_bool($properties['underline'])) {
+                $this->underline = $properties['underline'];
+                $this->options->set('underline', $properties['underline']);
+            }
+
+            // Hauteur de ligne
+            if (array_key_exists('heightline', $properties) && is_numeric($properties['heightline'])) {
+                $this->options->set('heightline', $properties['heightline']);
+            }
+
+            // Bordure
+            if (array_key_exists('border', $properties)) {
+                $this->options->set('border', $properties['border']);
+            }
+
+            // Alignement
+            if (array_key_exists('align', $properties)) {
+                $this->options->set('align', $properties['align']);
+            }
+        }
     }
 
     /**
@@ -589,11 +563,12 @@ class AbstractPDF extends \FPDF
             'style' => $this->FontStyle,
             'size' => $this->FontSizePt,
             'sizeInUnit' => $this->FontSize,
-            'color' => $this->getToolColor('text'),
-            'underline' => $this->isUnderline(),
+            'underline' => $this->underline,
+            'align' => $this->options->get('align'),
             'fill' => false,
             'fillColor' => $this->getToolColor('fill'),
-            'drawColor' => $this->getToolColor('draw')
+            'drawColor' => $this->getToolColor('draw'),
+            'textColor' => $this->getToolColor('text')
         ];
         if (is_null($property)) {
             return $properties;
@@ -601,6 +576,21 @@ class AbstractPDF extends \FPDF
             return $properties[$property];
         }
         return false;
+    }
+
+
+    /**
+     * Obtenir la liste des liens ou l'un d'entre eux
+     *
+     * @param int|null $id Identifiant d'un lien
+     *
+     * @return array
+     */
+    public function getLinks($id = null)
+    {
+        return !is_null($id) && array_key_exists($id, $this->links)
+            ? $this->links[$id]
+            : $this->links;
     }
 
     /**
@@ -638,7 +628,7 @@ class AbstractPDF extends \FPDF
      * @return array
      * @throws \Exception
      */
-    public function hexaToRgb($hexa)
+    protected function hexaToRgb($hexa)
     {
         if ($hexa[0] != '#' || strlen($hexa) != 7) {
             throw new \Exception("Code héxadécimal : '$hexa' de mauvaise longueur ou erroné");
@@ -648,6 +638,7 @@ class AbstractPDF extends \FPDF
             'g' => hexdec(substr($hexa, 3, 2)),
             'b' => hexdec(substr($hexa, 5, 2))
         ];
+
     }
 
     /**
@@ -661,7 +652,7 @@ class AbstractPDF extends \FPDF
      * @param string|array|int $color Code héxadécimal, valeur 'r' ou tableau rgb
      * @param string|null      $tool  Nom de l'outil à colorer, si null c'est le text qui est coloré par défaut
      *
-     * @return void
+     * @return $this
      * @throws \Exception
      */
     public function setToolColor($color, $tool = 'text')
@@ -677,40 +668,38 @@ class AbstractPDF extends \FPDF
         } elseif (is_array($color) && array_keys($color) === array_keys($rgb)) {
             $rgb = $color;
         } elseif (is_string($color)) {
-            if ($color[0] === '#' && strlen($color) === 7) {
+            if ($color[0] === '#') {
                 $rgb = $this->hexaToRgb($color);
             } elseif ($color[0] != '#') {
                 if (method_exists($this, 'setColor')) {
                     $this->setColor($color, $tool);
-                    return;
+                    return $this;
                 } else {
                     throw new \Exception(
-                        "Le trait 'ColorsPdfTrait' doit être implémenté pour utiliser les couleurs nommées"
+                        "Le trait 'ColorsPdfTrait' doit être implémenté pour utiliser les couleurs nommées !"
                     );
                 }
             }
         }
         $this->$method($rgb['r'], $rgb['g'], $rgb['b']);
+
+        return $this;
     }
 
     /**
-     * Obtenir les options par défaut de construction du document
+     * Définir un nouveau writer
      *
-     * ### Exemple
-     * - `$pdf->getOptions();`
-     * - `$pdf->getOptions('format');`
+     * @param \Rcnchris\Core\PDF\AbstractPDF|null $pdf     Document PDF
+     * @param array|null                          $options Options d'écritures du Writer
      *
-     * @param string|null $key Clé de la l'option à retourner
-     *
-     * @return array|mixed
+     * @return $this
      */
-    public function getOptions($key = null)
+    public function setWriter(AbstractPDF $pdf = null, array $options = [])
     {
-        if (is_null($key)) {
-            return $this->options;
-        } elseif (array_key_exists($key, $this->options)) {
-            return $this->options[$key];
+        if (is_null($pdf)) {
+            $pdf = $this;
         }
-        return false;
+        $this->writer = new Writer($pdf, $options);
+        return $this;
     }
 }

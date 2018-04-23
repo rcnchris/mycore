@@ -50,6 +50,8 @@ trait RoundedRectPdfTrait
      *                        <li>F : remplissage (fill)</li>
      *                        <li>DF ou FD : contour et remplissage</li>
      *                        </ul>
+     *
+     * @return $this
      */
     public function roundedRect($x, $y, $w, $h, $r, $corners = '1234', $style = '')
     {
@@ -102,6 +104,8 @@ trait RoundedRectPdfTrait
             $this->arc($xc - $r, $yc - $r * $MyArc, $xc - $r * $MyArc, $yc - $r, $xc, $yc - $r);
         }
         $this->_out($op);
+
+        return $this;
     }
 
     /**
@@ -127,34 +131,6 @@ trait RoundedRectPdfTrait
                 $x3 * $this->k,
                 ($h - $y3) * $this->k
             )
-        );
-    }
-
-    /**
-     * Imprime les informations du trait
-     */
-    public function infosRoundedRectPdfTrait()
-    {
-        $this->AddPage();
-        $this->title('Rectangles arrondis', 1);
-        $this->SetFont(null, 'I', 10, ['color' => 'black', 'fillColor' => 'graylight']);
-        $this->alert("Permet de tracer un rectangle avec les bords arrondis.");
-        $this->printInfoClass(RoundedRectPdfTrait::class);
-
-        $this->title('roundedRect', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode('Dessiner un rectangle arrondi.'));
-        $this->codeBloc("\$pdf->roundedRect(100, 25, 7, 'F');");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Exemple :");
-        $this->roundedRect(
-            $this->GetX(),
-            $this->GetY() + 7,
-            $this->getColWidth(2),
-            46,
-            5,
-            '13',
-            'D'
         );
     }
 }

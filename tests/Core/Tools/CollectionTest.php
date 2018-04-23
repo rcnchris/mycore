@@ -570,4 +570,26 @@ class CollectionTest extends BaseTestCase {
     {
         $this->assertEquals(['string'], $this->list->typesDatas()->toArray());
     }
+
+    public function testMergeAddInSelf()
+    {
+        $c = $this->makeCollection(['name' => 'Mathis', 'year' => 2007], 'Collection source');
+        $c->merge(['genre' => 'male'], true);
+        $this->assertEquals(['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'], $c->toArray());
+    }
+
+    public function testMergeAddInNewCollection()
+    {
+        $c = $this->makeCollection(['name' => 'Mathis', 'year' => 2007], 'Collection source');
+        $new = $c->merge(['genre' => 'male']);
+        $this->assertEquals(['name' => 'Mathis', 'year' => 2007], $c->toArray());
+        $this->assertEquals(['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'], $new->toArray());
+    }
+
+    public function testMergeWithExists()
+    {
+        $c = $this->makeCollection(['name' => 'Mathis', 'year' => 2007], 'Collection source');
+        $c->merge(['year' => 2009], true);
+        $this->assertEquals(['name' => 'Mathis', 'year' => 2009], $c->toArray());
+    }
 }

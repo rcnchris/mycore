@@ -83,80 +83,58 @@ trait RotatePdfTrait
     }
 
     /**
-     * Définit l'état du document à 1
-     */
-    protected function _endpage()
-    {
-        if ($this->angle != 0) {
-            $this->angle = 0;
-            $this->_out('Q');
-        }
-        parent::_endpage();
-    }
-
-    /**
      * Rotation du texte autour de son origine
      *
      * ### Exemple
      * - `$pdf->rotatedText(100, 60, 'Ola !', 45);`
      *
-     * @param $x
-     * @param $y
-     * @param $txt
-     * @param $angle
+     * @param double $x     Abscisse du centre de rotation
+     * @param double $y     Ordonnée du centre de rotation
+     * @param string $txt   Texte à faire pivoter
+     * @param int    $angle Angle de rotation
+     *
+     * @return $this
      */
     public function rotatedText($x, $y, $txt, $angle)
     {
-        $this->Rotate($angle, $x, $y);
-        $this->Text($x, $y, $txt);
-        $this->Rotate(0);
+        $this->rotate($angle, $x, $y);
+        parent::Text($x, $y, $txt);
+        //$this->rotate(0);  commenté pour le test de l'angle différent de zéro dans _endpage()
+        return $this;
     }
 
     /**
      * Rotation de l'image autour du coin supérieur gauche
      *
      * ### Exemple
-     * - `$pdf->rotatedImage(circle.png', 85, 60, 40, 16, 45);`
+     * - `$pdf->rotatedImage('path/to/file/circle.png', 85, 60, 40, 16, 45);`
      *
-     * @param $file
-     * @param $x
-     * @param $y
-     * @param $w
-     * @param $h
-     * @param $angle
+     * @param string $file  Nom du fichier de l'image
+     * @param double $x     Abscisse du centre de rotation
+     * @param double $y     Ordonnée du centre de rotation
+     * @param double $w     Largeur
+     * @param double $h     Hauteur
+     * @param int    $angle Angle de rotation
+     *
+     * @return $this
      */
     public function rotatedImage($file, $x, $y, $w, $h, $angle)
     {
-        $this->Rotate($angle, $x, $y);
+        $this->rotate($angle, $x, $y);
         $this->Image($file, $x, $y, $w, $h);
-        $this->Rotate(0);
+        $this->rotate(0);
+        return $this;
     }
 
     /**
-     * Imprime les informations du trait
+     * Définit l'état du document à 1
      */
-    public function infosRotatePdfTrait()
+    protected function _endpage()
     {
-        $this->AddPage();
-        $this->title('Rotation', 1);
-        $this->alert("Permet d'appliquer une rotation sur un texte ou une image.");
-        $this->printInfoClass(RotatePdfTrait::class);
-
-        $this->title('rotatedText', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode("Rotation du texte autour de son origine."));
-        $this->codeBloc("\$pdf->rotatedText(100, 60, 'Hello !', 45);");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Exemple :");
-        $this->rotatedText($this->GetX(), $this->GetY() + 7, 'Hello !', 45);
-        $this->Ln();
-
-        $this->title('rotatedImage', 2);
-        $this->addLine();
-        $this->MultiCell(0, 10, utf8_decode("Rotation de l'image autour du coin supérieur gauche."));
-        $this->codeBloc("\$pdf->rotatedImage('circle.png', 85, 60, 40, 16, 45);");
-        $this->SetFont(null, 'BI');
-        $this->MultiCell(0, 10, "Exemple :");
-        $this->rotatedImage(dirname(__DIR__) . '/files/circle.png', $this->GetX(), $this->GetY() + 35, 40, 16, 45);
+        if ($this->angle != 0) {
+            $this->angle = 0;
+            parent::_out('Q');
+        }
+        parent::_endpage();
     }
 }

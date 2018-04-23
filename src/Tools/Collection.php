@@ -190,7 +190,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      *
      * @param string|int $key Clé de la collection
      *
-     * @return Collection|null
+     * @return Collection|mixed|null
      */
     public function get($key)
     {
@@ -309,6 +309,29 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
         }
         $this->items[$key] = $value;
         return true;
+    }
+
+
+    /**
+     * Fusionne les items existants avec les nouveaux
+     *
+     * ### Exemple
+     * - `$c->merge($items);`
+     * - `$c->merge($items, true);`
+     *
+     * @param array     $items Nouveaux items
+     * @param bool|null $self  S'applique à la collection courante, sinon retourne une nouvelle collection
+     *
+     * @return Collection
+     */
+    public function merge(array $items, $self = false)
+    {
+        if ($self) {
+            $this->items = array_merge($this->items, $items);
+            return $this;
+        } else {
+            return new self(array_merge($this->items, $items));
+        }
     }
 
     /**
@@ -506,6 +529,11 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
     {
         $maxItem = max($this->items);
         return is_array($maxItem) ? new self($maxItem) : $maxItem;
+    }
+
+    public function sum()
+    {
+        return array_sum($this->items);
     }
 
     /**
