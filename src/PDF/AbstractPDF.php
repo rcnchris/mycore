@@ -220,7 +220,7 @@ class AbstractPDF extends \FPDF
      *
      * @param string|null $type (r, l, t, b)
      *
-     * @return double|array
+     * @return array|double
      */
     public function getMargin($type = null)
     {
@@ -288,16 +288,6 @@ class AbstractPDF extends \FPDF
     }
 
     /**
-     * Obtenir l'orientation courante
-     *
-     * @return string
-     */
-    public function getOrientation()
-    {
-        return $this->CurOrientation;
-    }
-
-    /**
      * Se positionner dans le document
      *
      * ### Exemple
@@ -316,6 +306,16 @@ class AbstractPDF extends \FPDF
         }
         $this->SetXY($x, $y);
         return $this;
+    }
+
+    /**
+     * Obtenir l'orientation courante
+     *
+     * @return string
+     */
+    public function getOrientation()
+    {
+        return $this->CurOrientation;
     }
 
     /**
@@ -422,20 +422,6 @@ class AbstractPDF extends \FPDF
             $fileName = array_pop($fileName);
         }
         return $this->Output('F', trim($fileName) . '.pdf');
-    }
-
-    /**
-     * Imprime une ligne sur toute la largeur du corps
-     *
-     * @param int $ln Saut de ligne après la ligne
-     *
-     * @return $this
-     */
-    public function addLine($ln = 0)
-    {
-        $this->Line($this->GetX(), $this->GetY(), $this->GetPageWidth() - 10, $this->GetY());
-        $this->Ln(intval($ln));
-        return $this;
     }
 
     /**

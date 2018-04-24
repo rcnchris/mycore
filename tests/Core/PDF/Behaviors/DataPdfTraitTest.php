@@ -26,22 +26,19 @@ class DataPdfTraitTest extends PdfTestCase
     private $user;
 
     /**
-     * @param bool $withPage
+     * @param string|null $className Nom de la classe du document PDF
+     * @param bool|null   $withPage  N'ajoute pas de première page si false
      *
      * @return \Tests\Rcnchris\Core\PDF\Behaviors\DataPdf
+     * @throws \Exception
      */
-    public function makePdf($withPage = true)
+    public function makePdf($className = null, $withPage = true)
     {
-        $pdf = new DataPdf();
         $this->user = new \stdClass();
         $this->user->name = 'Mathis';
         $this->user->year = 2007;
         $this->user->genre = 'males';
-
-        if ($withPage) {
-            $pdf->AddPage();
-        }
-        return $pdf;
+        return parent::makePdf(DataPdf::class, $withPage);
     }
 
     public function testSetData()

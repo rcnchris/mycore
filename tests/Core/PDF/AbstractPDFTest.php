@@ -6,6 +6,23 @@ use Rcnchris\Core\PDF\AbstractPDF;
 class AbstractPDFTest extends PdfTestCase
 {
 
+    /**
+     * @var DocPdf
+     */
+    protected $pdf;
+
+    /**
+     * @param string|null $className Nom de la classe du document PDF
+     * @param bool|null   $withPage  N'ajoute pas de première page si false
+     *
+     * @return \Tests\Rcnchris\Core\PDF\DocPdf
+     * @throws \Exception
+     */
+    public function makePdf($className = null, $withPage = true)
+    {
+        return parent::makePdf(DocPdf::class, $withPage);
+    }
+
     public function testInstance()
     {
         $this->ekoTitre('PDF - Abstraction');
@@ -18,7 +35,7 @@ class AbstractPDFTest extends PdfTestCase
 
     public function testGetTotalPages()
     {
-        $pdf = $this->makePdf(false);
+        $pdf = $this->makePdf(null, false);
         $this->assertEquals(
             0
             , $pdf->getTotalPages()
@@ -40,7 +57,7 @@ class AbstractPDFTest extends PdfTestCase
 
     public function testAddPage()
     {
-        $pdf = $this->makePdf(false);
+        $pdf = $this->makePdf(null, false);
         $this->assertNull($pdf->AddPage());
         $this->assertEquals(1, $pdf->getTotalPages());
     }
@@ -98,6 +115,7 @@ class AbstractPDFTest extends PdfTestCase
     public function testGetCursorWithParameter()
     {
         $pdf = $this->makePdf();
+//        $pdf->AddPage();
         $this->assertInternalType('double', $pdf->getCursor('x'));
         $this->assertInternalType('double', $pdf->getCursor('y'));
     }
@@ -144,7 +162,17 @@ class AbstractPDFTest extends PdfTestCase
     public function testToFileWithFileName()
     {
         $pdf = $this->makePdf();
-        $fileDest = $this->resultPath . '/testToFile';
+        $fileDest = $this->resultPath . '/' . __FUNCTION__;
+        $pdf->toFile($fileDest);
+        $fileDest .= '.pdf';
+        $this->assertTrue(file_exists($fileDest));
+        $this->addUsedFile($fileDest);
+    }
+
+    public function testToFileWithoutPage()
+    {
+        $pdf = $this->makePdf(null, false);
+        $fileDest = $this->resultPath . '/' . __FUNCTION__;
         $pdf->toFile($fileDest);
         $fileDest .= '.pdf';
         $this->assertTrue(file_exists($fileDest));
@@ -230,7 +258,7 @@ class AbstractPDFTest extends PdfTestCase
     public function testFileToPdf()
     {
         $fileSrc = $this->filesPath . '/textFile.txt';
-        $fileDest = $this->resultPath . '/lorem';
+        $fileDest = $this->resultPath . '/' . __FUNCTION__;
         $this->makePdf()
             ->fileToPdf($fileSrc)
             ->toFile($fileDest);
@@ -242,8 +270,8 @@ class AbstractPDFTest extends PdfTestCase
     public function testFileToPdfWithoutPage()
     {
         $fileSrc = $this->filesPath . '/textFile.txt';
-        $fileDest = $this->resultPath . '/lorem';
-        $this->makePdf(false)
+        $fileDest = $this->resultPath . '/' . __FUNCTION__;
+        $this->makePdf(null, false)
             ->fileToPdf($fileSrc)
             ->toFile($fileDest);
         $fileDest .= '.pdf';

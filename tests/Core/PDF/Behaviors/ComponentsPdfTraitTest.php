@@ -12,17 +12,15 @@ class ComponentsPdfTraitTest extends PdfTestCase
     protected $pdf;
 
     /**
-     * @param bool $withPage
+     * @param string|null $className Nom de la classe du document PDF
+     * @param bool|null   $withPage  N'ajoute pas de première page si false
      *
      * @return \Tests\Rcnchris\Core\PDF\Behaviors\ComponentsPdf
+     * @throws \Exception
      */
-    public function makePdf($withPage = true)
+    public function makePdf($className = null, $withPage = true)
     {
-        $pdf = new ComponentsPdf();
-        if ($withPage) {
-            $pdf->AddPage();
-        }
-        return $pdf;
+        return parent::makePdf(ComponentsPdf::class, $withPage);
     }
 
     public function testGetTitleTemplates()
@@ -59,45 +57,39 @@ class ComponentsPdfTraitTest extends PdfTestCase
 
     public function testTitle()
     {
-        $pdf = $this->makePdf();
-        $pdf->AddPage();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->title('Ola'));
+        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->title('Ola'));
     }
 
     public function testCodeBloc()
     {
-        $pdf = $this->makePdf();
-        $pdf->AddPage();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->codeBloc('Ola'));
+        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->codeBloc('Ola'));
     }
 
     public function testAlert()
     {
-        $pdf = $this->makePdf();
-        $pdf->AddPage();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->alert('Ola'));
+        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->alert('Ola'));
     }
 
     public function testPrintInfoClass()
     {
         $pdf = $this->makePdf();
-        $pdf->AddPage();
         $this->assertInstanceOf(AbstractPDF::class, $pdf->printInfoClass(get_class($this)));
+        $this->assertInstanceOf(AbstractPDF::class, $pdf->printInfoClass($this));
+        $this->expectException(\Exception::class);
+        $pdf->printInfoClass('fake');
     }
 
     public function testPrintDocumentProperties()
     {
-        $pdf = $this->makePdf();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->printDocumentProperties());
+        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->printDocumentProperties());
     }
 
     public function testSetTitleTemplates()
     {
-        $pdf = $this->makePdf();
         $templates = [
             ['fontFamily' => 'courier'],
             ['fontFamily' => 'helvetica']
         ];
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->setTitleTemplates($templates));
+        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->setTitleTemplates($templates));
     }
 }

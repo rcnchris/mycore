@@ -6,11 +6,27 @@ use Rcnchris\Core\PDF\Writer;
 
 class WriterTest extends PdfTestCase
 {
+    /**
+     * @var DocPdf
+     */
+    protected $pdf;
+
+    /**
+     * @param string|null $className Nom de la classe du document PDF
+     * @param bool|null   $withPage  N'ajoute pas de première page si false
+     *
+     * @return \Tests\Rcnchris\Core\PDF\DocPdf
+     * @throws \Exception
+     */
+    public function makePdf($className = null, $withPage = true)
+    {
+        return parent::makePdf(DocPdf::class, $withPage);
+    }
 
     public function makeWriter($pdf = null, array $options = [])
     {
         if (is_null($pdf)) {
-            $pdf = $this->makePdf(false);
+            $pdf = $this->pdf;
         }
         return new Writer($pdf, $options);
     }
@@ -44,6 +60,17 @@ class WriterTest extends PdfTestCase
     public function testWriteSimpleTextWithoutParameter()
     {
         $writer = $this->makeWriter();
+        $fileDest = $this->resultPath . '/' . __FUNCTION__;
+        $content = 'ola les gens !';
+        $pdf = $writer->write($content);
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->toFile($fileDest);
+    }
+
+    public function testWriteSimpleTextWithoutPage()
+    {
+        $pdf = $this->makePdf(null, false);
+        $writer = $this->makeWriter($pdf);
         $fileDest = $this->resultPath . '/' . __FUNCTION__;
         $content = 'ola les gens !';
         $pdf = $writer->write($content);

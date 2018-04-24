@@ -1,23 +1,60 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF;
 
+use Rcnchris\Core\PDF\AbstractPDF;
 use Tests\Rcnchris\BaseTestCase;
 
 class PdfTestCase extends BaseTestCase
 {
+    /**
+     * Emplacement des fichiers sources
+     *
+     * @var string
+     */
     protected $filesPath = __DIR__ . '/files';
+
+    /**
+     * Emplacement des fichiers générés
+     *
+     * @var string
+     */
     protected $resultPath = __DIR__ . '/results';
+
+    /**
+     * Instance du document PDF
+     *
+     * @var AbstractPDF
+     */
+    protected $pdf;
+
+    /**
+     * Constructeur
+     */
+    public function setUp()
+    {
+        $this->pdf = $this->makePdf();
+    }
 
     /**
      * Obtenir l'instance de AbstractPDF
      *
-     * @param bool|null $withPage N'ajoute pas de première page si false
+     * @param string|null $className Nom de la classe du document PDF
+     * @param bool|null   $withPage  N'ajoute pas de première page si false
      *
      * @return \Rcnchris\Core\PDF\AbstractPDF
+     * @throws \Exception
      */
-    public function makePdf($withPage = true)
+    public function makePdf($className = null, $withPage = true)
     {
-        $pdf = new DocPdf();
+        if (is_null($className)) {
+            $pdf = new DocPdf();
+        } else {
+            if (!class_exists($className)) {
+                throw new \Exception("La classe $className est introuvable !");
+            }
+            $pdf = new $className();
+        }
+
         if ($withPage) {
             $pdf->AddPage();
         }

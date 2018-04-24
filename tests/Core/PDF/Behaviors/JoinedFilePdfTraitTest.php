@@ -19,18 +19,16 @@ class JoinedFilePdfTraitTest extends PdfTestCase
     private $attachFile;
 
     /**
-     * @param bool $withPage
+     * @param string|null $className Nom de la classe du document PDF
+     * @param bool|null   $withPage  N'ajoute pas de première page si false
      *
      * @return \Tests\Rcnchris\Core\PDF\Behaviors\JoinedFilePdf
+     * @throws \Exception
      */
-    public function makePdf($withPage = true)
+    public function makePdf($className = null, $withPage = true)
     {
-        $pdf = new JoinedFilePdf();
         $this->attachFile = $this->filesPath . '/textFile.txt';
-        if ($withPage) {
-            $pdf->AddPage();
-        }
-        return $pdf;
+        return parent::makePdf(JoinedFilePdf::class, $withPage);
     }
 
     public function testAttachReturnInstance()

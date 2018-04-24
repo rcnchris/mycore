@@ -85,7 +85,7 @@ trait RecordSetPdfTrait
      * 'headerAlign' => 'L'
      * ]);`
      *
-     * @param array $params Paramètres du recordset
+     * @param array|null $params Paramètres du recordset
      *
      * @return $this
      * @throws \Exception
@@ -97,10 +97,13 @@ trait RecordSetPdfTrait
 
         // Nombre et largeur des colonnes
         if (!empty($this->properties['w'])) {
+            /**
+             * Définition par unité
+             */
             $colsLength = array_sum($this->properties['w']);
             if ($colsLength > $this->getBodySize('width')) {
                 $dep = $colsLength - $this->getBodySize('width');
-                throw new \Exception("La somme des longueurs des colonnes dépasse la largeur du corps de $dep");
+                throw new \Exception("La somme des longueurs des colonnes dépasse la largeur du corps de : $dep");
             }
             foreach ($this->properties['w'] as $width) {
                 $this->propertiesByCol[] = [
@@ -108,21 +111,37 @@ trait RecordSetPdfTrait
                 ];
             }
         } elseif (!empty($this->properties['wInPourc'])) {
+            /**
+             * Définition en pourcentage
+             */
             foreach ($this->properties['wInPourc'] as $width) {
                 $this->propertiesByCol[] = [
                     'w' => $this->getBodySize('width') * ($width / 100)
                 ];
             }
-        }
-        if (empty($this->propertiesByCol)) {
-            throw new \Exception("Le nombre de colonnes doit être définit par l'option 'w' ou 'wInPourc !'");
+        } else {
+            /**
+             * Aucune définition de colonne, donc une seule de la largeur du corps
+             */
+            $default = [
+                'w' => [$this->getBodySize('width')],
+                'wInPourc' => [100],
+                'headerNames' => ['col0'],
+                'itemProperties' => [
+                    [$this->defaultProperties['itemProperties']]
+                ]
+            ];
+            $this->properties = array_merge($this->defaultProperties, $default);
+            $this->propertiesByCol[0] = ['w' => $this->getBodySize('width')];
         }
 
         if (!empty($this->properties['headerNames'])) {
             // Contrôle cohérence nombre de colonnes
             if (count($this->properties['headerNames']) != $this->getRsNbCols()) {
                 throw new \Exception(
-                    "Le nombre de colonne diffère entre la définition via 'w' ou 'wInPourc' et 'headerNames' !"
+                    "Le nombre de colonnes diffère entre la définition via 'w' ou 'wInPourc' : "
+                    . $this->getRsNbCols() . " et 'headerNames' : "
+                    . count($this->properties['headerNames']) . " !"
                 );
             }
 
@@ -136,10 +155,9 @@ trait RecordSetPdfTrait
                 $this->propertiesByCol[$i]['header']['name'] = $headerName;
 
                 // Police
-                if (!is_null($this->properties['headerFont']) && in_array(
-                    $this->properties['headerFont'],
-                    $this->getFonts()
-                )
+                if (
+                    !is_null($this->properties['headerFont'])
+                    && in_array($this->properties['headerFont'], $this->getFonts())
                 ) {
                     $this->propertiesByCol[$i]['header']['fontFamily'] = $this->properties['headerFont'];
                 } else {
@@ -147,14 +165,20 @@ trait RecordSetPdfTrait
                 }
 
                 // Taille de la police
-                if (!is_null($this->properties['headerFontSize']) && is_numeric($this->properties['headerFontSize'])) {
+                if (
+                    !is_null($this->properties['headerFontSize'])
+                    && is_numeric($this->properties['headerFontSize'])
+                ) {
                     $this->propertiesByCol[$i]['header']['fontSize'] = $this->properties['headerFontSize'];
                 } else {
                     $this->propertiesByCol[$i]['header']['fontSize'] = $this->getFontProperty('size');
                 }
 
                 // Style
-                if (!is_null($this->properties['headerFontStyle']) && is_string($this->properties['headerFontStyle'])) {
+                if (
+                    !is_null($this->properties['headerFontStyle'])
+                    && is_string($this->properties['headerFontStyle'])
+                ) {
                     $this->propertiesByCol[$i]['header']['fontStyle'] = $this->properties['headerFontStyle'];
                 } else {
                     $this->propertiesByCol[$i]['header']['fontStyle'] = $this->getFontProperty('style');
@@ -164,7 +188,10 @@ trait RecordSetPdfTrait
                 $this->propertiesByCol[$i]['header']['fill'] = $this->properties['headerFill'];
 
                 // Alignement
-                if (!is_null($this->properties['headerAlign']) && is_string($this->properties['headerAlign'])) {
+                if (
+                    !is_null($this->properties['headerAlign'])
+                    && is_string($this->properties['headerAlign'])
+                ) {
                     $this->propertiesByCol[$i]['header']['align'] = $this->properties['headerAlign'];
                 } else {
                     $this->propertiesByCol[$i]['header']['align'] = 'L';
@@ -207,6 +234,9 @@ trait RecordSetPdfTrait
     /**
      * Obtenir toutes propriétés ou l'une d'entre elle
      *
+     * ### Exemple
+     * - `$pdf->getRsProperties('w');`
+     *
      * @param string|null $key Nom de la clé de la propriété
      *
      * @return array|bool
@@ -223,6 +253,10 @@ trait RecordSetPdfTrait
 
     /**
      * Obtenir les propriétés de toutes colonnes ou de l'une d'entre elle
+     *
+     * ### Exemple
+     * - `$pdf->getRsPropertiesByCol();`
+     * - `$pdf->getRsPropertiesByCol(0);`
      *
      * @param int|null $indice Indice de la colonne (commence à 0)
      *

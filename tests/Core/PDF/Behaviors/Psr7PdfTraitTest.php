@@ -13,17 +13,15 @@ class Psr7PdfTraitTest extends PdfTestCase
     protected $pdf;
 
     /**
-     * @param bool $withPage
+     * @param string|null $className Nom de la classe du document PDF
+     * @param bool|null   $withPage  N'ajoute pas de première page si false
      *
      * @return \Tests\Rcnchris\Core\PDF\Behaviors\Psr7Pdf
+     * @throws \Exception
      */
-    public function makePdf($withPage = true)
+    public function makePdf($className = null, $withPage = true)
     {
-        $pdf = new Psr7Pdf();
-        if ($withPage) {
-            $pdf->AddPage();
-        }
-        return $pdf;
+        return parent::makePdf(Psr7Pdf::class, $withPage);
     }
 
     public function testToView()

@@ -303,7 +303,7 @@ trait RowPdfTrait
 
         // Va à la ligne
         $this->Ln($h);
-        $this->addLine();
+        $this->draw('line');
 
         return $this;
     }

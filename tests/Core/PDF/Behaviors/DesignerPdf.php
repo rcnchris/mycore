@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier GridPdf.php du 23/04/2018
- * Description : Fichier de la classe GridPdf
+ * Fichier DesignerPdf.php du 24/04/2018
+ * Description : Fichier de la classe DesignerPdf
  *
  * PHP version 5
  *
@@ -18,11 +18,11 @@
 
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
-use Rcnchris\Core\PDF\Behaviors\GridPdfTrait;
+use Rcnchris\Core\PDF\Behaviors\DesignerPdfTrait;
 use Tests\Rcnchris\Core\PDF\DocPdf;
 
 /**
- * Class GridPdf
+ * Class DesignerPdf
  *
  * @category PDF
  *
@@ -32,7 +32,7 @@ use Tests\Rcnchris\Core\PDF\DocPdf;
  *
  * @version  Release: <1.0.0>
  */
-class GridPdf extends DocPdf
+class DesignerPdf extends DocPdf
 {
-    use GridPdfTrait;
+    use DesignerPdfTrait;
 }

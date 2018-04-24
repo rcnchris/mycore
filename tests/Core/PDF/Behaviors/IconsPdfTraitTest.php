@@ -12,17 +12,15 @@ class IconsPdfTraitTest extends PdfTestCase
     protected $pdf;
 
     /**
-     * @param bool $withPage
+     * @param string|null $className Nom de la classe du document PDF
+     * @param bool|null   $withPage  N'ajoute pas de première page si false
      *
      * @return \Tests\Rcnchris\Core\PDF\Behaviors\IconsPdf
+     * @throws \Exception
      */
-    public function makePdf($withPage = true)
+    public function makePdf($className = null, $withPage = true)
     {
-        $pdf = new IconsPdf();
-        if ($withPage) {
-            $pdf->AddPage();
-        }
-        return $pdf;
+        return parent::makePdf(IconsPdf::class, $withPage);
     }
 
     public function testPrintIcon()
