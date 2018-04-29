@@ -19,9 +19,10 @@
 namespace Tests\Rcnchris\Core\PDF;
 
 use Rcnchris\Core\PDF\AbstractPDF;
-use Rcnchris\Core\PDF\Behaviors\BookmarksPdfTrait;
 use Rcnchris\Core\PDF\Behaviors\ComponentsPdfTrait;
 use Rcnchris\Core\PDF\Behaviors\DesignerPdfTrait;
+use Rcnchris\Core\PDF\Behaviors\Psr7PdfTrait;
+use Rcnchris\Core\PDF\Behaviors\RessourcesPdfTrait;
 
 /**
  * Class AbstractPdf
@@ -36,7 +37,7 @@ use Rcnchris\Core\PDF\Behaviors\DesignerPdfTrait;
  */
 class DocPdf extends AbstractPDF
 {
-    use ComponentsPdfTrait, BookmarksPdfTrait, DesignerPdfTrait;
+    use RessourcesPdfTrait, ComponentsPdfTrait, DesignerPdfTrait, Psr7PdfTrait;
 
     public function Header()
     {

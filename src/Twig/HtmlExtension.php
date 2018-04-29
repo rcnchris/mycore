@@ -101,7 +101,13 @@ class HtmlExtension extends \Twig_Extension
         $html = "<$type>";
         if (is_array($value)) {
             foreach ($value as $key => $value) {
-                $html .= "<li>$key : $value</li>";
+                if (is_string($value)) {
+                    $html .= "<li>$key : $value</li>";
+                } elseif (is_object($value)) {
+                    $html .= "<li>$key : " . get_class($value) . "</li>";
+                } elseif (is_array($value)) {
+                    $html .= "<li>$key : " . array_keys($value) . "</li>";
+                }
             }
             $html .= "</$type>";
         }

@@ -416,6 +416,7 @@ class AbstractPDF extends \FPDF
      */
     public function toFile($fileName = null)
     {
+
         if (is_null($fileName)) {
             $fileName = get_class($this);
             $fileName = explode('\\', $fileName);
@@ -472,7 +473,6 @@ class AbstractPDF extends \FPDF
         parent::SetFont($family, $style, $size);
 
         if (count(func_get_args()) === 0) {
-
             // Couleurs
             $this->setToolColor($this->hexaToRgb($this->options->get('textColor'), 'text'));
             $this->setToolColor($this->hexaToRgb($this->options->get('fillColor'), 'fill'));
@@ -480,9 +480,7 @@ class AbstractPDF extends \FPDF
 
             // Souligné ?
             $this->underline = $this->options->get('underline');
-
         } elseif (!empty($properties)) {
-
             // Couleur du texte
             if (array_key_exists('textColor', $properties)) {
                 if (method_exists($this, 'setColor')) {
@@ -624,7 +622,6 @@ class AbstractPDF extends \FPDF
             'g' => hexdec(substr($hexa, 3, 2)),
             'b' => hexdec(substr($hexa, 5, 2))
         ];
-
     }
 
     /**

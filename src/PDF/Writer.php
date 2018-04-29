@@ -108,15 +108,12 @@ class Writer
         }
 
         if (is_string($content)) {
-
             $this->pdf->Write(
                 $this->writingOptions->get('heightline'),
                 utf8_decode($content),
                 $this->writingOptions->get('link')
             );
-
         } elseif (is_array($content) && !empty($content)) {
-
             foreach ($content as $k => $item) {
                 $this->pdf->Cell(
                     $this->writingOptions->get('width'),
@@ -129,9 +126,7 @@ class Writer
                     $this->writingOptions->get('link')
                 );
             }
-
         } elseif (is_object($content)) {
-
             foreach ($this->writingOptions['keys'] as $key) {
                 $this->pdf->Cell(
                     $this->writingOptions->get('width'),

@@ -26,161 +26,164 @@ class RowPdfTraitTest extends PdfTestCase
 
     public function testSetColWidth()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()->setColsWidth(20, 20, 50)
-        );
+        $pdf = $this->makePdf()->setColsWidth(20, 20, 50);
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testSetColWidthInPourc()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()->setColsWidthInPourc(30, 20, 50)
-        );
+        $pdf = $this->makePdf()->setColsWidthInPourc(30, 20, 50);
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testSetColsAlign()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->setColsAlign('L', 'C', 'R')
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->setColsAlign('L', 'C', 'R');
+
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+
+        $pdf->Close();
     }
 
     public function testSetColsBorder()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->setColsBorder('B', 'B', 'B')
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->setColsBorder('B', 'B', 'B');
+
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testSetColsFill()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->setColsFill(false, true, false)
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->setColsFill(false, true, false);
+
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testSetColsDrawColor()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->setColsDrawColors('#CCCCCC', '#000000', '#000000')
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->setColsDrawColors('#CCCCCC', '#000000', '#000000');
+
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testSetColsFillColor()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->setColsFillColors('#CCCCCC', '#000000', '#000000')
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->setColsFillColors('#CCCCCC', '#000000', '#000000');
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testSetColsTextColor()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->setColsTextColors('#CCCCCC', '#000000', '#000000')
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->setColsTextColors('#CCCCCC', '#000000', '#000000');
+
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testSetColsFont()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->setColsFont('courier', 'helvetica', 'helvetica')
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->setColsFont('courier', 'helvetica', 'helvetica');
+
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testSetColsSize()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->setColsFontSize(10, 8, 10)
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->setColsFontSize(10, 8, 10);
+
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testSetColsHeightline()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->setHeightLine(15)
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->setHeightLine(15);
+
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
-    public function testSetRowCols()
+    public function testRowCols()
     {
-        $this->assertInstanceOf(
-            AbstractPDF::class,
-            $this->makePdf()
-                ->setColsWidth(20, 20, 50)
-                ->rowCols('ola', 'les', 'gens')
-        );
+        $pdf = $this->makePdf()
+            ->setColsWidth(20, 20, 50)
+            ->rowCols('ola', 'les', 'gens');
+
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
+    }
+
+    public function testRowColsWithPageBreak()
+    {
+        $pdf = $this->makePdf()->setColsWidth(20, 20, 50);
+        for ($i = 0; $i <= 99; $i++) {
+            $pdf->rowCols("ola$i", "les$i", "gens$i");
+        }
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
+    }
+
+    public function testRowColsWithEmptyContent()
+    {
+        $pdf = $this->makePdf()->setColsWidth(20, 20, 50, 10);
+        for ($i = 0; $i <= 99; $i++) {
+            $pdf->rowCols("ola$i", "les$i", "gens$i", '');
+        }
+        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $pdf->Close();
     }
 
     public function testGetColsWidths()
     {
-        $this->assertEquals(
-            30,
-            $this->makePdf()
-                ->setColsWidth(30, 20, 50)
-                ->getColWidth(0)
-        );
+        $pdf = $this->makePdf()->setColsWidth(30, 20, 50);
+        $this->assertEquals(30, $pdf->getColWidth(0));
+        $pdf->Close();
     }
 
     public function testGetColsWidthsWithWrongIndice()
     {
-        $this->assertFalse(
-            $this->makePdf()
-                ->setColsWidthInPourc(30, 20, 50)
-                ->getColWidth(3)
-        );
+        $pdf = $this->makePdf()->setColsWidthInPourc(30, 20, 50);
+        $this->assertFalse($pdf->getColWidth(3));
+        $pdf->Close();
     }
 
     public function testGetNbCols()
     {
-        $this->assertEquals(
-            3,
-            $this->makePdf()
-                ->setColsWidthInPourc(30, 20, 50)
-                ->getNbCols()
-        );
+        $pdf = $this->makePdf()->setColsWidthInPourc(30, 20, 50);
+        $this->assertEquals(3, $pdf->getNbCols());
+        $pdf->Close();
     }
 
     public function testGetColsProperties()
     {
-        $this->assertNotEmpty(
-            $this->makePdf()
-                ->setColsWidthInPourc(30, 20, 50)
-                ->getColsProperties()
-        );
-
-        $this->assertNotEmpty(
-            $this->makePdf()
-                ->setColsWidthInPourc(30, 20, 50)
-                ->getColsProperties(1)
-        );
+        $pdf = $this->makePdf()->setColsWidthInPourc(30, 20, 50);
+        $this->assertNotEmpty($pdf->getColsProperties());
+        $this->assertNotEmpty($pdf->getColsProperties(1));
+        $pdf->Close();
     }
 }

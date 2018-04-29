@@ -79,6 +79,8 @@ class SourcesManager
      *
      * @param array $sources Liste des sources de données avec leur configuration
      * @param bool  $add     Si vrai, les sources sont ajoutées à celles existantes
+     *
+     * @return $this
      */
     public function setSources($sources, $add = false)
     {
@@ -86,6 +88,7 @@ class SourcesManager
             $sources = array_merge($this->sources, $sources);
         }
         $this->sources = $sources;
+        return $this;
     }
 
     /**

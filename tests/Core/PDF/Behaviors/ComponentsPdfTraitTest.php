@@ -92,4 +92,41 @@ class ComponentsPdfTraitTest extends PdfTestCase
         ];
         $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->setTitleTemplates($templates));
     }
+
+    public function testPuces()
+    {
+        $pdf = $this->makePdf();
+        $pdf->SetFont('Times', '', 12);
+
+        $column_width = ($pdf->GetPageWidth() - 30) / 2;
+        $sample_text = 'Ceci est un paragraphe avec puce. Le texte est indenté et la puce apparaît uniquement sur la première ligne.';
+
+        for ($n = 1; $n <= 3; $n++) {
+            $pdf->puce($column_width, 6, chr(149), $sample_text);
+        }
+        $fileDest = $this->resultPath . '/' . __FUNCTION__;
+        $pdf->toFile($fileDest);
+        $this->assertTrue(file_exists($fileDest . '.pdf'));
+        $this->addUsedFile($fileDest.'.pdf');
+        $pdf->Close();
+    }
+
+    public function testPucesWithArrayString()
+    {
+        $pdf = $this->makePdf();
+        $pdf->SetFont('Times', '', 12);
+
+        $column_width = ($pdf->GetPageWidth() - 30) / 2;
+        $sample_text = [
+            'Lorem ipsum dolor sit amet, consectetur adipisicing elit. A accusamus aliquam commodi earum fugiat inventore repudiandae ullam? Accusamus, dolores fuga, inventore ipsum magni, maiores officiis quae tempore ullam unde voluptates!',
+            'Accusamus culpa nesciunt nisi pariatur? Aspernatur, consequuntur itaque. Accusamus animi cum delectus dolore ducimus esse facilis, fugiat, laudantium nemo porro, quo rem sequi voluptas? Odio officia praesentium tenetur vero voluptatibus.',
+            'Blanditiis consectetur corporis, cupiditate dolores esse illum minus! Alias, deserunt dolores eveniet fugiat fugit ipsum modi nulla officia omnis perferendis quam quod repudiandae similique suscipit temporibus veniam veritatis. Animi, illo?'
+        ];
+        $pdf->puce($column_width, 6, chr(149), $sample_text);
+        $fileDest = $this->resultPath . '/' . __FUNCTION__;
+        $pdf->toFile($fileDest);
+        $this->assertTrue(file_exists($fileDest . '.pdf'));
+        $this->addUsedFile($fileDest.'.pdf');
+        $pdf->Close();
+    }
 }

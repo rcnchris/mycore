@@ -43,6 +43,8 @@ class WriterTest extends PdfTestCase
         $fileDest = __DIR__ . '/results/' . $shortName;
         $pdf->demo($className)->toFile($fileDest);
         $this->assertTrue(file_exists($fileDest . '.pdf'));
+        $this->addUsedFile($fileDest . '.pdf');
+        $pdf->Close();
     }
 
     public function testInstance()
@@ -65,6 +67,8 @@ class WriterTest extends PdfTestCase
         $pdf = $writer->write($content);
         $this->assertInstanceOf(AbstractPDF::class, $pdf);
         $pdf->toFile($fileDest);
+        $this->addUsedFile($fileDest . '.pdf');
+        $pdf->Close();
     }
 
     public function testWriteSimpleTextWithoutPage()
@@ -76,6 +80,8 @@ class WriterTest extends PdfTestCase
         $pdf = $writer->write($content);
         $this->assertInstanceOf(AbstractPDF::class, $pdf);
         $pdf->toFile($fileDest);
+        $this->addUsedFile($fileDest . '.pdf');
+        $pdf->Close();
     }
 
     public function testWriteSimpleTextWithOptions()
@@ -88,6 +94,8 @@ class WriterTest extends PdfTestCase
         ]);
         $this->assertInstanceOf(AbstractPDF::class, $pdf);
         $pdf->toFile($fileDest);
+        $this->addUsedFile($fileDest . '.pdf');
+        $pdf->Close();
     }
 
     public function testWriteArrayString()
@@ -103,6 +111,8 @@ class WriterTest extends PdfTestCase
         ]);
         $this->assertInstanceOf(AbstractPDF::class, $pdf);
         $pdf->toFile($fileDest);
+        $this->addUsedFile($fileDest . '.pdf');
+        $pdf->Close();
     }
 
     public function testWriteObject()
@@ -119,5 +129,7 @@ class WriterTest extends PdfTestCase
         ]);
         $this->assertInstanceOf(AbstractPDF::class, $pdf);
         $pdf->toFile($fileDest);
+        $this->addUsedFile($fileDest . '.pdf');
+        $pdf->Close();
     }
 }

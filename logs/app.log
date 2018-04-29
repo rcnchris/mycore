@@ -964,3 +964,10 @@
 [2018-04-24 01:28:14] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"9db7144"}
 [2018-04-24 01:28:22] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"ca293b9"}
 [2018-04-24 09:23:17] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"3ff616f"}
+[2018-04-24 17:57:53] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"9e0877d"}
+[2018-04-25 16:49:06] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"6e815b6"}
+[2018-04-26 13:37:19] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"8d55c19"}
+[2018-04-26 17:14:33] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"856cf85"}
+[2018-04-29 10:03:32] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"d4f9500"}
+[2018-04-29 10:21:27] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"0e24db1"}
+[2018-04-29 10:22:15] My Core.INFO: GET /_lab/mycore/orm/src-manager : 200 [] {"uid":"9523b05"}

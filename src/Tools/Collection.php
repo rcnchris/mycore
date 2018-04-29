@@ -531,6 +531,11 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
         return is_array($maxItem) ? new self($maxItem) : $maxItem;
     }
 
+    /**
+     * Obtenir la somme des valeurs d'une collection
+     *
+     * @return number
+     */
     public function sum()
     {
         return array_sum($this->items);

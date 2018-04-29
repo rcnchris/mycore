@@ -1,7 +1,7 @@
 <?php
 /**
- * Fichier JoinedFilePdf.php du 23/04/2018
- * Description : Fichier de la classe JoinedFilePdf
+ * Fichier RessourcesPdf.php du 26/04/2018
+ * Description : Fichier de la classe RessourcesPdf
  *
  * PHP version 5
  *
@@ -18,11 +18,11 @@
 
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
-use Rcnchris\Core\PDF\Behaviors\JoinedFilePdfTrait;
+use Rcnchris\Core\PDF\Behaviors\RessourcesPdfTrait;
 use Tests\Rcnchris\Core\PDF\DocPdf;
 
 /**
- * Class JoinedFilePdf
+ * Class RessourcesPdf
  *
  * @category PDF
  *
@@ -32,8 +32,7 @@ use Tests\Rcnchris\Core\PDF\DocPdf;
  *
  * @version  Release: <1.0.0>
  */
-class JoinedFilePdf extends DocPdf
+class RessourcesPdf extends DocPdf
 {
-    use JoinedFilePdfTrait;
-
+    use RessourcesPdfTrait;
 }

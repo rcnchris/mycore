@@ -157,9 +157,9 @@ class BaseTestCase extends TestCase
     /**
      * Vérifie le comportement d'un objet qui implémente ArrayAccess
      *
-     * @param object $object Objet à tester
-     * @param string $key    Nom d'une clé du tableau
-     * @param mixed  $expect Valeur attendue
+     * @param object $object  Objet à tester
+     * @param string $key     Nom d'une clé du tableau
+     * @param mixed  $expect  Valeur attendue
      * @param array  $methods Liste des méthodes à tester
      */
     protected function assertArrayAccess($object, $key, $expect, array $methods = [])
@@ -187,7 +187,8 @@ class BaseTestCase extends TestCase
                 // offsetExists
                 $this->assertTrue(
                     isset($object[$key])
-                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetExists pour $class")
+                    ,
+                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetExists pour $class")
                 );
             }
             if ($method === 'offsetGet') {
@@ -195,7 +196,8 @@ class BaseTestCase extends TestCase
                 $this->assertEquals(
                     $expect
                     , $object[$key]
-                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetGet pour $class")
+                    ,
+                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetGet pour $class")
                 );
             }
             if ($method === 'offsetSet') {
@@ -203,16 +205,34 @@ class BaseTestCase extends TestCase
                 $this->assertEquals(
                     $expect
                     , $object[$key]
-                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetSet pour $class")
+                    ,
+                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetSet pour $class")
                 );
             }
             if ($method === 'offsetUnset') {
                 unset($object[$key]);
                 $this->assertFalse(
                     isset($object[$key])
-                    , $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetUnset pour $class")
+                    ,
+                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetUnset pour $class")
                 );
             }
+        }
+    }
+
+    /**
+     * Vérifie la présence d'une liste de méthodes dans un objet
+     *
+     * @param object $object  Instance de l'objet
+     * @param array  $methods Liste des méthodes dont i lfaut vérifier la présence
+     */
+    public function assertObjectHasMethods($object, array $methods)
+    {
+        foreach ($methods as $methodName) {
+            $this->assertTrue(
+                method_exists($object, $methodName),
+                $this->getMessage("La méthode $methodName n'existe pas dans la clase " . get_class($object))
+            );
         }
     }
 
@@ -236,7 +256,8 @@ class BaseTestCase extends TestCase
         $this->assertInternalType(
             'string'
             , $object->serialize()
-            , $this->getMessage("Le retour de la méthode 'serialize' n'est pas au format string pour l'instance de $class")
+            ,
+            $this->getMessage("Le retour de la méthode 'serialize' n'est pas au format string pour l'instance de $class")
         );
 
         $this->assertTrue(
@@ -336,5 +357,23 @@ class BaseTestCase extends TestCase
                 unlink($file);
             }
         }
+    }
+
+    /**
+     * Obtenir la configuration des tests
+     *
+     * @param string|null $key Nom d'une clé de la configuration
+     *
+     * @return mixed
+     */
+    protected function getConfig($key = null)
+    {
+        $config = require $this->rootPath() . '/tests/config.php';
+        if (is_null($key)) {
+            return $config;
+        } elseif (array_key_exists($key, $config)) {
+            return $config[$key];
+        }
+        return false;
     }
 }

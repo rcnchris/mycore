@@ -422,4 +422,47 @@ trait ComponentsPdfTrait
         }
         return $this;
     }
+
+    /**
+     * Génère une MultiCell avec une puce ou plusieurs
+     *
+     * @param double       $w       Largeur
+     * @param double       $h       Hauteur
+     * @param string       $blt     Puce
+     * @param string|array $content Texte ou tableau de texte
+     * @param int|null     $border  Bordure
+     * @param string|null  $align   Alignement
+     * @param bool|null    $fill    Fill ?
+     *
+     * @return $this
+     */
+    public function puce($w, $h, $blt, $content, $border = 0, $align = 'J', $fill = false)
+    {
+        // Get bullet width including margins
+        $blt_width = $this->GetStringWidth($blt) + $this->cMargin * 2;
+
+        // Save x
+        $bak_x = $this->x;
+
+        if (is_string($content)) {
+            // Output bullet
+            $this->Cell($blt_width, $h, $blt, 0, '', $fill);
+
+            // Output text
+            $this->MultiCell($w - $blt_width, $h, utf8_decode($content), $border, $align, $fill);
+        } elseif (is_array($content)) {
+            foreach ($content as $item) {
+                //Output bullet
+                $this->Cell($blt_width, $h, $blt, 0, '', $fill);
+
+                //Output text
+                $this->MultiCell($w - $blt_width, $h, $item, $border, $align, $fill);
+            }
+        }
+
+        // Restore x
+        $this->x = $bak_x;
+
+        return $this;
+    }
 }

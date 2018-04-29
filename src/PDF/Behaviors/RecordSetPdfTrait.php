@@ -155,8 +155,7 @@ trait RecordSetPdfTrait
                 $this->propertiesByCol[$i]['header']['name'] = $headerName;
 
                 // Police
-                if (
-                    !is_null($this->properties['headerFont'])
+                if (!is_null($this->properties['headerFont'])
                     && in_array($this->properties['headerFont'], $this->getFonts())
                 ) {
                     $this->propertiesByCol[$i]['header']['fontFamily'] = $this->properties['headerFont'];
@@ -165,8 +164,7 @@ trait RecordSetPdfTrait
                 }
 
                 // Taille de la police
-                if (
-                    !is_null($this->properties['headerFontSize'])
+                if (!is_null($this->properties['headerFontSize'])
                     && is_numeric($this->properties['headerFontSize'])
                 ) {
                     $this->propertiesByCol[$i]['header']['fontSize'] = $this->properties['headerFontSize'];
@@ -175,8 +173,7 @@ trait RecordSetPdfTrait
                 }
 
                 // Style
-                if (
-                    !is_null($this->properties['headerFontStyle'])
+                if (!is_null($this->properties['headerFontStyle'])
                     && is_string($this->properties['headerFontStyle'])
                 ) {
                     $this->propertiesByCol[$i]['header']['fontStyle'] = $this->properties['headerFontStyle'];
@@ -188,8 +185,7 @@ trait RecordSetPdfTrait
                 $this->propertiesByCol[$i]['header']['fill'] = $this->properties['headerFill'];
 
                 // Alignement
-                if (
-                    !is_null($this->properties['headerAlign'])
+                if (!is_null($this->properties['headerAlign'])
                     && is_string($this->properties['headerAlign'])
                 ) {
                     $this->propertiesByCol[$i]['header']['align'] = $this->properties['headerAlign'];
