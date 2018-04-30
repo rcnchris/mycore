@@ -209,9 +209,6 @@ Ajoute des extensions à Twig.
 -------
 
 ## Todo <progress></progress>
-- ORM
- - Méthode find avec jointure, défaillante
- - Relations d'un model
 - Synology
  - Utilisation des cookies
 - Twig
