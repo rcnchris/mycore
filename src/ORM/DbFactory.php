@@ -174,7 +174,6 @@ class DbFactory
         // Cas particulier de l'utilisation d'un fichier de base de données
         if (isset($parts['file']) && !is_null($parts['file'])) {
             self::$dsn = $driver . $sepDriver . $parts['file'];
-            //var_dump(self::$dsn);
         } else {
             self::$dsn = $driver . $sepDriver
                 . "host=" . $parts['host']

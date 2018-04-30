@@ -1,9 +1,9 @@
 <?php
 namespace Tests\Rcnchris\Core\Tools;
 
+use Rcnchris\Core\Tools\Collection;
 use Rcnchris\Core\Tools\Folder;
 use Rcnchris\Core\Tools\Myvar;
-use Slim\Collection;
 use Tests\Rcnchris\BaseTestCase;
 use Tests\Rcnchris\Core\ORM\OrmTestCase;
 
@@ -292,7 +292,14 @@ class MyvarTest extends BaseTestCase
         $this->assertEquals(
             ['name', 'year', 'genre']
             , $this->makeVar($this->item)->getProperties()
-            , $this->getMessage("La liste des propriétés du tableau ne correspond pas au noms de clés du tableau")
+            , $this->getMessage("La liste des propriétés du tableau ne correspond pas aux noms de clés du tableau")
         );
+    }
+
+    public function testGetClass()
+    {
+        $c = new Collection('ola, ole, oli');
+        $this->assertEquals('Rcnchris\Core\Tools\Collection', $this->makeVar($c)->getClass());
+        $this->assertEquals('Collection', $this->makeVar($c)->getClass(true));
     }
 }

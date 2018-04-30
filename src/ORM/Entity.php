@@ -58,11 +58,13 @@ class Entity
     /**
      * Définir la date de création
      *
-     * @param $datetime
+     * @param string|null $datetime Date
      */
-    public function setCreated($datetime)
+    public function setCreated($datetime = null)
     {
-        if (is_string($datetime)) {
+        if (is_null($datetime)) {
+            $this->created = new \DateTime(date('y-m-d H:i:s'));
+        } elseif (is_string($datetime)) {
             $this->created = new \DateTime($datetime);
         }
     }
@@ -70,11 +72,13 @@ class Entity
     /**
      * Définir la date de modification
      *
-     * @param $datetime
+     * @param string|null $datetime Date
      */
-    public function setModified($datetime)
+    public function setModified($datetime = null)
     {
-        if (is_string($datetime)) {
+        if (is_null($datetime)) {
+            $this->modified = new \DateTime(date('y-m-d H:i:s'));
+        } elseif (is_string($datetime)) {
             $this->modified = new \DateTime($datetime);
         }
     }

@@ -19,6 +19,11 @@ class BaseTestCase extends TestCase
     const TESTS_FOLDER = '/tests';
 
     /**
+     * Retour console bavard
+     */
+    const VERBOSE = true;
+
+    /**
      * Liste des fichiers utilisés pour les tests
      *
      * @var array
@@ -68,7 +73,9 @@ class BaseTestCase extends TestCase
      */
     public function addUsedFile($file)
     {
-        $this->ekoMessage('Création du fichier ' . basename($file));
+        if ($this::VERBOSE) {
+            $this->ekoMessage('Création du fichier ' . basename($file));
+        }
         array_push($this->usedFiles, $file);
     }
 
@@ -80,18 +87,20 @@ class BaseTestCase extends TestCase
      */
     protected function ekoTitre($titre = '', $isTest = false)
     {
-        $methods = get_class_methods(get_class($this));
-        $tests = array_map(function ($method) {
-            if (substr($method, 0, 4) === 'test') {
-                return $method;
-            };
-        }, $methods);
-        $tests = count(array_filter($tests));
-        if ($isTest === true) {
-            $tests--;
+        if ($this::VERBOSE) {
+            $methods = get_class_methods(get_class($this));
+            $tests = array_map(function ($method) {
+                if (substr($method, 0, 4) === 'test') {
+                    return $method;
+                };
+            }, $methods);
+            $tests = count(array_filter($tests));
+            if ($isTest === true) {
+                $tests--;
+            }
+            $parts = explode(' - ', $titre);
+            echo "\n\033[0;36m{$parts[0]}\033[m - {$parts[1]} (\033[0;32m$tests\033[m)\n";
         }
-        $parts = explode(' - ', $titre);
-        echo "\n\033[0;36m{$parts[0]}\033[m - {$parts[1]} (\033[0;32m$tests\033[m)\n";
     }
 
     /**
@@ -121,12 +130,16 @@ class BaseTestCase extends TestCase
      */
     protected function getMessage($message)
     {
-        return "\033[0;33m$message\033[m";
+        if ($this::VERBOSE) {
+            return "\033[0;33m$message\033[m";
+        }
     }
 
     protected function ekoMsgInfo($message)
     {
-        echo "\033[0;34m$message\n\033[m";
+        if ($this::VERBOSE) {
+            echo "\033[0;34m$message\n\033[m";
+        }
     }
 
     /**
@@ -157,10 +170,13 @@ class BaseTestCase extends TestCase
     /**
      * Vérifie le comportement d'un objet qui implémente ArrayAccess
      *
-     * @param object $object  Objet à tester
-     * @param string $key     Nom d'une clé du tableau
-     * @param mixed  $expect  Valeur attendue
-     * @param array  $methods Liste des méthodes à tester
+     * ### Exemple
+     * - `$this->assertArrayAccess($result, 1, ['id' => 2, 'title' => 'Page'], ['Exists', 'Get']);`
+     *
+     * @param object     $object  Objet à tester
+     * @param string     $key     Nom d'une clé du tableau
+     * @param mixed      $expect  Valeur attendue
+     * @param array|null $methods Liste des méthodes à tester
      */
     protected function assertArrayAccess($object, $key, $expect, array $methods = [])
     {
@@ -184,37 +200,31 @@ class BaseTestCase extends TestCase
         foreach ($methods as $method) {
 
             if ($method === 'offsetExists') {
-                // offsetExists
                 $this->assertTrue(
-                    isset($object[$key])
-                    ,
-                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetExists pour $class")
+                    isset($object[$key]),
+                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas $method pour $class")
                 );
             }
             if ($method === 'offsetGet') {
-                // offsetGet
                 $this->assertEquals(
-                    $expect
-                    , $object[$key]
-                    ,
-                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetGet pour $class")
+                    $expect,
+                    $object[$key],
+                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas $method pour $class")
                 );
             }
             if ($method === 'offsetSet') {
                 $object[$key] = $expect;
                 $this->assertEquals(
-                    $expect
-                    , $object[$key]
-                    ,
-                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetSet pour $class")
+                    $expect,
+                    $object[$key],
+                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas $method pour $class")
                 );
             }
             if ($method === 'offsetUnset') {
                 unset($object[$key]);
                 $this->assertFalse(
-                    isset($object[$key])
-                    ,
-                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas offsetUnset pour $class")
+                    isset($object[$key]),
+                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas $method pour $class")
                 );
             }
         }
@@ -353,7 +363,9 @@ class BaseTestCase extends TestCase
         // Supprime les fichiers utilisés pour les tests
         foreach ($this->usedFiles as $file) {
             if (file_exists($file)) {
-                $this->ekoMessage('Suppression du fichier ' . basename($file));
+                if ($this::VERBOSE) {
+                    $this->ekoMessage('Suppression du fichier ' . basename($file));
+                }
                 unlink($file);
             }
         }

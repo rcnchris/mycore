@@ -201,6 +201,7 @@ class ComposerTest extends BaseTestCase {
             $this->composer->getRequires('fake')
             , $this->getMessage("La clé 'fake' ne doit pas être dans le retour de getRequires avec le paramètre 'fake'")
         );
+        $this->assertNotEmpty($this->composer->getRequires('req', true));
     }
 
     public function testCallMethod()

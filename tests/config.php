@@ -23,7 +23,6 @@ return [
     'app.templates' => dirname(__DIR__) . '/app/Templates',
     'app.logsPath' => dirname(__DIR__) . '/logs/app.log',
     'datasources' => [
-
         'default' => [
             'host' => 'dbApp',
             'username' => '',
@@ -40,7 +39,7 @@ return [
             'dbName' => 'dbTests',
             'sgbd' => 'sqlite',
             'port' => 0,
-            'fileName' => realpath(dirname(__DIR__) . '/tests/Core/ORM/dbTests.sqlite')
+            'fileName' => realpath(dirname(__DIR__) . '/Core/ORM/dbTests.sqlite')
         ]
     ]
 ];

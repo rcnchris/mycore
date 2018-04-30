@@ -257,6 +257,26 @@ class Myvar
     }
 
     /**
+     * Obtenir le nom de la classe de la variable
+     *
+     * @param bool $shortName Retourner le nom sans le namespace
+     *
+     * @return string|bool
+     */
+    public function getClass($shortName = false)
+    {
+        $className = false;
+        if ($this->isObject()) {
+            $className = get_class($this->var);
+            if ($shortName) {
+                $className = explode('\\', $className);
+                $className = end($className);
+            }
+        }
+        return $className;
+    }
+
+    /**
      * Obtenir la classe parente
      *
      * @return bool|string

@@ -87,6 +87,22 @@ class DebugExtension extends \Twig_Extension
     }
 
     /**
+     * Obtenir les constantes définies ou l'une d'entre elles
+     *
+     * @param string|null $key Nom de l'extension
+     *
+     * @return array [mixed]
+     */
+    public function getConstants($key = null)
+    {
+        $constants = get_defined_constants(true);
+        if (!is_null($key) && array_key_exists($key, $constants)) {
+            return $constants[$key];
+        }
+        return $constants;
+    }
+
+    /**
      * Obtenir la liste des propriétés publiques d'un objet
      * - Filtre
      *
@@ -186,9 +202,9 @@ class DebugExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('r', [$this, 'phpRef'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFunction('vd', [$this, 'vd'], ['is_safe' => ['html']])
+            new \Twig_SimpleFunction('r', [$this, 'phpRef'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('vd', [$this, 'vd'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('getConstants', [$this, 'getConstants'], ['is_safe' => ['html']])
         ];
     }
 

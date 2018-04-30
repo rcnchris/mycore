@@ -31,11 +31,7 @@ use Tests\Rcnchris\BaseTestCase;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license  https://github.com/rcnchris/fmk-php GPL
- *
  * @version  Release: <1.0.0>
- *
- * @link     https://github.com/rcnchris/fmk-php on Github
  */
 class FlashServiceTest extends BaseTestCase
 {
@@ -74,7 +70,6 @@ class FlashServiceTest extends BaseTestCase
 
     public function testDeleteFlashAfterGettingItError()
     {
-        $this->ekoTitre("Session - Messages Flash");
         $this->flashService->error('Erreur');
         $this->assertEquals('Erreur', $this->flashService->get('error'));
         $this->assertNull($this->session->get('flash'));

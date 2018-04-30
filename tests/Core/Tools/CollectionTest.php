@@ -592,4 +592,10 @@ class CollectionTest extends BaseTestCase {
         $c->merge(['year' => 2009], true);
         $this->assertEquals(['name' => 'Mathis', 'year' => 2009], $c->toArray());
     }
+
+    public function testSum()
+    {
+        $numbers = [2, 4, 8, 16];
+        $this->assertEquals(array_sum($numbers), $this->makeCollection($numbers)->sum());
+    }
 }

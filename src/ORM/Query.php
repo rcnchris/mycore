@@ -32,7 +32,7 @@ use Traversable;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @version  Release: <1.4.7>
+ * @version  Release: <1.4.8>
  *
  * @since    Release: <0.1.1>
  */
@@ -328,7 +328,14 @@ class Query implements \IteratorAggregate
         if ($this->select) {
             $parts[] = join(', ', $this->select);
         } else {
-            $parts[] = '*';
+            if (count($this->from) > 1) {
+                $select = array_map(function ($table) {
+                    return $table . '.*';
+                }, $this->from);
+                $parts[] = join(', ', $select);
+            } else {
+                $parts[] = current($this->from) . '.*';
+            }
         }
 
         // FROM
@@ -402,5 +409,15 @@ class Query implements \IteratorAggregate
     public function getPdo()
     {
         return $this->pdo;
+    }
+
+    /**
+     * Obtenir la liste des tables utilisées dans la requête
+     *
+     * @return array[string]
+     */
+    public function tables()
+    {
+        return $this->from;
     }
 }

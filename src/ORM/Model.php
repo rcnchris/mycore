@@ -104,7 +104,7 @@ class Model
     public function makeQuery()
     {
         return (new Query($this->getPdo()))
-            ->from($this->getTable(true))
+            ->from($this->getTable(false))
             ->into($this->entity);
     }
 
@@ -162,7 +162,7 @@ class Model
      *
      * ### Exemple
      * - `$posts->find(12)`
-     * - `$posts->find(12, ['categories' => 'categories.id = p.id'])`
+     * - `$posts->find(12, ['categories' => 'categories.id = posts.id'])`
      *
      * @param int        $id
      * @param array|null $joins
@@ -178,12 +178,39 @@ class Model
             foreach ($joins as $table => $condition) {
                 $query = $query->join($table, $condition);
             }
-            $t = $this->getTable();
-            $query->where($t[0] . ".id = $id");
+            $query->where($this->getTable() . ".id = $id");
         } else {
             $query->where("id = $id");
         }
         return $query->fetchOrFail();
+    }
+
+    /**
+     * Obtenir une requête avec la jointure sur une relation connue
+     *
+     * @param string $tableName Nom de la table
+     *
+     * @return Query|bool
+     */
+    public function withRelation($tableName)
+    {
+        $relation = array_map(function ($r) use ($tableName) {
+            if ($r->refTable === $tableName) {
+                return $r;
+            }
+            return false;
+        }, $this->getRelations())[0];
+
+        if (!$relation) {
+            return $relation;
+        }
+
+        $query = $this->makeQuery()
+            ->join(
+                $relation->refTable,
+                $relation->mainTable . '.' . $relation->foreignKey . " = " . $relation->refTable . ".id"
+            );
+        return $query;
     }
 
     /**
@@ -461,7 +488,10 @@ class Model
      */
     protected function belongsTo($tableName, array $options = [])
     {
-        $options = array_merge(['type' => __FUNCTION__], $options);
+        $options = array_merge([
+            'type' => __FUNCTION__,
+            'mainTable' => $this->getTable()
+        ], $options);
         $this->addRelation(strtolower($tableName), $options);
     }
 
@@ -482,7 +512,10 @@ class Model
      */
     protected function hasMany($tableName, array $options = [])
     {
-        $options = array_merge(['type' => __FUNCTION__], $options);
+        $options = array_merge([
+            'type' => __FUNCTION__,
+            'mainTable' => $this->getTable()
+        ], $options);
         $this->addRelation($tableName, $options);
     }
 

@@ -37,11 +37,18 @@ class Relation
 {
 
     /**
-     * Nom de la table
+     * Nom de la table principale
      *
      * @var string
      */
-    public $tableName;
+    public $mainTable;
+
+    /**
+     * Nom de la table à joindre
+     *
+     * @var string
+     */
+    public $refTable;
 
     /**
      * Constructeur
@@ -51,7 +58,7 @@ class Relation
      */
     public function __construct($tableName, array $options)
     {
-        $this->tableName = $tableName;
+        $this->refTable = $tableName;
         foreach ($options as $k => $v) {
             $this->$k = $v;
         }

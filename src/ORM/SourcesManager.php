@@ -38,6 +38,13 @@ class SourcesManager
 {
 
     /**
+     * Nom de la source de données par défaut
+     *
+     * @const string
+     */
+    const DEFAULT_SOURCENAME = 'default';
+
+    /**
      * Liste de toutes les sources de données
      * sous la forme key => [config]
      *
@@ -114,7 +121,7 @@ class SourcesManager
     public function connect($key = null)
     {
         if (is_null($key)) {
-            $key = 'default';
+            $key = $this::DEFAULT_SOURCENAME;
         }
         $config = $this->getSources($key);
         return DbFactory::get(
@@ -123,7 +130,8 @@ class SourcesManager
             $config['username'],
             $config['password'],
             $config['dbName'],
-            $config['sgbd']
+            $config['sgbd'],
+            isset($config['fileName']) ? $config['fileName'] : null
         );
     }
 
