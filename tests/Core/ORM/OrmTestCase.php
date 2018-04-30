@@ -23,6 +23,7 @@ class OrmTestCase extends BaseTestCase
 
     public function setUp()
     {
+        $this->markTestSkipped('Uniquement en local');
         $this->manager = $this->getManager();
     }
 
