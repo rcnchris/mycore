@@ -781,8 +781,22 @@ trait DesignerPdfTrait
                     }
                 }
                 if (is_array($value)) {
-                    $treeHeight += $this->tree($value, $x, $nodeFormat, $childFormat, $w, $h, $border, $fill,
-                        $align, $indent, $vspacing, $drawlines, $level + 1, $hcell);
+                    $treeHeight += $this->tree(
+                        $value,
+                        $x,
+                        $nodeFormat,
+                        $childFormat,
+                        $w,
+                        $h,
+                        $border,
+                        $fill,
+                        $align,
+                        $indent,
+                        $vspacing,
+                        $drawlines,
+                        $level + 1,
+                        $hcell
+                    );
                 }
                 $treeHeight += $hcell[$level][$c] + $vspacing;
                 $c++;
