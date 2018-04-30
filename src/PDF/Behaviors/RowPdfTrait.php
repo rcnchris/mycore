@@ -349,11 +349,21 @@ trait RowPdfTrait
                 'align' => isset($this->colsAlign[$i]) ? $this->colsAlign[$i] : 'L',
                 'border' => isset($this->colsBorder[$i]) ? $this->colsBorder[$i] : 0,
                 'fill' => isset($this->colsFill[$i]) ? $this->colsFill[$i] : false,
-                'fillColor' => isset($this->colsFillColors[$i]) ? $this->colsFillColors[$i] : $this->getToolColor('fill'),
-                'textColor' => isset($this->colsTextColors[$i]) ? $this->colsTextColors[$i] : $this->getToolColor('text'),
-                'drawColor' => isset($this->colsDrawColors[$i]) ? $this->colsDrawColors[$i] : $this->getToolColor('draw'),
-                'font' => isset($this->colsFont[$i]) ? $this->colsFont[$i] : $this->getFontProperty('family'),
-                'fontSize' => isset($this->colsFontSize[$i]) ? $this->colsFontSize[$i] : $this->getFontProperty('size'),
+                'fillColor' => isset($this->colsFillColors[$i])
+                    ? $this->colsFillColors[$i]
+                    : $this->getToolColor('fill'),
+                'textColor' => isset($this->colsTextColors[$i])
+                    ? $this->colsTextColors[$i]
+                    : $this->getToolColor('text'),
+                'drawColor' => isset($this->colsDrawColors[$i])
+                    ? $this->colsDrawColors[$i]
+                    : $this->getToolColor('draw'),
+                'font' => isset($this->colsFont[$i])
+                    ? $this->colsFont[$i]
+                    : $this->getFontProperty('family'),
+                'fontSize' => isset($this->colsFontSize[$i])
+                    ? $this->colsFontSize[$i]
+                    : $this->getFontProperty('size'),
             ];
         }
         return !is_null($indice) && array_key_exists($indice, $p)
