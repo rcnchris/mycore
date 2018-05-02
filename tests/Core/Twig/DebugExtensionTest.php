@@ -131,4 +131,16 @@ class DebugExtensionTest extends BaseTestCase {
         $this->assertTrue(true);
         $content = ob_get_clean();
     }
+
+    public function testIsType()
+    {
+        $a = ['ola', 'ole', 'oli'];
+        $c = new Collection($a);
+
+        $this->assertTrue($this->ext->isArray($a));
+        $this->assertTrue($this->ext->isObject($c));
+
+        $this->assertFalse($this->ext->isArray($c));
+        $this->assertFalse($this->ext->isObject($a));
+    }
 }

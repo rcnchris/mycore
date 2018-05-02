@@ -50,7 +50,8 @@ class DebugExtension extends \Twig_Extension
             new \Twig_SimpleFilter('getParentClass', [$this, 'getParentClass'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('getParentMethods', [$this, 'getParentMethods'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('getImplements', [$this, 'getImplements'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('getTraits', [$this, 'getTraits'], ['is_safe' => ['html']])
+            new \Twig_SimpleFilter('getTraits', [$this, 'getTraits'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('isObject', [$this, 'isObject'], ['is_safe' => ['html']])
         ];
     }
 
@@ -192,6 +193,30 @@ class DebugExtension extends \Twig_Extension
         $ret = is_object($value) ? class_uses($value) : false;
         sort($ret);
         return $ret;
+    }
+
+    /**
+     * Vérifie si la variable est un objet
+     *
+     * @param mixed $var Variable
+     *
+     * @return bool
+     */
+    public function isObject($var)
+    {
+        return is_object($var);
+    }
+
+    /**
+     * Vérifie si la variable est un tableau
+     *
+     * @param mixed $var Variable
+     *
+     * @return bool
+     */
+    public function isArray($var)
+    {
+        return is_array($var);
     }
 
     /**

@@ -1093,3 +1093,7 @@
 [2018-04-30 16:19:05] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"084b732"}
 [2018-04-30 16:20:12] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"a2166ac"}
 [2018-04-30 16:20:34] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"65741fc"}
+[2018-05-01 11:21:47] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"a6a8da2"}
+[2018-05-01 11:21:50] My Core.INFO: GET /_lab/mycore/application/show : 200 [] {"uid":"21804ed"}
+[2018-05-02 05:45:22] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"4339968"}
+[2018-05-02 05:45:31] My Core.INFO: GET /_lab/mycore/orm/db-model : 200 [] {"uid":"b062146"}
