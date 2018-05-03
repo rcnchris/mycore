@@ -10,7 +10,7 @@ return [
      * - dev : Tests Travis
      * - prod : Production
      */
-    'config.name' => 'local',
+    'config.name' => 'dev',
 
     /**
      * Personnalisation
