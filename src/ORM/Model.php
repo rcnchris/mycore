@@ -558,4 +558,13 @@ class Model
     {
         return array_keys(get_class_vars($this->entity));
     }
+
+    /**
+     * Obtenir l'ensemble de la table dans un tableau
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->findAll()->all()->toArray();
+    }
 }

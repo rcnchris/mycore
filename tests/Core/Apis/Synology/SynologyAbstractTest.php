@@ -7,10 +7,11 @@ use Tests\Rcnchris\BaseTestCase;
 class SynologyAbstractTest extends BaseTestCase
 {
 
-
     public function setUp()
     {
-        $this->markTestSkipped('Uniquement en local');
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped('Uniquement en local');
+        }
     }
 
     /**

@@ -4,6 +4,13 @@ return [
     'rootPath' => function () {
         return dirname(__DIR__);
     },
+    /**
+     * Nom de la configuration à utiliser
+     * - local : Tests locaux
+     * - dev : Tests Travis
+     * - prod : Production
+     */
+    'config.name' => 'local',
 
     /**
      * Personnalisation

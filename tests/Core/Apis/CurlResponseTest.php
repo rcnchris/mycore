@@ -26,7 +26,9 @@ class CurlResponseTest extends BaseTestCase {
 
     public function setUp()
     {
-        $this->markTestSkipped('Uniquement en local');
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped('Uniquement en local');
+        }
         $this->urlRandomUser = 'https://randomuser.me/api';
         $this->randomUserApi = $this->makeApi($this->urlRandomUser);
         $this->response = $this->makeResponse();

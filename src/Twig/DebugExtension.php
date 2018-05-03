@@ -51,7 +51,8 @@ class DebugExtension extends \Twig_Extension
             new \Twig_SimpleFilter('getParentMethods', [$this, 'getParentMethods'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('getImplements', [$this, 'getImplements'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('getTraits', [$this, 'getTraits'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('isObject', [$this, 'isObject'], ['is_safe' => ['html']])
+            new \Twig_SimpleFilter('isObject', [$this, 'isObject'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('isArray', [$this, 'isArray'], ['is_safe' => ['html']])
         ];
     }
 

@@ -111,7 +111,9 @@ class OneAPITest extends BaseTestCase {
 
     public function testRequest()
     {
-        $this->markTestSkipped('Uniquement en local');
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped('Uniquement en local');
+        }
         $api = $this->makeApi($this->urlRandomUser);
         $response = $api->r();
         $this->assertInstanceOf(CurlResponse::class, $response);
@@ -120,7 +122,9 @@ class OneAPITest extends BaseTestCase {
 
     public function testRequestWithParamString()
     {
-        $this->markTestSkipped('Uniquement en local');
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped('Uniquement en local');
+        }
         $api = $this->makeApi($this->urlRandomUser);
         $response = $api->addParams('results', 3)->r();
         $this->assertInternalType('string', $response->toJson());
@@ -129,7 +133,9 @@ class OneAPITest extends BaseTestCase {
 
     public function testRequestWithParamArray()
     {
-        $this->markTestSkipped('Uniquement en local');
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped('Uniquement en local');
+        }
         $api = $this->makeApi($this->urlRandomUser);
         $response = $api->r(['results' => 3]);
         $this->assertInternalType('string', $response->toJson());
@@ -138,14 +144,18 @@ class OneAPITest extends BaseTestCase {
 
     public function testRequestWithValidUrlWithParams()
     {
-        $this->markTestSkipped('Uniquement en local');
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped('Uniquement en local');
+        }
         $api = $this->makeApi();
         $this->assertNotEmpty($api->r('https://randomuser.me/api?results=3')->toArray());
     }
 
     public function testRequestWithValidUrlWithAddParams()
     {
-        $this->markTestSkipped('Uniquement en local');
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped('Uniquement en local');
+        }
         $api = $this->makeApi();
         $api->addParams('results', 3);
         $response = $api->r('https://randomuser.me/api')->toArray();
@@ -155,7 +165,9 @@ class OneAPITest extends BaseTestCase {
 
     public function testRequestWithoutUrl()
     {
-        $this->markTestSkipped('Uniquement en local');
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped('Uniquement en local');
+        }
         $api = $this->makeApi('');
         $this->expectException(ApiException::class);
         $api->r();
@@ -163,7 +175,9 @@ class OneAPITest extends BaseTestCase {
 
     public function testWithUserAgent()
     {
-        $this->markTestSkipped('Uniquement en local');
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped('Uniquement en local');
+        }
         $api = $this->makeApi($this->urlRandomUser)->withUserAgent();
         $this->assertCount(3, $api->addParams('results', 3)->r()->toArray('results'));
     }

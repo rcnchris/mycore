@@ -178,4 +178,9 @@ class ModelTest extends OrmTestCase
         $this->seedsPosts();
         $this->assertFalse($this->getModel('posts')->withRelation('fake'));
     }
+
+    public function testToArray()
+    {
+        $this->assertEquals($this->model->findAll()->all()->toArray(), $this->model->toArray());
+    }
 }

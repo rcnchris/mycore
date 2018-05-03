@@ -23,7 +23,7 @@ use Intervention\Image\ImageManagerStatic;
 /**
  * Class Image
  * <ul>
- * <li>Facilite la maniulation des images</li>
+ * <li>Facilite la manipulation des images</li>
  * </ul>
  *
  * @category Images
@@ -59,7 +59,9 @@ class Image
      */
     public function __construct($source = null)
     {
-        $this->setSource($source);
+        if (!is_null($source)) {
+            $this->setSource($source);
+        }
     }
 
     /**
