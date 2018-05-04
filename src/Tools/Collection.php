@@ -62,8 +62,9 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      *
      * @param mixed|null  $items Liste de données (chaîne avec séparateur, json, array, objet)
      * @param string|null $name  Nom de la collection
+     * @param string      $sep Caractère de séparation d'un item dans une chaîne de caractères
      */
-    public function __construct($items = null, $name = null)
+    public function __construct($items = null, $name = null, $sep = ',')
     {
         if (is_null($items)) {
             $this->items = [];
