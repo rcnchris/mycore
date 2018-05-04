@@ -1178,3 +1178,7 @@
 [2018-05-04 07:25:49] My Core.INFO: GET /_lab/mycore/orm/cake : 200 [] {"uid":"0a7ddb9"}
 [2018-05-04 07:25:51] My Core.INFO: GET /_lab/mycore/orm/cake : 200 [] {"uid":"6caa2c3"}
 [2018-05-04 07:26:20] My Core.INFO: GET /_lab/mycore/orm/cake : 200 [] {"uid":"dc2185f"}
+[2018-05-04 07:36:09] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"5536814"}
+[2018-05-04 07:36:33] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"88a715f"}
+[2018-05-04 07:46:32] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"4f9e90d"}
+[2018-05-04 07:46:37] My Core.INFO: GET /_lab/mycore/ : 200 [] {"uid":"124b2b8"}
