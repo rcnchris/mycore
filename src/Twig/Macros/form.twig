@@ -1,0 +1,129 @@
+<!-- INPUT -->
+{% macro input(name, value, options) %}
+    <div class="form-group">
+
+        {% if options.label is defined %}
+            <label for="{{ name }}">{{ options.label|raw }}</label>
+        {% endif %}
+
+        {% if options.prepend is defined %}
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">{{ options.prepend|raw }}</div>
+                </div>
+                <input type="{{ options.type|default('text') }}" class="form-control" id="{{ name }}" name="{{ name }}" aria-describedby="{{ name }}Help" placeholder="{{ options.placeholder }}" value="{{ value }}">
+            </div>
+        {% else %}
+            <input type="{{ options.type|default('text') }}" class="form-control" id="{{ name }}" name="{{ name }}" aria-describedby="{{ name }}Help" placeholder="{{ options.placeholder }}" value="{{ value }}">
+        {% endif %}
+
+        {% if options.help is defined %}
+            <small id="{{ name }}Help" class="form-text text-muted">{{ options.help|raw }}</small>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+<!-- INPUT FILE -->
+{% macro file(name, label) %}
+    <div class="form-group">
+        <div class="custom-file">
+            <input type="file" class="custom-file-input" id="{{ name }}" name="{{ name }}">
+            <label class="custom-file-label" for="customFile">{{ label }}</label>
+        </div>
+    </div>
+{% endmacro %}
+
+<!-- CHECKBOX -->
+{% macro checkbox(name, value, label) %}
+    {% if value == 1 %}
+        {% set checked = 'checked' %}
+    {% else %}
+        {% set checked = null %}
+    {% endif %}
+    <div class="custom-control custom-checkbox">
+        <input type="checkbox" class="custom-control-input" id="{{ name }}" name="{{ name }}" {{ checked }}>
+        <label class="custom-control-label" for="{{ name }}">{{ label }}</label>
+    </div>
+{% endmacro %}
+
+<!-- TEXTAREA -->
+{% macro textarea(name, value, options) %}
+    <div class="form-group">
+
+        {% if options.label is defined %}
+            <label for="{{ name }}">{{ options.label|raw }}</label>
+        {% endif %}
+
+        <textarea name="{{ name }}" id="{{ name }}" rows="{{ options.rows|default(10) }}" class="form-control" aria-describedby="{{ name }}Help" placeholder="{{ options.placeholder }}">{{ value }}</textarea>
+
+        {% if options.help is defined %}
+            <small id="{{ name }}Help" class="form-text text-muted">{{ options.help }}</small>
+        {% endif %}
+
+    </div>
+{% endmacro %}
+
+<!-- SELECT -->
+{% macro select(name, value, options) %}
+    <div class="form-group">
+
+        {% if options.label is defined %}
+            <label for="{{ name }}">{{ options.label|raw }}</label>
+        {% endif %}
+
+        {% if options.values is iterable %}
+            {% set required = options.required|default(null) %}
+
+            {% if options.prepend is defined %}
+                <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">{{ options.prepend|raw }}</div>
+                    </div>
+                    <select class="form-control" id="{{ name }}" name="{{ name }}" {{ options.multiple|default(null) }} {{ required }}>
+                        {% if options.empty %}
+                            {{ r(options) }}
+                            <option selected></option>
+                        {% endif %}
+                        {% for store, view in options.values %}
+                            {% if value is iterable and store in value|keys %}
+                                <option value="{{ store }}" selected>{{ view }}</option>
+                            {% elseif store == value %}
+                                <option value="{{ store }}" selected>{{ view }}</option>
+                            {% else %}
+                                <option value="{{ store }}">{{ view }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
+            {% else %}
+                <select class="form-control" id="{{ name }}" name="{{ name }}" {{ options.multiple|default(null) }} {{ required }}>
+                    {% if options.empty %}
+                        {{ r(options) }}
+                        <option selected></option>
+                    {% endif %}
+                    {% for store, view in options.values %}
+                        {% if value is iterable and store in value|keys %}
+                            <option value="{{ store }}" selected>{{ view }}</option>
+                        {% elseif store == value %}
+                            <option value="{{ store }}" selected>{{ view }}</option>
+                        {% else %}
+                            <option value="{{ store }}">{{ view }}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            {% endif %}
+
+
+        {% endif %}
+
+        {% if options.help is defined %}
+            <small id="{{ name }}Help" class="form-text text-muted">{{ options.help }}</small>
+        {% endif %}
+
+    </div>
+{% endmacro %}
+
+<!-- BUTTON -->
+{% macro button(type, label, class) %}
+    <button type="{{ type }}" class="{{ class }}">{{ label|raw }}</button>
+{% endmacro %}

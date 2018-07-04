@@ -195,6 +195,20 @@ class Composer implements \IteratorAggregate, \ArrayAccess
     }
 
     /**
+     * Obtenir le contenu au fomat JSON
+     *
+     * @param string|null $key Clé à extraire
+     *
+     * @return string
+     */
+    public function toJson($key = null)
+    {
+        return is_null($key)
+            ? json_encode($this->getIterator()->getArrayCopy())
+            : json_encode($this->$key);
+    }
+
+    /**
      * Obtenir le nombre de clés du contenu
      *
      * @return int

@@ -18,6 +18,7 @@
 
 namespace Rcnchris\Core\Twig;
 
+use Michelf\MarkdownExtra;
 use Rcnchris\Core\Tools\Text;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -51,10 +52,11 @@ class TextExtension extends Twig_Extension
     public function getFilters()
     {
         return [
-            new Twig_SimpleFilter('resume', [$this, 'resume'])
-            , new Twig_SimpleFilter('jsonDecode', [$this, 'jsonDecode'])
-            , new Twig_SimpleFilter('bitsSize', [$this, 'bitsSize'])
-            , new Twig_SimpleFilter('toSlug', [$this, 'toSlug'])
+            new Twig_SimpleFilter('resume', [$this, 'resume'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('jsonDecode', [$this, 'jsonDecode'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('bitsSize', [$this, 'bitsSize'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('toSlug', [$this, 'toSlug'], ['is_safe' => ['html']]),
+            new Twig_SimpleFilter('markdown', [$this, 'markdown'], ['is_safe' => ['html']])
         ];
     }
 
@@ -128,5 +130,17 @@ class TextExtension extends Twig_Extension
             $value /= 1024;
         }
         return round($value, $round) . $sizes[$i];
+    }
+
+    /**
+     * Retourne un contenu HTML à partir d'une source en Markdown
+     *
+     * @param string $value Contenu Markdown
+     *
+     * @return string
+     */
+    public function markdown($value)
+    {
+        return MarkdownExtra::defaultTransform($value);
     }
 }

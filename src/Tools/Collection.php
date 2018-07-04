@@ -217,6 +217,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      * Obtenir le premier élément de la collection
      *
      * @return mixed|Collection|null
+     * @see http://php.net/manual/fr/function.array-slice.php
      */
     public function first()
     {

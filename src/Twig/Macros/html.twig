@@ -1,0 +1,137 @@
+<!-- Surround with tag -->
+{% macro surround(value, tag, options) %}
+
+    <!-- Id de la balise -->
+    {% if options.id is defined %}
+    {% set id = options.id %}
+{% else %}
+    {% set id = null %}
+{% endif %}
+
+    <!-- Classe de la balise -->
+    {% if options.class is defined %}
+    {% set class = options.class %}
+{% else %}
+    {% set class = null %}
+{% endif %}
+
+    <{{ tag }} class="{{ class }}" id="{{ id }}">{{ value|raw }}</{{ tag }}>
+{% endmacro %}
+
+<!-- Présenter du code HTML -->
+{% macro htmlCode(value, tag) %}
+    <pre>
+<code>
+    &lt;{{ tag }}&gt;{{ value|raw }}&lt;/{{ tag }}&gt;
+</code>
+</pre>
+{% endmacro %}
+
+<!-- Link -->
+{% macro link(route, label, params, attributes) %}
+    <a href="{{ path_for(route, params|default({})) }}" class="{{ attributes.class }}" title="{{ attributes.title }}">{{ label|raw }}</a>
+{% endmacro %}
+
+<!-- Titre d'une page -->
+{% macro title(title, options) %}
+    <div class="row">
+        <div class="col">
+            <h1 class="display-4">
+                {% if options.icon is defined and options.icon|first == '<' %}
+                    {{ options.icon|raw }}
+                {% elseif options.icon is defined and options.icon|first != '<'%}
+                    {{ icon(options.icon) }}
+                {% endif %}
+
+                {{ title|raw }}
+
+                {% if options.count is defined %}
+                    <small>{{ options.count|number_format(0, ',', ' ')|badge('warning') }}</small>
+                {% endif %}
+
+                {% if options.link is defined %}
+                    <small><a href="{{ path_for(options.link.route) }}"
+                              class="{{ options.link.class }}">{{ icon(options.link.icon) }}</a></small>
+                {% endif %}
+            </h1>
+            {% if options.hr is defined %}
+                <hr/>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+<!-- Card -->
+{% macro card(class, options) %}
+
+    <div class="card {{ class }}">
+
+        {% if options.image is defined %}
+            <img class="card-img-top" src="{{ options.image }}" alt="Card image cap">
+        {% endif %}
+
+        {% if options.header is defined %}
+            <div class="card-header">
+                {{ options.header|raw }}
+            </div>
+        {% endif %}
+
+        <div class="card-body">
+
+            {% if options.title is defined %}
+                <h5 class="card-title">{{ options.title|raw }}</h5>
+            {% endif %}
+
+            {% if options.subtitle is defined %}
+                <h6 class="card-subtitle mb-2 text-muted">{{ options.subtitle|raw }}</h6>
+            {% endif %}
+
+            {% if options.content is defined %}
+                <p class="card-text">
+                    {{ options.content|raw }}
+                </p>
+            {% endif %}
+
+        </div>
+
+        {% if options.footer is defined %}
+            <div class="card-footer">
+                {{ options.footer|raw }}
+            </div>
+        {% endif %}
+
+    </div>
+
+{% endmacro %}
+
+<!-- Pastille statut -->
+{% macro pastille(title) %}
+    {% if title == 'En cours' %}
+        <span class="text-warning">{{ icon('dot-circle') }}</span>
+    {% elseif title == 'En attente' %}
+        <span class="text-info">{{ icon('pause-circle') }}</span>
+    {% elseif title == 'Terminé' %}
+        <span class="text-success">{{ icon('check-circle') }}</span>
+    {% else %}
+        {{ icon('circle') }}
+    {% endif %}
+{% endmacro %}
+
+<!-- Table -->
+{% macro table(items, options) %}
+    <table id="{{ options.name }}" class="{{ options.class }}">
+        <tbody>
+        {% for item in items %}
+            <tr>
+                {% if item is iterable %}
+                    {% for detail in item %}
+                        <td>{{ detail }}</td>
+                    {% endfor %}
+                {% else %}
+                    <td>{{ dump(item) }}</td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endmacro %}

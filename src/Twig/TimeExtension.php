@@ -73,7 +73,8 @@ class TimeExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('now', [$this, 'now'], ['is_safe' => ['html']])
+            new \Twig_SimpleFunction('now', [$this, 'now'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('dateDiff', [$this, 'dateDiff'], ['is_safe' => ['html']])
         ];
     }
 
@@ -85,5 +86,21 @@ class TimeExtension extends \Twig_Extension
     public function now()
     {
         return microtime(true);
+    }
+
+    /**
+     * Obtenir la différence entre deux dates
+     *
+     * @param string $date1
+     * @param string $date2
+     * @param bool   $absolute Toujours positif ?
+     *
+     * @return bool|\DateInterval
+     */
+    public function dateDiff($date1, $date2, $absolute = false)
+    {
+        $date1 = new \DateTime($date1);
+        $date2 = new \DateTime($date2);
+        return $date1->diff($date2, $absolute);
     }
 }

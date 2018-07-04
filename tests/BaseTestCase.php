@@ -167,6 +167,27 @@ class BaseTestCase extends TestCase
         $this->assertEquals($this->trim($expected), $this->trim($actual));
     }
 
+    protected function assertMagicMethods($object, $property, $expect, array $methods = [])
+    {
+        $allMethods = ['get', 'set', 'toString'];
+        if (empty($methods)) {
+            $methods = $allMethods;
+        }
+
+        if (in_array('get', $methods)) {
+            $this->assertEquals($expect, $object->$property);
+        }
+
+        if (in_array('set', $methods)) {
+            $object->$property = 'new';
+            $this->assertEquals('new', $object->$property);
+        }
+
+        if (in_array('toString', $methods)) {
+            $this->assertInternalType('string', (string)$object);
+        }
+    }
+
     /**
      * Vérifie le comportement d'un objet qui implémente ArrayAccess
      *
@@ -318,11 +339,9 @@ class BaseTestCase extends TestCase
 
         // Dépendances
         $dependancesFile = $this->rootPath() . '/app/dependances.php';
-        if (file_exists($dependancesFile)) {
-            $dependances = require $dependancesFile;
-        } else {
-            $dependances = [];
-        }
+        $dependances = file_exists($dependancesFile)
+            ? require $dependancesFile
+            : [];
 
         // Instantiation de Slim
         $app = new App(array_merge($settings, $dependances));

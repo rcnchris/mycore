@@ -92,24 +92,28 @@ class HtmlExtension extends \Twig_Extension
      * - Filtre
      *
      * @param mixed  $value Liste
-     * @param string $type  ul ou ol
+     * @param string $tag   `ul` ou `ol`
      *
      * @return string
      */
-    public function getList($value, $type = 'ul')
+    public function getList($value, $tag = 'ul')
     {
-        $html = "<$type>";
+        $html = "<$tag>";
         if (is_array($value)) {
-            foreach ($value as $key => $value) {
-                if (is_string($value)) {
-                    $html .= "<li>$key : $value</li>";
-                } elseif (is_object($value)) {
-                    $html .= "<li>$key : " . get_class($value) . "</li>";
-                } elseif (is_array($value)) {
-                    $html .= "<li>$key : " . array_keys($value) . "</li>";
+            foreach ($value as $k => $v) {
+                if (is_string($v)) {
+                    $html .= "<li>$k : $v</li>";
+                } elseif (is_numeric($v)) {
+                    $html .= "<li>$k : " . $v . "</li>";
+                } elseif (is_object($v)) {
+                    $html .= "<li>$k : " . get_class($v) . "</li>";
+                } elseif (is_array($v)) {
+                    $html .= "<li>$k : " . array_keys($v) . "</li>";
+                } elseif (is_resource($v)) {
+                    $html .= "<li>$k : " . get_resource_type($v) . "</li>";
                 }
             }
-            $html .= "</$type>";
+            $html .= "</$tag>";
         }
         return $html;
     }

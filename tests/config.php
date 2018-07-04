@@ -1,5 +1,4 @@
 <?php
-
 return [
     'rootPath' => function () {
         return dirname(__DIR__);

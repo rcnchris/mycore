@@ -1,0 +1,32 @@
+<!-- Graphique en ligne -->
+{% macro line(items, options) %}
+    <div class="card">
+        <div id="{{ options.name }}" style="height: 400px; min-width: 310px"></div>
+        <script>
+            $(function () {
+                var myChart = Highcharts.chart({{ options.name }}, {
+                    chart: {type: 'line'},
+                    plotOptions: {line: {dataLabels: {enabled: true}}},
+                    legend: false,
+                    xAxis: {
+                        categories: [
+                            {% for label in items|keys %}
+                            '{{ label }}',
+                            {% endfor %}
+                        ]
+                    },
+                    yAxis: {title: {'text': "{{ options.yTitle }}"}},
+                    title: {text: "{{ options.title }}"},
+                    credits: {enabled: false},
+                    series: [{
+                        data: [
+                            {% for value in items %}
+                            {{ value }},
+                            {% endfor %}
+                        ]
+                    }]
+                });
+            });
+        </script>
+    </div>
+{% endmacro %}

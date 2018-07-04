@@ -41,20 +41,13 @@ class Bootstrap4Extension extends \Twig_Extension
      * @var array
      */
     private $contexts = [
-        'primary'
-        ,
-        'secondary'
-        ,
-        'success'
-        ,
-        'danger'
-        ,
-        'warning'
-        ,
-        'info'
-        ,
-        'light'
-        ,
+        'primary',
+        'secondary',
+        'success',
+        'danger',
+        'warning',
+        'info',
+        'light',
         'dark'
     ];
 
@@ -73,14 +66,10 @@ class Bootstrap4Extension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('alert', [$this, 'alert'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFilter('alertResult', [$this, 'alertResult'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFilter('badge', [$this, 'badge'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFilter('badgeBool', [$this, 'badgeBool'], ['is_safe' => ['html']])
-            ,
+            new \Twig_SimpleFilter('alert', [$this, 'alert'], ['is_safe' => ['html']])            ,
+            new \Twig_SimpleFilter('alertResult', [$this, 'alertResult'], ['is_safe' => ['html']])            ,
+            new \Twig_SimpleFilter('badge', [$this, 'badge'], ['is_safe' => ['html']])            ,
+            new \Twig_SimpleFilter('badgeBool', [$this, 'badgeBool'], ['is_safe' => ['html']])            ,
             new \Twig_SimpleFilter('button', [$this, 'button'], ['is_safe' => ['html']])
         ];
     }
