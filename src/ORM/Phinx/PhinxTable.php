@@ -70,7 +70,7 @@ class PhinxTable extends Table
      *
      * @return $this
      */
-    public function addIndex($columns, $options = [])
+    public function addIndex($columns, array $options = [])
     {
         parent::addIndex($columns, $options);
         return $this;

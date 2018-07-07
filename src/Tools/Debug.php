@@ -53,7 +53,9 @@ class Debug
     }
 
     /**
-     * @param object $object
+     * Obtenir le nom de la classe d'un objet à partir de son instance
+     *
+     * @param object $object Objet dont il faut retourner le nom de la classe
      *
      * @return string
      * @throws \Exception
@@ -93,7 +95,9 @@ class Debug
     }
 
     /**
-     * @param null $object
+     * Obtenir la liste des méthodes d'un objet à partir de son instance
+     *
+     * @param object|null $object Objet dont il faut lister les méthodes
      *
      * @return array
      * @see http://php.net/manual/fr/function.get-class-methods.php

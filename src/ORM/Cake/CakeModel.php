@@ -33,8 +33,12 @@ use Cake\ORM\Table;
  */
 class CakeModel extends Table
 {
+    /**
+     * Initialise la configuration du modèle
+     *
+     * @param array $config
+     */
     public function initialize(array $config)
     {
-
     }
 }

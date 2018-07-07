@@ -2,22 +2,43 @@
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
+define('DS', DIRECTORY_SEPARATOR);
+define('ROOT', dirname(__FILE__));
+define('BASE_URL', $_SERVER['REQUEST_URI']);
+
 require '../vendor/autoload.php';
+?>
+<!doctype html>
+<html lang="fr">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-// Configuration & dépendances
-$config = require '../app/config.php';
-$dependances = require '../app/dependences.php';
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 
-// Application
-$app = new \Slim\App(array_merge($config, $dependances));
+    <title>MyCore</title>
+</head>
+<body>
 
-// Middlewares
-require '../app/middlewares.php';
+<nav class="navbar navbar-dark bg-dark">
+    <!-- Navbar content -->
+</nav>
 
-// Routes
-require '../app/routes.php';
+<div class="container-fluid" role="main">
+    <?php
+    $readme = file_get_contents('../README.md');
+    echo \Michelf\MarkdownExtra::defaultTransform($readme);
+    ?>
+</div>
 
-// Run app
-if (php_sapi_name() !== 'cli') {
-    $app->run();
-}
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+</body>
+</html>

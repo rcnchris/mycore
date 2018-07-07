@@ -115,7 +115,7 @@ class AbstractPDF extends \FPDF
      *
      * @var \Rcnchris\Core\PDF\Writer
      */
-    public $writer;
+    private $writer;
 
     /**
      * Constructeur
@@ -684,5 +684,15 @@ class AbstractPDF extends \FPDF
         }
         $this->writer = new Writer($pdf, $options);
         return $this;
+    }
+
+    /**
+     * Obtenir l'instance du Writer
+     *
+     * @return Writer
+     */
+    public function getWriter()
+    {
+        return $this->writer;
     }
 }

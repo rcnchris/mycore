@@ -165,7 +165,9 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
                 is_null($key)
                     ? $this->toArray()
                     : $this->get($key)->toArray(),
-                $offset, $length, true
+                $offset,
+                $length,
+                true
             )
         );
     }
@@ -577,6 +579,16 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
             : new self($this->get($key)->countValues());
     }
 
+    /**
+     * Obtenir le nom de la clé qui contient la valeur cherchée.
+     * Recherche dans un tableau la clé associée à la première valeur.
+     *
+     * @param mixed      $search Valeur à chercher
+     * @param mixed|null $key    Clé dans laquelle il faut chercher la valeur
+     *
+     * @return mixed
+     * @see http://php.net/manual/fr/function.array-search.php
+     */
     public function findKey($search, $key = null)
     {
         return is_null($key)
