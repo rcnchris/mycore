@@ -1,11 +1,5 @@
 /vendor/
 /composer.lock
-/app/
 /public/coverage/
 /public/doc/
-/public/img/CamaroSS.gif
-/public/img/Pist_RC_Signes.png
-/public/img/mcd_codes.png
-/public/img/bob_marley_santa-barbara79.jpg
-/public/img/isometric-cube.png
 /logs/app.log
