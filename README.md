@@ -13,6 +13,7 @@
 -------
 
 ## Installation
+
 ````
 # Pour l'utiliser dans son projet
 composer require rcnchris/core

@@ -1,8 +1,8 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Http\Response;
 use Tests\Rcnchris\Core\PDF\PdfTestCase;
 
 class Psr7PdfTraitTest extends PdfTestCase
