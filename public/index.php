@@ -1,5 +1,5 @@
 <?php
-$debug = false;
+$debug = true;
 require '../vendor/autoload.php';
 ?>
 <!doctype html>
@@ -40,6 +40,31 @@ require '../vendor/autoload.php';
                 <h1 class="display-3">Debug</h1>
                 <hr/>
                 <p class="lead">Taille du projet : <span class="badge badge-warning"><?= $folder->size() ?></span></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <?php
+                $tableFactory = \Rcnchris\Core\ORM\TableFactory::getInstance([
+                    'host' => 'dbMyCore',
+//                    'username' => '',
+//                    'password' => '',
+//                    'dbName' => 'dbMyCore',
+                    'sgbd' => 'sqlite',
+                    //'fileName' => ROOT . '/public/dbMycore.sqlite'
+                ]);
+                r($tableFactory);
+                ?>
+            </div>
+            <div class="col-6">
+                <?php
+                r($tableFactory->getConfig());
+                //r($tableFactory->get('users')->getColumns());
+                $users = $tableFactory->get('users', ['orm' => 'cake']);
+                //r($users);
+                r($users->find()->toArray());
+
+                ?>
             </div>
         </div>
         <div class="row">

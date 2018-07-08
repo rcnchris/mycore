@@ -1,11 +1,11 @@
 <?php
 /**
- * Fichier CakeModel.php du 28/06/2018
- * Description : Fichier de la classe CakeModel
+ * Fichier CakeTable.php du 28/06/2018
+ * Description : Fichier de la classe CakeTable
  *
  * PHP version 5
  *
- * @category New
+ * @category Table
  *
  * @package  App\ORM\Cake
  *
@@ -21,9 +21,9 @@ namespace Rcnchris\Core\ORM\Cake;
 use Cake\ORM\Table;
 
 /**
- * Class CakeModel
+ * Class CakeTable
  *
- * @category ORM
+ * @category Table
  *
  * @package  App\ORM\Cake
  *
@@ -31,14 +31,6 @@ use Cake\ORM\Table;
  *
  * @version  Release: <1.0.0>
  */
-class CakeModel extends Table
+class CakeTable extends Table
 {
-    /**
-     * Initialise la configuration du modèle
-     *
-     * @param array $config
-     */
-    public function initialize(array $config)
-    {
-    }
 }
