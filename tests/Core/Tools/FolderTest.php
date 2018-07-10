@@ -63,6 +63,28 @@ class FolderTest extends BaseTestCase {
         $this->makeFolder('/fake/path');
     }
 
+    public function testMagicMethodsGet()
+    {
+        $this->assertInstanceOf(Folder::class, $this->folder->tests);
+    }
+
+    public function testGet()
+    {
+        $this->assertInstanceOf(Folder::class, $this->folder->get('tests'));
+    }
+
+    public function testIsFolder()
+    {
+        $this->assertTrue($this->folder->isFolder());
+        $this->assertFalse($this->folderFile->isFolder());
+    }
+
+    public function testIsFile()
+    {
+        $this->assertTrue($this->folderFile->isFile());
+        $this->assertFalse($this->folder->isFile());
+    }
+
     /**
      * Vérifier le retour de files avec contenu.
      */
@@ -113,13 +135,15 @@ class FolderTest extends BaseTestCase {
 
     public function testExtensions()
     {
-        $this->assertContains('php', $this->folderFile->extensions());
+        $this->assertContains('json', $this->folder->extensions());
     }
 
     public function testSize()
     {
-        $this->assertNotEmpty($this->folder->size());
-        $this->assertNotEmpty($this->folder->size(false));
+        $this->assertInternalType('string', $this->folder->size());
+        $this->assertInternalType('string', $this->folderFile->size());
+        $this->assertInternalType('integer', $this->folder->size(false));
+        $this->assertInternalType('string', $this->folder->size(true, 2));
     }
 
     public function testDestroy()

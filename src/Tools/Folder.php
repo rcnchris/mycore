@@ -73,7 +73,7 @@ class Folder
             $this->path = $path;
         } elseif (is_file($path)) {
             $this->dir = dir(dirname($path));
-            $this->path = dirname($path);
+            $this->path = $path;
         } else {
             throw new \Exception('Paramètre invalide');
         }
@@ -91,24 +91,56 @@ class Folder
     }
 
     /**
-     * Obtenir la taille du dossier
+     * @param string $key Dossier ou fichier dans l'instance
      *
-     * @param bool|null $human Si true la valeur retournée est en byte,
-     *                         sinon en kilo octets
-     *
-     * @return string|int
+     * @return self|null
      */
-    public function size($human = true)
+    public function __get($key)
     {
-        $cmd = 'du -sh ' . $this->path;
-        if ($human) {
-            $cmd = $cmd . ' -sh ';
-            $size = explode('/', shell_exec($cmd))[0];
-            return trim($size);
+        return $this->get($key);
+    }
+
+    /**
+     * Obtenir une nouvelle instance à partir d'un dossier ou fichier présent dans l'instance courante
+     *
+     * @param string $name Dossier ou fichier dans l'instance
+     *
+     * @return self|null
+     */
+    public function get($name)
+    {
+        return file_exists($this->path . DIRECTORY_SEPARATOR . $name)
+            ? new self($this->path . DIRECTORY_SEPARATOR . $name)
+            : null;
+    }
+
+    /**
+     * Obtenir la taille du chemin de l'instance
+     *
+     * @param bool|null $human    Si true la valeur retournée est en byte,
+     *                            sinon en kilo octets
+     * @param int|null  $decimals Nombre de décimales
+     *
+     * @return int|null|string
+     */
+    public function size($human = true, $decimals = 0)
+    {
+        if ($this->isFolder()) {
+            $cmd = 'du -sh ' . $this->path;
+            if ($human) {
+                $cmd = $cmd . ' -sh ';
+                $size = explode('/', shell_exec($cmd))[0];
+                //$size = preg_replace('~\D~', '', $size) . ' ' . str_replace(preg_replace('~\D~', '', $size), '', $size);
+                return trim($size);
+            } else {
+                $cmd = $cmd . ' -sb ';
+                $size = explode('/', shell_exec($cmd))[0];
+                return intval(trim($size));
+            }
         } else {
-            $cmd = $cmd . ' -sb ';
-            $size = explode('/', shell_exec($cmd))[0];
-            return intval(trim($size));
+            return $human
+                ? Common::bitsSize(filesize($this->path), $decimals)
+                : filesize($this->path);
         }
     }
 
@@ -154,6 +186,36 @@ class Folder
     public function folders()
     {
         return $this->content('folders');
+    }
+
+    /**
+     * Vérifier si l'instance est un dossier
+     *
+     * @param string|null $path Chemin à vérifier
+     *
+     * @return bool
+     */
+    public function isFolder($path = null)
+    {
+        if (is_null($path)) {
+            $path = $this->path;
+        }
+        return is_dir($path);
+    }
+
+    /**
+     * Vérifier si l'instance est un fichier
+     *
+     * @param string|null $path Chemin à vérifier
+     *
+     * @return bool
+     */
+    public function isFile($path = null)
+    {
+        if (is_null($path)) {
+            $path = $this->path;
+        }
+        return is_file($path);
     }
 
     /**

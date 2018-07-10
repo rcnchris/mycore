@@ -18,7 +18,9 @@
 
 namespace Rcnchris\Core\Tools;
 
+use ArrayAccess;
 use ArrayIterator;
+use IteratorAggregate;
 
 /**
  * Class Composer
@@ -34,7 +36,7 @@ use ArrayIterator;
  *
  * @version  Release: <1.0.0>
  */
-class Composer implements \IteratorAggregate, \ArrayAccess
+class Composer implements IteratorAggregate, ArrayAccess
 {
 
     /**

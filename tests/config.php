@@ -17,10 +17,10 @@ return [
     'app.prefix' => '/_lab/mycore/',
     'app.poweredBy' => 'MRC Consulting',
     'app.name' => 'My Core',
+
     /**
      * Localisation
      */
-
     'app.charset' => 'utf-8',
     'app.timezone' => 'UTC',
     'app.defaultLocale' => 'fr_FR',

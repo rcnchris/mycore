@@ -53,7 +53,8 @@ class PHPCookies implements CookiesInterface
      * Constructeur
      *
      * @param mixed|null $datas   Données à écrire dans les cookies
-     * @param array      $options Options des cookies (lifetime, path, domain, secure, httponly)
+     * @param array|null $options Options des cookies (lifetime, path, domain, secure, httponly)
+     * @codeCoverageIgnore
      */
     public function __construct($datas = null, array $options = [])
     {
@@ -65,6 +66,11 @@ class PHPCookies implements CookiesInterface
             $options['secure'],
             $options['httponly']
         );
+        if (!is_null($datas) && !empty($datas)) {
+            foreach ($datas as $k => $v) {
+                $this->set($k, $v, $options['lifetime'], $options['path'], $options['domain'], false, true);
+            }
+        }
     }
 
     /**
@@ -131,15 +137,12 @@ class PHPCookies implements CookiesInterface
      * @param int|null    $expire   Le temps après lequel le cookie expire. C'est un timestamp Unix, donc, ce sera un
      *                              nombre de secondes depuis l'époque Unix (1 Janvier 1970).
      * @param string|null $path     Le chemin sur le serveur sur lequel le cookie sera disponible. Si la valeur est
-     *                              '/',
-     *                              le cookie sera disponible sur l'ensemble du domaine domain.
+     *                              '/', le cookie sera disponible sur l'ensemble du domaine domain.
      * @param string|null $domain   Le domaine pour lequel le cookie est disponible. Le fait de définir le domaine à
      *                              'www.example.com' rendra le cookie disponible pour le sous-domaine www mais aussi
-     *                              pour
-     *                              les sous-domaines supérieurs (ex: 'sub.www.example.com').
+     *                              pour les sous-domaines supérieurs (ex: 'sub.www.example.com').
      * @param bool|null   $secure   Indique si le cookie doit uniquement être transmis à travers une connexion
-     *                              sécurisée
-     *                              HTTPS depuis le client.
+     *                              sécurisée HTTPS depuis le client.
      * @param bool|null   $httponly Lorsque ce paramètre vaut TRUE, le cookie ne sera accessible que par le protocole
      *                              HTTP. Cela signifie que le cookie ne sera pas accessible via des langages de
      *                              scripts, comme Javascript.
@@ -154,11 +157,8 @@ class PHPCookies implements CookiesInterface
         $path = null,
         $domain = null,
         $secure = false,
-        $httponly = false
+        $httponly = true
     ) {
-//        if (is_null($expire)) {
-//            $expire = $this->defaultOptions['lifetime'];
-//        }
         return setcookie($name, $value, $expire, $path, $domain, $secure, $httponly);
     }
 

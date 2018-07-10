@@ -107,8 +107,8 @@ class HtmlExtension extends \Twig_Extension
                     $html .= "<li>$k : " . $v . "</li>";
                 } elseif (is_object($v)) {
                     $html .= "<li>$k : " . get_class($v) . "</li>";
-                } elseif (is_array($v)) {
-                    $html .= "<li>$k : " . array_keys($v) . "</li>";
+                } elseif (is_array($v) && !is_array($k)) {
+                    $html .= "<li>$k : " . implode(', ', array_keys($v)) . "</li>";
                 } elseif (is_resource($v)) {
                     $html .= "<li>$k : " . get_resource_type($v) . "</li>";
                 }

@@ -190,9 +190,4 @@ class Bootstrap4ExtensionTest extends BaseTestCase
             , $this->ext->alertResult('ola')
         );
     }
-
-    public function testGetAlertResultWithWrongParameter()
-    {
-        $this->assertNull($this->ext->alertResult(['ola']));
-    }
 }

@@ -143,4 +143,10 @@ class DebugExtensionTest extends BaseTestCase {
         $this->assertFalse($this->ext->isArray($c));
         $this->assertFalse($this->ext->isObject($a));
     }
+
+    public function testGetConstants()
+    {
+        $this->assertNotEmpty($this->ext->getConstants());
+        $this->assertNotEmpty($this->ext->getConstants('user'));
+    }
 }

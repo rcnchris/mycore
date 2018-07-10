@@ -37,7 +37,7 @@ class ComposerTest extends BaseTestCase {
         $this->assertInstanceOf(
             Composer::class
             , $this->composer
-            , $this->getMessage("L'instance attendue est incorreecte")
+            , $this->getMessage("L'instance attendue est incorrecte")
         );
     }
 
@@ -45,6 +45,33 @@ class ComposerTest extends BaseTestCase {
     {
         $this->expectException(\Exception::class);
         $this->makeComposer('path/to/fake/file/composer.json');
+    }
+
+    public function testInterfaces()
+    {
+        $this->assertObjectImplementInterfaces($this->composer, ['ArrayAccess', 'IteratorAggregate']);
+    }
+
+    public function testArrayAccess()
+    {
+        $this->assertArrayAccess(
+            $this->composer
+            , 'type'
+            , 'library'
+            , ['Exists', 'Get']
+        );
+    }
+
+    public function testArrayAccessSet()
+    {
+        $this->expectException(\Exception::class);
+        $this->composer['require'] = 'fake';
+    }
+
+    public function testArrayAccessUnset()
+    {
+        $this->expectException(\Exception::class);
+        unset($this->composer['require']);
     }
 
     public function testGetKeys()
@@ -104,28 +131,6 @@ class ComposerTest extends BaseTestCase {
         );
     }
 
-    public function testArrayAccess()
-    {
-        $this->assertArrayAccess(
-            $this->composer
-            , 'type'
-            , 'library'
-            , ['offsetExists', 'offsetGet']
-        );
-    }
-
-    public function testArrayAccessSet()
-    {
-        $this->expectException(\Exception::class);
-        $this->composer['require'] = 'fake';
-    }
-
-    public function testArrayAccessUnset()
-    {
-        $this->expectException(\Exception::class);
-        unset($this->composer['require']);
-    }
-
     public function testToArray()
     {
         $this->assertNotEmpty(
@@ -173,6 +178,11 @@ class ComposerTest extends BaseTestCase {
             , (string)$this->composer
             , $this->getMessage("Le type retournée par __toString est incorrect")
         );
+    }
+
+    public function testToJson()
+    {
+        $this->assertInternalType('string', $this->composer->toJson());
     }
 
     public function testGetRequires()

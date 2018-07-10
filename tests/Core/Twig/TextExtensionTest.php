@@ -79,11 +79,9 @@ class TextExtensionTest extends BaseTestCase{
         $this->assertEquals('0 B', $this->ext->bitsSize('fake'));
     }
 
-//    public function testToSlug()
-//    {
-//        $this->assertEquals(
-//            'oye-les-gens-comment-vont-ils'
-//            , $this->ext->toSlug('Oyé les gens, comment-vont-ils ?')
-//        );
-//    }
+    public function testMarkdown()
+    {
+        $markdown = "*ola*";
+        $this->assertSimilar('<p><em>ola</em></p>', $this->ext->markdown($markdown));
+    }
 }

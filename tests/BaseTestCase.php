@@ -3,12 +3,13 @@ namespace Tests\Rcnchris;
 
 use Faker\Factory;
 use Faker\Generator;
-use Michelf\MarkdownExtra;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\ServerRequest;
 use PHPUnit\Framework\TestCase;
-use Slim\App;
-use Slim\Http\Environment;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Rcnchris\Core\Config\ConfigContainer;
 
 class BaseTestCase extends TestCase
 {
@@ -34,6 +35,25 @@ class BaseTestCase extends TestCase
      * @var Generator
      */
     private $faker;
+
+    /**
+     * Mapping des interfaces et leur méthodes
+     *
+     * @var array
+     */
+    protected $mapMethodsInterfaces = [
+        'ArrayAccess' => ['offsetExists', 'offsetGet', 'offsetSet', 'offsetUnset'],
+        'Countable' => ['count'],
+        'IteratorAggregate' => ['getIterator'],
+        'Serializable' => ['serialize', 'unserialize'],
+    ];
+
+    /**
+     * Méthodes magiques PHP
+     *
+     * @var array
+     */
+    protected $magicMethods = ['__get', '__set', '__toString'];
 
     /**
      * @return \Faker\Generator
@@ -71,7 +91,7 @@ class BaseTestCase extends TestCase
      *
      * @param string $file Nom complet du fichier
      */
-    public function addUsedFile($file)
+    protected function addUsedFile($file)
     {
         if ($this::VERBOSE) {
             $this->ekoMessage('Création du fichier ' . basename($file));
@@ -167,6 +187,14 @@ class BaseTestCase extends TestCase
         $this->assertEquals($this->trim($expected), $this->trim($actual));
     }
 
+    /**
+     * Vérifie que les méthodes magiques de PHP sont fonctionnelles
+     *
+     * @param object     $object   Object à vérifier
+     * @param string     $property Prorpiété de test
+     * @param mixed      $expect   Valeur attendue
+     * @param array|null $methods  Liste des méthodes à tester
+     */
     protected function assertMagicMethods($object, $property, $expect, array $methods = [])
     {
         $allMethods = ['get', 'set', 'toString'];
@@ -194,24 +222,24 @@ class BaseTestCase extends TestCase
      * ### Exemple
      * - `$this->assertArrayAccess($result, 1, ['id' => 2, 'title' => 'Page'], ['Exists', 'Get']);`
      *
-     * @param object     $object  Objet à tester
+     * @param object     $object  Instance de l'objet à tester
      * @param string     $key     Nom d'une clé du tableau
      * @param mixed      $expect  Valeur attendue
      * @param array|null $methods Liste des méthodes à tester
      */
     protected function assertArrayAccess($object, $key, $expect, array $methods = [])
     {
+        $interfaceName = 'ArrayAccess';
         $class = get_class($object);
-        $this->ekoMsgInfo("Implémentation ArrayAccess de $class");
+        $this->ekoMsgInfo("Implémentation $interfaceName dans $class");
 
         $this->assertArrayHasKey(
-            'ArrayAccess'
-            , class_implements($object)
-            , $this->getMessage("L'instance de $class n'implémente pas l'interface ArrayAccess")
+            $interfaceName, class_implements($object),
+            $this->getMessage("L'instance de $class n'implémente pas l'interface $interfaceName")
         );
 
         if (empty($methods)) {
-            $methods = ['offsetExists', 'offsetGet', 'offsetSet', 'offsetUnset'];
+            $methods = $this->mapMethodsInterfaces[$interfaceName];
         } else {
             $methods = array_map(function ($method) {
                 return 'offset' . ucfirst($method);
@@ -219,18 +247,17 @@ class BaseTestCase extends TestCase
         }
 
         foreach ($methods as $method) {
-
             if ($method === 'offsetExists') {
                 $this->assertTrue(
                     isset($object[$key]),
-                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas $method pour $class")
+                    $this->getMessage("Le comportement de $interfaceName est incorrect dans le cas $method pour $class")
                 );
             }
             if ($method === 'offsetGet') {
                 $this->assertEquals(
                     $expect,
                     $object[$key],
-                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas $method pour $class")
+                    $this->getMessage("Le comportement de $interfaceName est incorrect dans le cas $method pour $class")
                 );
             }
             if ($method === 'offsetSet') {
@@ -238,14 +265,14 @@ class BaseTestCase extends TestCase
                 $this->assertEquals(
                     $expect,
                     $object[$key],
-                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas $method pour $class")
+                    $this->getMessage("Le comportement de $interfaceName est incorrect dans le cas $method pour $class")
                 );
             }
             if ($method === 'offsetUnset') {
                 unset($object[$key]);
                 $this->assertFalse(
                     isset($object[$key]),
-                    $this->getMessage("Le comportement de ArrayAccess est incorrect dans le cas $method pour $class")
+                    $this->getMessage("Le comportement de $interfaceName est incorrect dans le cas $method pour $class")
                 );
             }
         }
@@ -267,6 +294,43 @@ class BaseTestCase extends TestCase
         }
     }
 
+    /**
+     * Vérifie que l'instance d'un objet implémente une liste d'interfaces
+     *
+     * @param object       $object     Objet à tester
+     * @param string|array $implements Liste des interfaces dont il faut vérifier l'implémentaion dans l'objet
+     */
+    protected function assertObjectImplementInterfaces($object, $implements)
+    {
+        if (is_string($implements)) {
+            $implements = explode(',', $implements);
+        }
+        foreach ($implements as $interface) {
+            $this->assertTrue(
+                in_array($interface, class_implements($object)),
+                $this->getMessage("L'objet " . get_class($object) . " n'implémente pas l'interface $interface !")
+            );
+        }
+    }
+
+    /**
+     * Vérifie que l'instance d'un objet utilise une liste de traits
+     *
+     * @param object       $object Objet à tester
+     * @param string|array $traits Liste des traits dont il faut vérifier l'utilisation dans l'objet
+     */
+    protected function assertObjectUseTraits($object, $traits)
+    {
+        if (is_string($traits)) {
+            $traits = explode(',', $traits);
+        }
+        foreach ($traits as $trait) {
+            $this->assertTrue(
+                in_array($trait, class_uses($object)),
+                $this->getMessage("L'objet " . get_class($object) . " n'utilise pas le trait $trait !")
+            );
+        }
+    }
 
     /**
      * Vérifie si un objet est sérialisable
@@ -279,99 +343,19 @@ class BaseTestCase extends TestCase
         $this->ekoMsgInfo("Implémentation Serializable de $class");
 
         $this->assertArrayHasKey(
-            'Serializable'
-            , class_implements($object)
-            , $this->getMessage("L'instance de $class n'implémente pas l'interface Serializable")
+            'Serializable', class_implements($object),
+            $this->getMessage("L'instance de $class n'implémente pas l'interface Serializable")
         );
 
         $this->assertInternalType(
-            'string'
-            , $object->serialize()
-            ,
+            'string', $object->serialize(),
             $this->getMessage("Le retour de la méthode 'serialize' n'est pas au format string pour l'instance de $class")
         );
 
         $this->assertTrue(
-            method_exists($object, 'unserialize')
-            , $this->getMessage("La méthode 'unserialize est absente de l'instance de $class")
+            method_exists($object, 'unserialize'),
+            $this->getMessage("La méthode 'unserialize est absente de l'instance de $class")
         );
-    }
-
-    /**
-     * @param      $requestMethod
-     * @param      $requestUri
-     * @param null $requestData
-     *
-     * @return \Psr\Http\Message\ResponseInterface|\Slim\Http\Response
-     */
-    public function runApp($requestMethod, $requestUri, $requestData = null)
-    {
-        $environment = Environment::mock(
-            [
-                'REQUEST_METHOD' => $requestMethod,
-                'REQUEST_URI' => $requestUri
-            ]
-        );
-        $request = Request::createFromEnvironment($environment);
-        if (isset($requestData)) {
-            $request = $request->withParsedBody($requestData);
-        }
-        $response = new Response();
-
-        // Configuration
-        $configFile = $this->rootPath() . '/app/config.php';
-        if (file_exists($configFile)) {
-            $settings = require $configFile;
-        } else {
-            $settings = [
-                'app.prefix' => '/_lab/mycore/',
-                'app.poweredBy' => 'MRC Consulting',
-                'app.name' => 'My Core',
-                'app.charset' => 'utf-8',
-                'app.timezone' => 'UTC',
-                'app.defaultLocale' => 'fr_FR',
-                'app.sep_decimal' => ',',
-                'app.sep_mil' => ' ',
-                'app.templates' => dirname(__DIR__) . '/app/Templates',
-                'app.logsPath' => dirname(__DIR__) . '/logs/app.log'
-            ];
-        }
-
-        // Dépendances
-        $dependancesFile = $this->rootPath() . '/app/dependances.php';
-        $dependances = file_exists($dependancesFile)
-            ? require $dependancesFile
-            : [];
-
-        // Instantiation de Slim
-        $app = new App(array_merge($settings, $dependances));
-
-        // Routes
-        $routesFile = $this->rootPath() . '/app/routes.php';
-        if (file_exists($routesFile)) {
-            $routes = require $routesFile;
-        } else {
-            $rootPath = $this->rootPath();
-            $app->get('/', function (Request $request, Response $response) use ($rootPath) {
-                $readmeFile = $rootPath . '/README.md';
-                if (file_exists($readmeFile)) {
-                    $content = file_get_contents($readmeFile);
-                    $readme = MarkdownExtra::defaultTransform($content);
-
-                    $body = $response->getBody();
-                    $body->write($readme);
-                    $newResponse = $response
-                        ->withStatus(200)
-                        ->withBody($body);
-                    return $newResponse;
-                }
-            })->setName('home');
-        }
-
-        // Process the application
-        $response = $app->process($request, $response);
-        // Return the response
-        return $response;
     }
 
     /**
@@ -406,5 +390,48 @@ class BaseTestCase extends TestCase
             return $config[$key];
         }
         return false;
+    }
+
+    /**
+     * Obtenir une nouvelle requête PSR7
+     *
+     * @return ServerRequestInterface
+     */
+    protected function makeRequestPsr7()
+    {
+        return ServerRequest::fromGlobals();
+    }
+
+    /**
+     * Obtenir une nouvelle réponse PSR7
+     *
+     * @param int    $status
+     * @param array  $headers
+     * @param null   $body
+     * @param string $version
+     * @param null   $reason
+     *
+     * @return ResponseInterface
+     */
+    protected function makeResponsePsr7(
+        $status = 200,
+        array $headers = [],
+        $body = null,
+        $version = '1.1',
+        $reason = null
+    ) {
+        return new Response($status, $headers, $body, $version, $reason);
+    }
+
+    /**
+     * Obtenir un nouveau conteneur de dépendances
+     *
+     * @param array|null $data Données du conteneur
+     *
+     * @return ContainerInterface
+     */
+    protected function makeContainer(array $data = [])
+    {
+        return new ConfigContainer($data);
     }
 }

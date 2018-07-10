@@ -145,7 +145,7 @@ class PHPSession implements SessionInterface
     private function ensureStarted()
     {
         if (session_status() === PHP_SESSION_NONE) {
-            //$this->setCacheExpired();
+            $this->setCacheExpired();
             session_start();
             $this->set('id', session_id());
         }

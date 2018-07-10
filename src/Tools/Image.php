@@ -59,9 +59,7 @@ class Image
      */
     public function __construct($source = null)
     {
-        if (!is_null($source)) {
-            $this->setSource($source);
-        }
+        $this->setSource($source);
     }
 
     /**

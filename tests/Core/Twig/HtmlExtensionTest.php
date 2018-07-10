@@ -4,7 +4,8 @@ namespace Tests\Rcnchris\Core\Twig;
 use Rcnchris\Core\Twig\HtmlExtension;
 use Tests\Rcnchris\BaseTestCase;
 
-class HtmlExtensionTest extends BaseTestCase {
+class HtmlExtensionTest extends BaseTestCase
+{
 
     /**
      * @var HtmlExtension
@@ -53,15 +54,60 @@ class HtmlExtensionTest extends BaseTestCase {
 
     public function testGetDetails()
     {
-        $this->assertSimilar('<details><summary>ola</summary>oli</details>', $this->ext->details('ola', 'oli'));
+        $this->assertSimilar(
+            '<details><summary>ola</summary>oli</details>',
+            $this->ext->details('ola', 'oli')
+        );
     }
 
     public function testGetList()
     {
         $this->assertSimilar(
-            '<ul><li>0 : ola</li><li>1 : ole</li></ul>'
-            , $this->ext->getList(['ola', 'ole'])
-            , $this->getMessage("La liste est incorrecte")
+            '<ul><li>0 : ola</li><li>1 : ole</li></ul>',
+            $this->ext->getList(['ola', 'ole']),
+            $this->getMessage("La liste est incorrecte")
+        );
+    }
+
+    public function testGetListWithNumericValues()
+    {
+        $values = [12, 45];
+        $this->assertSimilar(
+            '<ul><li>0 : 12</li><li>1 : 45</li></ul>',
+            $this->ext->getList($values),
+            $this->getMessage("La liste est incorrecte")
+        );
+    }
+
+    public function testGetListWithObjectValues()
+    {
+        $values = [(new \stdClass()), (new \DateTime())];
+        $this->assertSimilar(
+            '<ul><li>0 : stdClass</li><li>1 : DateTime</li></ul>',
+            $this->ext->getList($values),
+            $this->getMessage("La liste est incorrecte")
+        );
+    }
+
+    public function testGetListWithArrayValues()
+    {
+        $values = ['name' => ['first_name' => 'Mathis', 'last_name' => 'CHRISMANN'], 'year' => 2007];
+        $this->assertSimilar(
+            '<ul><li>name : first_name, last_name</li><li>year : 2007</li></ul>',
+            $this->ext->getList($values),
+            $this->getMessage("La liste est incorrecte")
+        );
+    }
+
+    public function testGetListWithRessourcesValues()
+    {
+        $img = imagecreate(150, 150);
+        $dir = opendir(__DIR__);
+        $values = [$img, $dir];
+        $this->assertSimilar(
+            '<ul><li>0 : gd</li><li>1 : stream</li></ul>',
+            $this->ext->getList($values),
+            $this->getMessage("La liste est incorrecte")
         );
     }
 }

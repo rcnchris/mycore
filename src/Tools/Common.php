@@ -183,7 +183,7 @@ class Common
     ];
 
     /**
-     * Retourne une taille en Bits pour une valeur donnée
+     * Retourne une taille en Bits pour une valeur en octets
      *
      * ### Exemple
      * - `$ext->bitsSize(123456)`
