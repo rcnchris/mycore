@@ -8,7 +8,7 @@
 <img src="public/img/icon_readme.png" align="right" />
 
 # My Core
-> Mes librairies PHP.
+> Librairies PHP.
 
 -------
 
@@ -21,25 +21,33 @@ composer require rcnchris/core
 composer create-project -s rcnchris/core new-project
 ````
 
+-------
+
 ## Packages
 
 ### Tools
-Package qui regroupe les classes utilisées de manière autonomes un peu partout.
+Package qui regroupe les classes utilisées de manière autonomes un peu partout. Outils de gestion de base, tels que l'exécution de commandes shell, collections de données, accès aux fichiers et dossiers, debug...
 
 #### Cmd
-Classe statique instanciable qui permet d'exécuter des commandes *shell*.
+Exécution de commandes *shell* et traitement du retour.
 ````
 $ls = Cmd::exec("cd $path && ls");
 ````
 
 #### Collection
-Facilite la manipulation d'un tableau via un objet.
+Facilite la manipulation des listes de données, tableaux multi-dimensionels...
 ````
 $col = new Collection('ola,ole,oli', "Liste de valeurs dans une chaîne avec séparateur");
 ````
 
+#### Items
+Une autre classe de gestion des listes qui facilite la manipulation de tableaux multi-dimensionels...
+````
+$col = new Items('ola,ole,oli');
+````
+
 #### Colors
-Facilite la manipulation d'une palette de couleurs.
+Gestion d'une palette de couleurs pré-définies ou définition d'une personnelle.
 ````
 $colors = new Colors();
 $colors->get('blue');
@@ -52,14 +60,14 @@ $m = Common::getMemoryUse();
 ````
 
 #### Composer
-Facilite la manipulation d'un fichier composer.json
+Facilite la lecture d'un fichier composer.json
 ````
 $composer = new Composer('/path/to/file/composer.json');
 $composer->get('name');
 ````
 
 #### Folder
-Facilite la manipulation de fichiers et dossiers.
+Facilite la lecture de fichiers et dossiers.
 ````
 $folder = new Folder($path);
 $size = $folder->size();
@@ -70,14 +78,6 @@ Facilite la manipulation des images.
 ````
 $img = new Image('path/to/file');
 $src = $img->getEncode();
-````
-
-#### Session
-Facilite la manipulation des sessions et cookies.
-````
-$session = new PHPSession();
-$ip = $session->get('ip');
-$cookies = $session->getCookies();
 ````
 
 #### Text
@@ -96,8 +96,113 @@ $items = RandomItems::users(3, 'fr_FR');
 
 -------
 
+### Session
+Ce package regroupe les classes de gestion des sessions et cookies.
+
+#### Session
+Facilite la manipulation des sessions.
+````
+$session = new PHPSession();
+$ip = $session->get('ip');
+$cookies = $session->getCookies();
+````
+
+#### Cookies
+Facilite la lecture des cookies.
+````
+$cookies = new PHPCookies();
+$cookies->set('ip', '192.168.1.1')
+````
+
+-------
+
+## Apis
+Package qui permet d'utiliser n'importe qu'elle API facilement et quelques APIs dédiées.
+### APITrait
+Comportement communs à toutes les APIs sur la base de `curl`
+
+### CurlResponse
+Représente une réponse de la commande <code>curl_exec()</code>
+
+### OneAPI
+Utiliser n'importe quelle API à partir de son URL.
+````
+$api = new OneAPI('https://randomuser.me/api');
+$users = $api->r(['results' => 3])->toArray('results');
+````
+
+### AlloCiné
+Obtenir des informations de l'API.
+````
+$api = new AlloCine();
+$search = $api->search('Le Parrain');
+````
+
+### Synology
+Utiliser les API d'un NAS Synology.
+````
+$api = new AbstractSynology($config);
+$genres = $api
+    ->getPackage('AudioStation')
+    ->get('Genre');
+
+$movies = $api
+    ->getPackage('VideoStation')
+    ->get('Movie', 'list', ['limit' => 20, 'offset' => 0], 'movies');
+````
+
+-------
+
+## ORM
+Abstraction des bases de données qui s'appuient sur `PDO`.
+
+### SourcesManager
+Gestion de multiples sources de données hétérogènes (MySQL, SQLite, SQL Server...).
+````
+$manager = new SourcesManager($sources);
+$pdo = $manager->connect($sourceName);
+````
+
+### DbFactory
+Fournit une instance `PDO`.
+````
+$pdoSqliteMemory = DbFactory::get('memory', 0, '', '', '', 'sqlite');
+$pdoSqliteFile = DbFactory::get('dbApp', 0, '', '', '', 'sqlite', '/path/to/file');
+$pdoMysql = DbFactory::get('192.168.1.1', 3306, 'user', 'secret', 'home', 'mysql');
+$pdoSqlsrv = DbFactory::get('MYSERVER\SQLEXPRESS', 1433, 'user', 'secret', 'home', 'sqlsrv');
+````
+
+### TableFactory
+Fournit l'instance d'une table dans une base de données.
+````
+$phinxTable = TableFactory::get('users');
+$cakeTable = TableFactory::get('users', ['orm' => 'cake']);
+````
+
+### Query
+Effectuer une requête sur une connexion `PDO`.
+````
+$query = (new Query($pdo))->from('departements', 'dep');
+$count = $query->count();
+$items = $query->all()->toArray();
+
+$query = (new Query($pdo))
+            ->from('posts')
+            ->where('category_id = 3')
+            ->order('title');
+$result = $query->all()->toArray();
+````
+
+### QueryResult
+Représente le résultat d'une requête. Permet de gérer l'hydratation des objets qui contiennent les données issues de la bases de données.
+````
+$result = (new DepartementsModel($pdo))->makeQuery();
+````
+
+-------
+
 ## PDF
-Gestion des documents PDF.
+Génération de documents PDF.
 ````
 $pdf = new AbstractPDF();
 
@@ -129,70 +234,6 @@ Les comportements sont gérés via des traits :
 
 -------
 
-## Apis
-Package qui permet d'utiliser n'importe qu'elle API facilement et quelques APIs dédiées.
-#### APITrait
-Comportement communs à toutes les APIs sur la base de `curl`
-
-#### CurlResponse
-Représente une réponse de la commande <code>curl_exec()</code>
-
-#### OneAPI
-Utiliser n'importe quelle API à partir de son URL.
-````
-$api = new OneAPI('https://randomuser.me/api');
-$users = $api->r(['results' => 3])->toArray('results');
-````
-
-#### AlloCiné
-Obtenir des informations de l'API.
-````
-$api = new AlloCine();
-$search = $api->search('Le Parrain');
-````
-
-#### Synology
-Utiliser les API d'un NAS Synology.
-````
-$api = new AbstractSynology($config);
-$genres = $api
-    ->getPackage('AudioStation')
-    ->get('Genre');
-
-$movies = $api
-    ->getPackage('VideoStation')
-    ->get('Movie', 'list', ['limit' => 20, 'offset' => 0], 'movies');
-````
-
--------
-
-## ORM
-Abstraction des bases de données qui s'appuient sur `PDO`.
-````
-// Obtenir une connexion PDO à MySQL
-$pdo = DbFactory::get('localhost', 3306, 'al', 'secret', 'home', 'mysql');
-
-// Obtenir une connexion PDO à SQL Server
-$pdo = DbFactory::get('MYSERVER\SQLEXPRESS', 1433, 'al', 'secret', 'home', 'sqlsrv');
-
-// Gérer plusieurs sources de données depuis un tableau et s'y connecter
-$manager = new SourcesManager($sources);
-$pdo = $manager->connect('home');
-
-// Effectuer une requête
-$query = (new Query($pdo))
-            ->from('posts')
-            ->where('category_id = 3')
-            ->order('title');
-$result = $query->all()->toArray();
-
-// Utiliser un modèle
-$posts = new PostsModel($pdo);
-$items = $posts->findAll()->all()->toArray();
-````
-
--------
-
 ## Twig
 Ajoute des extensions à Twig.
 
@@ -208,6 +249,18 @@ Ajoute des extensions à Twig.
 - Messages flash
 
 -------
+
+## Middlewares PSR7
+- Boot
+- PoweredBy
+- Session
+- Cookies
+- TrailingSlashes
+
+-------
+
+## Home en mode debug
+<img src="public/img/home-debug.png" align="center" />
 
 ## Todo <progress></progress>
 - Synology
