@@ -559,4 +559,30 @@ class Text
         }
         return null;
     }
+
+    /**
+     * Obtenir le code source d'un fichier.
+     *
+     * @param string    $file         Chemin complet du fichier
+     * @param bool|null $htmlentities Convertit tous les caractères éligibles en entités HTML
+     *
+     * @return mixed|null|string
+     * @see http://php.net/manual/fr/function.htmlentities.php
+     * @see http://php.net/manual/fr/function.highlight-string.php
+     */
+    public static function showSource($file, $htmlentities = true)
+    {
+        $content = null;
+        if (is_file($file)) {
+            $parts = explode('.', $file);
+            $ext = array_pop($parts);
+            $content = file_get_contents($file);
+            if (strtolower($ext) === 'php') {
+                $content = highlight_string($content);
+            }
+        }
+        return $htmlentities
+            ? htmlentities($content)
+            : $content;
+    }
 }

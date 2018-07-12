@@ -14,6 +14,8 @@ NO_COLOR    = \033[m
 
 PROJECT_DIR = $(shell pwd)
 TEMPLATE_DOC = responsive
+APACHE_USER = www-data
+DEV_USER = dev
 
 vendor: composer.json ## Mise à jour des librairies composer
 	@composer selfupdate
@@ -26,7 +28,19 @@ install: ## Installation du projet
 	@rm -r composer.lock
 	@composer install
 
-code: ## Vérification et corection de la syntaxe
+permprod: ## Permissions des dossiers et fichiers
+	@echo -e '$(OK_COLOR)Permissions des dossiers et fichiers pour la production$(NO_COLOR)'
+	@sudo chown -R $(APACHE_USER):$(APACHE_USER) $(PROJECT_DIR)
+	@sudo find $(PROJECT_DIR) -type d -exec chmod 755 {} +
+	@sudo find $(PROJECT_DIR) -type f -exec chmod 644 {} +
+
+permdev: ## Permissions des dossiers et fichiers
+	@echo -e '$(OK_COLOR)Permissions des dossiers et fichiers pour le développement$(NO_COLOR)'
+	@sudo chown -R $(DEV_USER):$(DEV_USER) $(PROJECT_DIR)
+	@sudo find $(PROJECT_DIR) -type d -exec chmod 755 {} +
+	@sudo find $(PROJECT_DIR) -type f -exec chmod 644 {} +
+
+code: ## Vérification et correction de la syntaxe
 	@echo -e '$(OK_COLOR)Corrections syntaxiques$(NO_COLOR)'
 	@./vendor/bin/phpcbf
 	@echo -e '$(OK_COLOR)Tests syntaxiques$(NO_COLOR)'

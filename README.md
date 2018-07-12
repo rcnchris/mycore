@@ -34,6 +34,13 @@ Exécution de commandes *shell* et traitement du retour.
 $ls = Cmd::exec("cd $path && ls");
 ````
 
+#### Environnement
+Fournit des méthodes d'interrogation de l'environnement.
+````
+$e = new Environnement();
+$e->getPhpVersion();
+````
+
 #### Collection
 Facilite la manipulation des listes de données, tableaux multi-dimensionels...
 ````
