@@ -15,7 +15,6 @@ class EnvironnementTest extends BaseTestCase
 
     public function setUp()
     {
-        parent::setUp();
         $this->e = $this->makeEnvironnement($_SERVER);
     }
 
@@ -40,6 +39,11 @@ class EnvironnementTest extends BaseTestCase
         $this->assertInstanceOf(Items::class, $this->e->get());
     }
 
+    public function testMagicGet()
+    {
+        $this->assertInstanceOf(Items::class, $this->e->argv);
+    }
+
     public function testGetWithKey()
     {
         $this->assertInstanceOf(Items::class, $this->e->get('argv'));
@@ -48,6 +52,32 @@ class EnvironnementTest extends BaseTestCase
     public function testUname()
     {
         $this->assertSimilar(`uname -a`, $this->e->getUname());
+    }
+
+    public function testUnameWithOption()
+    {
+        $this->assertSimilar(`uname -r`, $this->e->getUname('r'));
+    }
+
+    public function testServerName()
+    {
+        $e = $this->makeEnvironnement(['SERVER_NAME' => 'testserver']);
+        $this->assertEquals('testserver', $e->getServerName());
+    }
+
+    public function testApacheModules()
+    {
+        if ($this->getConfig('config.name') != 'local') {
+            $this->markTestSkipped("N'existe pas dans les tests");
+        }
+        $this->assertNotEmpty($this->e->getApacheModules()->toArray());
+    }
+
+    public function testIp()
+    {
+        $this->markTestSkipped('Uniquement en local');
+        $this->assertSimilar($_SERVER['SERVER_ADDR'], $this->e->getIp());
+        $this->assertSimilar($_SERVER['REMOTE_ADDR'], $this->e->getIp('remote'));
     }
 
     public function testApacheUser()
@@ -73,8 +103,12 @@ class EnvironnementTest extends BaseTestCase
 
     public function testIniFiles()
     {
-        $this->assertNotEmpty($this->e->getPhpIniFiles()->toArray());
-        $this->assertNotEmpty($this->e->getPhpIniFiles('curl')->toArray());
+        $this->assertInstanceOf(Items::class, $this->e->getPhpIniFiles());
+    }
+
+    public function testIniFilesWithParameter()
+    {
+        $this->assertInstanceOf(Items::class, $this->e->getPhpIniFiles('curl'));
     }
 
     public function testPhpExtensions()

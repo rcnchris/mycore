@@ -43,10 +43,8 @@ class HtmlExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('code', [$this, 'code'], ['is_safe' => ['html']])
-            ,
-            new \Twig_SimpleFilter('surround', [$this, 'surround'], ['is_safe' => ['html']])
-            ,
+            new \Twig_SimpleFilter('code', [$this, 'code'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('surround', [$this, 'surround'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('getList', [$this, 'getList'], ['is_safe' => ['html']])
         ];
     }

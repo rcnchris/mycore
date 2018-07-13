@@ -36,9 +36,12 @@ $response = new \GuzzleHttp\Psr7\Response();
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
           integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 
+    <!-- Coloration syntaxique -->
+    <link rel="stylesheet" href="/cdn/vendor/shjs/css/sh_acid.min.css">
+
     <title>MyCore</title>
 </head>
-<body>
+<body onload="sh_highlightDocument('/cdn/vendor/shjs/lang/', '.min.js');">
 
 <div class="container-fluid" role="main">
     <?php
@@ -63,5 +66,9 @@ $response = new \GuzzleHttp\Psr7\Response();
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
         integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
         crossorigin="anonymous"></script>
+
+<!-- Coloration syntaxique -->
+<script type="text/javascript" src="/cdn/vendor/shjs/sh_main.min.js"></script>
+
 </body>
 </html>

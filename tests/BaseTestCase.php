@@ -56,6 +56,13 @@ class BaseTestCase extends TestCase
     protected $magicMethods = ['__get', '__set', '__toString'];
 
     /**
+     * Configuration
+     *
+     * @var array
+     */
+    private $config;
+
+    /**
      * @return \Faker\Generator
      */
     public function faker()

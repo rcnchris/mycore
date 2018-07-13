@@ -57,6 +57,25 @@ class Environnement
     }
 
     /**
+     * @param string $key Propriété à retourner
+     *
+     * @return mixed|null|\Rcnchris\Core\Tools\Items
+     */
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * Suppression des propriétés
+     */
+    public function __destruct()
+    {
+        unset($this->server);
+        unset($this->locale);
+    }
+
+    /**
      * Obtenir tous les paramètres ou l'un d'entre eux
      *
      * @param string|null $key Nom de la clé à retourner
@@ -72,10 +91,9 @@ class Environnement
     }
 
     /**
-     * Obtenir le nom du serveur
+     * Obtenir le nom du serveur Web
      *
      * @return string
-     * @codeCoverageIgnore
      */
     public function getServerName()
     {
@@ -122,6 +140,18 @@ class Environnement
     public function getApacheVersion()
     {
         return apache_get_version();
+    }
+
+    /**
+     * Obtenir les modules d'Apache
+     *
+     * @return \Rcnchris\Core\Tools\Items
+     * @see http://php.net/manual/fr/function.apache-get-modules.php
+     * @codeCoverageIgnore
+     */
+    public function getApacheModules()
+    {
+        return $this->makeItems(apache_get_modules());
     }
 
     /**
@@ -211,7 +241,10 @@ class Environnement
      */
     public function getPhpModules()
     {
-        return $this->makeItems(Cmd::exec('php -m'));
+        $modules = Cmd::exec('php -m');
+        array_shift($modules);
+        $modules = array_filter($modules);
+        return $this->makeItems($modules);
     }
 
     /**

@@ -41,6 +41,12 @@ $e = new Environnement();
 $e->getPhpVersion();
 ````
 
+#### Html
+Fournit des méthodes de génération de balises HTML
+````
+Html::makeLink('Google', 'http://google.fr', ['class' => 'btn btn-primary');
+````
+
 #### Collection
 Facilite la manipulation des listes de données, tableaux multi-dimensionels...
 ````
