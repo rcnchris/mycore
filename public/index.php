@@ -1,5 +1,5 @@
 <?php
-$debug = false;
+$debug = true;
 require '../vendor/autoload.php';
 
 // PSR7

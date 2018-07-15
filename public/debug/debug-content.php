@@ -19,38 +19,6 @@ if ($debug) {
     <div class="col">
         <?= Html::surround('Debug', 'h1', ['class' => 'display-3']) ?>
         <hr/>
-        <p>
-            <?=
-            Html::link(
-                Html::img(
-                    'https://img.shields.io/travis/rcnchris/mycore.svg',
-                    ['alt' => 'Travis']
-                ),
-                'https://travis-ci.org/rcnchris/mycore'
-            )
-            ?>
-            <?= Html::img('https://img.shields.io/github/tag/rcnchris/mycore.svg', ['alt' => 'Github tag']) ?>
-            <?=
-            Html::img(
-                'https://img.shields.io/packagist/php-v/rcnchris/core.svg',
-                ['alt' => 'PHP from Packagist']
-            )
-            ?>
-            <?= Html::img(
-                'https://img.shields.io/github/release-date/rcnchris/mycore.svg',
-                ['alt' => 'GitHub Release Date']
-            ) ?>
-
-            <?= Html::img(
-                'https://img.shields.io/packagist/l/rcnchris/core.svg',
-                ['alt' => 'Packagist License']
-            ) ?>
-            <?= Html::img(
-                'https://img.shields.io/packagist/dt/rcnchris/core.svg',
-                ['alt' => 'Packagist Downloads']
-            ) ?>
-        </p>
-        <hr/>
     </div>
 </div>
 
@@ -58,18 +26,21 @@ if ($debug) {
 <div class="row">
     <div class="col-6">
         <?php
-        echo Html::table(
-            [
-                ['name' => 'Mathis', 'year' => 2007],
-                ['name' => 'Clara', 'year' => 2009],
-            ],
-            ['class' => 'table table-bordered']
-        );
-        echo Html::table(['ola', 'ole'], ['class' => 'table table-bordered']);
+//        $to = 'raoul.chrismann@icloud.com';
+//        $subject = 'Test MyCore';
+//        $message = 'Oyé, cela Focntionne ?';
+//        $headers = [
+//            'From' => 'rcn.chris@gmail.com',
+//            'Reply-To' => 'rcn.chris@gmail.com',
+//            'X-Mailer' => 'PHP/' . phpversion()
+//        ];
+//        $mail = new \Rcnchris\Core\Mail\Mail();
+//        r($mail);
         ?>
     </div>
     <div class="col-6">
         <?php
+        // $r = $mail->send('rcn.chris@gmail.com', 'test mycore', "Oyé, Cela fonctionne ?", $headers);
 
         ?>
     </div>
@@ -80,12 +51,29 @@ if ($debug) {
     <div class="col">
         <div class="accordion" id="accDebug">
 
+            <!-- Readme -->
+            <div class="card">
+                <div class="card-header" id="hReadme">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collReadme"
+                                aria-expanded="true" aria-controls="collReadme">
+                            Readme
+                        </button>
+                    </h5>
+                </div>
+
+                <div id="collReadme" class="collapse show" aria-labelledby="hReadme" data-parent="#accDebug">
+                    <div class="card-body">
+                    <?= \Michelf\MarkdownExtra::defaultTransform(file_get_contents('../README.md')) ?>
+                    </div>
+                </div>
+            </div>
+
             <!-- Environnement -->
             <div class="card">
                 <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
-                                aria-expanded="true" aria-controls="collapseOne">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-controls="collapseOne">
                             <?php
                             $context = 'success';
                             $confName = $config->get('config.name');
@@ -101,7 +89,7 @@ if ($debug) {
                     </h5>
                 </div>
 
-                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accDebug">
+                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accDebug">
                     <div class="card-body">
                         <h5 class="card-title">Serveur, configuration et constantes</h5>
                         <table class="table table-sm">

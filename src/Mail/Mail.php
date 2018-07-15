@@ -46,6 +46,6 @@ class Mail
      */
     public static function send($to, $subject, $message, $addHeaders = null, $addParameters = null)
     {
-        return mail($to, $subject, $addHeaders, $addParameters);
+        return mail($to, $subject, $message, $addHeaders, $addParameters);
     }
 }

@@ -59,7 +59,9 @@ class Image
      */
     public function __construct($source = null)
     {
-        $this->setSource($source);
+        if (!is_null($source)) {
+            $this->setSource($source);
+        }
     }
 
     /**
@@ -82,9 +84,7 @@ class Image
     {
         if (is_null($source)) {
             throw new \Exception("La source de l'image est vide");
-        }
-        if (is_string($source) && file_exists($source)) {
-            // Chemin de fichier valide
+        } elseif (is_string($source) && file_exists($source)) {
             $this->img = ImageManagerStatic::make($source);
         } elseif ($source instanceof \Intervention\Image\Image) {
             $this->img = $source;
