@@ -376,7 +376,7 @@ class Environnement
 
     /**
      * Obrenir la version de Composer
-     * 
+     *
      * @return string
      */
     public function getComposerVersion()

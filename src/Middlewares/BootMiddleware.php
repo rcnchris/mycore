@@ -71,7 +71,8 @@ class BootMiddleware extends AbstractMiddleware
         if (version_compare(PHP_VERSION, $this->defaultConfig['php']) < 0) {
             throw new \Exception(
                 "Version de PHP " . PHP_VERSION
-                . " non supportée par cette application ! Elle a besoin de PHP {$this->defaultConfig['php']} ou supérieur."
+                . " non supportée par cette application ! Elle a besoin de PHP "
+                . $this->defaultConfig['php']. " ou supérieur."
             );
         }
 

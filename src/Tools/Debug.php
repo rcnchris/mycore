@@ -5,7 +5,7 @@
  *
  * PHP version 5
  *
- * @category New
+ * @category Debug
  *
  * @package  Rcnchris\Core\Tools
  *
@@ -21,7 +21,7 @@ namespace Rcnchris\Core\Tools;
 /**
  * Class Debug
  *
- * @category New
+ * @category Debug
  *
  * @package  Rcnchris\Core\Tools
  *
@@ -200,7 +200,10 @@ class Debug
     private static function isObject($variable)
     {
         if (!is_object($variable)) {
-            throw new \Exception("Le type de la variable passé à la fonction doit être un objet. Là c'est : " . gettype($variable) . "... Pas bien...");
+            throw new \Exception(
+                "Le type de la variable passé à la fonction doit être un objet. "
+                . "Là c'est : " . gettype($variable) . "... Pas bien..."
+            );
         }
         return $variable;
     }

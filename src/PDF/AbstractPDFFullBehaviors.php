@@ -46,5 +46,14 @@ use Rcnchris\Core\PDF\Behaviors\RowPdfTrait;
  */
 class AbstractPDFFullBehaviors extends AbstractPDF
 {
-    use ColorsPdfTrait, ComponentsPdfTrait, DataPdfTrait, DesignerPdfTrait, IconsPdfTrait, Psr7PdfTrait, RecordSetPdfTrait, RessourcesPdfTrait, RotatePdfTrait, RowPdfTrait;
+    use ColorsPdfTrait,
+        ComponentsPdfTrait,
+        DataPdfTrait,
+        DesignerPdfTrait,
+        IconsPdfTrait,
+        Psr7PdfTrait,
+        RecordSetPdfTrait,
+        RessourcesPdfTrait,
+        RotatePdfTrait,
+        RowPdfTrait;
 }

@@ -130,7 +130,6 @@ class Folder
             if ($human) {
                 $cmd = $cmd . ' -sh ';
                 $size = explode('/', shell_exec($cmd))[0];
-                //$size = preg_replace('~\D~', '', $size) . ' ' . str_replace(preg_replace('~\D~', '', $size), '', $size);
                 return trim($size);
             } else {
                 $cmd = $cmd . ' -sb ';

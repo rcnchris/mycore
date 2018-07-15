@@ -84,7 +84,7 @@ class ImageTest extends BaseTestCase
     public function testSetSourceWithEmptyParameter()
     {
         $this->expectException(\Exception::class);
-        $this->makeImage();
+        $this->makeImage()->setSource(null);
     }
 
     public function testGet()
