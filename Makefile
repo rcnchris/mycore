@@ -44,9 +44,9 @@ code: ## Vérification et correction de la syntaxe
 	@echo -e '$(OK_COLOR)Corrections syntaxiques$(NO_COLOR)'
 	@./vendor/bin/phpcbf
 	@echo -e '$(OK_COLOR)Tests syntaxiques$(NO_COLOR)'
-	@./vendor/bin/phpcs
+	@./vendor/bin/phpcs --ignore=/home/dev/www/_lab/mycore/src/PDF/AbstractPDF.php
 
-test: ## Lance les tests unitaires
+test: code ## Lance les tests unitaires
 	@echo -e '$(OK_COLOR)Tests unitaires$(NO_COLOR)'
 	@./vendor/bin/phpunit --coverage-html public/coverage
 
@@ -54,7 +54,7 @@ doc: code ## Génération de la documentation
 	@echo -e '$(OK_COLOR)Documentation des sources$(NO_COLOR)'
 	@/home/dev/www/phpdoc/./vendor/bin/phpdoc -d $(PROJECT_DIR)/src -t $(PROJECT_DIR)/public/doc --template="responsive"
 
-push: ## Commit et Push tous les changements
+push: test ## Commit et Push tous les changements
 	@git status
 	@git add .
 	@git commit -a -m "MAJ Globale"

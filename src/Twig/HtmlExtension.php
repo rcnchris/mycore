@@ -30,7 +30,7 @@ namespace Rcnchris\Core\Twig;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @version  Release: <1.0.0>
+ * @version  Release: <1.0.1>
  * @since    Release: <0.1.0>
  */
 class HtmlExtension extends \Twig_Extension
@@ -53,16 +53,17 @@ class HtmlExtension extends \Twig_Extension
      * Entourre une valeur d'une balise <code>
      * - Filtre
      *
-     * @param string $value
+     * @param string     $value      Valeur à mettre dans la balise `code`
+     * @param array|null $attributes Attributs de la balise `code`
      *
-     * @return null|string
+     * @return string|null
      */
-    public function code($value)
+    public function code($value, array $attributes = [])
     {
         if (!is_string($value)) {
             return null;
         }
-        return '<code>' . $value . '</code>';
+        return $this->surround($value, 'code', $attributes);
     }
 
     /**
@@ -71,26 +72,28 @@ class HtmlExtension extends \Twig_Extension
      *
      * ### Exemple
      * - `'montexte|surround('code')`
+     * - `'montexte|surround('pre', {class: 'sh_php'})`
      *
-     * @param string $value  Valeur à entourer
-     * @param string $balise Balise HTML
+     * @param string     $value      Valeur à entourer
+     * @param string     $tag        Balise HTML
+     * @param array|null $attributes Attributs de la balise
      *
      * @return string
      */
-    public function surround($value, $balise)
+    public function surround($value, $tag, array $attributes = [])
     {
-        if (!is_string($value) || !is_string($balise)) {
+        if (!is_string($value) || !is_string($tag)) {
             return null;
         }
-        return "<$balise>$value</$balise>";
+        return '<' . $tag . $this->parseAttributes($attributes) . '>' . $value . '</' . $tag . '>';
     }
 
     /**
      * Obtenir une liste ul ou ol
      * - Filtre
      *
-     * @param mixed  $value Liste
-     * @param string $tag   `ul` ou `ol`
+     * @param mixed       $value Liste
+     * @param string|null $tag   `ul` ou `ol`
      *
      * @return string
      */
@@ -124,7 +127,8 @@ class HtmlExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('details', [$this, 'details'], ['is_safe' => ['html']])
+            new \Twig_SimpleFunction('details', [$this, 'details'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('link', [$this, 'link'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -148,5 +152,43 @@ class HtmlExtension extends \Twig_Extension
         $html .= $content;
         $html .= '</details>';
         return $html;
+    }
+
+    /**
+     * Obtenir un lien
+     * - Fonction
+     *
+     * @param string      $url        URL de l'attribut `href`
+     * @param string|null $label      Texte visible
+     * @param array|null  $attributes Attribut de la balise `a`
+     *
+     * @return string
+     */
+    public function link($url, $label = null, array $attributes = [])
+    {
+        $attributes['href'] = $url;
+        if (is_null($label) || $label === '') {
+            $label = $url;
+        }
+        return $this->surround($label, 'a', $attributes);
+    }
+
+    /**
+     * Obtenir les attributs d'une balise HTML dans une chaîne de caractères
+     *
+     * @param array|null $attributes Attributs d'une balise HTML
+     *
+     * @return string|null
+     */
+    private function parseAttributes(array $attributes = [])
+    {
+        $ret = [];
+        foreach ($attributes as $attribute => $value) {
+            $ret[] = $attribute . '="' . $value . '"';
+        }
+        sort($ret);
+        return !empty($ret)
+            ? ' ' . implode(' ', $ret)
+            : null;
     }
 }

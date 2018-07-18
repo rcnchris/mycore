@@ -37,6 +37,7 @@ use Cake\ORM\Entity;
  */
 class CakeEntity extends Entity
 {
+    // phpcs:disable
     /**
      * Propriétés accessibles en modification
      *
@@ -46,6 +47,7 @@ class CakeEntity extends Entity
         '*' => true,
         'id' => false
     ];
+    // phpcs:enable
 
     /**
      * Obtenir le chemin racine de l'application

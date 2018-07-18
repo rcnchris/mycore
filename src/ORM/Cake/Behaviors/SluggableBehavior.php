@@ -41,6 +41,7 @@ use Cake\Utility\Text;
  */
 class SluggableBehavior extends Behavior
 {
+    // phpcs:disable
     /**
      * Options par défaut du behavior
      *
@@ -51,6 +52,7 @@ class SluggableBehavior extends Behavior
         'slug' => 'slug',
         'replacement' => '-'
     ];
+    // phpcs:enable
 
     /**
      * Génère le slug à partir de la configuration

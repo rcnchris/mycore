@@ -39,6 +39,7 @@ use Cake\ORM\Behavior;
  */
 class DateAppBehavior extends Behavior
 {
+    // phpcs:disable
     /**
      * Configuration par défaut des dates d'application
      *
@@ -49,6 +50,7 @@ class DateAppBehavior extends Behavior
         'end' => 'end_at',
         'year' => 10,
     ];
+    // phpcs:enable
 
     /**
      * Renseigne les champs de dates d'application

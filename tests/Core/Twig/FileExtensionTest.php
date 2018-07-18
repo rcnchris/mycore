@@ -4,6 +4,24 @@ namespace Tests\Rcnchris\Core\Twig;
 use Rcnchris\Core\Twig\FileExtension;
 use Tests\Rcnchris\BaseTestCase;
 
+/**
+ * Class FileExtensionTest
+ * <ul>
+ * <li>Helper de manipulation des fichiers et dossiers</li>
+ * </ul>
+ *
+ * @category Twig
+ *
+ * @package  Tests\Rcnchris\Core\Twig
+ *
+ * @author   <rcn.chris@gmail.com>
+ *
+ * @license  https://github.com/rcnchris GPL
+ *
+ * @version  Release: <1.0.0>
+ *
+ * @link     https://github.com/rcnchris on Github
+ */
 class FileExtensionTest extends BaseTestCase {
 
     /**

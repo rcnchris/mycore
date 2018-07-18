@@ -39,6 +39,7 @@ use Rcnchris\Core\ORM\Cake\Behaviors\SluggableBehavior;
  */
 class CakeTable extends Table
 {
+    // phpcs:disable
     /**
      * Options par défaut du behavior `SluggableBehavior`
      *
@@ -51,13 +52,6 @@ class CakeTable extends Table
     ];
 
     /**
-     * Options personnalisées du slug de la Table enfant
-     *
-     * @var array
-     */
-    protected $behaviorSlugOptions = [];
-
-    /**
      * Options par défaut de l'arbre intervallaire
      *
      * @var array
@@ -68,6 +62,14 @@ class CakeTable extends Table
         'right' => 'rght',
         'level' => 'level'
     ];
+    // phpcs:enable
+
+    /**
+     * Options personnalisées du slug de la Table enfant
+     *
+     * @var array
+     */
+    protected $behaviorSlugOptions = [];
 
     /**
      * Options personnalisées de l'arbre intervallaire

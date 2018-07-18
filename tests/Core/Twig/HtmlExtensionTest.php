@@ -110,4 +110,16 @@ class HtmlExtensionTest extends BaseTestCase
             $this->getMessage("La liste est incorrecte")
         );
     }
+
+    public function testLink()
+    {
+        $expect='<a href="http://google.fr" target="_blank">Google</a>';
+        $this->assertSimilar($expect, $this->ext->link('http://google.fr', 'Google', ['target' => '_blank']));
+    }
+
+    public function testLinkWithoutLabel()
+    {
+        $expect='<a href="http://google.fr" target="_blank">http://google.fr</a>';
+        $this->assertSimilar($expect, $this->ext->link('http://google.fr', null, ['target' => '_blank']));
+    }
 }
