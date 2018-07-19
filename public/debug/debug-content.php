@@ -6,11 +6,13 @@ if ($debug) {
     ini_set("display_errors", 1);
 
     // Objets
+    $config = require ROOT . DS . 'tests/config.php';
     $e = new \Rcnchris\Core\Tools\Environnement();
     $folder = new \Rcnchris\Core\Tools\Folder(dirname(__DIR__));
     $composer = new \Rcnchris\Core\Tools\Composer(ROOT . DIRECTORY_SEPARATOR . 'composer.json');
     $session = new \Rcnchris\Core\Session\PHPSession();
-    $config = new Rcnchris\Core\Config\ConfigContainer(require ROOT . DS . 'tests/config.php');
+    $config = new Rcnchris\Core\Config\ConfigContainer($config);
+    $cdn = new \Rcnchris\Core\Html\Cdn($config->get('cdn'));
 }
 ?>
 
@@ -26,21 +28,11 @@ if ($debug) {
 <div class="row">
     <div class="col-6">
         <?php
-//        $to = 'raoul.chrismann@icloud.com';
-//        $subject = 'Test MyCore';
-//        $message = 'Oyé, cela Focntionne ?';
-//        $headers = [
-//            'From' => 'rcn.chris@gmail.com',
-//            'Reply-To' => 'rcn.chris@gmail.com',
-//            'X-Mailer' => 'PHP/' . phpversion()
-//        ];
-//        $mail = new \Rcnchris\Core\Mail\Mail();
-//        r($mail);
+        
         ?>
     </div>
     <div class="col-6">
         <?php
-        // $r = $mail->send('rcn.chris@gmail.com', 'test mycore', "Oyé, Cela fonctionne ?", $headers);
 
         ?>
     </div>

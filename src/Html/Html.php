@@ -213,7 +213,7 @@ class Html
      *
      * @return string
      */
-    private static function parseAttributes(array $attributes)
+    protected static function parseAttributes(array $attributes)
     {
         $attr = [];
         foreach ($attributes as $key => $value) {

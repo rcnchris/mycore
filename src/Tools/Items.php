@@ -307,7 +307,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param mixed $key Clé à retourner
      *
-     * @return $this|null
+     * @return self|null
      */
     public function get($key)
     {
@@ -370,7 +370,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Obtenir la liste des clés de la liste
      *
-     * @return $this
+     * @return self
      */
     public function keys()
     {
@@ -395,7 +395,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param mixed|null $key Clé dont il faut retourner la plus petite valeur
      *
-     * @return mixed|$this
+     * @return mixed|self
      */
     public function min($key = null)
     {
@@ -412,7 +412,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param mixed|null $key Clé dont il faut retourner la plus grande valeur
      *
-     * @return mixed|$this
+     * @return mixed|self
      */
     public function max($key = null)
     {
@@ -427,7 +427,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Obtenir le premier élément des items
      *
-     * @return $this
+     * @return self
      * @see http://php.net/manual/fr/function.array-slice.php
      */
     public function first()
@@ -440,7 +440,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Obtenir le dernier éléments des items
      *
-     * @return $this
+     * @return self
      */
     public function last()
     {
@@ -455,7 +455,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param mixed      $key    Clé à extraire
      * @param mixed|null $indice Clé qui servira d'indice à la liste extraite
      *
-     * @return $this|null
+     * @return self|null
      *
      * @see http://php.net/manual/fr/function.array-column.php
      */
@@ -472,7 +472,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param bool|null $recurs Ajoute les valeurs avec des clés identiques
      *
-     * @return $this
+     * @return self
      * @see http://php.net/manual/fr/function.array-merge.php
      */
     public function merge($k1, $k2, $recurs = false)
@@ -491,7 +491,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      *                                 Les clés non-numériques ne seront pas affectées par cette configuration,
      *                                 et seront toujours préservées.
      *
-     * @return $this
+     * @return self
      *
      * @see http://php.net/manual/fr/function.array-reverse.php
      */
@@ -508,7 +508,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param mixed|null $key Clé dont il faut inverser les clés avec les valeurs
      *
-     * @return $this
+     * @return self
      */
     public function flip($key = null)
     {
@@ -553,7 +553,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param int  $n   Nombre d'items à retourner, 1 âr défaut
      * @param null $key Clé des clés à retourner
      *
-     * @return $this
+     * @return self
      */
     public function rand($n = 1, $key = null)
     {
@@ -569,7 +569,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      *
      * @param mixed|null $key Clé dont il faut compter les valeurs
      *
-     * @return $this
+     * @return self
      * @see http://php.net/manual/fr/function.array-count-values.php
      */
     public function countValues($key = null)
@@ -602,7 +602,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param $k1
      * @param $k2
      *
-     * @return \Rcnchris\Core\Tools\Items
+     * @return self
      * @see http://php.net/manual/fr/function.array-diff.php
      */
     public function diffValues($k1, $k2)
@@ -616,7 +616,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param $k1
      * @param $k2
      *
-     * @return \Rcnchris\Core\Tools\Items
+     * @return self
      * @see http://php.net/manual/fr/function.array-diff-assoc.php
      */
     public function diffAssoc($k1, $k2)
@@ -630,7 +630,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param $k1
      * @param $k2
      *
-     * @return \Rcnchris\Core\Tools\Items
+     * @return self
      * @see http://php.net/manual/fr/function.array-diff-key.php
      */
     public function diffKeys($k1, $k2)
@@ -645,7 +645,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param $k1
      * @param $k2
      *
-     * @return \Rcnchris\Core\Tools\Items
+     * @return self
      * @see http://php.net/manual/fr/function.array-intersect.php
      */
     public function intersectValues($k1, $k2)
@@ -660,7 +660,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param $k1
      * @param $k2
      *
-     * @return $this
+     * @return self
      * @see http://php.net/manual/fr/function.array-intersect-key.php
      */
     public function intersectKeys($k1, $k2)
@@ -674,7 +674,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param null $key
      * @param int  $case
      *
-     * @return $this
+     * @return self
      *
      * @see http://php.net/manual/fr/function.array-change-key-case.php
      */
@@ -693,7 +693,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param bool|null $preserveKeys Lorsque définit à `TRUE`, les clés seront préservées. Par défaut, vaut `FALSE` ce
      *                                qui réindexera le tableau résultant numériquement
      *
-     * @return \Rcnchris\Core\Tools\Items
+     * @return self
      *
      * @see http://php.net/manual/fr/function.array-chunk.php
      */
@@ -709,7 +709,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param array $keys   Clés des tableaux à fusioner
      * @param array $values Clés des tableaux à fusioner
      *
-     * @return \Rcnchris\Core\Tools\Items
+     * @return self
      * @see http://php.net/manual/fr/function.array-combine.php
      */
     public function combine($keys, $values)
@@ -743,7 +743,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param array $indexes
      * @param       $value
      *
-     * @return $this|null
+     * @return self|null
      *
      * @see http://php.net/manual/fr/function.array-shift.php
      * @see http://php.net/manual/fr/function.array-key-exists.php
