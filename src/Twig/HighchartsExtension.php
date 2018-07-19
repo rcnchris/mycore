@@ -37,6 +37,13 @@ class HighchartsExtension extends HtmlExtension
 {
 
     /**
+     * URL du CDN de Highcharts
+     *
+     * @var string
+     */
+    private $cdnUrl = 'https://code.highcharts.com/highcharts.js';
+
+    /**
      * Options par défaut des graphiques
      *
      * @var array
@@ -65,7 +72,30 @@ class HighchartsExtension extends HtmlExtension
         ];
     }
 
-    public function line($items, array $options = [])
+    /**
+     * Obtenir la balise `script` du CDN de Highcharts
+     *
+     * @param string|null $url URL du CDN
+     *
+     * @return string
+     */
+    public function cdn($url = null)
+    {
+        if (is_null($url)) {
+            $url = $this->cdnUrl;
+        }
+        return '<script src="' . $url . '"></script>';
+    }
+
+    /**
+     * Obtenir un graphique en ligne à partir d'un tableau de données
+     *
+     * @param array      $items   Données du graphique
+     * @param array|null $options Options du graphique
+     *
+     * @return string
+     */
+    public function chartLine($items, array $options = [])
     {
         $options = array_merge($this->defaultOptions['line'], $options);
 
@@ -84,15 +114,17 @@ class HighchartsExtension extends HtmlExtension
             $keys .= "'$k',";
             $values .= "$v,";
         }
+        $keys = substr($keys, 0, strlen($keys) - 1);
+        $values = substr($values, 0, strlen($values) - 1);
 
         $js = "$(function () {";
         $js .= "var myChart = Highcharts.chart(" . $options['id'] . ", {";
         $js .= "chart: {type: 'line'},";
         $js .= "plotOptions: {line: {dataLabels: {enabled: true}}},";
+        $js .= "xAxis: {categories: [$keys]},";
+        $js .= "yAxis: {title: {text: '" . $options['yTitle'] . "'}},";
+        $js .= "title: {text: '" . $options['title'] . "'},";
         $js .= "legend: " . $options['legend'] . ",";
-        $js .= "xAxis: { categories: [$keys]},";
-        $js .= "yAxis: {title: {'text': " . $options['yTitle'] . "}},";
-        $js .= "title: {text: " . $options['title'] . "},";
         $js .= "credits: {enabled: " . $options['credits'] . "},";
         $js .= "series: [{data: [$values]}]";
         $js .= "});});";

@@ -56,14 +56,44 @@ class HighchartsExtensionTest extends BaseTestCase
         $this->assertNotEmpty($this->ext->getFunctions());
     }
 
+    public function testCdn()
+    {
+        $expect = '<script src="https://code.highcharts.com/highcharts.js"></script>';
+        $this->assertSimilar($expect, $this->ext->cdn());
+    }
+
+    public function testCdnWithOldies()
+    {
+        $expect = '<script src="https://code.highcharts.com/highcharts.js"></script>';
+        $this->assertSimilar($expect, $this->ext->cdn());
+    }
+
     public function testLine()
     {
-        $expectDiv = '<div id="chartTest" style="height: 400px; min-width: 300px;"></div>';
-        $expectScript = "<script>$(function () {var myChart = Highcharts.chart(chartTest, {chart: {type: 'line'},plotOptions: {line: {dataLabels: {enabled: true}}},legend: false,xAxis: { categories: ['Mathis','Raphaël','Clara',]},yAxis: {title: {'text': Minots}},title: {text: Graphique test},credits: {enabled: false},series: [{data: [10,10,8,]}]});});</script>";
         $items = ['Mathis' => 10, 'Raphaël' => 10, 'Clara' => 8];
+        $expectDiv = '<div id="chartTest" style="height: 400px; min-width: 300px;"></div>';
+        $expectScript = "<script>
+            $(function () {
+                var myChart = Highcharts.chart(chartTest, {
+                    chart: {type: 'line'},
+                    plotOptions: {line: {dataLabels: {enabled: true}}},
+                    xAxis: {
+                        categories: ['Mathis','Raphaël','Clara']
+                    },
+                    yAxis: {title: {text: 'Minots'}},
+                    title: {text: 'Graphique test'},
+                    legend: false,
+                    credits: {enabled: false},
+                    series: [{
+                        data: [10,10,8]
+                    }]
+                });
+            });
+        </script>";
+
         $this->assertSimilar(
             $expectDiv . $expectScript,
-            $this->ext->line($items, [
+            $this->ext->chartLine($items, [
                     'id' => 'chartTest',
                     'height' => 400,
                     'width' => 300,
@@ -76,12 +106,30 @@ class HighchartsExtensionTest extends BaseTestCase
 
     public function testLineWithoutId()
     {
-        $expectDiv = '<div id="chart" style="height: 400px; min-width: 300px;"></div>';
-        $expectScript = "<script>$(function () {var myChart = Highcharts.chart(chart, {chart: {type: 'line'},plotOptions: {line: {dataLabels: {enabled: true}}},legend: false,xAxis: { categories: ['Mathis','Raphaël','Clara',]},yAxis: {title: {'text': Minots}},title: {text: Graphique test},credits: {enabled: false},series: [{data: [10,10,8,]}]});});</script>";
         $items = ['Mathis' => 10, 'Raphaël' => 10, 'Clara' => 8];
+        $expectDiv = '<div id="chart" style="height: 400px; min-width: 300px;"></div>';
+        $expectScript = "<script>
+            $(function () {
+                var myChart = Highcharts.chart(chart, {
+                    chart: {type: 'line'},
+                    plotOptions: {line: {dataLabels: {enabled: true}}},
+                    xAxis: {
+                        categories: ['Mathis','Raphaël','Clara']
+                    },
+                    yAxis: {title: {text: 'Minots'}},
+                    title: {text: 'Graphique test'},
+                    legend: false,
+                    credits: {enabled: false},
+                    series: [{
+                        data: [10,10,8]
+                    }]
+                });
+            });
+        </script>";
+
         $this->assertSimilar(
             $expectDiv . $expectScript,
-            $this->ext->line($items, [
+            $this->ext->chartLine($items, [
                     'height' => 400,
                     'width' => 300,
                     'yTitle' => 'Minots',
@@ -93,12 +141,27 @@ class HighchartsExtensionTest extends BaseTestCase
 
     public function testLineWithMinParameters()
     {
-        $expectDiv = '<div id="chart" style="height: 400px; min-width: 300px;"></div>';
-        $expectScript = "<script>$(function () {var myChart = Highcharts.chart(chart, {chart: {type: 'line'},plotOptions: {line: {dataLabels: {enabled: true}}},legend: false,xAxis: { categories: ['Mathis','Raphaël','Clara',]},yAxis: {title: {'text': }},title: {text: },credits: {enabled: false},series: [{data: [10,10,8,]}]});});</script>";
         $items = ['Mathis' => 10, 'Raphaël' => 10, 'Clara' => 8];
-        $this->assertSimilar(
-            $expectDiv . $expectScript,
-            $this->ext->line($items)
-        );
+        $expectDiv = '<div id="chart" style="height: 400px; min-width: 300px;"></div>';
+        $expectScript = "<script>
+            $(function () {
+                var myChart = Highcharts.chart(chart, {
+                    chart: {type: 'line'},
+                    plotOptions: {line: {dataLabels: {enabled: true}}},
+                    xAxis: {
+                        categories: ['Mathis','Raphaël','Clara']
+                    },
+                    yAxis: {title: {text: ''}},
+                    title: {text: ''},
+                    legend: false,
+                    credits: {enabled: false},
+                    series: [{
+                        data: [10,10,8]
+                    }]
+                });
+            });
+        </script>";
+
+        $this->assertSimilar($expectDiv . $expectScript, $this->ext->chartLine($items));
     }
 }
