@@ -232,43 +232,30 @@ $pdf->toView(ResponseInterface $response, 'filename');
 <em>Les comportements sont gérés via des traits :</em>
 
 <dl>
-
     <dt>Signets</dt>
     <dd>Helper de gestion hiérarchique des signets.</dd>
-
     <dt>Couleurs</dt>
     <dd>Helper d'utilisation d'une palette de couleurs. Permet d'utiliser des couleurs nommées.</dd>
-
     <dt>Données</dt>
     <dd>Helper d'utilisation d'une collection de données.</dd>
-
     <dt>Codes à barres</dt>
     <dd>Helper de génération de codes à barres.</dd>
-
     <dt>Cercles et ellipses</dt>
     <dd>Helper de génération de cercles et ellipses.</dd>
-
     <dt>Rectangles arrondis</dt>
     <dd>Helper de génération des rectangles avec les bords arrondis. Les comportements sotn gérés comme la prorpiété CSS <code>radius</code>.</dd>
-
     <dt>Rotation de texte et d'image</dt>
     <dd>Helper de rotation de textes et d'images.</dd>
-
     <dt>Grille graduée</dt>
     <dd>Helper de génération de pages avec une grille graduée. Utile pour le développement.</dd>
-
     <dt>Colonnes et lignes</dt>
     <dd>Helper de génération de tableaux.</dd>
-
     <dt>Icônes</dt>
     <dd>Helper de génération d'icônes.</dd>
-
     <dt>Fichier attaché</dt>
     <dd>Helper de gestion des fichiers attachés.</dd>
-
     <dt>PSR7</dt>
     <dd>Permet de visualiser ou télécharger le document à partir du navigateur en respectant la norme du <a href="https://www.php-fig.org/psr/psr-7/" target="_blank">PSR7</a>.</dd>
-
 </dl>
 
 -------
@@ -277,40 +264,28 @@ $pdf->toView(ResponseInterface $response, 'filename');
 Ajoute des extensions à Twig.
 
 <dl>
-
     <dt>Debug</dt>
     <dd>Outils et fonctions de debug</dd>
-
     <dt>Texte</dt>
     <dd>Helper de manipulation des chaînes de caractères</dd>
-
     <dt>Fichiers et dossiers</dt>
     <dd>Helper de manipulation des fichiers et dossiers</dd>
-
     <dt>Dates</dt>
     <dd>Helper de manipulation des dates</dd>
-
     <dt>Tableaux</dt>
     <dd>Helper de manipulation des tableaux</dd>
-
     <dt>HTML</dt>
     <dd>Génération de balises HTML</dd>
-
     <dt>Formulaire</dt>
     <dd>Génération de balises HTML spécifiques aux formulaires HTML</dd>
-
     <dt>Icônes</dt>
     <dd>Génération d'icônes à partir de poclices spécialisées</dd>
-
     <dt>Bootstrap 4</dt>
     <dd>Génération de balises HTML qui utilisent les classes de <code>Bootstrap 4</code></dd>
-
     <dt>Highcharts</dt>
     <dd>Génération de graphiques à l'aide de la libraire <code>Highcharts</code></dd>
-
     <dt>Messages Flash</dt>
     <dd>Helper de génération de messages flash</dd>
-
 </dl>
 
 -------
@@ -318,19 +293,14 @@ Ajoute des extensions à Twig.
 ## Middlewares PSR7
 
 <dl>
-
     <dt>Boot</dt>
     <dd>Démarrage de l'application. Définition de la localisation, environnement et constantes.</dd>
-
     <dt>PoweredBy</dt>
     <dd>Ajoute un tag aux headers de la réponse.</dd>
-
     <dt>Session</dt>
     <dd>Gestion de la session utilisateur.</dd>
-
     <dt>Cookies</dt>
     <dd>Gestion des cookies.</dd>
-
 </dl>
 
 -------
@@ -341,17 +311,14 @@ Ajoute des extensions à Twig.
 ## Todo <progress></progress>
 
 <dl>
-
     <dt>Synology</dt>
     <dd>
         - Utilisation des cookies.
     </dd>
-
     <dt>Twig</dt>
     <dd>
         - <code>ArrayExtension</code> : Améliorer toHml pour pouvoir déterminer le sens du tableau
     </dd>
-
 </dl>
 
 -------
