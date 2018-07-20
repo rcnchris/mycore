@@ -52,47 +52,68 @@ return [
      * CDN locaux et distants
      */
     'cdn' => [
-        'highcharts' => [
-            'name' => 'Highcharts',
-            'core' => [
-                'js' => [
-                    'src' => 'https://code.highcharts.com/highcharts.js',
-                    'min' => 'https://code.highcharts.com/highcharts.min.js',
-                ]
-            ]
-        ],
         'jquery' => [
             'name' => 'jQuery',
-            'path' => '/components/jquery',
             'core' => [
-                'js' => [
-                    'min' => '/jquery.min.js',
-                    'src' => '/jquery.js',
+                '151' => [
+                    'js' => [
+                        'min' => 'https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js',
+                    ],
+                ],
+                'latest' => [
+                    'js' => [
+                        'min' => 'https://code.jquery.com/jquery-3.3.1.slim.min.js',
+                    ],
                 ],
             ]
         ],
-        'bootstrap4' => [
+        'bootstrap' => [
             'name' => 'Bootstrap 4',
-            'path' => '/twbs/bootstrap',
             'core' => [
-                'css' => [
-                    'min' => '/dist/css/bootstrap.min.css',
-                    'src' => '/dist/css/bootstrap.css',
-                ],
-                'js' => [
-                    'min' => '/dist/js/bootstrap.min.js',
-                    'src' => '/dist/js/bootstrap.js',
-                ],
+                'latest' => [
+                    'css' => [
+                        'min' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css',
+                    ],
+                    'js' => [
+                        'min' => '/dist/js/bootstrap.min.js',
+                        'src' => '/dist/js/bootstrap.js',
+                    ],
+                ]
             ],
+        ],
+        'popper' => [
+            'name' => 'Popper',
+            'core' => [
+                'latest' => [
+                    'js' => [
+                        'min' => 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js'
+                    ]
+                ]
+            ]
         ],
         'datatables' => [
             'name' => 'Datatables',
             'core' => [
-                'css' => [
-                    'src' => 'https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.css',
-                    'min' => 'https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css'
+                'latest' => [
+                    'css' => [
+                        'src' => 'https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.css',
+                        'min' => 'https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css'
+                    ]
+                ],
+
+            ]
+        ],
+        'highcharts' => [
+            'name' => 'Highcharts',
+            'core' => [
+                'latest' => [
+                    'js' => [
+                        'src' => 'https://code.highcharts.com/highcharts.js',
+                        'min' => 'https://code.highcharts.com/highcharts.min.js',
+                    ]
                 ]
             ]
-        ]
+        ],
+
     ]
 ];

@@ -41,13 +41,13 @@ class CdnTest extends BaseTestCase
 
     public function testGetScript()
     {
-        $expect = '<script src="https://code.highcharts.com/highcharts.js"></script>';
+        $expect = '<script src="https://code.highcharts.com/highcharts.js" type="text/javascript"></script>';
         $this->assertSimilar($expect, $this->cdn->script('highcharts'));
     }
 
     public function testGetScriptMin()
     {
-        $expect = '<script src="/components/jquery/jquery.min.js"></script>';
+        $expect = '<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" type="text/javascript"></script>';
         $this->assertSimilar($expect, $this->cdn->script('jquery', 'min'));
     }
 
@@ -63,13 +63,13 @@ class CdnTest extends BaseTestCase
 
     public function testGetCssLink()
     {
-        $expect = '<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.css"/>';
+        $expect = '<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.css" rel="stylesheet" type="text/css"/>';
         $this->assertSimilar($expect, $this->cdn->css('datatables'));
     }
 
     public function testGetCssLinkMin()
     {
-        $expect = '<link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css"/>';
+        $expect = '<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css"/>';
         $this->assertSimilar($expect, $this->cdn->css('datatables', 'min'));
     }
 
@@ -80,6 +80,6 @@ class CdnTest extends BaseTestCase
 
     public function testGetCssWithWrongType()
     {
-        $this->assertNull($this->cdn->css('bootstrap4', 'fake'));
+        $this->assertNull($this->cdn->css('bootstrap', 'fake'));
     }
 }

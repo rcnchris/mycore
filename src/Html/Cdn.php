@@ -94,18 +94,20 @@ class Cdn extends Html
      * @param string      $key        Nom du CDN
      * @param string|null $type       Type de script (src ou min)
      * @param array|null  $attributes Attributs de la balise `script`
+     * @param string      $version    Version demandée
      *
      * @return null|string
      */
-    public function script($key, $type = 'src', array $attributes = [])
+    public function script($key, $type = 'src', array $attributes = [], $version = 'latest')
     {
         if (!$this->has($key)) {
             return null;
         }
-        $script = $this->get($key)->get('core.js')->get($type);
+        $script = $this->get($key)->get('core')->get($version)->get('js')->get($type);
         if ($script) {
             $defaultAttributes = [
-                'src' => $this->get($key)->get('path') . $script,
+                'src' => $this->get($key)->get('prefix') . $script,
+                'type' => 'text/javascript'
             ];
             return $this->surround(
                 '',
@@ -122,20 +124,21 @@ class Cdn extends Html
      * @param string      $key        Nom du CDN
      * @param string|null $type       Type de css (src ou min)
      * @param array|null  $attributes Attributs de la balise `link`
+     * @param string      $version    Version demandée
      *
      * @return null|string
      */
-
-    public function css($key, $type = 'src', array $attributes = [])
+    public function css($key, $type = 'src', array $attributes = [], $version = 'latest')
     {
         if (!$this->has($key)) {
             return null;
         }
-        $css = $this->get($key)->get('core.css')->get($type);
+        $css = $this->get($key)->get('core')->get($version)->get('css')->get($type);
         if ($css) {
             $defaultAttributes = [
+                'href' => $this->get($key)->get('prefix') . $css,
                 'rel' => 'stylesheet',
-                'href' => $this->get($key)->get('path') . $css,
+                'type' => 'text/css'
             ];
             return '<link' . $this->parseAttributes(array_merge($defaultAttributes, $attributes)) . '/>';
         }

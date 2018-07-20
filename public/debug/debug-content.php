@@ -7,12 +7,13 @@ if ($debug) {
 
     // Objets
     $config = require ROOT . DS . 'tests/config.php';
+    $config = new Rcnchris\Core\Config\ConfigContainer($config);
     $e = new \Rcnchris\Core\Tools\Environnement();
     $folder = new \Rcnchris\Core\Tools\Folder(dirname(__DIR__));
     $composer = new \Rcnchris\Core\Tools\Composer(ROOT . DIRECTORY_SEPARATOR . 'composer.json');
     $session = new \Rcnchris\Core\Session\PHPSession();
-    $config = new Rcnchris\Core\Config\ConfigContainer($config);
     $cdn = new \Rcnchris\Core\Html\Cdn($config->get('cdn'));
+    
 }
 ?>
 
@@ -28,12 +29,13 @@ if ($debug) {
 <div class="row">
     <div class="col-6">
         <?php
-        
+            r($cdn)
         ?>
     </div>
     <div class="col-6">
         <?php
-
+        r($cdn->script('jquery', 'min'));
+        r($cdn->css('bootstrap', 'min'))
         ?>
     </div>
 </div>
