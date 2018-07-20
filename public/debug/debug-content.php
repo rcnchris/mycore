@@ -12,7 +12,8 @@ if ($debug) {
     $folder = new \Rcnchris\Core\Tools\Folder(dirname(__DIR__));
     $composer = new \Rcnchris\Core\Tools\Composer(ROOT . DIRECTORY_SEPARATOR . 'composer.json');
     $session = new \Rcnchris\Core\Session\PHPSession();
-    $cdn = new \Rcnchris\Core\Html\Cdn($config->get('cdn'));
+    $html = Html::getInstance();
+    $html->setCdns($config->get('cdn'));
 
 }
 ?>
@@ -29,12 +30,12 @@ if ($debug) {
 <div class="row">
     <div class="col-6">
         <?php
-            r($cdn)
+            r($html)
         ?>
     </div>
     <div class="col-6">
         <?php
-        echo $cdn->table($cdn->get('highcharts')->toArray(), ['class' => 'table table-sm'], true, true);
+        r($html->script('jquery', 'min'))
         ?>
     </div>
 </div>

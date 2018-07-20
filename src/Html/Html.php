@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Html;
 
+use Rcnchris\Core\Tools\Items;
+
 /**
  * Class Html
  *
@@ -41,6 +43,13 @@ class Html
      * @var self
      */
     private static $instance;
+
+    /**
+     * Liste des CDN
+     *
+     * @var \Rcnchris\Core\Tools\Items
+     */
+    private static $cdns;
 
     /**
      * Obtenir l'instance de cette classe
@@ -260,5 +269,82 @@ class Html
         return !empty($attr)
             ? ' ' . implode(' ', $attr)
             : null;
+    }
+
+    /**
+     * Obtenir la balise `link` pour le CSS d'un CDN
+     *
+     * @param string      $key        Nom du CDN
+     * @param string|null $type       Type de css (src ou min)
+     * @param array|null  $attributes Attributs de la balise `link`
+     * @param string      $version    Version demandée
+     *
+     * @return null|string
+     */
+    public static function css($key, $type = 'src', array $attributes = [], $version = 'latest')
+    {
+        if (!self::$cdns->has($key)) {
+            return null;
+        }
+        $css = self::$cdns->get($key)->get('core')->get($version)->get('css')->get($type);
+        if ($css) {
+            $defaultAttributes = [
+                'href' => self::$cdns->get($key)->get('prefix') . $css,
+                'rel' => 'stylesheet',
+                'type' => 'text/css'
+            ];
+            return '<link' . self::parseAttributes(array_merge($defaultAttributes, $attributes)) . '/>';
+        }
+        return null;
+    }
+
+    /**
+     * Obtenir la balise `script` d'un CDN
+     *
+     * @param string      $key        Nom du CDN
+     * @param string|null $type       Type de script (src ou min)
+     * @param array|null  $attributes Attributs de la balise `script`
+     * @param string      $version    Version demandée
+     *
+     * @return null|string
+     */
+    public static function script($key, $type = 'src', array $attributes = [], $version = 'latest')
+    {
+        if (!self::$cdns->has($key)) {
+            return null;
+        }
+        $script = self::$cdns->get($key)->get('core')->get($version)->get('js')->get($type);
+        if ($script) {
+            $defaultAttributes = [
+                'src' => self::$cdns->get($key)->get('prefix') . $script,
+                'type' => 'text/javascript'
+            ];
+            return self::surround(
+                '',
+                'script',
+                array_merge($defaultAttributes, $attributes)
+            );
+        }
+        return null;
+    }
+
+    /**
+     * Obtenir les CDN
+     *
+     * @return \Rcnchris\Core\Tools\Items
+     */
+    public static function getCdns()
+    {
+        return self::$cdns;
+    }
+
+    /**
+     * Définir les CDN
+     *
+     * @param array $cdns
+     */
+    public static function setCdns(array $cdns)
+    {
+        self::$cdns = new Items($cdns);
     }
 }

@@ -14,12 +14,14 @@ class HtmlTest extends BaseTestCase
     public function setUp()
     {
         $this->html = Html::getInstance();
+        $this->html->setCdns($this->getConfig('cdn'));
     }
 
     public function testInstance()
     {
         $this->ekoTitre('Html - Helper HTML');
         $this->assertInstanceOf(Html::class, $this->html);
+        $this->assertArrayHasKey('jquery', $this->html->getCdns()->toArray());
     }
 
     public function testLink()
@@ -304,5 +306,49 @@ class HtmlTest extends BaseTestCase
         </table>
         ';
         $this->assertSimilar($expect, $this->html->table($list));
+    }
+
+    public function testGetScript()
+    {
+        $expect = '<script src="https://code.highcharts.com/highcharts.js" type="text/javascript"></script>';
+        $this->assertSimilar($expect, $this->html->script('highcharts'));
+    }
+
+    public function testGetScriptMin()
+    {
+        $expect = '<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" type="text/javascript"></script>';
+        $this->assertSimilar($expect, $this->html->script('jquery', 'min'));
+    }
+
+    public function testGetScriptWithWrongType()
+    {
+        $this->assertNull($this->html->script('jquery', 'fake'));
+    }
+
+    public function testGetScriptWithMissingKey()
+    {
+        $this->assertNull($this->html->script('fake', 'src'));
+    }
+
+    public function testGetCssLink()
+    {
+        $expect = '<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.css" rel="stylesheet" type="text/css"/>';
+        $this->assertSimilar($expect, $this->html->css('datatables'));
+    }
+
+    public function testGetCssLinkMin()
+    {
+        $expect = '<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css"/>';
+        $this->assertSimilar($expect, $this->html->css('datatables', 'min'));
+    }
+
+    public function testGetCssWithWrongKey()
+    {
+        $this->assertNull($this->html->css('fake'));
+    }
+
+    public function testGetCssWithWrongType()
+    {
+        $this->assertNull($this->html->css('bootstrap', 'fake'));
     }
 }
