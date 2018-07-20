@@ -46,6 +46,11 @@ class ConfigContainer implements ContainerInterface
      */
     private $config;
 
+    /**
+     * Constructeur
+     *
+     * @param array $config
+     */
     public function __construct(array $config = [])
     {
         $this->config = $config;

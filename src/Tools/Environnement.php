@@ -50,6 +50,11 @@ class Environnement
      */
     private $locale;
 
+    /**
+     * Constructeur
+     *
+     * @param array|null $server Contenu de la variable `$_SERVER`
+     */
     public function __construct($server = null)
     {
         $this->server = is_null($server) ? new Items($_SERVER) : new Items($server);
@@ -57,6 +62,8 @@ class Environnement
     }
 
     /**
+     * Est appelée pour lire des données depuis des propriétés inaccessibles.
+     *
      * @param string $key Propriété à retourner
      *
      * @return mixed|null|\Rcnchris\Core\Tools\Items

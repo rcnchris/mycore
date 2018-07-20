@@ -43,6 +43,8 @@ class Seeding extends AbstractSeed
     const YEAR_APPLICATION_DATE = 10;
 
     /**
+     * Tableau des données à insérer
+     *
      * @var array
      */
     protected $items = [];
@@ -72,9 +74,8 @@ class Seeding extends AbstractSeed
      * Trace du seeding
      *
      * @param string   $description Description du seeding
-     *
-     * @param int|null $nbItems     Nombre d'items insérés par le seeding
      * @param string   $migration   Nom de la migration associée
+     * @param int|null $nbItems     Nombre d'items insérés par le seeding
      */
     protected function logSeeding($description, $migration = null, $nbItems = null)
     {
@@ -93,6 +94,8 @@ class Seeding extends AbstractSeed
     }
 
     /**
+     * Appelle la méthode `start`
+     *
      * @param float|null $start Timestamp de départ
      *
      * @return void
@@ -105,6 +108,8 @@ class Seeding extends AbstractSeed
     }
 
     /**
+     * Fixe le début du traitement de seeding
+     *
      * @return float|mixed
      */
     private function start()

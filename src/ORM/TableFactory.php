@@ -19,9 +19,7 @@
 namespace Rcnchris\Core\ORM;
 
 use Cake\Database\Connection;
-use Cake\Database\Schema\TableSchema;
 use Cake\Datasource\ConnectionManager;
-use Cake\ORM\Locator\TableLocator;
 use Rcnchris\Core\ORM\Cake\CakeTable;
 use Rcnchris\Core\ORM\Phinx\PhinxTable;
 use Cake\ORM\TableRegistry;
@@ -71,6 +69,8 @@ class TableFactory
     private static $orm;
 
     /**
+     * Configuration de la table demandée
+     *
      * @var array
      */
     private $config;

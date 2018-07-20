@@ -31,7 +31,7 @@ use Rcnchris\Core\ORM\Cake\Behaviors\SluggableBehavior;
  *
  * @category Table
  *
- * @package  App\ORM\Cake
+ * @package  Rcnchris\Core\ORM\Cake
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -375,6 +375,8 @@ class CakeTable extends Table
     }
 
     /**
+     * Obtenir les données des tables associées sous forme de listes
+     *
      * @return array
      */
     public function getRelated()

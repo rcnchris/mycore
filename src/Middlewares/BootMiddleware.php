@@ -54,6 +54,8 @@ class BootMiddleware extends AbstractMiddleware
     ];
 
     /**
+     * Est appelée lorsqu'un script tente d'appeler un objet comme une fonction. (callable)
+     *
      * @param \Psr\Http\Message\RequestInterface  $request  Requête PSR7
      * @param \Psr\Http\Message\ResponseInterface $response Réponse PSR7
      * @param callable|null                       $next     Middleware suivant

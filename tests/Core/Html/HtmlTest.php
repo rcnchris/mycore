@@ -103,4 +103,206 @@ class HtmlTest extends BaseTestCase
             $this->html->source($this->rootPath() . '/tests/config.php')
         );
     }
+
+    public function testTableWithSimpleList()
+    {
+        $list = ['ola','ole','oli'];
+        $expect = '
+        <table>
+            <tbody>
+                <tr><th>0</th><td>ola</td></tr>
+                <tr><th>1</th><td>ole</td></tr>
+                <tr><th>2</th><td>oli</td></tr>
+            </tbody>
+        </table>
+        ';
+        $this->assertSimilar($expect, $this->html->table($list));
+    }
+
+    public function testTableWithSimpleListWithoutHeader()
+    {
+        $list = ['ola','ole','oli'];
+        $expect = '
+        <table>
+            <tbody>
+                <tr><td>ola</td></tr>
+                <tr><td>ole</td></tr>
+                <tr><td>oli</td></tr>
+            </tbody>
+        </table>
+        ';
+        $this->assertSimilar($expect, $this->html->table($list, [], false));
+    }
+
+    public function testTableRecursive()
+    {
+        $list = [
+            'list1' => ['ola','ole','oli'],
+            'list2' => ['olo','olu','oly'],
+        ];
+        $expect = '
+        <table>
+            <tbody>
+                <tr>
+                    <th>list1</th>
+                    <td>
+                        <table>
+                            <tbody>
+                                <tr><th>0</th><td>ola</td></tr>
+                                <tr><th>1</th><td>ole</td></tr>
+                                <tr><th>2</th><td>oli</td></tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <th>list2</th>
+                    <td>
+                        <table>
+                            <tbody>
+                                <tr><th>0</th><td>olo</td></tr>
+                                <tr><th>1</th><td>olu</td></tr>
+                                <tr><th>2</th><td>oly</td></tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        ';
+        $this->assertSimilar($expect, $this->html->table($list));
+    }
+
+    public function testTableWithSimpleListWithCaption()
+    {
+        $list = ['ola','ole','oli'];
+        $expect = '
+        <table>
+            <caption>Avec un titre</caption>
+            <tbody>
+                <tr><th>0</th><td>ola</td></tr>
+                <tr><th>1</th><td>ole</td></tr>
+                <tr><th>2</th><td>oli</td></tr>
+            </tbody>
+        </table>
+        ';
+        $this->assertSimilar($expect, $this->html->table($list, ['caption' => 'Avec un titre']));
+    }
+
+    public function testTableWithSimpleListColMode()
+    {
+        $list = ['ola','ole','oli'];
+        $expect = '
+        <table>
+            <thead>
+                <tr>
+                    <th>0</th>
+                    <th>1</th>
+                    <th>2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ola</td>
+                    <td>ole</td>
+                    <td>oli</td>
+                </tr>
+            </tbody>
+        </table>
+        ';
+        $this->assertSimilar($expect, $this->html->table($list, [], true, true));
+    }
+
+    public function testTableWithSimpleListColModeRecursive()
+    {
+        $list = [
+            'list1' => ['ola','ole','oli'],
+            'list2' => ['olo','olu','oly'],
+        ];
+        $expect = '
+        <table>
+            <thead>
+                <tr>
+                    <th>list1</th>
+                    <th>list2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>0</th>
+                                    <th>1</th>
+                                    <th>2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ola</td>
+                                    <td>ole</td>
+                                    <td>oli</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>0</th>
+                                    <th>1</th>
+                                    <th>2</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>olo</td>
+                                    <td>olu</td>
+                                    <td>oly</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        ';
+        $this->assertSimilar($expect, $this->html->table($list, [], true, true));
+    }
+
+    public function testTableWithWithAttributes()
+    {
+        $list = ['ola','ole','oli'];
+        $expect = '
+        <table class="table table-sm">
+            <tbody>
+                <tr><th>0</th><td>ola</td></tr>
+                <tr><th>1</th><td>ole</td></tr>
+                <tr><th>2</th><td>oli</td></tr>
+            </tbody>
+        </table>
+        ';
+        $this->assertSimilar($expect, $this->html->table($list, ['class' => 'table table-sm']));
+    }
+
+    public function testTableWithAssociativeArray()
+    {
+        $list = [
+            'Mathis' => 12,
+            'Raphaël' => 14,
+            'Clara' => 16,
+        ];
+        $expect = '
+        <table>
+            <tbody>
+                <tr><th>Mathis</th><td>12</td></tr>
+                <tr><th>Raphaël</th><td>14</td></tr>
+                <tr><th>Clara</th><td>16</td></tr>
+            </tbody>
+        </table>
+        ';
+        $this->assertSimilar($expect, $this->html->table($list));
+    }
 }

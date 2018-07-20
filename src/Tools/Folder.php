@@ -91,6 +91,8 @@ class Folder
     }
 
     /**
+     * Est appelée pour lire des données depuis des propriétés inaccessibles.
+     *
      * @param string $key Dossier ou fichier dans l'instance
      *
      * @return self|null

@@ -177,31 +177,69 @@ class Html
 
     /**
      * Obtenir un tableau HTML à partir d'une liste
-     * Todo : En cours
+     * - `$html->table($items);`
+     * - `$html->table($items, ['class' => 'table table-sm']);`
+     * - `$html->table($items, ['caption' => 'Un titre']);`
+     * - `$html->table($items, [], false);`
      *
-     * @param mixed       $items      Liste
-     * @param array|null  $attributes Attributs du tableau
-     * @param bool|null   $withHeader fficher les entêtes
-     * @param string|null $mode       Lite ou présentation (list, presentation)
+     * @param mixed      $items      Liste
+     * @param array|null $attributes Attributs du tableau
+     * @param bool|null  $withHeader fficher les entêtes
+     * @param bool|null  $colMode    Lite ou présentation (list, presentation)
      *
      * @return string
      */
-    public static function table($items, array $attributes = [], $withHeader = true, $mode = 'presentation')
+    public static function table($items, array $attributes = [], $withHeader = true, $colMode = false)
     {
+        // Caption
+        $caption = null;
+        if (array_key_exists('caption', $attributes)) {
+            $caption = self::surround($attributes['caption'], 'caption');
+            unset($attributes['caption']);
+        }
+
+        // Attributes
         $attributes = self::parseAttributes($attributes);
+
         $html = '<table' . $attributes . '>';
-        foreach ($items as $key => $value) {
-            $html .= '<tbody>';
+        $html .= $caption;
+
+        // Header
+        if ($colMode) {
+            $html .= '<thead><tr>';
+            foreach (array_keys($items) as $key) {
+                $html .= self::surround($key, 'th');
+            }
+            $html .= '</tr></thead>';
+        }
+
+        // Body
+        $html .= '<tbody>';
+        if ($colMode) {
             $html .= '<tr>';
-            $html .= self::surround($key, 'th');
-            if (is_array($value)) {
-                $html .= self::surround(self::table($value, [], $withHeader, $mode), 'td');
-            } else {
-                $html .= self::surround($value, 'td');
+            foreach ($items as $key => $value) {
+                if (is_array($value)) {
+                    $html .= self::surround(self::table($value, [], $withHeader, $colMode), 'td');
+                } else {
+                    $html .= self::surround($value, 'td');
+                }
             }
             $html .= '</tr>';
-            $html .= '</tbody>';
+        } else {
+            foreach ($items as $key => $value) {
+                $html .= '<tr>';
+                if ($withHeader) {
+                    $html .= self::surround($key, 'th');
+                }
+                if (is_array($value)) {
+                    $html .= self::surround(self::table($value, [], $withHeader, $colMode), 'td');
+                } else {
+                    $html .= self::surround($value, 'td');
+                }
+                $html .= '</tr>';
+            }
         }
+        $html .= '</tbody>';
         $html .= '</table>';
         return $html;
     }

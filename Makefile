@@ -46,13 +46,22 @@ code: ## Vérification et correction de la syntaxe
 	@echo -e '$(OK_COLOR)Tests syntaxiques$(NO_COLOR)'
 	@./vendor/bin/phpcs --ignore=/home/dev/www/_lab/mycore/src/PDF/AbstractPDF.php
 
-test: code ## Lance les tests unitaires
+test: ## Lance les tests unitaires
+	@echo -e '$(OK_COLOR)Tests unitaires$(NO_COLOR)'
+	@./vendor/bin/phpunit --coverage-html public/coverage
+
+testcode: code ## Lance les tests unitaires en vérifiant la syntaxe du code
 	@echo -e '$(OK_COLOR)Tests unitaires$(NO_COLOR)'
 	@./vendor/bin/phpunit --coverage-html public/coverage
 
 doc: code ## Génération de la documentation
 	@echo -e '$(OK_COLOR)Documentation des sources$(NO_COLOR)'
-	@/home/dev/www/phpdoc/./vendor/bin/phpdoc -d $(PROJECT_DIR)/src -t $(PROJECT_DIR)/public/doc --template="responsive"
+	@/home/dev/www/phpdoc/./vendor/bin/phpdoc -d $(PROJECT_DIR)/src -t $(PROJECT_DIR)/public/doc --template="$(TEMPLATE_DOC)"
+
+prepush: testcode doc ## Préparation avant un push
+	@echo -e '$(OK_COLOR)Documentation des sources$(NO_COLOR)'
+	@/home/dev/www/phpdoc/./vendor/bin/phpdoc -d $(PROJECT_DIR)/src -t $(PROJECT_DIR)/public/doc --template="$(TEMPLATE_DOC)"
+	@git status
 
 push: test ## Commit et Push tous les changements
 	@git status

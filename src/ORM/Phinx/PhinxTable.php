@@ -28,6 +28,8 @@ use Phinx\Db\Table;
  *
  * @category ORM
  *
+ * @package  Rcnchris\Core\ORM\Phinx
+ *
  * @author   Raoul <rcn.chris@gmail.com>
  *
  * @version  Release: <1.0.0>

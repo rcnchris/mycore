@@ -43,11 +43,15 @@ use Psr\Http\Message\ResponseInterface;
 abstract class AbstractMiddleware
 {
     /**
+     * Conteneur de dépendances
+     *
      * @var ContainerInterface
      */
     protected $container;
 
     /**
+     * Est appelée lorsqu'un script tente d'appeler un objet comme une fonction. (callable)
+     *
      * @param \Psr\Http\Message\RequestInterface  $request  Requête PSR7
      * @param \Psr\Http\Message\ResponseInterface $response Réponse PSR7
      * @param callable|null                       $next     Middleware suivant
@@ -100,6 +104,8 @@ abstract class AbstractMiddleware
     }
 
     /**
+     * Est appelée pour lire des données depuis des propriétés inaccessibles.
+     *
      * @param string $key Nom de la clé du conteneur à retourner
      *
      * @return mixed|null

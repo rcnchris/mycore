@@ -13,7 +13,7 @@ if ($debug) {
     $composer = new \Rcnchris\Core\Tools\Composer(ROOT . DIRECTORY_SEPARATOR . 'composer.json');
     $session = new \Rcnchris\Core\Session\PHPSession();
     $cdn = new \Rcnchris\Core\Html\Cdn($config->get('cdn'));
-    
+
 }
 ?>
 
@@ -34,8 +34,7 @@ if ($debug) {
     </div>
     <div class="col-6">
         <?php
-        r($cdn->script('jquery', 'min'));
-        r($cdn->css('bootstrap', 'min'))
+        echo $cdn->table($cdn->get('highcharts')->toArray(), ['class' => 'table table-sm'], true, true);
         ?>
     </div>
 </div>

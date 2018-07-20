@@ -45,6 +45,8 @@ class Cdn extends Html
     private $items;
 
     /**
+     * Constructeur
+     *
      * @param mixed $items Liste des CDN
      */
     public function __construct($items)
