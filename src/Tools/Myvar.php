@@ -301,4 +301,24 @@ class Myvar
         }
         return false;
     }
+
+    /**
+     * Obtenir la valeur booléenne de la valeur
+     *
+     * @return bool
+     */
+    public function toBool()
+    {
+        return boolval($this->var);
+    }
+
+    /**
+     * Obtenir la valeur entière de la variable
+     *
+     * @return int
+     */
+    public function toInt()
+    {
+        return intval($this->var);
+    }
 }

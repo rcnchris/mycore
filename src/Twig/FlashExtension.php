@@ -58,7 +58,7 @@ class FlashExtension extends \Twig_Extension
     /**
      * Obtenir la liste des fonctions
      *
-     * @return array[\Twig_SimpleFunction]
+     * @return \Twig_SimpleFunction[]
      */
     public function getFunctions()
     {
@@ -69,6 +69,7 @@ class FlashExtension extends \Twig_Extension
 
     /**
      * Retourne le message correspondant au type
+     * - Fonction
      *
      * @param string $type Type de message à retourner
      *

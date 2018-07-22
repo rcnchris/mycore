@@ -6,7 +6,6 @@ require '../vendor/autoload.php';
 $request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
 $response = new \GuzzleHttp\Psr7\Response();
 
-
 // Middlewares
 (new \Rcnchris\Core\Middlewares\BootMiddleware())->__invoke($request, $response, function () {
     return null;
@@ -34,9 +33,7 @@ $response = new \GuzzleHttp\Psr7\Response();
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <?php //echo $cdn->css('bootstrap', 'min', ['integrity' => 'sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB', 'crossorigin' => "anonymous"]) ?>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
-          integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
 
     <!-- Coloration syntaxique -->
     <link rel="stylesheet" href="/cdn/vendor/shjs/css/sh_acid.min.css">
@@ -53,9 +50,7 @@ $response = new \GuzzleHttp\Psr7\Response();
         include 'debug/debug-content.php';
     }
     ?>
-
 </div>
-
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -4,7 +4,8 @@ namespace Tests\Rcnchris\Core\Twig;
 use Rcnchris\Core\Twig\ArrayExtension;
 use Tests\Rcnchris\BaseTestCase;
 
-class ArrayExtensionTest extends BaseTestCase {
+class ArrayExtensionTest extends BaseTestCase
+{
 
     /**
      * @var ArrayExtension
@@ -33,7 +34,12 @@ class ArrayExtensionTest extends BaseTestCase {
         $tab2 = ['mcn', 'rcn', 'ccn'];
         $tab = $this->ext->arrayMerge($tab1, $tab2);
         $this->assertEquals([
-            'ola', 'ole', 'oli', 'mcn', 'rcn', 'ccn'
+            'ola',
+            'ole',
+            'oli',
+            'mcn',
+            'rcn',
+            'ccn'
         ], $tab);
     }
 
@@ -48,8 +54,10 @@ class ArrayExtensionTest extends BaseTestCase {
     {
         $tab = [
             ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
-            , ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
-            , ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
+            ,
+            ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
+            ,
+            ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
         ];
         $this->assertEquals(
             ['Mathis', 'Raphaël', 'Clara']
@@ -61,14 +69,18 @@ class ArrayExtensionTest extends BaseTestCase {
     {
         $tab = [
             ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
-            , ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
-            , ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
+            ,
+            ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
+            ,
+            ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
         ];
         $this->assertEquals(
             [
                 'Mathis' => 'male'
-                , 'Raphaël' => 'male'
-                , 'Clara' => 'female'
+                ,
+                'Raphaël' => 'male'
+                ,
+                'Clara' => 'female'
             ]
             , $this->ext->extract($tab, 'genre', 'name')
         );
@@ -81,87 +93,96 @@ class ArrayExtensionTest extends BaseTestCase {
         $this->assertSimilar(
             '<table>
                 <tbody>
-                <tr><td>0</td><td>ola</td></tr>
-                <tr><td>1</td><td>ole</td></tr>
-                <tr><td>2</td><td>oli</td></tr>
+                    <tr><td>ola</td></tr>
+                    <tr><td>ole</td></tr>
+                    <tr><td>oli</td></tr>
                 </tbody>
             </table>'
             , $tab
         );
     }
 
-    public function testToHtmlWithSimpleHeader()
+    public function testToHtmlWithKeys()
     {
         $tab = ['ola', 'ole', 'oli'];
-        $tab = $this->ext->toHtml($tab, ['header' => true]);
+        $tab = $this->ext->toHtml($tab, ['key' => true]);
         $this->assertSimilar(
             '<table>
-                <thead>
-                <tr><th>#</th><th>Libellé</th></tr>
-                </thead>
                 <tbody>
-                <tr><td>0</td><td>ola</td></tr>
-                <tr><td>1</td><td>ole</td></tr>
-                <tr><td>2</td><td>oli</td></tr>
+                    <tr><th>0</th><td>ola</td></tr>
+                    <tr><th>1</th><td>ole</td></tr>
+                    <tr><th>2</th><td>oli</td></tr>
                 </tbody>
             </table>'
             , $tab
         );
     }
 
-    public function testToHtmlWithSimpleHeaderWithClass()
+    public function testToHtmlWithKeysWithClass()
     {
         $tab = ['ola', 'ole', 'oli'];
-        $tab = $this->ext->toHtml($tab, ['header' => true, 'class' => 'table']);
+        $tab = $this->ext->toHtml($tab, ['key' => true, 'class' => 'table']);
         $this->assertSimilar(
             '<table class="table">
-                <thead>
-                <tr><th>#</th><th>Libellé</th></tr>
-                </thead>
                 <tbody>
-                <tr><td>0</td><td>ola</td></tr>
-                <tr><td>1</td><td>ole</td></tr>
-                <tr><td>2</td><td>oli</td></tr>
+                    <tr><th>0</th><td>ola</td></tr>
+                    <tr><th>1</th><td>ole</td></tr>
+                    <tr><th>2</th><td>oli</td></tr>
                 </tbody>
             </table>'
             , $tab
         );
     }
 
-    public function testToHtmlWithHeader()
+    public function testToHtmlWithRecordset()
     {
         $tab = [
-            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
-            , ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
+            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'],
+            ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
         ];
-        $tab = $this->ext->toHtml($tab);
-        $this->assertSimilar('
+        $expect = '
             <table>
-            <thead>
-            <tr><th>name</th><th>year</th><th>genre</th></tr>
-            </thead>
-            <tbody>
-            <tr><td>Mathis</td><td>2007</td><td>male</td></tr>
-            <tr><td>Raphaël</td><td>2007</td><td>male</td></tr>
-            </tbody>
-            </table>'
-            , $tab);
+                <tbody>
+                    <tr>
+                        <td>
+                            <table>
+                                <tbody>
+                                    <tr><td>Mathis</td></tr>
+                                    <tr><td>2007</td></tr>
+                                    <tr><td>male</td></tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table>
+                                <tbody>
+                                    <tr><td>Raphaël</td></tr>
+                                    <tr><td>2007</td></tr>
+                                    <tr><td>male</td></tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        ';
+        $this->assertSimilar($expect, $this->ext->toHtml($tab));
     }
 
     public function testToHtmlWithAssociativeArray()
     {
-        $tab = $this->ext->toHtml(['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']);
-        $this->assertSimilar("
+        $tab = ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'];
+        $expect ='
             <table>
-            <thead>
-            <tr><th>Clé</th><th>Valeur</th></tr>
-            </thead>
-            <tbody>
-            <tr><th>name</th><td>Mathis</td></tr>
-            <tr><th>year</th><td>2007</td></tr>
-            <tr><th>genre</th><td>male</td></tr>
-            </tbody>
+                <tbody>
+                    <tr><td>Mathis</td></tr>
+                    <tr><td>2007</td></tr>
+                    <tr><td>male</td></tr>
+                </tbody>
             </table>
-        ", $tab);
+        ';
+        $this->assertSimilar($expect, $this->ext->toHtml($tab));
     }
 }

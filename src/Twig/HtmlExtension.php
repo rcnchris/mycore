@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Twig;
 
+use Rcnchris\Core\Html\Html;
+
 /**
  * Class HtmlExtension
  * <ul>
@@ -30,7 +32,7 @@ namespace Rcnchris\Core\Twig;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @version  Release: <1.0.1>
+ * @version  Release: <1.0.2>
  * @since    Release: <0.1.0>
  */
 class HtmlExtension extends \Twig_Extension
@@ -45,7 +47,7 @@ class HtmlExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFilter('code', [$this, 'code'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('surround', [$this, 'surround'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('getList', [$this, 'getList'], ['is_safe' => ['html']])
+            new \Twig_SimpleFilter('liste', [$this, 'liste'], ['is_safe' => ['html']])
         ];
     }
 
@@ -55,15 +57,13 @@ class HtmlExtension extends \Twig_Extension
      *
      * @param string     $value      Valeur à mettre dans la balise `code`
      * @param array|null $attributes Attributs de la balise `code`
+     * @param bool|null  $withHeader Ajoute l'emplacement du fichier, si `$value` en est un
      *
-     * @return string|null
+     * @return null|string
      */
-    public function code($value, array $attributes = [])
+    public function code($value, array $attributes = [], $withHeader = false)
     {
-        if (!is_string($value)) {
-            return null;
-        }
-        return $this->surround($value, 'code', $attributes);
+        return Html::source($value, $attributes, $withHeader);
     }
 
     /**
@@ -82,41 +82,22 @@ class HtmlExtension extends \Twig_Extension
      */
     public function surround($value, $tag, array $attributes = [])
     {
-        if (!is_string($value) || !is_string($tag)) {
-            return null;
-        }
-        return '<' . $tag . $this->parseAttributes($attributes) . '>' . $value . '</' . $tag . '>';
+        return Html::surround($value, $tag, $attributes);
     }
 
     /**
      * Obtenir une liste ul ou ol
      * - Filtre
      *
-     * @param mixed       $value Liste
-     * @param string|null $tag   `ul` ou `ol`
+     * @param mixed       $value    Liste
+     * @param string|null $tag      `ul`, `ol` ou `dl`
+     * @param bool|null   $withKeys Les valeurs sont affichées avec leur clés
      *
      * @return string
      */
-    public function getList($value, $tag = 'ul')
+    public function liste($value, $tag = 'ul', $withKeys = true)
     {
-        $html = "<$tag>";
-        if (is_array($value)) {
-            foreach ($value as $k => $v) {
-                if (is_string($v)) {
-                    $html .= "<li>$k : $v</li>";
-                } elseif (is_numeric($v)) {
-                    $html .= "<li>$k : " . $v . "</li>";
-                } elseif (is_object($v)) {
-                    $html .= "<li>$k : " . get_class($v) . "</li>";
-                } elseif (is_array($v) && !is_array($k)) {
-                    $html .= "<li>$k : " . implode(', ', array_keys($v)) . "</li>";
-                } elseif (is_resource($v)) {
-                    $html .= "<li>$k : " . get_resource_type($v) . "</li>";
-                }
-            }
-            $html .= "</$tag>";
-        }
-        return $html;
+        return Html::liste($value, ['type' => $tag], $withKeys);
     }
 
     /**
@@ -140,18 +121,15 @@ class HtmlExtension extends \Twig_Extension
      * - `$ext->details($titre, $content);`
      * - `{{ details(titre, content) }}`
      *
-     * @param string $title   Titre
-     * @param string $content Contenu caché
+     * @param string     $title      Titre
+     * @param string     $content    Contenu caché
+     * @param array|null $attributes Attributs de la balise `details`
      *
      * @return string
      */
-    public function details($title, $content)
+    public function details($title, $content, array $attributes = [])
     {
-        $html = '<details>';
-        $html .= "<summary>$title</summary>";
-        $html .= $content;
-        $html .= '</details>';
-        return $html;
+        return Html::details($title, $content, $attributes);
     }
 
     /**
@@ -166,29 +144,6 @@ class HtmlExtension extends \Twig_Extension
      */
     public function link($url, $label = null, array $attributes = [])
     {
-        $attributes['href'] = $url;
-        if (is_null($label) || $label === '') {
-            $label = $url;
-        }
-        return $this->surround($label, 'a', $attributes);
-    }
-
-    /**
-     * Obtenir les attributs d'une balise HTML dans une chaîne de caractères
-     *
-     * @param array|null $attributes Attributs d'une balise HTML
-     *
-     * @return string|null
-     */
-    private function parseAttributes(array $attributes = [])
-    {
-        $ret = [];
-        foreach ($attributes as $attribute => $value) {
-            $ret[] = $attribute . '="' . $value . '"';
-        }
-        sort($ret);
-        return !empty($ret)
-            ? ' ' . implode(' ', $ret)
-            : null;
+        return Html::link($url, $label, $attributes);
     }
 }

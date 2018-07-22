@@ -30,7 +30,7 @@ use Phinx\Db\Adapter\AdapterFactory;
  *
  * @category ORM
  *
- * @package  App\ORM
+ * @package  Rcnchris\Core\ORM\Cake
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *

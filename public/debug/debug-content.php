@@ -14,7 +14,6 @@ if ($debug) {
     $session = new \Rcnchris\Core\Session\PHPSession();
     $html = Html::getInstance();
     $html->setCdns($config->get('cdn'));
-
 }
 ?>
 
@@ -29,13 +28,38 @@ if ($debug) {
 <!-- Debug en cours -->
 <div class="row">
     <div class="col-6">
-        <?php
-            r($html)
-        ?>
+        <form action="#" method="post" enctype="multipart/form-data">
+            <?= Html::field('year', 2018, ['label' => 'Année', 'class' => 'form-control']) ?>
+            <hr/>
+            <?= Html::field('yearDisabled', 2018, ['disabled' => true, 'class' => 'form-control']) ?>
+            <hr/>
+            <?= Html::field('textRequired', 'ola', ['required' => true, 'class' => 'form-control']) ?>
+            <hr/>
+            <?= Html::field('birthday', (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05'), ['class' => 'form-control']) ?>
+            <hr/>
+            <?= Html::field('vrai', 0, ['type' => 'checkbox']) ?>
+            <hr/>
+            <?= Html::field('fileIn', null, ['type' => 'file']) ?>
+            <hr/>
+            <?= Html::field('description', 2018, ['type' => 'textarea', 'class' => 'form-control', 'rows' => 5]) ?>
+            <hr/>
+            <?= Html::field('drivers', null, ['items' => \PDO::getAvailableDrivers(), 'empty' => true, 'class' => 'form-control']) ?>
+            <hr/>
+            <?= Html::field('mulDrivers[]', null, ['items' => \PDO::getAvailableDrivers(), 'multiple' => true, 'class' => 'form-control']) ?>
+            <hr/>
+            <?= Html::button('Feu !', 'submit', ['class' => 'btn btn-primary']) ?>
+            <hr/>
+        </form>
+
     </div>
     <div class="col-6">
         <?php
-        r($html->script('jquery', 'min'))
+        if (isset($_POST)) {
+            echo Html::table($_POST, ['class' => 'table table-sm']);
+        }
+        if (isset($_FILES)) {
+            echo Html::table($_FILES, ['class' => 'table table-sm']);
+        }
         ?>
     </div>
 </div>

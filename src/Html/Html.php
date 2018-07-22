@@ -67,15 +67,18 @@ class Html
     /**
      * Génère un lien
      *
-     * @param string     $label      Label du lien
-     * @param string     $link       Lien
-     * @param array|null $attributes Attributs du lien
+     * @param string      $link       Lien
+     * @param string|null $label      Label du lien
+     * @param array|null  $attributes Attributs du lien
      *
      * @return string
      */
-    public static function link($label, $link, array $attributes = [])
+    public static function link($link, $label = null, array $attributes = [])
     {
         $attributes = array_merge($attributes, ['href' => $link]);
+        if (is_null($label)) {
+            $label = $link;
+        }
         return self::surround($label, 'a', $attributes);
     }
 
@@ -94,7 +97,7 @@ class Html
     }
 
     /**
-     * Générer une liste `ul` ou `ol` selon le type
+     * Générer une liste `ul`, `ol` ou `dl`
      *
      * @param mixed      $items      Liste des items à lister
      * @param array|null $attributes Attributs de la liste
@@ -110,10 +113,22 @@ class Html
         $html = '';
         if ($type != 'dl') {
             foreach ($items as $key => $value) {
-                if (!is_array($value)) {
+                if (is_string($value) || is_numeric($value)) {
                     $html = $withKeys
                         ? $html . self::surround($key . ' : ' . $value, 'li')
                         : $html . self::surround($value, 'li');
+                } elseif (is_object($value)) {
+                    $html = $withKeys
+                        ? $html . self::surround($key . ' : ' . get_class($value), 'li')
+                        : $html . self::surround(get_class($value), 'li');
+                } elseif (is_array($value) && !is_array($key)) {
+                    $html = $withKeys
+                        ? $html . self::surround($key . ' : ' . implode(', ', array_keys($value)), 'li')
+                        : $html . self::surround(implode(', ', array_keys($value)), 'li');
+                } elseif (is_resource($value)) {
+                    $html = $withKeys
+                        ? $html . self::surround($key . ' : ' . get_resource_type($value), 'li')
+                        : $html . self::surround(get_resource_type($value), 'li');
                 }
             }
         } else {
@@ -149,9 +164,10 @@ class Html
      */
     public static function surround($content, $tag, array $attributes = [])
     {
-        $attr = self::parseAttributes($attributes);
-        return '<' . $tag . $attr . '>' . $content . '</' . $tag . '>';
-        //return "<$tag $attr>$content</$tag>";
+        if (!is_string($tag) || is_array($content)) {
+            return null;
+        }
+        return '<' . $tag . self::parseAttributes($attributes) . '>' . $content . '</' . $tag . '>';
     }
 
     /**
@@ -166,6 +182,9 @@ class Html
      */
     public static function source($content, array $attributes = [], $withHeader = false)
     {
+        if (is_array($content)) {
+            return null;
+        }
         $header = null;
         $ext = null;
         if (is_file($content)) {
@@ -254,18 +273,36 @@ class Html
     }
 
     /**
+     * Obtenir une balise `input`
+     *
+     * @param array|null $attributes
+     *
+     * @return string
+     */
+    public static function input(array $attributes = [])
+    {
+        return '<input' . self::parseAttributes($attributes) . '>';
+    }
+
+    /**
      * Obtenir les attributs d'une balise HTML dans une chaîne de caractères
      *
      * @param array $attributes
      *
      * @return string
      */
-    protected static function parseAttributes(array $attributes)
+    public static function parseAttributes(array $attributes)
     {
         $attr = [];
+        $singleAttributes = ['checked', 'selected', 'multiple', 'required', 'disabled'];
         foreach ($attributes as $key => $value) {
-            $attr[] = $key . '="' . $value . '"';
+            if (in_array($key, $singleAttributes)) {
+                $attr[] = $key;
+            } else {
+                $attr[] = $key . '="' . $value . '"';
+            }
         }
+        sort($attr);
         return !empty($attr)
             ? ' ' . implode(' ', $attr)
             : null;
@@ -346,5 +383,154 @@ class Html
     public static function setCdns(array $cdns)
     {
         self::$cdns = new Items($cdns);
+    }
+
+    /**
+     * Obtenir la balise html qui correspond au type demandé
+     *
+     * @param string     $name    Nom de la balise générée
+     * @param mixed|null $value   Valeur actuelle
+     * @param array|null $options Options de la balise à générer
+     *
+     * @return null|string
+     */
+    public static function field($name, $value = null, array $options = [])
+    {
+        $html = null;
+        $type = isset($options['type']) ? $options['type'] : 'text';
+        if (!is_null($value)) {
+            $value = self::toStr($value);
+        }
+        $attributes = [
+            'name' => $name,
+            'id' => $name,
+            'type' => $type,
+            'value' => $value
+        ];
+        if (array_key_exists('disabled', $options)) {
+            $attributes['disabled'] = true;
+        }
+        if (array_key_exists('required', $options)) {
+            $attributes['required'] = true;
+        }
+
+        // Class ?
+        if (array_key_exists('class', $options)) {
+            $attributes['class'] = $options['class'];
+        }
+
+        if ($type === 'textarea') {
+            unset($attributes['value']);
+            unset($attributes['type']);
+            if (array_key_exists('rows', $options)) {
+                $attributes['rows'] = $options['rows'];
+            }
+            if (array_key_exists('cols', $options)) {
+                $attributes['cols'] = $options['cols'];
+            }
+            $html = self::surround($value, 'textarea', $attributes);
+        } elseif ($type === 'file') {
+            $html = self::input($attributes);
+        } elseif ($type === 'checkbox') {
+            $html = self::checkbox($value, $attributes);
+        } elseif (array_key_exists('items', $options)) {
+            unset($attributes['value']);
+            unset($attributes['type']);
+            if (array_key_exists('empty', $options)) {
+                $attributes['empty'] = true;
+            }
+            if (array_key_exists('multiple', $options)) {
+                $attributes['multiple'] = true;
+            }
+            $html = self::select($value, $options['items'], $attributes);
+        } else {
+            $html = self::input($attributes);
+        }
+        // Label ?
+        if (array_key_exists('label', $options)) {
+            $html = self::surround($options['label'], 'label', ['for' => $attributes['id']]) . $html;
+        }
+        return $html;
+    }
+
+    /**
+     * Obtenir un bouton
+     *
+     * @param string $label      Texte du bouton
+     * @param string $type       Type du bouton (button, submit, reset)
+     * @param array  $attributes attrbibut du bouton
+     *
+     * @return string
+     */
+    public static function button($label, $type = 'submit', array $attributes = [])
+    {
+        $attributes['type'] = $type;
+        return self::surround($label, 'button', $attributes);
+    }
+
+    /**
+     * Obtenir un checkbox
+     *
+     * @param mixed $value      Valeur actuelle
+     * @param array $attributes Attibuts de la balise `input`
+     *
+     * @return string
+     */
+    private static function checkbox($value, array $attributes = [])
+    {
+        $hiddenCheck = self::input([
+            'type' => 'hidden',
+            'name' => $attributes['name'],
+            'value' => 0
+        ]);
+        if ($value) {
+            $attributes['checked'] = true;
+            $attributes['value'] = 1;
+        }
+        $check = self::input($attributes);
+        return $hiddenCheck . $check;
+    }
+
+    /**
+     * Obtenir une balise `select`
+     *
+     * @param mixed|null $value      Valeur actuelle
+     * @param array      $items      Liste des options
+     * @param array      $attributes Attributs de la balise `select`
+     *
+     * @return string
+     */
+    private static function select($value = null, array $items = [], array $attributes = [])
+    {
+        $options = [];
+        if (array_key_exists('empty', $attributes)) {
+            $options[] = self::surround('', 'option', ['value' => '']);
+            unset($attributes['empty']);
+        }
+        foreach ($items as $k => $v) {
+            if (!is_null($value) && $k === intval($value)) {
+                $options[] = self::surround($v, 'option', ['value' => $k, 'selected' => true]);
+            } else {
+                $options[] = self::surround($v, 'option', ['value' => $k]);
+            }
+        }
+        return self::surround(implode('', $options), 'select', $attributes);
+    }
+
+    /**
+     * Convertir une valeur en chaîne de caractères
+     *
+     * @param mixed $value Valeur à convertir en chaîne de caractères
+     *
+     * @return string
+     */
+    private static function toStr($value)
+    {
+        if ($value instanceof \DateTime) {
+            return $value->format('Y-m-d H:i:s');
+        } elseif (is_array($value)) {
+            return serialize($value);
+        }
+        return (string)$value;
     }
 }

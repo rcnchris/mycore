@@ -25,17 +25,16 @@ class HtmlExtensionTest extends BaseTestCase
         $this->assertNotEmpty($this->ext->getFunctions());
     }
 
-    /**
-     * Obtenir une balise <code>
-     */
     public function testGetCode()
     {
-        $this->assertEquals('<code>ola</code>', $this->ext->code('ola'));
+        $this->assertEquals('<pre>ola</pre>', $this->ext->code('ola'));
     }
 
-    /**
-     * Obtenir une balise <code>
-     */
+    public function testGetCodeShjs()
+    {
+        $this->assertEquals('<pre class="sh_php">ola</pre>', $this->ext->code('ola', ['class' => 'sh_php']));
+    }
+
     public function testGetCodeWithWrongParameter()
     {
         $this->assertNull($this->ext->code(['ola']));
@@ -60,11 +59,11 @@ class HtmlExtensionTest extends BaseTestCase
         );
     }
 
-    public function testGetList()
+    public function testGetListe()
     {
         $this->assertSimilar(
             '<ul><li>0 : ola</li><li>1 : ole</li></ul>',
-            $this->ext->getList(['ola', 'ole']),
+            $this->ext->liste(['ola', 'ole']),
             $this->getMessage("La liste est incorrecte")
         );
     }
@@ -74,7 +73,7 @@ class HtmlExtensionTest extends BaseTestCase
         $values = [12, 45];
         $this->assertSimilar(
             '<ul><li>0 : 12</li><li>1 : 45</li></ul>',
-            $this->ext->getList($values),
+            $this->ext->liste($values),
             $this->getMessage("La liste est incorrecte")
         );
     }
@@ -84,7 +83,7 @@ class HtmlExtensionTest extends BaseTestCase
         $values = [(new \stdClass()), (new \DateTime())];
         $this->assertSimilar(
             '<ul><li>0 : stdClass</li><li>1 : DateTime</li></ul>',
-            $this->ext->getList($values),
+            $this->ext->liste($values),
             $this->getMessage("La liste est incorrecte")
         );
     }
@@ -94,7 +93,7 @@ class HtmlExtensionTest extends BaseTestCase
         $values = ['name' => ['first_name' => 'Mathis', 'last_name' => 'CHRISMANN'], 'year' => 2007];
         $this->assertSimilar(
             '<ul><li>name : first_name, last_name</li><li>year : 2007</li></ul>',
-            $this->ext->getList($values),
+            $this->ext->liste($values),
             $this->getMessage("La liste est incorrecte")
         );
     }
@@ -106,20 +105,20 @@ class HtmlExtensionTest extends BaseTestCase
         $values = [$img, $dir];
         $this->assertSimilar(
             '<ul><li>0 : gd</li><li>1 : stream</li></ul>',
-            $this->ext->getList($values),
+            $this->ext->liste($values),
             $this->getMessage("La liste est incorrecte")
         );
     }
 
     public function testLink()
     {
-        $expect='<a href="http://google.fr" target="_blank">Google</a>';
+        $expect = '<a href="http://google.fr" target="_blank">Google</a>';
         $this->assertSimilar($expect, $this->ext->link('http://google.fr', 'Google', ['target' => '_blank']));
     }
 
     public function testLinkWithoutLabel()
     {
-        $expect='<a href="http://google.fr" target="_blank">http://google.fr</a>';
+        $expect = '<a href="http://google.fr" target="_blank">http://google.fr</a>';
         $this->assertSimilar($expect, $this->ext->link('http://google.fr', null, ['target' => '_blank']));
     }
 }

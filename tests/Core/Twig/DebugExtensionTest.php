@@ -56,7 +56,6 @@ class DebugExtensionTest extends BaseTestCase {
     {
         $o = new Collection('ola,ole,oli');
         $methods = get_class_methods(get_class($o));
-        sort($methods);
         $this->assertEquals($methods, $this->ext->getMethods($o));
     }
 
@@ -76,15 +75,7 @@ class DebugExtensionTest extends BaseTestCase {
     {
         $this->assertEquals(
             get_parent_class($this->ext),
-            $this->ext->getParentClass($this->ext)
-        );
-    }
-
-    public function testGetParentClassRecurs()
-    {
-        $this->assertContains(
-            get_parent_class($this->ext),
-            $this->ext->getParentClass($this->ext, true)
+            current($this->ext->getParentClass($this->ext))
         );
     }
 
@@ -97,15 +88,15 @@ class DebugExtensionTest extends BaseTestCase {
     {
         $this->assertEquals(
             get_class_methods(get_parent_class($this->ext)),
-            $this->ext->getParentMethods($this->ext)
+            current($this->ext->getParentMethods($this->ext))
         );
     }
 
     public function testGetImplements()
     {
         $this->assertEquals(
-            class_implements($this->ext),
-            $this->ext->getImplements($this->ext)
+            current(class_implements($this->ext)),
+            current($this->ext->getImplements($this->ext))
         );
     }
 

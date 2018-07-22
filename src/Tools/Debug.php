@@ -118,7 +118,7 @@ class Debug
     {
         $methods = [];
         foreach (self::getParents($object) as $parent) {
-            $methods[$parent] = get_class_methods(get_parent_class($parent));
+            $methods[$parent] = get_class_methods($parent);
         }
         return $methods;
     }

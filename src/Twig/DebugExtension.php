@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Twig;
 
+use Rcnchris\Core\Tools\Debug;
+
 /**
  * Class DebugExtension
  * <ul>
@@ -58,21 +60,24 @@ class DebugExtension extends \Twig_Extension
 
     /**
      * Obtenir le nom de la classe d'un objet
+     * - Filtre
      *
-     * @param $object
+     * @param object $object Objet dont il faut récupérer le nom de la classe
      *
      * @return bool|string
      */
     public function getClass($object)
     {
-        if (is_object($object)) {
-            return get_class($object);
+        try {
+            return Debug::getClass($object);
+        } catch (\Exception $e) {
+            return false;
         }
-        return false;
     }
 
     /**
      * Obtenir les méthodes d'un objet
+     * - Filtre
      *
      * @param object $object Objet
      *
@@ -80,28 +85,11 @@ class DebugExtension extends \Twig_Extension
      */
     public function getMethods($object)
     {
-        if (is_object($object)) {
-            $methods = get_class_methods(get_class($object));
-            sort($methods);
-            return $methods;
+        try {
+            return Debug::getMethods($object);
+        } catch (\Exception $e) {
+            return false;
         }
-        return false;
-    }
-
-    /**
-     * Obtenir les constantes définies ou l'une d'entre elles
-     *
-     * @param string|null $key Nom de l'extension
-     *
-     * @return array [mixed]
-     */
-    public function getConstants($key = null)
-    {
-        $constants = get_defined_constants(true);
-        if (!is_null($key) && array_key_exists($key, $constants)) {
-            return $constants[$key];
-        }
-        return $constants;
     }
 
     /**
@@ -117,42 +105,33 @@ class DebugExtension extends \Twig_Extension
      */
     public function getProperties($o)
     {
-        return get_object_vars($o);
+        return Debug::getProperties($o);
     }
 
     /**
      * Nom du parent de la classe de l'objet passé en paramètre
+     * - Filtre
      *
      * ### Exemple
      * - `object|getParentClass;`
      * - `object|getParentClass(true);`
      *
      * @param object    $value  Objet dont il faut récupérer le nom du parent
-     * @param bool|null $recurs Remonte tous les parents
      *
      * @return bool|string
      */
-    public function getParentClass($value, $recurs = false)
+    public function getParentClass($value)
     {
-        $parents = [];
-        if (is_object($value)) {
-            if ($recurs) {
-                $parent = null;
-                while (get_parent_class($value) != null) {
-                    $parent = get_parent_class($value);
-                    $parents[] = $parent;
-                    $value = $parent;
-                }
-                return $parents;
-            } else {
-                return get_parent_class($value);
-            }
+        try {
+            return Debug::getParents($value);
+        } catch (\Exception $e) {
+            return false;
         }
-        return false;
     }
 
     /**
      * Obtenir les méthodes du parent d'un objet
+     * - Filtre
      *
      * @param $value
      *
@@ -160,11 +139,12 @@ class DebugExtension extends \Twig_Extension
      */
     public function getParentMethods($value)
     {
-        return get_class_methods(get_parent_class($value));
+        return Debug::getParentsMethods($value);
     }
 
     /**
      * Obtenir les interfaces utilisées par un objet
+     * - Filtre
      *
      * ### Exemple
      * - `o|getImplements`
@@ -175,7 +155,7 @@ class DebugExtension extends \Twig_Extension
      */
     public function getImplements($value)
     {
-        return is_object($value) ? class_implements($value) : false;
+        return Debug::getInterfaces($value);
     }
 
     /**
@@ -191,13 +171,12 @@ class DebugExtension extends \Twig_Extension
      */
     public function getTraits($value)
     {
-        $ret = is_object($value) ? class_uses($value) : false;
-        sort($ret);
-        return $ret;
+        return Debug::getTraits($value);
     }
 
     /**
      * Vérifie si la variable est un objet
+     * - Filtre
      *
      * @param mixed $var Variable
      *
@@ -210,6 +189,7 @@ class DebugExtension extends \Twig_Extension
 
     /**
      * Vérifie si la variable est un tableau
+     * - Filtre
      *
      * @param mixed $var Variable
      *
@@ -223,7 +203,7 @@ class DebugExtension extends \Twig_Extension
     /**
      * Obtenir la liste des fonctions
      *
-     * @return array[\Twig_SimpleFunction]
+     * @return \Twig_SimpleFunction[]
      */
     public function getFunctions()
     {
@@ -236,6 +216,7 @@ class DebugExtension extends \Twig_Extension
 
     /**
      * Faire un var_dump
+     * - Fonction
      *
      * @param $value
      */
@@ -246,11 +227,29 @@ class DebugExtension extends \Twig_Extension
 
     /**
      * Utiliser phpref pour debugger
+     * - Fonction
      *
      * @param $value
      */
     public function phpRef($value)
     {
         r($value);
+    }
+
+    /**
+     * Obtenir les constantes définies ou l'une d'entre elles
+     * - Fonction
+     *
+     * @param string|null $key Nom de l'extension
+     *
+     * @return array [mixed]
+     */
+    public function getConstants($key = null)
+    {
+        $constants = get_defined_constants(true);
+        if (!is_null($key) && array_key_exists($key, $constants)) {
+            return $constants[$key];
+        }
+        return $constants;
     }
 }

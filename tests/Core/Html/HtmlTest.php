@@ -27,13 +27,13 @@ class HtmlTest extends BaseTestCase
     public function testLink()
     {
         $expect = '<a href="http://google.fr">Google</a>';
-        $this->assertSimilar($expect, $this->html->link('Google', 'http://google.fr'));
+        $this->assertSimilar($expect, $this->html->link('http://google.fr', 'Google'));
     }
 
     public function testLinkWithAttribute()
     {
         $expect = '<a class="btn btn-primary" href="http://google.fr">Google</a>';
-        $this->assertSimilar($expect, $this->html->link('Google', 'http://google.fr', ['class' => 'btn btn-primary']));
+        $this->assertSimilar($expect, $this->html->link('http://google.fr', 'Google', ['class' => 'btn btn-primary']));
     }
 
     public function testImage()
@@ -350,5 +350,125 @@ class HtmlTest extends BaseTestCase
     public function testGetCssWithWrongType()
     {
         $this->assertNull($this->html->css('bootstrap', 'fake'));
+    }
+
+    public function testGetFieldInputText()
+    {
+        $expect = '<input id="year" name="year" type="text" value="2018">';
+        $this->assertSimilar($expect, $this->html->field('year', 2018));
+    }
+
+    public function testGetFieldInputTextDisabled()
+    {
+        $expect = '<input disabled id="year" name="year" type="text" value="2018">';
+        $this->assertSimilar($expect, $this->html->field('year', 2018, ['disabled' => true]));
+    }
+
+    public function testGetFieldInputTextRequired()
+    {
+        $expect = '<input id="year" name="year" required type="text" value="2018">';
+        $this->assertSimilar($expect, $this->html->field('year', 2018, ['required' => true]));
+    }
+
+    public function testGetFieldInputTextWithClass()
+    {
+        $expect = '<input class="form-control" id="year" name="year" type="text" value="2018">';
+        $this->assertSimilar($expect, $this->html->field('year', 2018, ['class' => 'form-control']));
+    }
+
+    public function testGetFieldInputTextWithLabel()
+    {
+        $expect = '<label for="year">Année</label><input class="form-control" id="year" name="year" type="text" value="2018">';
+        $this->assertSimilar($expect, $this->html->field('year', 2018, ['class' => 'form-control', 'label' => 'Année']));
+    }
+
+    public function testGetFieldInputDate()
+    {
+        $birthday = (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05');
+        $expect = '<input id="birthday" name="birthday" type="text" value="1975-10-15 05:15:05">';
+        $this->assertSimilar($expect, $this->html->field('birthday', $birthday));
+    }
+
+    public function testGetFieldInputArray()
+    {
+        $items = ['ola', 'ole', 'oli'];
+        $expect = '<input id="items" name="items" type="text" value="a:3:{i:0;s:3:"ola";i:1;s:3:"ole";i:2;s:3:"oli";}">';
+        $this->assertSimilar($expect, $this->html->field('items', $items));
+    }
+
+    public function testGetFieldInputCheckbox()
+    {
+        $expect = '<input name="vrai" type="hidden" value="0"><input id="vrai" name="vrai" type="checkbox" value="0">';
+        $this->assertSimilar($expect, $this->html->field('vrai', 0, ['type' => 'checkbox']));
+
+        $expect = '<input name="vrai" type="hidden" value="0"><input checked id="vrai" name="vrai" type="checkbox" value="1">';
+        $this->assertSimilar($expect, $this->html->field('vrai', 1, ['type' => 'checkbox']));
+    }
+
+    public function testGetFieldInputFile()
+    {
+        $expect = '<input id="vrai" name="vrai" type="file" value="">';
+        $this->assertSimilar($expect, $this->html->field('vrai', null, ['type' => 'file']));
+    }
+
+    public function testGetFieldTextarea()
+    {
+        $expect = '<textarea cols="25" id="year" name="year" rows="5">2018</textarea>';
+        $this->assertSimilar($expect, $this->html->field('year', 2018, ['type' => 'textarea', 'rows' => 5, 'cols' => 25]));
+    }
+
+    public function testGetFieldSelect()
+    {
+        $items = ['ola', 'ole', 'oli'];
+        $expect = '
+            <select id="selUnchecked" name="selUnchecked">
+                <option value="0">ola</option>
+                <option value="1">ole</option>
+                <option value="2">oli</option>
+            </select>';
+        $this->assertSimilar($expect, $this->html->field('selUnchecked', null, ['items' => $items]));
+    }
+
+    public function testGetFieldSelectSelected()
+    {
+        $items = ['ola', 'ole', 'oli'];
+        $expect = '
+            <select id="selChecked" name="selChecked">
+                <option value="0">ola</option>
+                <option selected value="1">ole</option>
+                <option value="2">oli</option>
+            </select>';
+        $this->assertSimilar($expect, $this->html->field('selChecked', 1, ['items' => $items]));
+    }
+
+    public function testGetFieldSelectMultiple()
+    {
+        $items = ['ola', 'ole', 'oli'];
+        $expect = '
+            <select id="selChecked" multiple name="selChecked">
+                <option value="0">ola</option>
+                <option value="1">ole</option>
+                <option value="2">oli</option>
+            </select>';
+        $this->assertSimilar($expect, $this->html->field('selChecked', null, ['items' => $items, 'multiple' => true]));
+    }
+
+    public function testGetFieldSelectWithEmpty()
+    {
+        $items = ['ola', 'ole', 'oli'];
+        $expect = '
+            <select id="selEmpty" name="selEmpty">
+                <option value=""></option>
+                <option value="0">ola</option>
+                <option selected value="1">ole</option>
+                <option value="2">oli</option>
+            </select>';
+        $this->assertSimilar($expect, $this->html->field('selEmpty', 1, ['items' => $items, 'empty' => true]));
+    }
+
+    public function testButton()
+    {
+        $expect='<button type="submit">Feu</button>';
+        $this->assertSimilar($expect, $this->html->button('Feu'));
     }
 }

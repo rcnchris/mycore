@@ -302,4 +302,14 @@ class MyvarTest extends BaseTestCase
         $this->assertEquals('Rcnchris\Core\Tools\Collection', $this->makeVar($c)->getClass());
         $this->assertEquals('Collection', $this->makeVar($c)->getClass(true));
     }
+
+    public function testToInt()
+    {
+        $this->assertInternalType('integer', $this->makeVar('123')->toInt());
+    }
+
+    public function testToBool()
+    {
+        $this->assertInternalType('bool', $this->makeVar('1')->toBool());
+    }
 }

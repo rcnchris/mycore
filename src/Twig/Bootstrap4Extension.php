@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Twig;
 
+use Rcnchris\Core\Html\Html;
+
 /**
  * Class Bootstrap4Extension
  * <ul>
@@ -66,64 +68,64 @@ class Bootstrap4Extension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('alert', [$this, 'alert'], ['is_safe' => ['html']])            ,
-            new \Twig_SimpleFilter('alertResult', [$this, 'alertResult'], ['is_safe' => ['html']])            ,
-            new \Twig_SimpleFilter('badge', [$this, 'badge'], ['is_safe' => ['html']])            ,
-            new \Twig_SimpleFilter('badgeBool', [$this, 'badgeBool'], ['is_safe' => ['html']])            ,
+            new \Twig_SimpleFilter('alert', [$this, 'alert'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('alertResult', [$this, 'alertResult'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('badge', [$this, 'badge'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('badgeBool', [$this, 'badgeBool'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('button', [$this, 'button'], ['is_safe' => ['html']])
         ];
     }
 
     /**
-     * Afficher une alerte de type résultat d'exécution de code
+     * Génère une alerte contextuelle
+     * - Filtre
      *
-     * @param string $value Valeur à afficher dans une alerte de type résultat
+     * - `"{{ Ola les gens"|alert('warning) }}`
      *
-     * @return null|string
-     */
-    public function alertResult($value)
-    {
-        try {
-            $value = (string)$value;
-        } catch (\Exception $e) {
-            return null;
-        }
-        return '<div class="alert alert-secondary"><samp>' . $value . '</samp></div>';
-    }
-
-    /**
-     * Filtre : Génère une alerte contextuelle
-     *
-     * <code>"Ola les gens"|alert('warning)</code>
-     *
-     * @param string $content
-     * @param string $context
-     * @param array  $options
+     * @param string      $content Contenu de l'alerte
+     * @param string|null $context Couleur de l'alerte
+     * @param array|null  $options Options de l'alerte
      *
      * @return null|string
      */
     public function alert($content, $context = 'info', array $options = [])
     {
-        if (!is_string($content) || !$this->hasContext($context)) {
+        if (!$this->hasContext($context)) {
             return null;
         }
-        $html = null;
         $class = 'alert alert-' . $context;
         if (array_key_exists('dismissible', $options)) {
             $class .= ' alert-dismissible fade show';
-            $content = '<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            $content = '<button type="button" class="close" data-dismiss="alert" aria-label="Fermer">
                             <span aria-hidden="true">&times;</span>
                         </button>' . $content;
         }
         if (array_key_exists('icon', $options)) {
             $content = $options['icon'] . ' ' . $content;
         }
-        $html = '<div class="%s" role="alert">%s</div>';
-        return sprintf($html, $class, $content);
+        return Html::surround($content, 'div', ['class' => $class, 'role' => 'alert']);
     }
 
     /**
-     * Filtre : Génère un badge selon un contexte souhaité
+     * Afficher une alerte de type résultat d'exécution de code
+     * - Filtre
+     *
+     * @param string $value Valeur à afficher dans une alerte de type résultat
+     *
+     * @return string
+     */
+    public function alertResult($value)
+    {
+        return Html::surround(
+            Html::surround($value, 'samp'),
+            'div',
+            ['class' => 'alert alert-secondary']
+        );
+    }
+
+    /**
+     * Génère un badge selon un contexte souhaité
+     * - Filtre
      *
      * @param string $value
      * @param string $context
@@ -145,42 +147,39 @@ class Bootstrap4Extension extends \Twig_Extension
         if (array_key_exists('pill', $options)) {
             $class = $class . ' badge-pill';
         }
-        if ($this->hasContext($context)) {
-            $class .= ' badge-' . $context;
-        }
+        $class = $this->hasContext($context)
+            ? $class . ' badge-' . $context
+            : $class . ' badge-secondary';
 
-        if (array_key_exists('link', $options)) {
-            $html = '<a href="%s" class="%s">%s</a>';
-            $html = sprintf($html, $options['link'], $class, $value);
-        } else {
-            $html = '<span class="%s">%s</span>';
-            $html = sprintf($html, $class, $value);
-        }
-        return $html;
+        return array_key_exists('link', $options)
+            ? Html::surround($value, 'a', ['class' => $class, 'href' => $options['link']])
+            : Html::surround($value, 'span', ['class' => $class]);
     }
 
     /**
-     * Filtre : Génère une vignette vrai/faux
+     * Génère un badge vrai/faux
+     * - Filtre
      *
-     * @param $value
+     * @param mixed      $value   Valeur booléenne de différents types
+     * @param array|null $options du badge
      *
      * @return null|string
      */
-    public function badgeBool($value)
+    public function badgeBool($value, array $options = [])
     {
-        if ($value === true || $value === 1 || $value === 'yes') {
-            return $this->badge('TRUE', 'success');
-        } else {
-            return $this->badge('FALSE', 'danger');
-        }
+        $valuesOk = [true, 1, '1', 'yes', 'on'];
+        return in_array($value, $valuesOk)
+            ? $this->badge('TRUE', 'success', $options)
+            : $this->badge('FALSE', 'danger', $options);
     }
 
     /**
-     * Filtre : Génère un bouton pour formulaire ou simple lien
+     * Génère un bouton pour formulaire ou simple lien
+     * - Filtre
      *
-     * @param string $text
-     * @param string $type Type du bouton ('button', 'link', 'input')
-     * @param array  $options
+     * @param string      $text    Label du bouton
+     * @param string|null $type    Type du bouton ('button', 'link', 'input')
+     * @param array|null  $options Options du bouton
      *
      * @return null|string
      */
@@ -193,43 +192,43 @@ class Bootstrap4Extension extends \Twig_Extension
             $options['context'] = 'primary';
         }
         $html = null;
-        switch ($type) {
-            case 'button':
-                $html = '<button class="%s" type="submit">%s</button>';
-                break;
-
-            case 'input':
-                $html = '<input class="%s" type="submit" value="%s">';
-                break;
-
-            case 'link':
-                $link = isset($options['link']) ? $options['link'] : '#';
-                $html = '<a class="%s" href="' . $link . '" role="button">%s</a>';
-                break;
-        }
         $class = 'btn btn-' . $options['context'];
         if (array_key_exists('size', $options) && in_array($options['size'], $this->sizes)) {
             $class .= ' btn-' . $options['size'];
         }
-        return sprintf($html, $class, $text);
+        switch ($type) {
+            case 'button':
+                $html = Html::surround($text, 'button', ['class' => $class, 'type' => 'submit']);
+                break;
+
+            case 'input':
+                $html = Html::input(['class' => $class, 'type' => 'submit', 'value' => $text]);
+                break;
+
+            case 'link':
+                $link = isset($options['link']) ? $options['link'] : '#';
+                $html = Html::link($link, $text, ['class' => $class, 'role' => 'button']);
+                break;
+        }
+        return $html;
     }
 
     /**
-     * Obtenir laliste des fonctions
+     * Obtenir la liste des fonctions
      *
      * @return \Twig_SimpleFunction[]
      */
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('progress', [$this, 'progress'], ['is_safe' => ['html']])
-            ,
+            new \Twig_SimpleFunction('progress', [$this, 'progress'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('checkbox', [$this, 'checkbox'], ['is_safe' => ['html']])
         ];
     }
 
     /**
-     * Fonction : Génère une barre de progression
+     * Génère une barre de progression
+     * - Fonction
      *
      * @param       $value
      * @param int   $max
@@ -248,16 +247,17 @@ class Bootstrap4Extension extends \Twig_Extension
             $min = $options['min'];
         }
         $prc = (string)round(($value / $max) * 100, 2);
-        $html = '<div class="progress">
-                    <div class="' . $class
-            . '" role="progressbar" style="width: '
-            . $prc . '%" aria-valuenow="'
-            . $value . '" aria-valuemin="'
-            . $min . '" aria-valuemax="'
-            . $max . '" title="'
-            . $prc . '%">'
-            . $value . '</div>
-                </div>';
+
+        $html = Html::surround($value, 'div', [
+            'class' => $class,
+            'role' => 'progressbar',
+            'style' => 'width: ' . $prc . '%',
+            'aria-valuenow' => $value,
+            'aria-valuemin' => $min,
+            'aria-valuemax' => $max,
+            'title' => $prc . '%'
+        ]);
+        $html = Html::surround($html, 'div', ['class' => 'progress']);
         return $html;
     }
 
@@ -277,14 +277,27 @@ class Bootstrap4Extension extends \Twig_Extension
         if ($value) {
             $checked = 'checked';
         }
-        $html = '
-            <label class="custom-control custom-checkbox">
-              <input type="hidden" name="' . $field . '" value="0">
-              <input type="checkbox" class="custom-control-input" name="'
-            . $field . '" value="' . $value . '" ' . $checked . '>
-              <span class="custom-control-indicator"></span>
-              <span class="custom-control-description">' . $label . '</span>
-            </label>';
+        $hiddenInput = Html::input([
+            'name' => $field,
+            'type' => 'hidden',
+            'value' => 0
+        ]);
+        $input = Html::input([
+            'class' => 'custom-control-input',
+            'name' => $field,
+            'type' => 'checkbox',
+            'value' => $value,
+            'checked' => $checked
+        ]);
+        $spanIndicator = Html::surround('', 'span', ['class' => 'custom-control-indicator']);
+        $spanDescription = Html::surround($label, 'span', ['class' => 'custom-control-description']);
+
+        $html = Html::surround(
+            $hiddenInput . $input . $spanIndicator . $spanDescription,
+            'label',
+            ['class' => 'custom-control custom-checkbox']
+        );
+
         return $html;
     }
 

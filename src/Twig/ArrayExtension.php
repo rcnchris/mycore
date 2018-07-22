@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Twig;
 
+use Rcnchris\Core\Html\Html;
+
 /**
  * Class ArrayExtension
  * <ul>
@@ -38,7 +40,7 @@ class ArrayExtension extends \Twig_Extension
     /**
      * Obtenir la liste des filtres
      *
-     * @return array
+     * @return \Twig_SimpleFilter[]
      */
     public function getFilters()
     {
@@ -57,62 +59,15 @@ class ArrayExtension extends \Twig_Extension
      */
     public function toHtml(array $values, array $options = [])
     {
-        $class = null;
-
-        // Application des options
         if (array_key_exists('class', $options)) {
-            $class = ' class="' . $options['class'] . '"';
+            $class = $options['class'];
         }
-        $withHeader = false;
-        if (array_key_exists('header', $options)) {
-            $withHeader = true;
-        }
-
-        $html = "<table$class>";
-        $keys = array_keys($values);
-        if (is_numeric($keys[0]) && !is_array(current($values))) {
-            // La valeur n'est pas un tableau, donc liste simple
-            if ($withHeader) {
-                $html .= "<thead>";
-                $html .= "<tr><th>#</th><th>Libellé</th></tr>";
-                $html .= "</thead>";
-            }
-            $html .= '<tbody>';
-            foreach ($values as $k => $value) {
-                $html .= "<tr><td>$k</td><td>$value</td></tr>";
-            }
-            $html .= '</tbody>';
-        } elseif (is_numeric($keys[0]) && is_array(current($values))) {
-            // La valeur est un tableau
-            $html .= '<thead><tr>';
-            $keys = array_keys(current($values));
-            foreach ($keys as $field) {
-                $html .= "<th>$field</th>";
-            }
-            $html .= '</tr></thead><tbody>';
-
-            foreach ($values as $k => $item) {
-                $html .= "<tr>";
-                foreach ($keys as $field) {
-                    $html .= "<td>" . $item[$field] . "</td>";
-                }
-                $html .= "</tr>";
-            }
-            $html .= '</tbody>';
-        } elseif (is_string($keys[0])) {
-            // Tableau associatif
-            $html .= '<thead><tr><th>Clé</th><th>Valeur</th></tr></thead>';
-            $html .= '<tbody>';
-            foreach ($values as $field => $value) {
-                $html .= "<tr>";
-                $html .= "<th>$field</th>";
-                $html .= "<td>$value</td>";
-                $html .= "</tr>";
-            }
-            $html .= '</tbody>';
-        }
-        $html .= '</table>';
-        return $html;
+        return Html::table(
+            $values,
+            isset($class) ? ['class' => $class] : [],
+            array_key_exists('key', $options),
+            array_key_exists('col', $options)
+        );
     }
 
     /**
@@ -123,10 +78,8 @@ class ArrayExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_SimpleFunction('arrayMerge', [$this, 'arrayMerge'])
-            ,
-            new \Twig_SimpleFunction('extract', [$this, 'extract'])
-            ,
+            new \Twig_SimpleFunction('arrayMerge', [$this, 'arrayMerge']),
+            new \Twig_SimpleFunction('extract', [$this, 'extract']),
             new \Twig_SimpleFunction('inArray', [$this, 'inArray'])
         ];
     }

@@ -48,7 +48,7 @@ class Bootstrap4ExtensionTest extends BaseTestCase
         );
 
         $this->assertSimilar(
-            '<div class="alert alert-dark alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            '<div class="alert alert-dark alert-dismissible fade show" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Fermer">
                     <span aria-hidden="true">&times;</span>
                 </button>ola
             </div>'
@@ -101,8 +101,8 @@ class Bootstrap4ExtensionTest extends BaseTestCase
 
     public function testGetBadgeWithLink()
     {
-        $this->assertEquals(
-            '<a href="http://link.com" class="badge badge-dark">ola</a>'
+        $this->assertSimilar(
+            '<a class="badge badge-dark" href="http://link.com">ola</a>'
             , $this->ext->badge('ola', 'dark', ['link' => 'http://link.com'])
         );
     }
@@ -123,8 +123,8 @@ class Bootstrap4ExtensionTest extends BaseTestCase
     public function testButtonButtonType()
     {
         $this->assertEquals(
-            '<button class="btn btn-primary" type="submit">ola</button>'
-            , $this->ext->button('ola')
+            '<button class="btn btn-primary" type="submit">ola</button>',
+            $this->ext->button('ola')
         );
     }
 
@@ -136,40 +136,45 @@ class Bootstrap4ExtensionTest extends BaseTestCase
     public function testButtonWithContext()
     {
         $this->assertEquals(
-            '<button class="btn btn-success" type="submit">ola</button>'
-            , $this->ext->button('ola', 'button', ['context' => 'success'])
+            '<button class="btn btn-success" type="submit">ola</button>',
+            $this->ext->button('ola', 'button', ['context' => 'success'])
         );
     }
 
     public function testButtonWithSize()
     {
         $this->assertEquals(
-            '<button class="btn btn-primary btn-sm" type="submit">ola</button>'
-            , $this->ext->button('ola', 'button', ['size' => 'sm'])
+            '<button class="btn btn-primary btn-sm" type="submit">ola</button>',
+            $this->ext->button('ola', 'button', ['size' => 'sm'])
         );
     }
 
     public function testButtonInputType()
     {
         $this->assertEquals(
-            '<input class="btn btn-primary" type="submit" value="ola">'
-            , $this->ext->button('ola', 'input')
+            '<input class="btn btn-primary" type="submit" value="ola">',
+            $this->ext->button('ola', 'input')
         );
     }
 
     public function testButtonLinkType()
     {
         $this->assertEquals(
-            '<a class="btn btn-primary" href="#" role="button">ola</a>'
-            , $this->ext->button('ola', 'link')
+            '<a class="btn btn-primary" href="#" role="button">ola</a>',
+            $this->ext->button('ola', 'link')
         );
     }
 
     public function testCheckbox()
     {
-        $this->assertSimilar(
-            '<label class="custom-control custom-checkbox"><input type="hidden" name="choix" value="0"><input type="checkbox" class="custom-control-input" name="choix" value="1" checked><span class="custom-control-indicator"></span><span class="custom-control-description">Choix</span></label>'
-            , $this->ext->checkbox('choix', 1, 'Choix')
+        $this->assertSimilar('
+            <label class="custom-control custom-checkbox">
+                <input name="choix" type="hidden" value="0">
+                <input checked class="custom-control-input" name="choix" type="checkbox" value="1">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description">Choix</span>
+            </label>',
+            $this->ext->checkbox('choix', 1, 'Choix')
         );
     }
 
@@ -177,7 +182,7 @@ class Bootstrap4ExtensionTest extends BaseTestCase
     {
         $this->assertSimilar(
             '<div class="progress">
-                <div class="progress-bar bg-info" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100" title="65%">65</div>
+                <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="65" class="progress-bar bg-info" role="progressbar" style="width: 65%" title="65%">65</div>
             </div>',
             $this->ext->progress(65)
         );
@@ -186,8 +191,8 @@ class Bootstrap4ExtensionTest extends BaseTestCase
     public function testGetAlertResult()
     {
         $this->assertEquals(
-            '<div class="alert alert-secondary"><samp>ola</samp></div>'
-            , $this->ext->alertResult('ola')
+            '<div class="alert alert-secondary"><samp>ola</samp></div>',
+            $this->ext->alertResult('ola')
         );
     }
 }

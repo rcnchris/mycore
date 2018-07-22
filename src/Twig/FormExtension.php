@@ -69,12 +69,9 @@ class FormExtension extends \Twig_Extension
         $value = $this->convertValue($value);
         $classInput = isset($options['class']) ? $options['class'] : '';
         $attributes = [
-            'class' => trim('form-control ' . $classInput)
-            ,
-            'name' => $key
-            ,
-            'id' => $key
-            ,
+            'class' => trim('form-control ' . $classInput),
+            'name' => $key,
+            'id' => $key,
             'type' => $type
         ];
 

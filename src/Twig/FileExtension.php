@@ -43,16 +43,15 @@ class FileExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('baseName', [$this, 'baseName'])
-            ,
-            new \Twig_SimpleFilter('dirName', [$this, 'dirName'])
-            ,
+            new \Twig_SimpleFilter('baseName', [$this, 'baseName']),
+            new \Twig_SimpleFilter('dirName', [$this, 'dirName']),
             new \Twig_SimpleFilter('fileExtension', [$this, 'fileExtension'])
         ];
     }
 
     /**
      * Obtenir uniquement le nom du fichier à partir d'un chemin.
+     * - Filtre
      *
      * @param string $value Chemin avec fichier
      * @param string $sep   Séparateur de parties
@@ -67,6 +66,7 @@ class FileExtension extends \Twig_Extension
 
     /**
      * Obtenir uniquement le nom du chemin sans le fichier
+     * - Filtre
      *
      * @param string $value Chemin avec nom de fichier
      *
@@ -79,6 +79,7 @@ class FileExtension extends \Twig_Extension
 
     /**
      * Obtenir l'extension d'un fichier à partir d'un chemin
+     * - Filtre
      *
      * @param string $value Emplacement ou nom d'un fichier avec une extension
      *
