@@ -47,4 +47,12 @@ class TimeExtensionTest extends BaseTestCase {
     {
         $this->assertInternalType('float', $this->ext->now());
     }
+
+    public function testDateDiff()
+    {
+        $start = '15-10-1975 05:15:05';
+        $end = new \DateTime();
+        $result = $this->ext->dateDiff($start, $end->format('d-m-Y H:i:s'));
+        $this->assertInstanceOf(\DateInterval::class, $result);
+    }
 }

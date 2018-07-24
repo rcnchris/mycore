@@ -87,4 +87,26 @@ class TimeExtension extends \Twig_Extension
     {
         return microtime(true);
     }
+
+    /**
+     * Obtenir la différence en entre deux dates
+     * - Fonction
+     *
+     * @param mixed       $start    Date de départ
+     * @param mixed       $end      Date de fin
+     * @param string|null $format   Format des dates fournies en chaîne de caractères
+     * @param bool|null   $absolute Valeur absolue
+     *
+     * @return bool|\DateInterval
+     */
+    public function dateDiff($start, $end, $format = 'd-m-Y H:i:s', $absolute = false)
+    {
+        if (is_string($start)) {
+            $start = \DateTime::createFromFormat($format, $start);
+        }
+        if (is_string($end)) {
+            $end = \DateTime::createFromFormat($format, $end);
+        }
+        return $start->diff($end, $absolute);
+    }
 }

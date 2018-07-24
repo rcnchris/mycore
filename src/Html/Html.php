@@ -246,8 +246,10 @@ class Html
         if ($colMode) {
             $html .= '<tr>';
             foreach ($items as $key => $value) {
-                if (is_array($value)) {
+                if (is_array($value) || $value instanceof \Traversable) {
                     $html .= self::surround(self::table($value, [], $withHeader, $colMode), 'td');
+                } elseif ($value instanceof \DateTime) {
+                    $html .= self::surround($value->format('d-m-Y H:i:s'), 'td');
                 } else {
                     $html .= self::surround($value, 'td');
                 }
@@ -259,8 +261,10 @@ class Html
                 if ($withHeader) {
                     $html .= self::surround($key, 'th');
                 }
-                if (is_array($value)) {
+                if (is_array($value) || $value instanceof \Traversable) {
                     $html .= self::surround(self::table($value, [], $withHeader, $colMode), 'td');
+                } elseif ($value instanceof \DateTime) {
+                    $html .= self::surround($value->format('d-m-Y H:i:s'), 'td');
                 } else {
                     $html .= self::surround($value, 'td');
                 }
