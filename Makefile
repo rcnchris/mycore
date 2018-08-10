@@ -17,7 +17,12 @@ TEMPLATE_DOC = responsive
 APACHE_USER = www-data
 DEV_USER = dev
 
-vendor: composer.json ## Mise à jour des librairies composer
+update: ## Mise à jour des librairies composer
+	@composer selfupdate
+	@echo -e '$(OK_COLOR)Mise à jour Composer$(NO_COLOR)'
+	@composer update
+
+vendor: composer.json ## Modification composer.json
 	@composer selfupdate
 	@echo -e '$(OK_COLOR)Mise à jour Composer$(NO_COLOR)'
 	@composer update

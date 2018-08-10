@@ -7,6 +7,9 @@ $request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
 $response = new \GuzzleHttp\Psr7\Response();
 
 // Middlewares
+(new \Rcnchris\Core\Middlewares\WhoopsMiddleware())->__invoke($request, $response, function () {
+    return null;
+});
 (new \Rcnchris\Core\Middlewares\BootMiddleware())->__invoke($request, $response, function () {
     return null;
 });

@@ -374,4 +374,14 @@ class RandomItemsTest extends BaseTestCase {
         $this->assertInternalType('array', $invoice);
         $this->assertArrayHasKey('numero', $invoice);
     }
+
+    public function testGetImagesCategories()
+    {
+        $this->assertContains('sports', RandomItems::getImgagesCategories());
+    }
+
+    public function testGetImage()
+    {
+        $this->assertInternalType('string', RandomItems::image());
+    }
 }

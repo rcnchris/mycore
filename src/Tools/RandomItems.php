@@ -51,6 +51,11 @@ class RandomItems
      */
     private static $datas = [];
 
+    protected static $imgagesCategories = [
+        'abstract', 'animals', 'business', 'cats', 'city', 'food', 'nightlife',
+        'fashion', 'people', 'nature', 'sports', 'technics', 'transport'
+    ];
+
     /**
      * Obtenir des dates
      *
@@ -511,6 +516,38 @@ class RandomItems
             self::$datas[] = $faker->fileExtension;
         }
         return self::getResults();
+    }
+
+    /**
+     * Obtenir la liste des catégories d'images disponibles
+     *
+     * @return array
+     */
+    public static function getImgagesCategories()
+    {
+        return self::$imgagesCategories;
+    }
+
+    public static function image(array $options = [])
+    {
+        $defaultOptions = [
+            'width' => 640,
+            'height' => 480,
+            'category' => null,
+            'randomize' => true,
+            'word' => null,
+            'gray' => false
+        ];
+        $options = array_merge($defaultOptions, $options);
+        return self::getFaker()
+            ->imageUrl(
+                $options['width'],
+                $options['height'],
+                $options['category'],
+                $options['randomize'],
+                $options['word'],
+                $options['gray']
+            );
     }
 
     /**

@@ -28,6 +28,9 @@ return [
     'app.sep_mil' => ' ',
     'app.templates' => dirname(__DIR__) . '/app/Templates',
     'app.logsPath' => dirname(__DIR__) . '/logs/app.log',
+    /**
+     * Database Datasources
+     */
     'datasources' => [
         'default' => [
             'host' => 'dbApp',
@@ -115,5 +118,21 @@ return [
             ]
         ],
 
-    ]
+    ],
+    /**
+     * NAS Synology
+     */
+    'synology' => [
+        'nas' => [
+            'name' => 'nas',
+            'description' => 'Nas du salon',
+            'address' => '192.168.1.2',
+            'port' => 5551,
+            'protocol' => 'http',
+            'version' => 1,
+            'ssl' => false,
+            'user' => 'phpunit',
+            'pwd' => 'mycoretest'
+        ],
+    ],
 ];

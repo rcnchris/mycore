@@ -40,13 +40,14 @@ class SynologyException extends Exception
     /**
      * Constructeur
      *
-     * @param string     $message
-     * @param int        $code
+     * @param string    $message
+     * @param int       $code
      * @param Exception $previous
      */
     public function __construct($message = '', $code = 0, Exception $previous = null)
     {
-        if ($message === '' && $code != 0) {
+        $initMessage = $message;
+        if ($code != 0) {
             $errorsCodes = require __DIR__ . '/errors-codes.php';
             $lang = substr(Locale::getDefault(), 0, 2);
             if (array_key_exists($code, $errorsCodes)) {
@@ -55,6 +56,9 @@ class SynologyException extends Exception
                 } else {
                     $message = $errorsCodes[$code]['en'];
                 }
+            }
+            if ($initMessage != '') {
+                $message = $initMessage . "\n" . $message;
             }
         }
         parent::__construct($message, $code, null);

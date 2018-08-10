@@ -100,12 +100,6 @@ class DebugExtensionTest extends BaseTestCase {
         );
     }
 
-    public function testGetTraits()
-    {
-        $o = new OneAPI();
-        $this->assertNotEmpty($this->ext->getTraits($o));
-    }
-
     public function testGetPhpRef()
     {
         ob_start();

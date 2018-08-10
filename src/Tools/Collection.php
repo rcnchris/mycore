@@ -27,14 +27,15 @@ use ArrayIterator;
  * <li>Permet de gérer une liste de données</li>
  * </ul>
  *
- * @category Collection
+ * @category   Collection
  *
- * @package  Rcnchris\Core\Tools
+ * @package    Rcnchris\Core\Tools
  *
- * @author   Raoul <rcn.chris@gmail.com>
+ * @author     Raoul <rcn.chris@gmail.com>
  *
- * @version  Release: <0.0.1>
- * @since    Release: <0.0.1>
+ * @version    Release: <0.0.1>
+ * @since      Release: <0.0.1>
+ * @deprecated Remplacée par Rcnchris\Core\Tools\Items
  */
 class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Serializable
 {
@@ -62,7 +63,7 @@ class Collection implements \ArrayAccess, \IteratorAggregate, \Countable, \Seria
      *
      * @param mixed|null  $items Liste de données (chaîne avec séparateur, json, array, objet)
      * @param string|null $name  Nom de la collection
-     * @param string      $sep Caractère de séparation d'un item dans une chaîne de caractères
+     * @param string      $sep   Caractère de séparation d'un item dans une chaîne de caractères
      */
     public function __construct($items = null, $name = null, $sep = ',')
     {

@@ -1,9 +1,9 @@
 <?php
 /**
- * Fichier AlloCine.php du 27/12/2017
+ * Fichier AlloCine.php du 08/08/2018
  * Description : Fichier de la classe AlloCine
  *
- * PHP version 7
+ * PHP version 5
  *
  * @category API
  *
@@ -20,9 +20,6 @@ namespace Rcnchris\Core\Apis;
 
 /**
  * Class AlloCine
- * <ul>
- * <li>Interrogation de l'API AlloCiné</li>
- * </ul>
  *
  * @category API
  *
@@ -30,37 +27,21 @@ namespace Rcnchris\Core\Apis;
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
- * @version  Release: <1.0.0>
+ * @license  https://github.com/rcnchris GPL
+ *
+ * @version  Release: <2.0.0>
+ *
+ * @link     https://github.com/rcnchris on Github
  */
-class AlloCine extends OneAPI
+class AlloCine extends CurlAPI
 {
-    /**
-     * Clé du partenanire
-     *
-     * @const string
-     */
-    const PARTNER = '100043982026';
 
     /**
-     * Clé secrète pour encodage sig
-     *
-     * @const string
-     */
-    const KEY = '29d185d98c984a359e6e6f26a0474269';
-
-    /**
-     * Navigateur fictif
-     *
-     * @const string
-     */
-    const USER_AGENT = 'Dalvik/1.6.0 (Linux; U; Android 4.2.2; Nexus 4 Build/JDQ39E)';
-
-    /**
-     * Format du retour de la requête
+     * Code partenaire pour AlloCine
      *
      * @var string
      */
-    private $format = 'json';
+    private $partner = '100043982026';
 
     /**
      * Méthodes disponibles sur AlloCine
@@ -84,354 +65,305 @@ class AlloCine extends OneAPI
 
     /**
      * Constructeur
-     *
-     * ### Exemple
-     * - `$allo = new AlloCine();`
-     *
-     * Définit l'URL de base de l'API et les options de CURL
+     * Définit l'URL de base, la clé de l'API et le navigateur à utiliser
      */
     public function __construct()
     {
-        $this->initialize('http://api.allocine.fr/rest/v3');
-        $this->setCurlOptions($this->curlOptions);
-        $this->setBrowser($this::USER_AGENT);
+        parent::__construct('http://api.allocine.fr/rest/v3');
+        $this->setApiKey('29d185d98c984a359e6e6f26a0474269');
+        $this->withUserAgent('Dalvik/1.6.0 (Linux; U; Android 4.2.2; Nexus 4 Build/JDQ39E)');
     }
 
     /**
-     * Effectue une recherche sur AlloCine
+     * Effectuer une recherche d'un terme sur AlloCiné
+     * - `$allo->search('Le Parrain')->get('movie')->toArray();`
      *
-     * ### Exemple
-     * - `$allo->search('Scarface');`
+     * @param string $text Terme à chercher sur AlloCiné
      *
-     * @param string $term Terme à chercher (personne, film, série...)
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
-     * @throws \Rcnchris\Core\Apis\ApiException
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function search($term)
+    public function search($text)
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'q' => $term
-            ],
-            $term
-        );
+        return $this
+            ->addUrlParts(__FUNCTION__)
+            ->addUrlParams('q', $text)
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir les informations sur un film à partir de son code AlloCiné
+     * Obtenir les information d'un fil à partir de son code sur AlloCiné
      *
-     * ### Exemple
-     * - `$allo->movie(27022, 'large')->toArray();`
+     * @param int         $codeMovie Code du film sur AlloCiné
+     * @param string|null $profile   Profil de retour de la réponse (small, medium ou large)
      *
-     * ### Profile
-     * - small, medium or large
-     *
-     * @param int    $codeMovie Code du film
-     * @param string $profile   Type de profil retourné
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
-     * @throws \Rcnchris\Core\Apis\ApiException
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
     public function movie($codeMovie, $profile = 'small')
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'code' => intval($codeMovie)
-                , 'profile' => $profile
-            ],
-            $codeMovie
-        );
+        return $this
+            ->addUrlParts(__FUNCTION__)
+            ->addUrlParams([
+                'code' => intval($codeMovie),
+                'profile' => $profile
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir les critiques d'un film par son code
+     * Obtenir les critiques d'un film à partir de son code sur AlloCiné
      *
-     * ### Exemple
-     * - `$allo->reviewlist(27022, 'public');`
-     *
-     * ### Filter
-     * - desk-press or public
-     *
-     * @param int         $codeMovie Code du film
+     * @param int         $codeMovie Code du film sur AlloCiné
      * @param string|null $filter    Type de critiques (desk-press ou public)
      *
-     * @return \Rcnchris\Core\Apis\CurlResponse
-     * @throws \Rcnchris\Core\Apis\ApiException
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function reviewlist($codeMovie, $filter = 'desk-press')
+    public function reviewsOfMovie($codeMovie, $filter = 'desk-press')
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'code' => intval($codeMovie)
-                , 'type' => 'movie'
-                , 'filter' => $filter
-            ],
-            $codeMovie
-        );
+        return $this
+            ->addUrlParts('reviewlist')
+            ->addUrlParams([
+                'code' => intval($codeMovie),
+                'type' => 'movie',
+                'filter' => $filter
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir les cinémas à partir d'un code postal
-     * et dans un rayon donné
+     * Obtenir la liste des cinémas dans un rayon de kilomètres donné
      *
-     * ### Exemple
-     * - `$allo->theaterlist('83190')->toArray();`
+     * @param int|string $codeZip Code postal d'une ville
+     * @param int|null   $radius  Rayon en kilomètres de la recherche
      *
-     * @param string   $codeZip Code postal
-     * @param int|null $radius  Rayon en nombre de kilomètres
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
-     * @throws \Rcnchris\Core\Apis\ApiException
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function theaterlist($codeZip, $radius = 50)
+    public function theaters($codeZip, $radius = 50)
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'zip' => $codeZip
-                , 'radius' => intval($radius)
-            ],
-            $codeZip
-        );
+        return $this
+            ->addUrlParts('theaterlist')
+            ->addUrlParams([
+                'zip' => $codeZip,
+                'radius' => intval($radius)
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir les séances d'un cinéma pour un code postal,
-     * un cinéma, un film
+     * Obtenir les séances disponibles
      *
-     * @exemple $allo->showtimelist('83000', 'P0201', 240850);
+     * @param int|string      $codeZip     Code postal de la recherche
+     * @param string|null     $codeTheater Code du cinéma sur AlloCiné
+     * @param int|string|null $codeMovie   Code du film sur AlloCiné
+     * @param int|null        $radius      Rayon de la recherche en kilomomères
      *
-     * @param string      $codeZip     Code postal
-     * @param string|null $codeTheater Code d'un cinéma
-     * @param int|null    $codeMovie   Code d'un film
-     * @param int|null    $radius      Rayon en kilomètres
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
-     * @throws \Rcnchris\Core\Apis\ApiException
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function showtimelist($codeZip, $codeTheater = null, $codeMovie = null, $radius = 25)
+    public function showTimes($codeZip, $codeTheater = null, $codeMovie = null, $radius = 50)
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'zip' => $codeZip
-                , 'theater' => $codeTheater
-                , 'movie' => $codeMovie
-                , 'radius' => $radius
-            ],
-            $codeZip
-        );
+        return $this
+            ->addUrlParts('showtimelist')
+            ->addUrlParams([
+                'zip' => $codeZip,
+                'theater' => $codeTheater,
+                'movie' => $codeMovie,
+                'radius' => intval($radius)
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir un media par son code
+     * Obtenir un média par son code
      *
-     * @exemple $allo->media(18408293);
+     * @param int         $codeMedia Code du média sur AlloCiné
+     * @param string|null $profile   Profil du retour de la réponse (small, medium ou large)
      *
-     * @param int         $codeMedia Code du média
-     * @param string|null $profile   Type de profil (small, medium ou large)
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
-     * @throws \Rcnchris\Core\Apis\ApiException
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
     public function media($codeMedia, $profile = 'small')
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'code' => $codeMedia
-                , 'profile' => $profile
-            ],
-            $codeMedia
-        );
+        return $this
+            ->addUrlParts('media')
+            ->addUrlParams([
+                'code' => $codeMedia,
+                'profile' => $profile
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir les informations sur une personne
-     * à partir de son code
+     * Obtenir les informations d'une personne par son code sur AlloCinné
      *
-     * @exemple $allo->person(1825, 'medium');
+     * @param int         $codePerson Code de la personne sur AlloCinné
+     * @param string|null $profile    Profil du retour de la réponse (small, medium ou large)
      *
-     * @param int         $codePerson Code la personne
-     * @param string|null $profile    Profile de la requête (small, medium ou large)
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
-     * @throws \Rcnchris\Core\Apis\ApiException
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
     public function person($codePerson, $profile = 'small')
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'code' => $codePerson
-                , 'profile' => $profile
-            ],
-            $codePerson
-        );
+        return $this
+            ->addUrlParts(__FUNCTION__)
+            ->addUrlParams([
+                'code' => $codePerson,
+                'profile' => $profile
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir la filmographie d'une personne
+     * Obtenir la filmographie d'une personne par son code sur AlloCiné
      *
-     * @exemple $allo->filmography(1825, 'medium');
+     * @param int         $codePerson Code de la personne sur AlloCiné
+     * @param string|null $profile    Profil du retour de la réponse (small, medium ou large)
      *
-     * @param int         $codePerson Code la personne
-     * @param string|null $profile    Profile de la requête (small, medium ou large)
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function filmography($codePerson, $profile = 'small')
+    public function filmographyOfPerson($codePerson, $profile = 'small')
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'code' => $codePerson
-                , 'profile' => $profile
-            ],
-            $codePerson
-        );
+        return $this
+            ->addUrlParts('filmography')
+            ->addUrlParams([
+                'code' => $codePerson,
+                'profile' => $profile
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir la liste des films en salle pour une personne
+     * Obtenir la liste des films en salles pour une person par son code sur AlloCiné
      *
-     * @param int         $codePerson Code de la personne
-     * @param string|null $profile    Profile de la requête (small, medium ou large)
-     * @param bool|null   $comming    Si <code>true</code>, ce sont les films à venir qui sont retournés
+     * @param int         $codePerson Code de la personne sur AlloCiné
+     * @param string|null $profile    Profil du retour de la réponse (small, medium ou large)
+     * @param bool|null   $comming    Si vrai, ce sont les films à venir qui sont retournés
      *
-     * @return \Rcnchris\Core\Apis\CurlResponse
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function movielist($codePerson, $profile = 'small', $comming = false)
+    public function currentMoviesOfPerson($codePerson, $profile = 'small', $comming = false)
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'code' => $codePerson
-                , 'profile' => $profile
-                , 'filter' => $comming ? 'commingsoon' : 'nowshowing'
-                , 'order' => 'datedesc'
-            ],
-            $codePerson
-        );
+        return $this
+            ->addUrlParts('movielist')
+            ->addUrlParams([
+                'code' => $codePerson,
+                'profile' => $profile,
+                'filter' => $comming ? 'commingsoon' : 'nowshowing',
+                'order' => 'datedesc'
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir les informations sur une série grâce à son code
+     * Obtenir une série par son code sur AlloCiné
+     * - `$allo->tvseries(4963, 'large')->toArray();`
      *
-     * @exemple $allo->tvseries(4963, 'large');
+     * @param int         $codeSerie Code de la série sur AlloCiné
+     * @param string|null $profile   Profil du retour de la réponse (small, medium ou large)
      *
-     * @param int         $codeSerie Code de la série
-     * @param string|null $profile   Profile de la requête (small, medium ou large)
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
     public function tvseries($codeSerie, $profile = 'small')
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'code' => $codeSerie
-                , 'profile' => $profile
-            ],
-            $codeSerie
-        );
+        return $this
+            ->addUrlParts(__FUNCTION__)
+            ->addUrlParams([
+                'code' => $codeSerie,
+                'profile' => $profile
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir les informations sur une saison par son code
+     * Obtenir une saison d'une série par son code sur AlloCiné
+     * - `$allo->season(4963, 'large')->toArray();`
      *
-     * @exemple $allo->season(9730, 'medium');
+     * @param int         $codeSeason Code de la saison sur AlloCiné
+     * @param string|null $profile    Profil du retour de la réponse (small, medium ou large)
      *
-     * @param int         $codeSeason Code de la série
-     * @param string|null $profile    Profile de la requête (small, medium ou large)
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
     public function season($codeSeason, $profile = 'small')
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'code' => $codeSeason
-                , 'profile' => $profile
-            ],
-            $codeSeason
-        );
+        return $this
+            ->addUrlParts(__FUNCTION__)
+            ->addUrlParams([
+                'code' => $codeSeason,
+                'profile' => $profile
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Obtenir les informations sur un épisode
-     * à partir de son code
+     * Obtenir un épisode d'une saison par son code sur AlloCiné
+     * - `$allo->episode(230135, 'large')->toArray();`
      *
-     * @param int         $codeEpisode Code de l'épisode
-     * @param string|null $profile     Profile de la requête (small, medium ou large)
+     * @param int         $codeEpisode Code de la saison sur AlloCiné
+     * @param string|null $profile     Profil du retour de la réponse (small, medium ou large)
      *
-     * @return \Rcnchris\Core\Apis\CurlResponse
+     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
     public function episode($codeEpisode, $profile = 'small')
     {
-        return $this->makeRequest(
-            __FUNCTION__,
-            [
-                'code' => $codeEpisode
-                , 'profile' => $profile
-            ],
-            $codeEpisode
-        );
+        return $this
+            ->addUrlParts(__FUNCTION__)
+            ->addUrlParams([
+                'code' => $codeEpisode,
+                'profile' => $profile
+            ])
+            ->makeUrl()
+            ->exec(false)
+            ->get('items');
     }
 
     /**
-     * Génère l'URL correspondant à la méthode
+     * Obtenir la liste des méthodes de l'API
      *
-     * @param string     $method Nom de la méthode à utiliser
-     * @param array|null $params Paramètres de la requête
-     *
-     * @return string
-     * @throws \Rcnchris\Core\Apis\ApiException
+     * @return array
      */
-    private function makeUrl($method, array $params = [])
+    public function getMethods()
     {
-//        if (!in_array($method, $this->methods)) {
-//            throw new ApiException(
-//                "Méthode $method introuvable ! Essayez plutôt avec une de celles-ci : "
-//                  . implode(', ', $this->methods)
-//            );
-//        }
-        $this->addUrlPart($method);
-        $this->addParams($params, null, true);
-        $this->addParams([
-            'format' => $this->format
-            , 'partner' => $this::PARTNER
+        return $this->methods;
+    }
+
+    /**
+     * Fabrique et définit l'URL conforme à la structure de l'API
+     *
+     * @return $this
+     */
+    private function makeUrl()
+    {
+        $this->addUrlParams([
+            'format' => 'json',
+            'partner' => $this->partner
         ]);
+
         $sed = date('Ymd');
         $sig = urlencode(
             base64_encode(
-                sha1($this::KEY . str_replace('?', '', $this->getParams()) . '&sed=' . $sed, true)
+                sha1($this->getApiKey() . $this->getParams() . '&sed=' . $sed, true)
             )
         );
-        $url = $this->url(false) . $this->getParams() . '&sed=' . $sed . '&sig=' . $sig;
-        return $url;
-    }
-
-    /**
-     * Effectuer la requête auprès de l'API
-     *
-     * @param string $method   Nom de la méthode de l'API
-     * @param array  $params   Paramètres de la requête
-     * @param string $logTitle Titre de la requête dans le journal
-     *
-     * @return \Rcnchris\Core\Apis\CurlResponse
-     * @throws \Rcnchris\Core\Apis\ApiException
-     */
-    private function makeRequest($method, array $params, $logTitle)
-    {
-        return $this->r(
-            $this->makeUrl($method, $params),
-            ucfirst($method) . ' : ' . $logTitle
-        );
+        $url = $this->getUrl(true, false) . '?' . $this->getParams() . '&sed=' . $sed . '&sig=' . $sig;
+        $this->setCurlOptions(CURLOPT_URL, $url);
+        return $this;
     }
 }

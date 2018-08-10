@@ -2,116 +2,100 @@
 namespace Tests\Rcnchris\Core\Apis;
 
 use Rcnchris\Core\Apis\AlloCine;
-use Rcnchris\Core\Apis\CurlResponse;
+use Rcnchris\Core\Tools\Items;
 use Tests\Rcnchris\BaseTestCase;
 
-class AlloCineTest extends BaseTestCase {
-
+class AlloCine2Test extends BaseTestCase
+{
     /**
-     * Instance
-     *
-     * @var AlloCine
+     * @return \Rcnchris\Core\Apis\AlloCine2
      */
-    private $api;
-
-    public function setUp()
-    {
-        $this->api = $this->makeApi();
-    }
-
-    /**
-     * Obtenir une instance de l'API
-     *
-     * @return AlloCine
-     */
-    public function makeApi()
+    public function makeAlloCineAPI()
     {
         return new AlloCine();
     }
 
     public function testInstance()
     {
-        $this->ekoTitre('API - Allo Ciné');
-        $this->assertInstanceOf(AlloCine::class, $this->api);
-        $this->assertEquals('http://api.allocine.fr/rest/v3', $this->api->url());
+        $this->ekoTitre('API - AlloCiné');
+        $this->assertInstanceOf(AlloCine::class, $this->makeAlloCineAPI());
     }
 
-    public function testHasConstant()
+    public function testGetMethods()
     {
-        $api = $this->api;
-        $this->assertInternalType('string', $api::PARTNER);
-        $this->assertInternalType('string', $api::KEY);
+        $api = $this->makeAlloCineAPI();
+        $this->assertContains('movie', $api->getMethods());
     }
 
     public function testSearch()
     {
-        $response = $this->api->search('scarface');
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->search('Scarface'));
     }
 
-    public function testMovie()
+    public function testGetMovie()
     {
-        $response = $this->api->movie(27022);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->movie(900));
     }
 
-    public function testReviewList()
+    public function testGetReviewsOfMovie()
     {
-        $response = $this->api->reviewlist(27022);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->reviewsOfMovie(900));
     }
 
-    public function testTheaterList()
+    public function testGetTheaters()
     {
-        $response = $this->api->theaterlist('83190');
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->theaters(83190));
     }
 
-    public function testShowTimeList()
+    public function testGetShowTimes()
     {
-        $response = $this->api->showtimelist('83000', 'P0201', 240850);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->showTimes(83190));
     }
 
-    public function testMedia()
+    public function testGetMedia()
     {
-        $response = $this->api->media(18408293);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->media(18408293));
     }
 
-    public function testPerson()
+    public function testGetPerson()
     {
-        $response = $this->api->person(1825);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->person(1825));
     }
 
-    public function testFilmography()
+    public function testGetFilmographyOfPerson()
     {
-        $response = $this->api->filmography(1825);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->filmographyOfPerson(1825));
     }
 
-    public function testMoviesList()
+    public function testGetMoviesListOfPerson()
     {
-        $response = $this->api->movielist(1825);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->currentMoviesOfPerson(1825));
     }
 
-    public function testTvSeries()
+    public function testGetSerie()
     {
-        $response = $this->api->tvseries(4963);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->tvseries(4963));
     }
 
-    public function testSeasons()
+    public function testGetSeason()
     {
-        $response = $this->api->season(9730);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->season(9730));
     }
 
-    public function testEpisode()
+    public function testGetEpisode()
     {
-        $response = $this->api->episode(363695);
-        $this->assertInstanceOf(CurlResponse::class, $response);
+        $api = $this->makeAlloCineAPI();
+        $this->assertInstanceOf(Items::class, $api->episode(230135));
     }
 }

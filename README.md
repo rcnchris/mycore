@@ -15,92 +15,103 @@
 ## Installation
 
 <pre class="sh_sh">
-# Pour l'utiliser dans son projet
-composer require rcnchris/core
-# ou créer un projet vide
-composer create-project -s rcnchris/core new-project
+ # Pour l'utiliser dans son projet
+ composer require rcnchris/core
 </pre>
 
 -------
 
 ## Packages
+> Un package regroupe un ensemble de classes.
 
 ### Tools
-Package qui regroupe les classes utilisées de manière autonomes un peu partout. Outils de gestion de base, tels que l'exécution de commandes shell, collections de données, accès aux fichiers et dossiers, debug...
+> Package qui regroupe les classes utilisées de manière autonomes un peu partout. Outils de gestion de base, tels que l'exécution de commandes shell, collections de données, accès aux fichiers et dossiers, debug...
 
 #### Cmd
-Exécution de commandes *shell* et traitement du retour.
+> Exécution de commandes *shell* et traitement du retour.
+
 <pre class="sh_sh">
 $ls = Cmd::exec("cd $path && ls");
 </pre>
 
 #### Environnement
-Fournit des méthodes d'interrogation de l'environnement.
+> Fournit des méthodes d'interrogation de l'environnement.
+
 <pre class="sh_sh">
 $e = new Environnement();
 $e->getPhpVersion();
 </pre>
 
 #### Html
-Fournit des méthodes de génération de balises HTML
+> Fournit des méthodes de génération de balises HTML
+
 <pre class="sh_sh">
 Html::link('Google', 'http://google.fr', ['class' => 'btn btn-primary');
 </pre>
 
 #### Collection
-Facilite la manipulation des listes de données, tableaux multi-dimensionels...
+> Facilite la manipulation des listes de données, tableaux multi-dimensionels...
+
 <pre class="sh_sh">
 $col = new Collection('ola,ole,oli', "Liste de valeurs dans une chaîne avec séparateur");
 </pre>
 
 #### Items
-Une autre classe de gestion des listes qui facilite la manipulation de tableaux multi-dimensionels...
+> Une autre classe de gestion des listes qui facilite la manipulation de tableaux multi-dimensionels...
+
 <pre class="sh_sh">
 $col = new Items('ola,ole,oli');
 </pre>
 
 #### Colors
-Gestion d'une palette de couleurs pré-définies ou définition d'une personnelle.
+> Gestion d'une palette de couleurs pré-définies ou définition d'une personnelle.
+
 <pre class="sh_sh">
 $colors = new Colors();
 $colors->get('blue');
 </pre>
 
 #### Common
-Méthodes communes diverses.
+> Méthodes communes diverses.
+
 <pre class="sh_sh">
 $m = Common::getMemoryUse();
 </pre>
 
 #### Composer
-Facilite la lecture d'un fichier composer.json
+> Facilite la lecture d'un fichier composer.json
+
 <pre class="sh_sh">
 $composer = new Composer('/path/to/file/composer.json');
 $composer->get('name');
 </pre>
 
 #### Folder
-Facilite la lecture de fichiers et dossiers.
+> Facilite la lecture de fichiers et dossiers.
+
 <pre class="sh_sh">
 $folder = new Folder($path);
 $size = $folder->size();
 </pre>
 
 #### Image
-Facilite la manipulation des images.
+> Facilite la manipulation des images.
+
 <pre class="sh_sh">
 $img = new Image('path/to/file');
 $src = $img->getEncode();
 </pre>
 
 #### Text
-Facilite la manipulation des chaînes de caractères.
+> Facilite la manipulation des chaînes de caractères.
+
 <pre class="sh_sh">
 $slug = Text::slug('Le slug qui va bien !');
 </pre>
 
 #### RandomItems
-Obtenir des données aléatoires.
+> Obtenir des données aléatoires.
+
 <pre class="sh_sh">
 $item = RandomItems::users();
 $items = RandomItems::users(3);
@@ -110,10 +121,11 @@ $items = RandomItems::users(3, 'fr_FR');
 -------
 
 ### Session
-Ce package regroupe les classes de gestion des sessions et cookies.
+> Ce package regroupe les classes de gestion des sessions et cookies.
 
 #### Session
-Facilite la manipulation des sessions.
+> Facilite la manipulation des sessions.
+
 <pre class="sh_sh">
 $session = new PHPSession();
 $ip = $session->get('ip');
@@ -121,7 +133,8 @@ $cookies = $session->getCookies();
 </pre>
 
 #### Cookies
-Facilite la lecture des cookies.
+> Facilite la lecture des cookies.
+
 <pre class="sh_sh">
 $cookies = new PHPCookies();
 $cookies->set('ip', '192.168.1.1')
@@ -130,29 +143,33 @@ $cookies->set('ip', '192.168.1.1')
 -------
 
 ## Apis
-Package qui permet d'utiliser n'importe qu'elle API facilement et quelques APIs dédiées.
+> Package qui permet d'utiliser n'importe qu'elle API facilement et quelques APIs dédiées.
+
 ### APITrait
-Comportement communs à toutes les APIs sur la base de `curl`
+> Comportement communs à toutes les APIs sur la base de `curl`
 
 ### CurlResponse
-Représente une réponse de la commande <code>curl_exec()</code>
+> Représente une réponse de la commande <code>curl_exec()</code>
 
 ### OneAPI
-Utiliser n'importe quelle API à partir de son URL.
+> Utiliser n'importe quelle API à partir de son URL.
+
 <pre class="sh_sh">
 $api = new OneAPI('https://randomuser.me/api');
 $users = $api->r(['results' => 3])->toArray('results');
 </pre>
 
 ### AlloCiné
-Obtenir des informations de l'API.
+> Obtenir des informations de l'API.
+
 <pre class="sh_sh">
 $api = new AlloCine();
 $search = $api->search('Le Parrain');
 </pre>
 
 ### Synology
-Utiliser les API d'un NAS Synology.
+> Utiliser les API d'un NAS Synology.
+
 <pre class="sh_sh">
 $api = new AbstractSynology($config);
 $genres = $api
@@ -167,17 +184,19 @@ $movies = $api
 -------
 
 ## ORM
-Abstraction des bases de données qui s'appuient sur `PDO`.
+> Abstraction des bases de données qui s'appuient sur `PDO`.
 
 ### SourcesManager
-Gestion de multiples sources de données hétérogènes (MySQL, SQLite, SQL Server...).
+> Gestion de multiples sources de données hétérogènes (MySQL, SQLite, SQL Server...).
+
 <pre class="sh_sh">
 $manager = new SourcesManager($sources);
 $pdo = $manager->connect($sourceName);
 </pre>
 
 ### DbFactory
-Fournit une instance `PDO`.
+> Fournit une instance `PDO`.
+
 <pre class="sh_sh">
 $pdoSqliteMemory = DbFactory::get('memory', 0, '', '', '', 'sqlite');
 $pdoSqliteFile = DbFactory::get('dbApp', 0, '', '', '', 'sqlite', '/path/to/file');
@@ -186,14 +205,16 @@ $pdoSqlsrv = DbFactory::get('MYSERVER\SQLEXPRESS', 1433, 'user', 'secret', 'home
 </pre>
 
 ### TableFactory
-Fournit l'instance d'une table dans une base de données.
+> Fournit l'instance d'une table dans une base de données.
+
 <pre class="sh_sh">
 $phinxTable = TableFactory::get('users');
 $cakeTable = TableFactory::get('users', ['orm' => 'cake']);
 </pre>
 
 ### Query
-Effectuer une requête sur une connexion `PDO`.
+> Effectuer une requête sur une connexion `PDO`.
+
 <pre class="sh_sh">
 $query = (new Query($pdo))->from('departements', 'dep');
 $count = $query->count();
@@ -207,7 +228,8 @@ $result = $query->all()->toArray();
 </pre>
 
 ### QueryResult
-Représente le résultat d'une requête. Permet de gérer l'hydratation des objets qui contiennent les données issues de la bases de données.
+> Représente le résultat d'une requête. Permet de gérer l'hydratation des objets qui contiennent les données issues de la bases de données.
+
 <pre class="sh_sh">
 $result = (new DepartementsModel($pdo))->makeQuery();
 </pre>
@@ -215,7 +237,8 @@ $result = (new DepartementsModel($pdo))->makeQuery();
 -------
 
 ## PDF
-Génération de documents PDF.
+> Génération de documents PDF.
+
 <pre class="sh_sh">
 $pdf = new AbstractPDF();
 
@@ -261,7 +284,7 @@ $pdf->toView(ResponseInterface $response, 'filename');
 -------
 
 ## Twig
-Ajoute des extensions à Twig.
+> Ajoute des extensions à Twig.
 
 <dl>
     <dt>Debug</dt>

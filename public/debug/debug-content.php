@@ -1,9 +1,8 @@
 <?php
 use Rcnchris\Core\Html\Html;
+use Rcnchris\Core\Tools\Common;
 
 if ($debug) {
-    error_reporting(E_ALL);
-    ini_set("display_errors", 1);
 
     // Objets
     $config = require ROOT . DS . 'tests/config.php';
@@ -14,6 +13,13 @@ if ($debug) {
     $session = new \Rcnchris\Core\Session\PHPSession();
     $html = Html::getInstance();
     $html->setCdns($config->get('cdn'));
+    //$rand = \Rcnchris\Core\Tools\RandomItems::getInstance();
+//    $adr = new \Rcnchris\Core\Apis\ApiGouv\AdressesApiGouv();
+//    $dog = new \Rcnchris\Core\Apis\CurlAPI('https://dog.ceo/api');
+//    $allo = new \Rcnchris\Core\Apis\AlloCine();
+    $syno = new \Rcnchris\Core\Apis\Synology\SynologyAPI($config->get('synology')['nas']);
+    //$syno2 = new \Rcnchris\Core\Apis\Synology\SynologyAPI($config->get('synology')['nas']);
+    $audio2 = new \Rcnchris\Core\Apis\Synology\Packages\AudioStationPackage($syno);
 }
 ?>
 
@@ -28,31 +34,206 @@ if ($debug) {
 <!-- Debug en cours -->
 <div class="row">
     <div class="col-6">
-        <form action="#" method="post" enctype="multipart/form-data">
-            <?= Html::field('year', 2018, ['label' => 'Année', 'class' => 'form-control']) ?>
-            <hr/>
-            <?= Html::field('yearDisabled', 2018, ['disabled' => true, 'class' => 'form-control']) ?>
-            <hr/>
-            <?= Html::field('textRequired', 'ola', ['required' => true, 'class' => 'form-control']) ?>
-            <hr/>
-            <?= Html::field('birthday', (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05'), ['class' => 'form-control']) ?>
-            <hr/>
-            <?= Html::field('vrai', 0, ['type' => 'checkbox']) ?>
-            <hr/>
-            <?= Html::field('fileIn', null, ['type' => 'file']) ?>
-            <hr/>
-            <?= Html::field('description', 2018, ['type' => 'textarea', 'class' => 'form-control', 'rows' => 5]) ?>
-            <hr/>
-            <?= Html::field('drivers', null, ['items' => \PDO::getAvailableDrivers(), 'empty' => true, 'class' => 'form-control']) ?>
-            <hr/>
-            <?= Html::field('mulDrivers[]', null, ['items' => \PDO::getAvailableDrivers(), 'multiple' => true, 'class' => 'form-control']) ?>
-            <hr/>
-            <?= Html::button('Feu !', 'submit', ['class' => 'btn btn-primary']) ?>
-            <hr/>
-        </form>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">API</h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Utilisateur : <?= $syno->getConfig()->get('user') ?>
+                </h6>
+                <p class="card-text">
+                    Packages : <code><?= $syno->getPackages()->join() ?></code>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-6">
+        <?php
+        $dl = $syno->getPackage('DownloadStation', $syno)->setIcon('fa fa-download');
+        $audio = $syno->getPackage('AudioStation', $syno)->setIcon('fa fa-music');
+        ?>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="<?= $dl->getIcon() ?>"></i>
+                    Package <?= $dl->getName() ?>
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Version <span class="badge badge-secondary"><?= $dl->getVersion() ?></span>
+                </h6>
+                <p class="card-text">
+                    Méthodes de l'API : <code><?= $dl->getMethods()->join() ?></code>
+                </p>
+
+                <p class="card-text">
+                    Classe : <code><?= get_class($dl) ?></code>
+                </p>
+                <hr/>
+                <p class="card-text">
+                    <?php
+                    $taches = $dl->request('Task', 'list');
+                    ?>
+                    Liste des tâches <span class="badge badge-warning"><?= $taches->get('total') ?></span>
+                </p>
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Titre</th>
+                        <th>Statut</th>
+                        <th>Type</th>
+                        <th>Taille</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($taches->get('tasks') as $task): ?>
+                        <tr>
+                            <td><?= $task['title'] ?></td>
+                            <td><?= $task['status'] ?></td>
+                            <td><?= $task['type'] ?></td>
+                            <td align="right">
+                                <span class="badge badge-secondary"><?= Common::bitsSize($task['size'], 2) ?></span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="<?= $audio->getIcon() ?>"></i>
+                    Package <?= $audio->getName() ?>
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Version <span class="badge badge-secondary"><?= $audio->getVersion() ?></span>
+                </h6>
+
+                <p class="card-text">
+                    Méthodes de l'API : <code><?= $audio->getMethods()->join() ?></code>
+                </p>
+
+                <p class="card-text">
+                    Classe : <code><?= get_class($audio) ?></code>
+                </p>
+
+                <hr/>
+
+                <p class="card-text">
+                    <?php
+                    $playlists = $audio->request('Playlist', 'list');
+                    ?>
+                    Listes de lectures <span class="badge badge-warning"><?= $playlists->get('total') ?></span>
+                </p>
+
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Statut</th>
+                        <th>Type</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($playlists->get('playlists') as $playlist): ?>
+                        <tr>
+                            <td><?= $playlist['name'] ?></td>
+                            <td><?= $playlist['sharing_status'] ?></td>
+                            <td><?= $playlist['type'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="<?= $audio2->getIcon() ?>"></i>
+                    Package <?= $audio2->getName() ?>
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+                    Version <span class="badge badge-secondary"><?= $audio2->getVersion() ?></span>
+                </h6>
+
+                <p class="card-text">
+                    Méthodes de l'API : <code><?= $audio2->getMethods()->join() ?></code>
+                </p>
+
+                <p class="card-text">
+                    Classe : <code><?= get_class($audio2) ?></code>
+                </p>
+
+                <hr/>
+
+                <p class="card-text">
+                    Listes de lectures <span class="badge badge-warning"><?= $playlists->get('total') ?></span>
+                </p>
+
+                <table class="table table-sm">
+                    <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Statut</th>
+                        <th>Type</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach($audio2->playlists()->get('playlists') as $playlist): ?>
+                        <tr>
+                            <td><?= $playlist['name'] ?></td>
+                            <td><?= $playlist['sharing_status'] ?></td>
+                            <td><?= $playlist['type'] ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <hr/>
+                <?php
+                r($audio2->albums()->keys()->toArray());
+                ?>
+            </div>
+        </div>
 
     </div>
-    <div class="col-6">
+
+    <!-- Journal des requêtes des API -->
+    <div class="col-12">
+        <hr/>
+        <h2>Journal des requêtes <span class="badge badge-warning"><?= $syno->getLog()->count() ?></span></h2>
+        <table class="table table-sm">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Title</th>
+                <th>URL</th>
+                <th>Statut</th>
+                <th>Temps</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach($syno->getLog() as $k => $log): ?>
+                <tr>
+                    <td><?= $k ?></td>
+                    <td><?= $log['title'] ?></td>
+                    <td><?= $log['details']['url'] ?></td>
+                    <td><?= $log['details']['http_code'] ?></td>
+                    <td><?= $log['details']['total_time'] ?></td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- POST -->
+    <div class="col-12">
         <?php
         if (isset($_POST)) {
             echo Html::table($_POST, ['class' => 'table table-sm']);
@@ -62,6 +243,7 @@ if ($debug) {
         }
         ?>
     </div>
+
 </div>
 
 <!-- Accordéon -->
@@ -82,7 +264,7 @@ if ($debug) {
 
                 <div id="collReadme" class="collapse show" aria-labelledby="hReadme" data-parent="#accDebug">
                     <div class="card-body">
-                    <?= \Michelf\MarkdownExtra::defaultTransform(file_get_contents('../README.md')) ?>
+                        <?= \Michelf\MarkdownExtra::defaultTransform(file_get_contents('../README.md')) ?>
                     </div>
                 </div>
             </div>
@@ -91,7 +273,8 @@ if ($debug) {
             <div class="card">
                 <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
-                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-controls="collapseOne">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                                aria-controls="collapseOne">
                             <?php
                             $context = 'success';
                             $confName = $config->get('config.name');

@@ -9,6 +9,9 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Rcnchris\Core\Apis\CurlAPI;
+use Rcnchris\Core\Apis\Synology\SynologyAPI;
+use Rcnchris\Core\Apis\Synology\SynologyAPIPackage;
 use Rcnchris\Core\Config\ConfigContainer;
 
 class BaseTestCase extends TestCase
@@ -56,16 +59,9 @@ class BaseTestCase extends TestCase
     protected $magicMethods = ['__get', '__set', '__toString'];
 
     /**
-     * Configuration
-     *
-     * @var array
-     */
-    private $config;
-
-    /**
      * @return \Faker\Generator
      */
-    public function faker()
+    protected function faker()
     {
         if (is_null($this->faker)) {
             $this->faker = Factory::create('fr_FR');
@@ -88,7 +84,7 @@ class BaseTestCase extends TestCase
      *
      * @return array
      */
-    public function getUsedFiles()
+    protected function getUsedFiles()
     {
         return $this->usedFiles;
     }
@@ -431,6 +427,16 @@ class BaseTestCase extends TestCase
     }
 
     /**
+     * @param string $url URL de base
+     *
+     * @return \Rcnchris\Core\Apis\CurlAPI
+     */
+    protected function makeCurlApi($url)
+    {
+        return new CurlAPI($url);
+    }
+
+    /**
      * Obtenir un nouveau conteneur de dépendances
      *
      * @param array|null $data Données du conteneur
@@ -440,5 +446,31 @@ class BaseTestCase extends TestCase
     protected function makeContainer(array $data = [])
     {
         return new ConfigContainer($data);
+    }
+
+    /**
+     * Obtenir l'instance de l'API Synology
+     *
+     * @param null $config Configuration de connexion
+     *
+     * @return \Rcnchris\Core\Apis\Synology\SynologyAPI
+     */
+    protected function makeSynoAPI($config = null)
+    {
+        return is_null($config)
+            ? new SynologyAPI($this->getConfig('synology')['nas'])
+            : new SynologyAPI($config);
+    }
+
+    /**
+     * Obtenir l'instance d'un package de l'API Synology
+     *
+     * @param string $packageName nom du package (DownloadStation, AudioStation...)
+     *
+     * @return \Rcnchris\Core\Apis\Synology\SynologyAPIPackage
+     */
+    protected function makeSynologyPackage($packageName)
+    {
+        return new SynologyAPIPackage($packageName, $this->makeSynoAPI());
     }
 }

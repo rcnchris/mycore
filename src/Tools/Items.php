@@ -54,7 +54,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * Définit la variable `items` sous forme de tableau
      * en fonction du type d'origine des items
      *
-     * @param $items
+     * @param mixed $items Liste des éléments à stocker
      *
      * @see http://php.net/manual/fr/function.get-object-vars.php
      */
@@ -305,14 +305,19 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Obtenir la valeur d'une clé des items
      *
-     * @param mixed $key Clé à retourner
+     * @param mixed     $key       Clé à retourner
+     * @param bool|null $withPoint Si faux, les points ne sont pas considérés pour traverser la hiérachie du tableau
      *
-     * @return self|null
+     * @return null|\Rcnchris\Core\Tools\Items
      */
-    public function get($key)
+    public function get($key, $withPoint = true)
     {
-        $indexes = explode('.', $key);
-        return $this->getValue($indexes, $this->items);
+        if ($withPoint) {
+            $indexes = explode('.', $key);
+            return $this->getValue($indexes, $this->items);
+        } else {
+            return new self($this->items[$key]);
+        }
     }
 
     /**
