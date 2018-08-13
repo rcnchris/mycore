@@ -14,12 +14,10 @@ if ($debug) {
     $html = Html::getInstance();
     $html->setCdns($config->get('cdn'));
     //$rand = \Rcnchris\Core\Tools\RandomItems::getInstance();
-//    $adr = new \Rcnchris\Core\Apis\ApiGouv\AdressesApiGouv();
+    $adr = new \Rcnchris\Core\Apis\ApiGouv\AdressesApiGouv();
 //    $dog = new \Rcnchris\Core\Apis\CurlAPI('https://dog.ceo/api');
 //    $allo = new \Rcnchris\Core\Apis\AlloCine();
     $syno = new \Rcnchris\Core\Apis\Synology\SynologyAPI($config->get('synology')['nas']);
-    //$syno2 = new \Rcnchris\Core\Apis\Synology\SynologyAPI($config->get('synology')['nas']);
-    $audio2 = new \Rcnchris\Core\Apis\Synology\Packages\AudioStationPackage($syno);
 }
 ?>
 
@@ -31,208 +29,80 @@ if ($debug) {
     </div>
 </div>
 
-<!-- Debug en cours -->
+<!-- Synology -->
 <div class="row">
-    <div class="col-6">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">API</h5>
-                <h6 class="card-subtitle mb-2 text-muted">
-                    Utilisateur : <?= $syno->getConfig()->get('user') ?>
-                </h6>
-                <p class="card-text">
-                    Packages : <code><?= $syno->getPackages()->join() ?></code>
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-6">
+    <div class="col">
         <?php
-        $dl = $syno->getPackage('DownloadStation', $syno)->setIcon('fa fa-download');
-        $audio = $syno->getPackage('AudioStation', $syno)->setIcon('fa fa-music');
+        // include_once 'synology.php'
+        $dl = new \Rcnchris\Core\Apis\Synology\Packages\DownloadStationPackage($syno);
+        $audio = new \Rcnchris\Core\Apis\Synology\Packages\AudioStationPackage($syno);
+        $video = new \Rcnchris\Core\Apis\Synology\Packages\VideoStationPackage($syno);
+
+        //r($dlPkg->listBT()->toArray());
+        //    $dl->createTask([
+        //        'uri' => 'ftps://192.168.1.2:21/web/index.php',
+        //        'username' => 'phpunit',
+        //        'password' => 'mycoretest'
+        //    ]);
+        //r($dl);
+        //r($dl->config()->toArray());
+        //r($dl->configSchedule()->toArray());
+        //r($dl->statistics()->toArray());
+        //r($dl->listBT()->toArray());
+        //        r($dl->tasks()->toArray());
+        //        r($dl->tasks([], 'title'));
+        //        r($dl->task('dbid_195')->toArray());
+
+
+        r($audio);
+        //    r($audio->config()->toArray());
+        //    r($audio->getVersion());
+        //        r($audio->albums(null, ['limit' => 10])->toArray());
+        //        r($audio->albums('IAM', ['limit' => 10])->toArray());
+        //        r($audio->albums('IAM', ['limit' => 10], 'name'));
+        //        r($audio->artists(['limit' => 10])->toArray());
+        //        r($audio->artists(['limit' => 10], 'name'));
+        //        r($audio->composers(['limit' => 10])->toArray());
+        //        r($audio->composers(['limit' => 10], 'name'));
+        //        r($audio->genres(['limit' => 10])->toArray());
+        //        r($audio->genres(['limit' => 10], 'name'));
+//        r($audio->folders(['limit' => 10])->toArray());
+//        r($audio->folder('dir_24')->toArray());
+//        r($audio->folder('dir_24', true));
+        //        r($audio->playlists()->toArray());
+        //        r($audio->playlists('name'));
+        //        r($audio->playlist('playlist_shared_normal/346')->toArray());
+        //        r($audio->playlist('playlist_shared_normal/346', true));
+        //        r($audio->radios()->toArray());
+        //        r($audio->radios('title'));
+        //        r($audio->remotes()->toArray());
+        //        r($audio->remotes('name'));
+        //        r($audio->remote('F4CAE55B33A0')->toArray());
+        //        r($audio->remote('F4CAE55B33A0', true));
+        //        r($audio->remotePlaylist('F4CAE55B33A0')->toArray());
+        //        r($audio->remotePlaylist('F4CAE55B33A0', true));
+        //        r($audio->servers()->toArray());
+        //        r($audio->servers([], 'title'));
+        //        r($audio->songs(['limit' => 10])->toArray());
+        //        r($audio->songs(['limit' => 10], 'title'));
+        //        r($audio->song('music_v_77900')->toArray());
+        //        r($audio->song('music_v_77900', true));
+        //        r($audio->searchSongs('u-turn')->toArray());
+        //        r($audio->searchSongs('u-turn', [], 'title'));
+
+
+        //        r($video->config()->toArray());
+        //    r($video->getVersion());
+        //    r($video->movies(['limit' => 10])->toArray());
+        //    r($video->collections()->toArray());
+        //    r($video->videos(['limit' => 10])->toArray());
+        //    r($video->videos(['limit' => 10], 'title'));
         ?>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="<?= $dl->getIcon() ?>"></i>
-                    Package <?= $dl->getName() ?>
-                </h5>
-                <h6 class="card-subtitle mb-2 text-muted">
-                    Version <span class="badge badge-secondary"><?= $dl->getVersion() ?></span>
-                </h6>
-                <p class="card-text">
-                    Méthodes de l'API : <code><?= $dl->getMethods()->join() ?></code>
-                </p>
-
-                <p class="card-text">
-                    Classe : <code><?= get_class($dl) ?></code>
-                </p>
-                <hr/>
-                <p class="card-text">
-                    <?php
-                    $taches = $dl->request('Task', 'list');
-                    ?>
-                    Liste des tâches <span class="badge badge-warning"><?= $taches->get('total') ?></span>
-                </p>
-                <table class="table table-sm">
-                    <thead>
-                    <tr>
-                        <th>Titre</th>
-                        <th>Statut</th>
-                        <th>Type</th>
-                        <th>Taille</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($taches->get('tasks') as $task): ?>
-                        <tr>
-                            <td><?= $task['title'] ?></td>
-                            <td><?= $task['status'] ?></td>
-                            <td><?= $task['type'] ?></td>
-                            <td align="right">
-                                <span class="badge badge-secondary"><?= Common::bitsSize($task['size'], 2) ?></span>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <hr/>
-
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="<?= $audio->getIcon() ?>"></i>
-                    Package <?= $audio->getName() ?>
-                </h5>
-                <h6 class="card-subtitle mb-2 text-muted">
-                    Version <span class="badge badge-secondary"><?= $audio->getVersion() ?></span>
-                </h6>
-
-                <p class="card-text">
-                    Méthodes de l'API : <code><?= $audio->getMethods()->join() ?></code>
-                </p>
-
-                <p class="card-text">
-                    Classe : <code><?= get_class($audio) ?></code>
-                </p>
-
-                <hr/>
-
-                <p class="card-text">
-                    <?php
-                    $playlists = $audio->request('Playlist', 'list');
-                    ?>
-                    Listes de lectures <span class="badge badge-warning"><?= $playlists->get('total') ?></span>
-                </p>
-
-                <table class="table table-sm">
-                    <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Statut</th>
-                        <th>Type</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($playlists->get('playlists') as $playlist): ?>
-                        <tr>
-                            <td><?= $playlist['name'] ?></td>
-                            <td><?= $playlist['sharing_status'] ?></td>
-                            <td><?= $playlist['type'] ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <hr/>
-
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">
-                    <i class="<?= $audio2->getIcon() ?>"></i>
-                    Package <?= $audio2->getName() ?>
-                </h5>
-                <h6 class="card-subtitle mb-2 text-muted">
-                    Version <span class="badge badge-secondary"><?= $audio2->getVersion() ?></span>
-                </h6>
-
-                <p class="card-text">
-                    Méthodes de l'API : <code><?= $audio2->getMethods()->join() ?></code>
-                </p>
-
-                <p class="card-text">
-                    Classe : <code><?= get_class($audio2) ?></code>
-                </p>
-
-                <hr/>
-
-                <p class="card-text">
-                    Listes de lectures <span class="badge badge-warning"><?= $playlists->get('total') ?></span>
-                </p>
-
-                <table class="table table-sm">
-                    <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Statut</th>
-                        <th>Type</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php foreach($audio2->playlists()->get('playlists') as $playlist): ?>
-                        <tr>
-                            <td><?= $playlist['name'] ?></td>
-                            <td><?= $playlist['sharing_status'] ?></td>
-                            <td><?= $playlist['type'] ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
-                <hr/>
-                <?php
-                r($audio2->albums()->keys()->toArray());
-                ?>
-            </div>
-        </div>
-
     </div>
+</div>
 
-    <!-- Journal des requêtes des API -->
-    <div class="col-12">
-        <hr/>
-        <h2>Journal des requêtes <span class="badge badge-warning"><?= $syno->getLog()->count() ?></span></h2>
-        <table class="table table-sm">
-            <thead>
-            <tr>
-                <th>#</th>
-                <th>Title</th>
-                <th>URL</th>
-                <th>Statut</th>
-                <th>Temps</th>
-            </tr>
-            </thead>
-            <tbody>
-            <?php foreach($syno->getLog() as $k => $log): ?>
-                <tr>
-                    <td><?= $k ?></td>
-                    <td><?= $log['title'] ?></td>
-                    <td><?= $log['details']['url'] ?></td>
-                    <td><?= $log['details']['http_code'] ?></td>
-                    <td><?= $log['details']['total_time'] ?></td>
-                </tr>
-            <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-
-
-    <!-- POST -->
+<!-- POST -->
+<div class="row">
     <div class="col-12">
         <?php
         if (isset($_POST)) {
@@ -243,7 +113,6 @@ if ($debug) {
         }
         ?>
     </div>
-
 </div>
 
 <!-- Accordéon -->

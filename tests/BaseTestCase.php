@@ -220,6 +220,18 @@ class BaseTestCase extends TestCase
     }
 
     /**
+     * Vérifie la classe et le code de l'exception
+     *
+     * @param string $class Nom de la classe d'exception
+     * @param int    $code  Code de l'erreur
+     */
+    protected function expectExceptionWithCode($class, $code)
+    {
+        $this->expectException($class);
+        $this->expectExceptionCode(intval($code));
+    }
+
+    /**
      * Vérifie le comportement d'un objet qui implémente ArrayAccess
      *
      * ### Exemple

@@ -73,6 +73,7 @@ class SynologyAPIPackage
             throw new SynologyException("Le package $packageName n'existe pas pour l'API " . get_class($api));
         }
         $this->setName($packageName);
+        $this->api->setCurrentPackage($this);
     }
 
     /**
@@ -148,7 +149,7 @@ class SynologyAPIPackage
      * @param array|null  $params     Paramètres de la requête
      * @param string|null $key        Nom de la clé à retourner au sein de la réponse
      *
-     * @return null|\Rcnchris\Core\Tools\Items
+     * @return null|\Rcnchris\Core\Tools\Items|bool
      * @throws \Rcnchris\Core\Apis\Synology\SynologyException
      */
     public function request($apiEndName, $method = 'list', array $params = [], $key = null)
@@ -169,14 +170,35 @@ class SynologyAPIPackage
             ], true)
             ->addUrlParams($params)
             ->exec(true, $apiShortName . ' ' . $method)
-            ->get('items')
-            ->get('data');
+            ->get('items');
 
+        /**
+         * Clé de la réponse à retourner
+         */
         return $key
             ? $response->get($key)
             : $response;
     }
 
+    /**
+     * Obtenir la configuration du package courant
+     *
+     * @param string $apiEndName
+     * @param string $method
+     *
+     * @return bool|null|\Rcnchris\Core\Tools\Items
+     */
+    public function config($apiEndName = 'Info', $method = 'getinfo')
+    {
+        return $this->getItems($apiEndName, $method);
+    }
+
+    /**
+     * Obtenir la version du package
+     * - `$api->getVersion();`
+     *
+     * @return string
+     */
     public function getVersion()
     {
         $version = null;
@@ -185,7 +207,61 @@ class SynologyAPIPackage
         } elseif ($this->getName() === 'AudioStation') {
             $parts = $this->request('Info', 'getinfo', [], 'version')->toArray();
             $version = $parts['major'] . '.' . $parts['minor'] . '-' . $parts['build'];
+        } elseif ($this->getName() === 'VideoStation') {
+            $version = $this->request('Info', 'getinfo', [], 'version_string');
         }
         return $version;
+    }
+
+    /**
+     * Obtenir les items d'une pour une API et une méthode
+     *
+     * @param string      $apiEndName Partie finale du nom de l'API (Album, Task, Movie...)
+     * @param string      $method     Nom de la méthode à utiliser
+     * @param array|null  $params     Paramètres de la requête
+     * @param string|null $itemsKey   Nom de la clé qui contient les items
+     * @param string|null $extractKey Nom de la clé d'un item à extraire
+     *
+     * @return array|bool|null|\Rcnchris\Core\Tools\Items
+     */
+    protected function getItems($apiEndName, $method, array $params = [], $itemsKey = null, $extractKey = null)
+    {
+        $response = $this->request($apiEndName, $method, $params);
+        if (!is_null($extractKey)) {
+            return $response->get($itemsKey)->extract($extractKey, 'id')->toArray();
+        }
+        return $response;
+    }
+
+    /**
+     * Obtenir un item à partir d'un package
+     *
+     * @param \Rcnchris\Core\Apis\Synology\SynologyAPIPackage $package    Package de l'item
+     * @param string                                          $apiEndName Nom de la partie finale de l'API (Album,
+     *                                                                    Task, Movie...)
+     * @param string                                          $method     Nom de la méthode de l'API
+     * @param string|int                                      $id         Identifiant de l'item
+     * @param string                                          $itemsKey   Nom de la clé qui contient les items
+     * @param bool|null                                       $toEntity   Retourne une entité Synology
+     *
+     * @return \Rcnchris\Core\Apis\Synology\SynologyAPIEntity|\Rcnchris\Core\Tools\Items
+     */
+    protected function getItem(SynologyAPIPackage $package, $apiEndName, $method, $id, $itemsKey, $toEntity = false)
+    {
+        $response = $this->request($apiEndName, $method, compact('id'))->get($itemsKey)->first();
+        if ($toEntity) {
+            return new SynologyAPIEntity($package, $response->toArray());
+        }
+        return $response;
+    }
+
+    /**
+     * Obtenir l'instance de l'API Synology
+     *
+     * @return SynologyAPI
+     */
+    public function getApi()
+    {
+        return $this->api;
     }
 }

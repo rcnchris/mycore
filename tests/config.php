@@ -9,7 +9,7 @@ return [
      * - dev : Tests Travis
      * - prod : Production
      */
-    'config.name' => 'dev',
+    'config.name' => 'local',
 
     /**
      * Personnalisation
@@ -22,7 +22,7 @@ return [
      * Localisation
      */
     'app.charset' => 'utf-8',
-    'app.timezone' => 'UTC',
+    'app.timezone' => 'Europe/Paris',
     'app.defaultLocale' => 'fr_FR',
     'app.sep_decimal' => ',',
     'app.sep_mil' => ' ',
@@ -131,8 +131,8 @@ return [
             'protocol' => 'http',
             'version' => 1,
             'ssl' => false,
-            'user' => 'phpunit',
-            'pwd' => 'mycoretest'
+            'user' => 'rcn',
+            'pwd' => 'maracla'
         ],
     ],
 ];

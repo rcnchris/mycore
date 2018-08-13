@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\Apis\Synology;
 
+use Rcnchris\Core\Apis\Synology\SynologyAPI;
 use Rcnchris\Core\Apis\Synology\SynologyAPIPackage;
 use Rcnchris\Core\Apis\Synology\SynologyException;
 use Rcnchris\Core\Tools\Items;
@@ -55,5 +56,10 @@ class SynologyAPIPackageTest extends BaseTestCase
     {
         $this->assertInternalType('string', $this->makeSynologyPackage('DownloadStation')->getVersion());
         $this->assertInternalType('string', $this->makeSynologyPackage('AudioStation')->getVersion());
+    }
+
+    public function testGetApi()
+    {
+        $this->assertInstanceOf(SynologyAPI::class, $this->makeSynologyPackage('DownloadStation')->getApi());
     }
 }

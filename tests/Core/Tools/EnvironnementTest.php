@@ -67,17 +67,21 @@ class EnvironnementTest extends BaseTestCase
 
     public function testApacheModules()
     {
-        if ($this->getConfig('config.name') != 'local') {
-            $this->markTestSkipped("N'existe pas dans les tests");
+        if (function_exists('apache_get_modules')) {
+            $this->assertNotEmpty($this->e->getApacheModules()->toArray());
+        } else {
+            $this->assertTrue(true);
         }
-        $this->assertNotEmpty($this->e->getApacheModules()->toArray());
     }
 
     public function testIp()
     {
-        $this->markTestSkipped('Uniquement en local');
-        $this->assertSimilar($_SERVER['SERVER_ADDR'], $this->e->getIp());
-        $this->assertSimilar($_SERVER['REMOTE_ADDR'], $this->e->getIp('remote'));
+        if ($this->getConfig('config.name') != 'dev') {
+            $this->markTestSkipped('Uniquement en local');
+        } else {
+            $this->assertSimilar($_SERVER['SERVER_ADDR'], $this->e->getIp());
+            $this->assertSimilar($_SERVER['REMOTE_ADDR'], $this->e->getIp('remote'));
+        }
     }
 
     public function testApacheUser()

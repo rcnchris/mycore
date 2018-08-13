@@ -5,7 +5,7 @@ use Rcnchris\Core\Apis\AlloCine;
 use Rcnchris\Core\Tools\Items;
 use Tests\Rcnchris\BaseTestCase;
 
-class AlloCine2Test extends BaseTestCase
+class AlloCineTest extends BaseTestCase
 {
     /**
      * @return \Rcnchris\Core\Apis\AlloCine2

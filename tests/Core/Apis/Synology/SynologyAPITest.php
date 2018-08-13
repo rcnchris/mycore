@@ -93,6 +93,11 @@ class SynologyAPITest extends BaseTestCase
         $this->assertInstanceOf(SynologyAPIPackage::class, $this->makeSynoAPI()->getPackage('DownloadStation'));
     }
 
+    public function testGetCurrentPackage()
+    {
+        $this->assertNull($this->makeSynoAPI()->getCurrentPackage());
+    }
+
     public function testGetSidsToItemsInstance()
     {
         $api = $this->makeSynoAPI();
@@ -115,6 +120,20 @@ class SynologyAPITest extends BaseTestCase
     {
         $this->expectException(SynologyException::class);
         $this->makeSynoAPI()->login('DownloadStation.Task', 'sid', 'fake', 'fake');
+    }
+
+    public function testLogout()
+    {
+        $api = $this->makeSynoAPI();
+        $api->login('DownloadStation.Task', 'sid', 'phpunit', 'mycoretest');
+        $this->assertTrue($api->logout('DownloadStation.Task'));
+    }
+
+    public function testLogoutWithApiNotConnected()
+    {
+        $api = $this->makeSynoAPI();
+        $api->login('DownloadStation.Task', 'sid', 'phpunit', 'mycoretest');
+        $this->assertFalse($api->logout('AudioStation.Album'));
     }
 
     public function testLoginOnceTime()

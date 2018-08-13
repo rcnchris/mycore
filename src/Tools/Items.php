@@ -379,7 +379,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      */
     public function keys()
     {
-        if ($this->isEmpty()) {
+        if ($this->isEmpty() || is_bool($this->items)) {
             return null;
         }
         return new self(array_keys($this->items));

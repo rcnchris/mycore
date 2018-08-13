@@ -105,6 +105,13 @@ class SynologyAPI extends CurlAPI
     private $definitions = [];
 
     /**
+     * Instance du package qui utilise l'API
+     *
+     * @var SynologyAPIPackage
+     */
+    private $currentPackage;
+
+    /**
      * Constructeur
      * Accepte l'URL de base ou un tableau de configuration
      */
@@ -113,7 +120,11 @@ class SynologyAPI extends CurlAPI
         $config = func_get_arg(0);
         if (is_array($config)) {
             $this->setConfig($config);
-            parent::__construct($this->config->get('protocol') . '://' . $this->config->get('address') . ':' . $this->config->get('port') . '/webapi');
+            parent::__construct(
+                $this->config->get('protocol') . '://'
+                . $this->config->get('address') . ':'
+                . $this->config->get('port') . '/webapi'
+            );
         } elseif (is_string($config)) {
             parent::__construct($config);
         }
@@ -188,9 +199,8 @@ class SynologyAPI extends CurlAPI
                     'method' => 'query',
                     'query' => 'all'
                 ], true)
-                ->exec(true, 'API list ')
-                ->get('items')
-                ->get('data');
+                ->exec(true, 'API list')
+                ->get('items');
         }
         return $this->apiList;
     }
@@ -220,8 +230,7 @@ class SynologyAPI extends CurlAPI
                 'query' => "SYNO.API.Auth,$apiName",
             ], true)
             ->exec(true, 'Definition of ' . $apiShortName)
-            ->get('items')
-            ->get('data');
+            ->get('items');
 
         $this->definitions[$apiName] = $definition;
         return $definition;
@@ -372,7 +381,6 @@ class SynologyAPI extends CurlAPI
             ], true)
             ->exec(true, 'Login to ' . $apiShortName . ' by ' . $this->getConfig()->get('user'))
             ->get('items')
-            ->get('data')
             ->get('sid');
 
         $this->setSid($apiName, $sid);
@@ -398,7 +406,7 @@ class SynologyAPI extends CurlAPI
                 ->get($this->getPrefixApiName() . '.' . $this->getAuthApiName(), false)
                 ->get('path');
 
-            $response = $this
+            $this
                 ->addUrlParts($authPath)
                 ->addUrlParams([
                     'api' => $this->getPrefixApiName() . '.' . $this->getAuthApiName(),
@@ -406,11 +414,10 @@ class SynologyAPI extends CurlAPI
                     'method' => 'logout',
                     'session' => $apiName
                 ])
-                ->exec(true, "Logout to $apiShortName by " . $this->getConfig()->get('user'))
-                ->get('items');
+                ->exec(true, "Logout to $apiShortName by " . $this->getConfig()->get('user'));
 
             unset($this->sids[$apiName]);
-            return $response->toArray();
+            return true;
         }
         return false;
     }
@@ -428,13 +435,23 @@ class SynologyAPI extends CurlAPI
         $response = parent::get($format);
         if (!$response instanceof Items) {
             $content = json_decode($response, true);
-            if (isset($content['success'])) {
+            if (isset($content['success']) && !$content['success']) {
                 if (isset($content['error']['code'])) {
                     throw new SynologyException('', $content['error']['code']);
                 }
             }
-        } elseif (!$response->get('success')) {
-            throw new SynologyException('', intval($response->get('error.code')));
+        } else {
+            if (is_bool($response->toArray())) {
+                return $response->toArray();
+            }
+
+            if ($response->get('success') === false) {
+                throw new SynologyException($this->currentPackage, intval($response->get('error.code')));
+            }
+
+            if ($response->has('data')) {
+                return $response->get('data');
+            }
         }
         return $response;
     }
@@ -467,6 +484,26 @@ class SynologyAPI extends CurlAPI
     public function setSid($apiName, $sid)
     {
         $this->sids[$apiName] = $sid;
+    }
+
+    /**
+     * Définir le package courant de l'API
+     *
+     * @param \Rcnchris\Core\Apis\Synology\SynologyAPIPackage $package
+     */
+    public function setCurrentPackage(SynologyAPIPackage $package)
+    {
+        $this->currentPackage = $package;
+    }
+
+    /**
+     * Obtenir le package qui utilise l'API
+     *
+     * @return \Rcnchris\Core\Apis\Synology\SynologyAPIPackage
+     */
+    public function getCurrentPackage()
+    {
+        return $this->currentPackage;
     }
 
     /**

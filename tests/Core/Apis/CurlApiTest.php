@@ -152,6 +152,18 @@ class CurlApiTest extends BaseTestCase
         $this->assertEquals(200, $this->makeCurlApi($url)->exec()->getHttpCode());
     }
 
+    public function testGetHttpCodes()
+    {
+        $url = $this->apis->get('cats.exec.image');
+        $this->assertNotEmpty($this->makeCurlApi($url)->getHttpCodes());
+    }
+
+    public function testGetHttpCodesWithCode()
+    {
+        $url = $this->apis->get('cats.exec.image');
+        $this->assertInternalType('string', $this->makeCurlApi($url)->getHttpCodes(200));
+    }
+
     public function testGetJsonToItems()
     {
         $url = $this->apis->get('dog.exec.breeds');
@@ -203,6 +215,14 @@ class CurlApiTest extends BaseTestCase
         $api = $this->makeCurlApi($this->apis->get('geo.baseUrl'))
             ->addUrlParts('communes')
             ->addUrlParams('codePostal', '83000');
+        $this->assertEquals($this->apis->get('geo.baseUrl') . '/communes?codePostal=83000', $api->getUrl());
+    }
+
+    public function testAddUrlParamsWithErase()
+    {
+        $api = $this->makeCurlApi($this->apis->get('geo.baseUrl'))
+            ->addUrlParts('communes')
+            ->addUrlParams('codePostal', '83000', true);
         $this->assertEquals($this->apis->get('geo.baseUrl') . '/communes?codePostal=83000', $api->getUrl());
     }
 
