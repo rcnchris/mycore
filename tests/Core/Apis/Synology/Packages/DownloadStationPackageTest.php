@@ -2,7 +2,6 @@
 namespace Tests\Rcnchris\Core\Apis\Synology\Packages;
 
 use Rcnchris\Core\Apis\Synology\Packages\DownloadStationPackage;
-use Rcnchris\Core\Apis\Synology\SynologyAPIEntity;
 use Rcnchris\Core\Apis\Synology\SynologyException;
 use Rcnchris\Core\Tools\Items;
 use Tests\Rcnchris\BaseTestCase;
@@ -46,12 +45,6 @@ class DownloadStationPackageTest extends BaseTestCase
     {
         $api = $this->makeDownloadStationPackage();
         $this->assertInternalType('array', $api->task('dbid_68')->toArray());
-    }
-
-    public function testTaskToEntity()
-    {
-        $api = $this->makeDownloadStationPackage();
-        $this->assertInstanceOf(SynologyAPIEntity::class, $api->taskEntity('dbid_68'));
     }
 
     public function testTaskWithWrongId()

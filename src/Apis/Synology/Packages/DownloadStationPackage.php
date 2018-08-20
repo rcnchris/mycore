@@ -118,22 +118,6 @@ class DownloadStationPackage extends SynologyAPIPackage
     }
 
     /**
-     * Obtenir l'entité d'une tâche
-     *
-     * @param        $id
-     * @param string $additional
-     *
-     * @return \Rcnchris\Core\Apis\Synology\Packages\Entities\TaskEntity
-     */
-    public function taskEntity($id, $additional = 'detail,transfer,file,tracker,peer')
-    {
-        return new TaskEntity(
-            $this,
-            $this->task($id, compact('additional'))->toArray()
-        );
-    }
-
-    /**
      * Créer une tâche de téléchargement
      *
      * @param array $params Paramètres de la tâche

@@ -63,6 +63,7 @@ class VideoStationPackageTest extends BaseTestCase
         $items = $api->movies();
         $this->assertInstanceOf(Items::class, $items);
         $this->assertNotEmpty($items->toArray());
+        $this->assertTrue($items->has('movies'));
 
         $items = $api->movies([], 'title');
         $this->assertInternalType('array', $items);

@@ -237,6 +237,16 @@ class CurlAPI
     }
 
     /**
+     * Obtenir l'IP du serveur de la requête
+     *
+     * @return string
+     */
+    public function getServerIP()
+    {
+        return $this->getCurlInfos('primary_ip');
+    }
+
+    /**
      * Définir l'URL de base de l'API
      *
      * @param string $baseUrl URL de base de l'API
@@ -284,8 +294,10 @@ class CurlAPI
      */
     public function exec($build = true, $title = null)
     {
-        if ($build) {
+        if (is_bool($build) && $build === true) {
             $this->setCurlOptions(CURLOPT_URL, $this->getUrl());
+        } elseif (is_string($build) && filter_var($build, FILTER_VALIDATE_URL)) {
+            $this->setCurlOptions(CURLOPT_URL, $build);
         }
         $this->response = curl_exec($this->curl);
         $this->log($title);
@@ -304,6 +316,7 @@ class CurlAPI
         if ($this->getHttpCode() === 200) {
             $formats = ['array', 'items', 'xml'];
             if (!is_null($format) && in_array(strtolower($format), $formats)) {
+
                 $contentType = $this->getContentType();
 
                 if ($contentType === 'text/xml' && $format === 'xml') {
@@ -318,6 +331,10 @@ class CurlAPI
                 if ($contentType === 'text/plain' && $format === 'items') {
                     $items = new Items($this->response);
                     return $items;
+                }
+
+                if ($contentType === 'image/jpeg') {
+                    return $this->response;
                 }
             }
             return $this->response;
@@ -382,11 +399,17 @@ class CurlAPI
     /**
      * Obtenir le journal des requêtes
      * - `$allo->getLog();`
+     * - `$allo->getLog(true);`
      *
-     * @return array
+     * @param bool|null $items Obtenir le journal dans une instance de Items
+     *
+     * @return array|\Rcnchris\Core\Tools\Items
      */
-    public function getLog()
+    public function getLog($items = false)
     {
+        if ($items) {
+            return new Items($this->log);
+        }
         return $this->log;
     }
 
@@ -450,7 +473,6 @@ class CurlAPI
      */
     public function getHttpCodes($code = null)
     {
-
         if (is_null($code)) {
             return $this->httpCodes;
         } elseif (array_key_exists(intval($code), $this->httpCodes)) {

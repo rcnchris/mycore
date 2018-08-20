@@ -532,15 +532,12 @@ class Text
      * @param string $string Caractère séparateur
      * @param string $text   Texte à découper
      *
-     * @return null|string
+     * @return string|null
      */
     public static function getBefore($string, $text)
     {
-        $pos = strpos($text, $string);
-        if ($pos) {
-            return trim(substr($text, 0, $pos));
-        }
-        return null;
+        $result = strstr($text, $string, true);
+        return $result != '' ? $result : null;
     }
 
     /**
@@ -549,15 +546,13 @@ class Text
      * @param string $string Caractère séparateur
      * @param string $text   Texte à découper
      *
-     * @return null|string
+     * @return string|null
+     * @see http://fr2.php.net/manual/fr/function.strstr.php
      */
     public static function getAfter($string, $text)
     {
-        $pos = strpos($text, $string);
-        if ($pos) {
-            return trim(substr($text, $pos + 1, strlen($text)));
-        }
-        return null;
+        $result = strstr($text, $string);
+        return $result != '' ? substr($result, 1, strlen($result) - 1) : null;
     }
 
     /**

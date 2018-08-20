@@ -41,7 +41,6 @@ use Psr\Http\Message\ResponseInterface;
  */
 class PoweredByMiddleware extends AbstractMiddleware
 {
-
     /**
      * Est appelée lorsqu'un script tente d'appeler un objet comme une fonction. (callable)
      *

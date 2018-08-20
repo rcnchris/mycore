@@ -1,5 +1,6 @@
 <?php
 $debug = true;
+$start = microtime(true);
 require '../vendor/autoload.php';
 
 // PSR7
@@ -41,6 +42,8 @@ $response = new \GuzzleHttp\Psr7\Response();
     <!-- Coloration syntaxique -->
     <link rel="stylesheet" href="/cdn/vendor/shjs/css/sh_acid.min.css">
 
+    <link rel="stylesheet" href="public/css/app.css">
+
     <title>MyCore</title>
 </head>
 <body onload="sh_highlightDocument('/cdn/vendor/shjs/lang/', '.min.js');">
@@ -54,6 +57,14 @@ $response = new \GuzzleHttp\Psr7\Response();
     }
     ?>
 </div>
+
+<footer class="footer">
+    <div class="container-fluid">
+        <span class="text-muted">
+            Mémoire utilisée : <?= \Rcnchris\Core\Tools\Common::getMemoryUse(true) ?> - <?= microtime(true) - $start ?>
+        </span>
+    </div>
+</footer>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -344,13 +344,14 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Vérifie la présence d'une clé dans les items
      *
-     * @param mixed $key Clé à vérifier
+     * @param mixed     $key       Clé à vérifier
+     * @param bool|null $withPoint Si faux, les points ne sont pas considérés pour traverser la hiérachie du tableau
      *
      * @return bool
      */
-    public function has($key)
+    public function has($key, $withPoint = true)
     {
-        if ($this->get($key)) {
+        if ($this->get($key, $withPoint)) {
             return true;
         }
         return false;

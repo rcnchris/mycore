@@ -19,6 +19,7 @@
 namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Debug;
+use Rcnchris\Core\Twig\ArrayExtension;
 use Tests\Rcnchris\BaseTestCase;
 
 class DebugTest extends BaseTestCase
@@ -38,7 +39,7 @@ class DebugTest extends BaseTestCase
 
     public function testGetInstance()
     {
-        $this->ekoTitre('Tools - Items');
+        $this->ekoTitre('Tools - Debug');
         $this->assertInstanceOf(Debug::class, $this->debugger);
     }
 

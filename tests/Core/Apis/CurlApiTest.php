@@ -114,8 +114,8 @@ class CurlApiTest extends BaseTestCase
     public function testGetCharset()
     {
         $url = $this->apis->get('dog.exec.image');
-        $this->assertNull($this->makeCurlApi($url)->exec()->getCharset(),
-            $this->getMessage("L'URL $url ne retourne pas un charset null"));
+        $charset = $this->makeCurlApi($url)->exec()->getCharset();
+        $this->assertNull($charset, $this->getMessage("L'URL $url retourne le charset $charset au lieu de null"));
 
         $url = $this->apis->get('dog.exec.breeds');
         $this->assertNull($this->makeCurlApi($url)->exec()->getCharset(),
@@ -150,6 +150,12 @@ class CurlApiTest extends BaseTestCase
 
         $url = $this->apis->get('cats.exec.image');
         $this->assertEquals(200, $this->makeCurlApi($url)->exec()->getHttpCode());
+    }
+
+    public function testServerIP()
+    {
+        $url = $this->apis->get('dog.exec.image');
+        $this->assertInternalType('string', $this->makeCurlApi($url)->exec()->getServerIP());
     }
 
     public function testGetHttpCodes()

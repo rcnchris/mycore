@@ -310,6 +310,43 @@ class BaseTestCase extends TestCase
     }
 
     /**
+     * Vérifier la présence d'une série de clé dans un tableau
+     *
+     * @param array        $array Tableau à vérifier
+     * @param array|string $keys  Liste des clés dont il faut vérifier la présence
+     */
+    public function assertArrayHasKeys(array $array, $keys)
+    {
+        if (is_string($keys)) {
+            $keys = explode(',', $keys);
+        }
+        foreach ($keys as $key) {
+            $this->assertArrayHasKey(
+                $key,
+                $array,
+                $this->getMessage("La clé $key est absente du tableau")
+            );
+        }
+    }
+
+    /**
+     * Vérifier la présence d'une série d'attributs dans un objet
+     *
+     * @param object $object     Objet à vérifier
+     * @param array  $attributes Liste des noms d'attributs
+     */
+    public function assertObjectHasAttributes($object, array $attributes)
+    {
+        foreach ($attributes as $attribute) {
+            $this->assertObjectHasAttribute(
+                $attribute,
+                $object,
+                $this->getMessage("L'attribut $attribute est absent de l'objet")
+            );
+        }
+    }
+
+    /**
      * Vérifie que l'instance d'un objet implémente une liste d'interfaces
      *
      * @param object       $object     Objet à tester
@@ -483,6 +520,6 @@ class BaseTestCase extends TestCase
      */
     protected function makeSynologyPackage($packageName)
     {
-        return new SynologyAPIPackage($packageName, $this->makeSynoAPI());
+        return $this->makeSynoAPI()->getPackage($packageName);
     }
 }

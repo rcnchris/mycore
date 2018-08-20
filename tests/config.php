@@ -134,5 +134,16 @@ return [
             'user' => 'rcn',
             'pwd' => 'maracla'
         ],
+        'nasdev' => [
+            'name' => 'nas',
+            'description' => 'Nas de développement',
+            'address' => '192.168.1.20',
+            'port' => 5552,
+            'protocol' => 'http',
+            'version' => 1,
+            'ssl' => false,
+            'user' => 'rcn',
+            'pwd' => 'maracla'
+        ],
     ],
 ];

@@ -93,17 +93,25 @@ class AudioStationPackageTest extends BaseTestCase
     public function testRemote()
     {
         $api = $this->makeAudioStationPackage();
-        $player = $api->remotes()->get('players')->first();
-        $this->assertInstanceOf(Items::class, $api->remote($player->id));
-        $this->assertInstanceOf(SynologyAPIEntity::class, $api->remote($player->id, true));
+        $players = $api->remotes()->get('players');
+        if (!$players->isEmpty()) {
+            $this->assertInstanceOf(Items::class, $api->remote($players->first()->id));
+            $this->assertInstanceOf(SynologyAPIEntity::class, $api->remote($players->first()->id, true));
+        } else {
+            $this->markTestSkipped('Aucun lecteur à tester');
+        }
     }
 
     public function testRemotePlaylist()
     {
         $api = $this->makeAudioStationPackage();
-        $player = $api->remotes()->get('players')->first();
-        $this->assertInstanceOf(Items::class, $api->remotePlaylist($player->id));
-        $this->assertInstanceOf(SynologyAPIEntity::class, $api->remotePlaylist($player->id, true));
+        $players = $api->remotes()->get('players');
+        if (!$players->isEmpty()) {
+            $this->assertInstanceOf(Items::class, $api->remotePlaylist($players->first()->id));
+            $this->assertInstanceOf(SynologyAPIEntity::class, $api->remotePlaylist($players->first()->id, true));
+        } else {
+            $this->markTestSkipped('Aucun lecteur à tester');
+        }
     }
 
     public function testServers()

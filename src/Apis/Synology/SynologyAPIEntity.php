@@ -43,10 +43,17 @@ class SynologyAPIEntity
     private $package;
 
     /**
+     * Liste des champs de l'entité
+     *
+     * @var []
+     */
+    private $fields;
+
+    /**
      * Constructeur
      *
-     * @param array                                           $content
-     * @param \Rcnchris\Core\Apis\Synology\SynologyAPIPackage $package
+     * @param array                                           $content Tableau du contenu de l'entité
+     * @param \Rcnchris\Core\Apis\Synology\SynologyAPIPackage $package Instance du package concerné
      */
     public function __construct(SynologyAPIPackage $package, array $content = [])
     {
@@ -71,7 +78,7 @@ class SynologyAPIEntity
      *
      * @return $this
      */
-    public function setPackage($package)
+    private function setPackage($package)
     {
         $this->package = $package;
         return $this;
@@ -88,7 +95,18 @@ class SynologyAPIEntity
     {
         foreach ($content as $property => $value) {
             $this->$property = $value;
+            $this->fields[$property] = gettype($value);
         }
         return $this;
+    }
+
+    /**
+     * Obtenir la liste des champs de l'entité et leur type
+     *
+     * @return array
+     */
+    public function getFields()
+    {
+        return $this->fields;
     }
 }

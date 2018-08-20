@@ -12,8 +12,9 @@ class SynologyAPITest extends BaseTestCase
 
     public function testInstance()
     {
-        $this->ekoTitre('API - SynologyAPI');
+        $this->ekoTitre('API - Synology API');
         $this->assertInstanceOf(SynologyAPI::class, $this->makeSynoAPI());
+        $this->assertInstanceOf(SynologyAPI::class, $this->makeSynoAPI($this->getConfig('synology')['nasdev']));
     }
 
     public function testInstanceWithUrl()
@@ -85,23 +86,30 @@ class SynologyAPITest extends BaseTestCase
             'Encryption',
             'Info',
             'OTP'
-        ], $api->getMethodsOfPackage($packeName)->toArray());
+        ], $api->getApisOfPackage($packeName)->toArray());
     }
 
     public function testGetPackage()
     {
-        $this->assertInstanceOf(SynologyAPIPackage::class, $this->makeSynoAPI()->getPackage('DownloadStation'));
+        $syno = $this->makeSynoAPI();
+        $pkg = $syno->getPackage('DownloadStation');
+        $this->assertInstanceOf(SynologyAPIPackage::class, $pkg);
+        $this->assertEquals('DownloadStation', $pkg->getName());
     }
 
-    public function testGetCurrentPackage()
+    public function testGetPackageOnceTime()
     {
-        $this->assertNull($this->makeSynoAPI()->getCurrentPackage());
+        $syno = $this->makeSynoAPI();
+        $pkg1 = $syno->getPackage('DownloadStation');
+        $pkg2 = $syno->getPackage('DownloadStation');
+        $this->assertInstanceOf(SynologyAPIPackage::class, $pkg1);
+        $this->assertInstanceOf(SynologyAPIPackage::class, $pkg2);
     }
 
-    public function testGetSidsToItemsInstance()
+    public function testGetSids()
     {
         $api = $this->makeSynoAPI();
-        $this->assertInstanceOf(Items::class, $api->getSids());
+        $this->assertFalse($api->getSids());
     }
 
     public function testLogin()
@@ -155,6 +163,21 @@ class SynologyAPITest extends BaseTestCase
     {
         $api = $this->makeSynoAPI();
         $api->getApis();
-        $this->assertInstanceOf(Items::class, $api->getLog());
+        $this->assertInternalType('array', $api->getLog());
+        $this->assertInstanceOf(Items::class, $api->getLog(true));
+    }
+
+    public function testGetAllApiEndNames()
+    {
+        $names = $this->makeSynoAPI()->getAllApiEndNames();
+        $this->assertInstanceOf(Items::class, $names);
+        $this->assertNotEmpty($names->toArray());
+    }
+
+    public function testGetErrorMessages()
+    {
+        $messages = $this->makeSynoAPI()->getErrorMessages();
+        $this->assertInstanceOf(Items::class, $messages);
+        $this->assertArrayHasKeys($messages->toArray(), ['AudioStation', 'FileStation', 'DownloadStation', 'VideoStation']);
     }
 }

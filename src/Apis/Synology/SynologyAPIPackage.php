@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Apis\Synology;
 
+use Rcnchris\Core\Tools\Items;
+
 /**
  * Class SynologyAPIPackage
  *
@@ -73,17 +75,23 @@ class SynologyAPIPackage
             throw new SynologyException("Le package $packageName n'existe pas pour l'API " . get_class($api));
         }
         $this->setName($packageName);
-        $this->api->setCurrentPackage($this);
+        $this->api->addPackage($this);
     }
 
     /**
      * Obtenir le nom du package
      *
+     * @param bool|null $withEndPoint Ajoute un point après le nom du package
+     *
      * @return string
      */
-    public function getName()
+    public function getName($withEndPoint = false)
     {
-        return $this->name;
+        $name = $this->name;
+        if ($withEndPoint) {
+            $name .= '.';
+        }
+        return $name;
     }
 
     /**
@@ -97,15 +105,62 @@ class SynologyAPIPackage
     }
 
     /**
+     * Obtenir le sid de l'API demandée (Task, Album...)
+     *
+     * @param string $apiEndName Nom de la partie finale de l'API
+     *
+     * @return array|bool|string
+     */
+    public function getSid($apiEndName)
+    {
+        return $this->api->getSids($this->api->getPrefixApiName(true) . $this->getName(true) . $apiEndName);
+    }
+
+    /**
+     * Se connecter à une API depuis le package
+     * - `$pkg->login('Task');`
+     *
+     * @param string      $apiEndName Partie finale du nom de l'API (Task, Album...)
+     * @param string|null $format     Format d'authentification (sid ou cookie)
+     * @param string|null $user       Nom d'utilisateur
+     * @param string|null $pwd        Mot de passe
+     *
+     * @return bool|null|\Rcnchris\Core\Tools\Items
+     * @throws \Rcnchris\Core\Apis\Synology\SynologyException
+     */
+    public function login($apiEndName, $format = 'sid', $user = null, $pwd = null)
+    {
+        return $this->api->login($this->getName(true) . $apiEndName, $format, $user, $pwd);
+    }
+
+    /**
+     * Se déconnecter d'une API du package
+     *
+     * @param string $apiEndName Nom de la partie finale de l'API (Task, Album...)
+     *
+     * @return array|bool
+     */
+    public function logout($apiEndName)
+    {
+        return $this->api->logout($this->getName(true) . (string)$apiEndName);
+    }
+
+    /**
      * Obtenir la définition d'une méthode
      *
-     * @param string $methodName Nom de la méthode d'un package
+     * @param string    $methodName Nom de la méthode d'un package
+     * @param bool|null $onlyMethod Uniquement la clé de la méthode sans celle de Auth
      *
      * @return null|\Rcnchris\Core\Tools\Items
      */
-    public function getDefinition($methodName)
+    public function getDefinition($methodName, $onlyMethod = false)
     {
-        return $this->api->getApiDefinition($this->getName() . '.' . $methodName);
+        $response = $this->api->getApiDefinition($this->getName(true) . $methodName);
+        if ($onlyMethod) {
+            $array = $response->toArray();
+            return new Items(end($array));
+        }
+        return $response;
     }
 
     /**
@@ -115,7 +170,7 @@ class SynologyAPIPackage
      */
     public function getMethods()
     {
-        return $this->api->getMethodsOfPackage($this->getName());
+        return $this->api->getApisOfPackage($this->getName());
     }
 
     /**
@@ -154,23 +209,14 @@ class SynologyAPIPackage
      */
     public function request($apiEndName, $method = 'list', array $params = [], $key = null)
     {
-        $apiShortName = $this->getName() . '.' . $apiEndName;
-        $sid = $this->api->login($apiShortName);
-        $definition = $this->getDefinition($apiEndName);
-        $apiPath = $definition->get($this->api->getPrefixApiName() . '.' . $apiShortName, false)->get('path');
-        $apiVersion = $definition->get($this->api->getPrefixApiName() . '.' . $apiShortName, false)->get('minVersion');
-
-        $response = $this->api
-            ->addUrlParts($apiPath, true)
-            ->addUrlParams([
-                'api' => $this->api->getPrefixApiName() . '.' . $apiShortName,
-                'version' => $apiVersion,
-                'method' => $method,
-                '_sid' => $sid
-            ], true)
-            ->addUrlParams($params)
-            ->exec(true, $apiShortName . ' ' . $method)
+        $url = $this->makeUrl($apiEndName, $method, $params);
+        $response = $this
+            ->getApi()
+            ->exec($url, $apiEndName . ' ' . $method)
             ->get('items');
+
+        // Trace des méthodes utilisées par l'instance
+        //$this->api->apiMethods[$this->api->getPrefixApiName(true) . $this->getName(true) . $apiEndName][$method][] = $this->api->getParams(false);
 
         /**
          * Clé de la réponse à retourner
@@ -181,16 +227,49 @@ class SynologyAPIPackage
     }
 
     /**
+     * Obtenir l'URL formatée sans l'exécuter
+     *
+     * @param string      $apiEndName Nom de final de l'API à utilier au sein du package (Task, Album, Info...)
+     * @param string|null $method     Nom de la méthode de l'API (list, query...)
+     * @param array|null  $params     Paramètres de la requête
+     *
+     * @return null|string
+     * @throws \Rcnchris\Core\Apis\Synology\SynologyException
+     */
+    public function makeUrl($apiEndName, $method, array $params = [])
+    {
+        $apiShortName = $this->getName(true) . $apiEndName;
+        $sid = $this->api->login($apiShortName);
+        $definition = $this->getDefinition($apiEndName);
+        $apiPath = $definition->get($this->api->getPrefixApiName(true) . $apiShortName, false)->get('path');
+        $apiVersion = $definition->get($this->api->getPrefixApiName(true) . $apiShortName, false)->get('minVersion');
+
+        $params = array_merge([
+            'api' => $this->api->getPrefixApiName(true) . $apiShortName,
+            'version' => $apiVersion,
+            'method' => $method,
+            '_sid' => $sid
+        ], $params);
+
+        return $this
+            ->getApi()
+            ->addUrlParts($apiPath, true)
+            ->addUrlParams($params, null, true)
+            ->getUrl();
+    }
+
+    /**
      * Obtenir la configuration du package courant
      *
-     * @param string $apiEndName
-     * @param string $method
+     * @param string|null $apiEndName Partie finale dyu nom de l'API
+     * @param string|null $method     Nom de la méthode
+     * @param array|null  $params     Paramètres de la requête
      *
      * @return bool|null|\Rcnchris\Core\Tools\Items
      */
-    public function config($apiEndName = 'Info', $method = 'getinfo')
+    public function config($apiEndName = 'Info', $method = 'getinfo', array $params = [])
     {
-        return $this->getItems($apiEndName, $method);
+        return $this->getItems($apiEndName, $method, $params);
     }
 
     /**
@@ -227,8 +306,12 @@ class SynologyAPIPackage
     protected function getItems($apiEndName, $method, array $params = [], $itemsKey = null, $extractKey = null)
     {
         $response = $this->request($apiEndName, $method, $params);
+        $colId = 'id';
         if (!is_null($extractKey)) {
-            return $response->get($itemsKey)->extract($extractKey, 'id')->toArray();
+            return $response
+                ->get($itemsKey)
+                ->extract($extractKey, $colId)
+                ->toArray();
         }
         return $response;
     }
@@ -241,14 +324,23 @@ class SynologyAPIPackage
      *                                                                    Task, Movie...)
      * @param string                                          $method     Nom de la méthode de l'API
      * @param string|int                                      $id         Identifiant de l'item
-     * @param string                                          $itemsKey   Nom de la clé qui contient les items
+     * @param string|null                                     $itemsKey   Nom de la clé qui contient les items
      * @param bool|null                                       $toEntity   Retourne une entité Synology
      *
      * @return \Rcnchris\Core\Apis\Synology\SynologyAPIEntity|\Rcnchris\Core\Tools\Items
      */
-    protected function getItem(SynologyAPIPackage $package, $apiEndName, $method, $id, $itemsKey, $toEntity = false)
-    {
-        $response = $this->request($apiEndName, $method, compact('id'))->get($itemsKey)->first();
+    protected function getItem(
+        SynologyAPIPackage $package,
+        $apiEndName,
+        $method,
+        $id,
+        $itemsKey = null,
+        $toEntity = false
+    ) {
+        $response = $this->request($apiEndName, $method, compact('id'));
+        if ($itemsKey) {
+            $response = $response->get($itemsKey)->first();
+        }
         if ($toEntity) {
             return new SynologyAPIEntity($package, $response->toArray());
         }
@@ -263,5 +355,38 @@ class SynologyAPIPackage
     public function getApi()
     {
         return $this->api;
+    }
+
+    /**
+     * Démarre une tâche
+     *
+     * @param string      $apiEndName Partie finale du nom de l'API
+     * @param string|null $method     Nom de la méthode de démarrage
+     * @param array|null  $params     Paramètres de la raquête
+     *
+     * @return null|\Rcnchris\Core\Tools\Items
+     */
+    protected function startTask($apiEndName, array $params = [], $method = 'start')
+    {
+        return $this->request($apiEndName, $method, $params)->get('taskid');
+    }
+
+    /**
+     * Arrête une tâche
+     *
+     * @param string      $taskid     Identifiant de la tâche
+     * @param string      $apiEndName Partie finale du nom de l'API (Album, Movie...)
+     * @param bool|null   $withClean  Vide aussi le cache
+     * @param string|null $method     Nom de la méthode d'arrêt de la tâche
+     *
+     * @return bool|null|\Rcnchris\Core\Tools\Items
+     */
+    protected function stopTask($taskid, $apiEndName, $withClean = false, $method = 'stop')
+    {
+        $response = $this->request($apiEndName, $method, compact('taskid'));
+        if ($withClean) {
+            $response = $this->request($apiEndName, 'clean', compact('taskid'));
+        }
+        return $response;
     }
 }

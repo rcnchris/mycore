@@ -51,14 +51,21 @@ class SynologyException extends Exception
     {
         $this->errorsCodes = new Items(require __DIR__ . '/errors-codes.php');
         $packageName = null;
+
         if (is_object($message)) {
             if ($message instanceof SynologyAPIPackage) {
-                $packageName = $message->getName();
-                $message = $packageName . ' : ' . $this->getSynologyMessage($code, $packageName);
+                $package = $message;
+                $errors = $package->getApi()->errors;
+                if ($errors) {
+                    r($errors->toArray());
+                }
+                $message = $package->getName() . ' : ' . $this->getSynologyMessage($code, $package);
             }
         } elseif (is_string($message) && $message != '') {
             $initMessage = $message;
             $message = $initMessage . "\n" . $message;
+        } elseif ($code !== 0) {
+            $message = $this->getSynologyMessage($code);
         }
         parent::__construct($message, $code, null);
     }
@@ -66,35 +73,35 @@ class SynologyException extends Exception
     /**
      * Obtenir le message Synology s'il existe
      *
-     * @param int         $code        Code Synology de l'erreur
-     * @param string|null $packageName Nom du package
+     * @param int                                             $code
+     * @param \Rcnchris\Core\Apis\Synology\SynologyAPIPackage $package
      *
      * @return null|\Rcnchris\Core\Tools\Items
      */
-    private function getSynologyMessage($code, $packageName = null)
+    private function getSynologyMessage($code = 0, SynologyAPIPackage $package = null)
     {
-        if ($code === 0) {
-            return null;
-        }
         $lang = substr(Locale::getDefault(), 0, 2);
-        if (!is_null($packageName)) {
-            //r($packageName, $code);die;
+
+        if (!is_null($package)) {
+            $packageName = $package->getName();
             if ($this->errorsCodes->has($packageName) && $this->errorsCodes->get($packageName)->has($code)) {
+
                 return $this->errorsCodes->get($packageName)->get($code)->has($lang)
-                    ? $this->errorsCodes->get($packageName)->get($code)->get($lang)
-                    : $this->errorsCodes->get($packageName)->get($code)->get('en');
+                    ? '[' . $code . '] ' . $this->errorsCodes->get($packageName)->get($code)->get($lang)
+                    : '[' . $code . '] ' . $this->errorsCodes->get($packageName)->get($code)->get('en');
             } else {
                 if ($this->errorsCodes->has($code)) {
                     return $this->errorsCodes->get($code)->has($lang)
-                        ? $this->errorsCodes->get($code)->get($lang)
-                        : $this->errorsCodes->get($code)->get('en');
+                        ? '[' . $code . '] ' . $this->errorsCodes->get($code)->get($lang)
+                        : '[' . $code . '] ' . $this->errorsCodes->get($code)->get('en');
                 }
             }
         } else {
+
             if ($this->errorsCodes->has($code)) {
                 return $this->errorsCodes->get($code)->has($lang)
-                    ? $this->errorsCodes->get($code)->get($lang)
-                    : $this->errorsCodes->get($code)->get('en');
+                    ? '[' . $code . '] ' . $this->errorsCodes->get($code)->get($lang)
+                    : '[' . $code . '] ' . $this->errorsCodes->get($code)->get('en');
             }
         }
         return null;

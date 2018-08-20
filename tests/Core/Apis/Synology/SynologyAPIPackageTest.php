@@ -12,7 +12,7 @@ class SynologyAPIPackageTest extends BaseTestCase
 
     public function testInstance()
     {
-        $this->ekoTitre('API - Synology Package');
+        $this->ekoTitre('API - Synology Packages');
         $this->assertInstanceOf(SynologyAPIPackage::class, $this->makeSynologyPackage('DownloadStation'));
     }
 
@@ -35,6 +35,14 @@ class SynologyAPIPackageTest extends BaseTestCase
         $this->assertArrayHasKey('path', $definition->get('SYNO.API.Auth', false));
         $this->assertArrayHasKey('SYNO.DownloadStation.Task', $definition->toArray());
         $this->assertArrayHasKey('path', $definition->get('SYNO.DownloadStation.Task', false));
+    }
+
+    public function testGetDefinitionWithOnlyApi()
+    {
+        $definition = $this->makeSynologyPackage('DownloadStation')->getDefinition('Task', true);
+        $this->assertInstanceOf(Items::class, $definition);
+        $this->assertArrayNotHasKey('SYNO.API.Auth', $definition->toArray());
+        $this->assertArrayHasKey('path', $definition->toArray());
     }
 
     public function testGetMethods()
@@ -61,5 +69,26 @@ class SynologyAPIPackageTest extends BaseTestCase
     public function testGetApi()
     {
         $this->assertInstanceOf(SynologyAPI::class, $this->makeSynologyPackage('DownloadStation')->getApi());
+    }
+
+    public function testGetSid()
+    {
+        $pkg = $this->makeSynologyPackage('DownloadStation');
+        $pkg->request('Task', 'list');
+        $this->assertInternalType('string', $pkg->getSid('Task'));
+    }
+
+    public function testLogin()
+    {
+        $pkg = $this->makeSynologyPackage('AudioStation');
+        $this->assertInternalType('string', $pkg->login('Playlist'));
+        $this->assertTrue($pkg->logout('Playlist'));
+    }
+
+    public function testLogout()
+    {
+        $pkg = $this->makeSynologyPackage('DownloadStation');
+        $pkg->request('Task', 'list');
+        $this->assertTrue($pkg->logout('Task'));
     }
 }

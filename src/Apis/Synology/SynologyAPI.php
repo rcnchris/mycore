@@ -53,6 +53,13 @@ class SynologyAPI extends CurlAPI
     const AUTH_VERSION = 2;
 
     /**
+     * Contenu de la clé 'error' de la réponse
+     *
+     * @var Items
+     */
+    public $errors;
+
+    /**
      * Configuration de l'API
      *
      * @var Items
@@ -112,6 +119,127 @@ class SynologyAPI extends CurlAPI
     private $currentPackage;
 
     /**
+     * Liste des packages instanciés dans cette instance
+     *
+     * @var SynologyAPIPackage[]
+     */
+    public $packages = [];
+
+    /**
+     * Liste des méthodes par API
+     *
+     * Pour info... pour l'instant
+     *
+     * @var array
+     */
+    public $apiMethods = [];
+
+    /**
+     * Liste des méthodes rencontrées
+     *
+     * @var array
+     */
+    public $enableMethods = [
+        'list',
+        'video_list',
+        'video_getinfo',
+        'get',
+        'getinfo',
+        'getconfig',
+        'getstatus',
+        'get_task_detail',
+        'getCategory',
+        'getModule',
+        'getimage',
+        'getcountry',
+        'getregion',
+        'status',
+        'search',
+        'list_share',
+        'start',
+        'restart',
+        'stop',
+        'clean',
+        'open',
+        'close',
+        'create',
+        'add',
+        'add_by_file',
+        'addvideo',
+        'delete',
+        'deletevideo',
+        'edit',
+        'edit_adv',
+        'replace_all',
+        'rename',
+        'write',
+        'clear_broken',
+        'clear_invalid',
+        'clear_finished',
+        'download',
+        'upload',
+        'stream',
+        'transcode',
+        'update',
+        'updateradios',
+        'copytolibrary',
+        'updatesongs',
+        'createsmart',
+        'updatesmart',
+        'getplaylist',
+        'updateplaylist',
+        'control',
+        'resume',
+        'pause',
+        'refresh',
+        'testpassword',
+        'setconfig',
+        'setpassword',
+        'setserverconfig',
+        'setimage',
+        'setinfo',
+        'getstreamid',
+        'stream',
+        'getsonginfo',
+        'deletesonginfo',
+        'getlyrics',
+        'setlyrics',
+        'searchlyrics',
+        'getsongcover',
+        'getfoldercover',
+        'getcover',
+        'verify_account',
+        'login',
+        'get_download_default_dest',
+        'download_to_local',
+        'get_satellite',
+        'create_satellite',
+        'edit_satellite',
+        'delete_satellite',
+        'get_lnb',
+        'create_lnb',
+        'edit_lnb',
+        'delete_lnb',
+        'get_tp',
+        'get_tp_default',
+        'save_tp',
+        'delete_all_channels',
+        'delete_passed',
+        'create_repeat',
+        'getinfo_repeat',
+        'edit_repeat',
+        'delete_repeat',
+        'getinfo_userdefine',
+        'create_userdefine',
+        'edit_userdefine',
+        'delete_userdefine',
+        'getchannel',
+        'setchannel',
+        'query',
+        'updateinfo'
+    ];
+
+    /**
      * Constructeur
      * Accepte l'URL de base ou un tableau de configuration
      */
@@ -135,9 +263,12 @@ class SynologyAPI extends CurlAPI
      */
     public function __destruct()
     {
-//        foreach ($this->getSids()->keys()->toArray() as $apiName) {
-//            $this->logout($apiName);
-//        }
+        $sids = $this->getSids();
+        if ($sids) {
+            foreach ($sids as $apiName => $sid) {
+                $this->logout($apiName);
+            }
+        }
         unset($this->config);
         parent::__destruct();
     }
@@ -246,15 +377,37 @@ class SynologyAPI extends CurlAPI
     public function getPackages($withMethods = false)
     {
         $packages = [];
+
         foreach ($this->getApis()->keys() as $apiName) {
-            $withMethods
-                ? $packages[$this->getPackageName($apiName)][] = $this->getMethodName($apiName)
-                : $packages[] = $this->getPackageName($apiName);
+            if ($withMethods) {
+                $packages[$this->getPackageName($apiName)][] = $this->getMethodName($apiName);
+            } else {
+                $packages[] = $this->getPackageName($apiName);
+            }
         }
         !$withMethods
             ? $packages = array_unique($packages)
             : null;
         return new Items($packages);
+    }
+
+    /**
+     * Obtenir la liste exhaustive de tous les noms finaux des packages
+     *
+     * @return \Rcnchris\Core\Tools\Items
+     */
+    public function getAllApiEndNames()
+    {
+        $pkgs = $this->getPackages(true);
+        $apis = [];
+        foreach ($pkgs as $pkgName => $apiNames) {
+            foreach ($apiNames as $apiName) {
+                $apis[] = $apiName;
+            }
+        }
+        $apis = array_unique($apis);
+        sort($apis);
+        return new Items($apis);
     }
 
     /**
@@ -267,7 +420,7 @@ class SynologyAPI extends CurlAPI
      */
     public function getPackageName($apiName)
     {
-        $packageName = str_replace('SYNO.', '', $apiName);
+        $packageName = str_replace($this->getPrefixApiName(true), '', $apiName);
         $packageName = explode('.', $packageName);
         return current($packageName);
     }
@@ -306,7 +459,7 @@ class SynologyAPI extends CurlAPI
      *
      * @return \Rcnchris\Core\Tools\Items
      */
-    public function getMethodsOfPackage($packageName)
+    public function getApisOfPackage($packageName)
     {
         $methods = [];
         if ($this->hasPackage($packageName)) {
@@ -330,6 +483,9 @@ class SynologyAPI extends CurlAPI
      */
     public function getPackage($packageName)
     {
+        if (array_key_exists($packageName, $this->packages)) {
+            return $this->packages[$packageName];
+        }
         return new SynologyAPIPackage($packageName, $this);
     }
 
@@ -349,7 +505,7 @@ class SynologyAPI extends CurlAPI
     {
         if (!in_array($format, $this->authFormats)) {
             throw new SynologyException(
-                "Le format d'authentication $format est incorrect. Merci d'essayer un de ceux-là : "
+                "Le format d'authentification $format est incorrect. Merci d'essayer un de ceux-là : "
                 . implode(', ', $this->authFormats)
             );
         }
@@ -390,7 +546,7 @@ class SynologyAPI extends CurlAPI
     /**
      * Se déconnecte d'une API
      *
-     * @param string $apiName Nom de l'API (DownloadStation.Task, AudioStation.Album)
+     * @param string $apiName Nom court de l'API (DownloadStation.Task, AudioStation.Album)
      *
      * @return array|bool
      * @throws \Rcnchris\Core\Apis\ApiException
@@ -398,8 +554,8 @@ class SynologyAPI extends CurlAPI
      */
     public function logout($apiName)
     {
-        $apiShortName = $apiName;
-        $apiName = $this->getPrefixApiName() . '.' . $apiName;
+        $apiName = $this->getApiFullName($apiName);
+        $apiShortName = str_replace($this->getPrefixApiName(true), '', $apiName);
         if ($this->getSids($apiName)) {
             $this->setBaseUrl($this->getBaseUrl());
             $authPath = $this->getApiDefinition($apiShortName)
@@ -433,20 +589,26 @@ class SynologyAPI extends CurlAPI
     public function get($format = null)
     {
         $response = parent::get($format);
-        if (!$response instanceof Items) {
-            $content = json_decode($response, true);
-            if (isset($content['success']) && !$content['success']) {
-                if (isset($content['error']['code'])) {
-                    throw new SynologyException('', $content['error']['code']);
-                }
-            }
-        } else {
+        if ($response instanceof Items) {
+
             if (is_bool($response->toArray())) {
                 return $response->toArray();
             }
 
             if ($response->get('success') === false) {
-                throw new SynologyException($this->currentPackage, intval($response->get('error.code')));
+                if ($response->has('error')) {
+                    $this->errors = $response->get('error');
+                }
+                $codes = [];
+                if ($this->errors->has('code')) {
+                    $codes[] = $this->errors->get('code');
+                    if ($this->errors->has('errors')) {
+                        foreach ($this->errors->get('errors') as $error) {
+                            $codes[] = $error['code'];
+                        }
+                    }
+                }
+                throw new SynologyException($this->currentPackage, intval(end($codes)));
             }
 
             if ($response->has('data')) {
@@ -461,16 +623,21 @@ class SynologyAPI extends CurlAPI
      * Obtenir la liste de tous des SID obtenus
      * ou uniquement ceux d'un package
      *
-     * @param string|null $apiName Nom de l'API (DownloadStation.Task, AudioStation.Album...)
+     * @param string|null $apiName Nom complet de l'API (SYNO.DownloadStation.Task, SYNO.AudioStation.Album...)
      *
-     * @return bool|\Rcnchris\Core\Tools\Items
+     * @return bool|array|string
      */
     public function getSids($apiName = null)
     {
+        if (empty($this->sids)) {
+            return false;
+        }
         if (is_null($apiName)) {
-            return new Items($this->sids);
-        } elseif (array_key_exists($apiName, $this->sids)) {
-            return $this->sids[$apiName];
+            return $this->sids;
+        } else {
+            if (array_key_exists($apiName, $this->sids)) {
+                return $this->sids[$apiName];
+            }
         }
         return false;
     }
@@ -487,44 +654,18 @@ class SynologyAPI extends CurlAPI
     }
 
     /**
-     * Définir le package courant de l'API
+     * Ajouter une instance d'un package dans cette instance
      *
-     * @param \Rcnchris\Core\Apis\Synology\SynologyAPIPackage $package
+     * @param SynologyAPIPackage $package Instance d'un package Synology (AudioStationPackage, VideoStationPackage...)
+     *
+     * @return $this
      */
-    public function setCurrentPackage(SynologyAPIPackage $package)
+    public function addPackage(SynologyAPIPackage $package)
     {
+        $this->packages[$package->getName()] = $package;
         $this->currentPackage = $package;
+        return $this;
     }
-
-    /**
-     * Obtenir le package qui utilise l'API
-     *
-     * @return \Rcnchris\Core\Apis\Synology\SynologyAPIPackage
-     */
-    public function getCurrentPackage()
-    {
-        return $this->currentPackage;
-    }
-
-    /**
-     * Obtenir la liste des définitions obtenues ou l'une d'entre elles
-     *
-     * @param string|null $apiName Nom complet de l'API (DownloadStation.Task, AudioStation.Album...)
-     *
-     * @return array
-     */
-//    public function getDefinitions($apiName = null)
-//    {
-//        if (is_null($apiName)) {
-//            return $this->definitions;
-//        } else {
-//            $apiName = $this->getPrefixApiName() . '.' . $apiName;
-//            if (array_key_exists($apiName, $this->definitions)) {
-//                return $this->definitions[$apiName];
-//            }
-//        }
-//        return null;
-//    }
 
     /**
      * Alimente le tableau de configuration
@@ -542,26 +683,49 @@ class SynologyAPI extends CurlAPI
     /**
      * Obtenir le préfixe du nom de toutes les API
      *
+     * @param bool|null $withEndPoint Ajoute un point après le préfixe
+     *
      * @return string
      */
-    public function getPrefixApiName()
+    public function getPrefixApiName($withEndPoint = false)
     {
         $parts = explode('.', $this::API_AUTH_NAME);
-        return current($parts);
+        $prefix = current($parts);
+        if ($withEndPoint) {
+            $prefix .= '.';
+        }
+        return $prefix;
     }
 
     /**
-     * Obtenir le journal des requêtes sous formes d'objet Items
+     * Obtenir la liste des messages d'erreurs Synology
      *
      * @return \Rcnchris\Core\Tools\Items
      */
-    public function getLog()
+    public function getErrorMessages()
     {
-        return new Items(parent::getLog());
+        $messages = new Items(require __DIR__ . '/errors-codes.php');
+        return $messages;
     }
 
     private function getAuthApiName()
     {
-        return str_replace($this->getPrefixApiName() . '.', '', $this::API_AUTH_NAME);
+        return str_replace($this->getPrefixApiName(true), '', $this::API_AUTH_NAME);
+    }
+
+    /**
+     * Obtenir toujours le nom de l'API complet
+     *
+     * @param string $apiName Nom de l'API sous deux formes possibles (SYNO.AudioStation.Album ou AudioStation.Album)
+     *
+     * @return string
+     */
+    private function getApiFullName($apiName)
+    {
+        $withPrefix = strstr($apiName, '.', true) === $this->getPrefixApiName();
+        if (!$withPrefix) {
+            $apiName = $this->getPrefixApiName(true) . $apiName;
+        }
+        return $apiName;
     }
 }

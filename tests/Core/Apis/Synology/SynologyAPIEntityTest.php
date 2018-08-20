@@ -29,4 +29,9 @@ class SynologyAPIEntityTest extends BaseTestCase
     {
         $this->assertInstanceOf(SynologyAPIPackage::class, $this->makeSynologyEntity()->getPackage());
     }
+
+    public function testGetFields()
+    {
+        $this->assertNotEmpty($this->makeSynologyEntity()->getFields());
+    }
 }
