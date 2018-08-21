@@ -4,10 +4,23 @@ namespace Tests\Rcnchris\Core\Apis\Synology\Packages;
 use Rcnchris\Core\Apis\Synology\Packages\DownloadStationPackage;
 use Rcnchris\Core\Apis\Synology\SynologyException;
 use Rcnchris\Core\Tools\Items;
-use Tests\Rcnchris\BaseTestCase;
+use Tests\Rcnchris\Core\Apis\Synology\SynologyBaseTestCase;
 
-class DownloadStationPackageTest extends BaseTestCase
+class DownloadStationPackageTest extends SynologyBaseTestCase
 {
+    /**
+     * @var DownloadStationPackage
+     */
+    private $downloadStation;
+
+    /**
+     * Constructeur
+     */
+    public function setUp()
+    {
+        $this->downloadStation = $this->makeDownloadStationPackage();
+    }
+
     /**
      * @return \Rcnchris\Core\Apis\Synology\Packages\DownloadStationPackage
      */
@@ -18,33 +31,39 @@ class DownloadStationPackageTest extends BaseTestCase
 
     public function testInstance()
     {
-        $this->ekoTitre('API - Synology Package : DownloadStation');
+        $this->ekoTitre('API - Synology Package : ' . $this->downloadStation->getName());
         $this->assertInstanceOf(DownloadStationPackage::class, $this->makeDownloadStationPackage());
     }
 
     public function testGetVersion()
     {
-        $this->assertInternalType('string', $this->makeDownloadStationPackage()->getVersion());
+        $this->assertInternalType('string', $this->downloadStation->getVersion());
     }
 
     public function testConfig()
     {
-        $api = $this->makeDownloadStationPackage();
-        $config = $api->config();
+        $config = $this->downloadStation->config();
         $this->assertInstanceOf(Items::class, $config);
         $this->assertNotEmpty($config->toArray());
     }
 
     public function testTasks()
     {
-        $api = $this->makeDownloadStationPackage();
-        $this->assertInstanceOf(Items::class, $api->tasks());
+        $this->assertInstanceOf(Items::class, $this->downloadStation->tasks());
     }
 
     public function testTask()
     {
-        $api = $this->makeDownloadStationPackage();
-        $this->assertInternalType('array', $api->task('dbid_68')->toArray());
+        $this->assertInternalType(
+            'array',
+            $this->downloadStation->task(
+                $this->downloadStation
+                    ->tasks()
+                    ->get('tasks')
+                    ->first()
+                    ->id
+            )->toArray()
+        );
     }
 
     public function testTaskWithWrongId()
@@ -56,26 +75,23 @@ class DownloadStationPackageTest extends BaseTestCase
 
     public function testTaskWithInvalideParameter()
     {
-        $api = $this->makeDownloadStationPackage();
         $this->expectExceptionWithCode(SynologyException::class, 101);
-        $api->task('fake');
+        $this->downloadStation->task('fake');
     }
 
     public function testCreateTask()
     {
-        $api = $this->makeDownloadStationPackage();
         $params = [
             'uri' => 'ftps://192.168.1.2:21/web/index.php',
             'username' => 'phpunit',
             'password' => 'mycoretest'
         ];
-        $this->assertTrue($api->createTask($params));
+        $this->assertTrue($this->downloadStation->createTask($params));
     }
 
     public function testConfigSchedule()
     {
-        $api = $this->makeDownloadStationPackage();
-        $config = $api->configSchedule();
+        $config = $this->downloadStation->configSchedule();
         $this->assertInstanceOf(Items::class, $config);
         $this->assertNotEmpty($config->toArray());
     }
@@ -90,15 +106,14 @@ class DownloadStationPackageTest extends BaseTestCase
 
     public function testStatistics()
     {
-        $api = $this->makeDownloadStationPackage();
-        $items = $api->statistics();
+        $items = $this->downloadStation->statistics();
         $this->assertInstanceOf(Items::class, $items);
         $this->assertNotEmpty($items->toArray());
     }
+
     public function testListBT()
     {
-        $api = $this->makeDownloadStationPackage();
-        $items = $api->listBT();
+        $items = $this->downloadStation->listBT();
         $this->assertInstanceOf(Items::class, $items);
         $this->assertNotEmpty($items->toArray());
     }

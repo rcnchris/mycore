@@ -98,36 +98,16 @@ class CurlApiTest extends BaseTestCase
 
     public function testGetContentType()
     {
-        $url = $this->apis->get('dog.exec.image');
-        $this->assertEquals('application/json', $this->makeCurlApi($url)->exec()->getContentType());
-
-        $url = $this->apis->get('dog.exec.breeds');
-        $this->assertEquals('application/json', $this->makeCurlApi($url)->exec()->getContentType());
-
         $url = $this->apis->get('geo.exec.communes');
         $this->assertEquals('application/json', $this->makeCurlApi($url)->exec()->getContentType());
-
-        $url = $this->apis->get('cats.exec.image');
-        $this->assertEquals('text/xml', $this->makeCurlApi($url)->exec()->getContentType());
     }
 
     public function testGetCharset()
     {
-        $url = $this->apis->get('dog.exec.image');
-        $charset = $this->makeCurlApi($url)->exec()->getCharset();
-        $this->assertNull($charset, $this->getMessage("L'URL $url retourne le charset $charset au lieu de null"));
-
-        $url = $this->apis->get('dog.exec.breeds');
-        $this->assertNull($this->makeCurlApi($url)->exec()->getCharset(),
-            $this->getMessage("L'URL $url ne retourne pas un charset null"));
 
         $url = $this->apis->get('geo.exec.communes');
         $this->assertEquals('utf-8', $this->makeCurlApi($url)->exec()->getCharset(),
             $this->getMessage("L'URL $url ne retourne pas un charset null"));
-
-        $url = $this->apis->get('cats.exec.image');
-        $this->assertNull($this->makeCurlApi($url)->exec()->getCharset(),
-            $this->getMessage("L'URL $url ne retourne pas un charset iso-8859-1"));
 
         $url = $this->apis->get('gouv.exec.organismes');
         $this->assertEquals('UTF-8', $this->makeCurlApi($url)->exec()->getCharset(),
@@ -136,19 +116,10 @@ class CurlApiTest extends BaseTestCase
 
     public function testGetHttpCode200()
     {
-        $url = $this->apis->get('dog.exec.image');
-        $this->assertEquals(200, $this->makeCurlApi($url)->exec()->getHttpCode());
-
-        $url = $this->apis->get('dog.exec.breeds');
-        $this->assertEquals(200, $this->makeCurlApi($url)->exec()->getHttpCode());
-
         $url = $this->apis->get('geo.exec.communes');
         $this->assertEquals(200, $this->makeCurlApi($url)->exec()->getHttpCode());
 
         $url = $this->apis->get('gouv.exec.organismes');
-        $this->assertEquals(200, $this->makeCurlApi($url)->exec()->getHttpCode());
-
-        $url = $this->apis->get('cats.exec.image');
         $this->assertEquals(200, $this->makeCurlApi($url)->exec()->getHttpCode());
     }
 
@@ -183,9 +154,13 @@ class CurlApiTest extends BaseTestCase
     {
         $url = $this->apis->get('cats.exec.image');
         $api = $this->makeCurlApi($url)->exec();
-        $this->assertEquals('text/xml', $api->getContentType());
-        $this->assertInternalType('string', $api->get());
-        $this->assertInstanceOf(SimpleXMLElement::class, $api->get('xml'));
+        if ($api->getHttpCode() === 200) {
+            $this->assertEquals('text/xml', $api->getContentType());
+            $this->assertInternalType('string', $api->get());
+            $this->assertInstanceOf(SimpleXMLElement::class, $api->get('xml'));
+        } else {
+            $this->markTestSkipped('API non disponible : ' . $api->getHttpCode());
+        }
     }
 
     public function testGetWithFormat()
@@ -257,7 +232,8 @@ class CurlApiTest extends BaseTestCase
     public function testGetCurlVersion()
     {
         $this->assertInstanceOf(Items::class, $this->makeCurlApi($this->apis->get('dog.exec.image'))->getVersion());
-        $this->assertInternalType('string', $this->makeCurlApi($this->apis->get('dog.exec.image'))->getVersion('version'));
+        $this->assertInternalType('string',
+            $this->makeCurlApi($this->apis->get('dog.exec.image'))->getVersion('version'));
     }
 
     public function testSetApiKey()

@@ -1,5 +1,5 @@
 <?php
-$dl = new \Rcnchris\Core\Apis\Synology\Packages\DownloadStationPackage($syno);
+$dl = $syno->getPackage('DownloadStation');
 ?>
 <div class="col">
     <div class="card">
@@ -13,7 +13,7 @@ $dl = new \Rcnchris\Core\Apis\Synology\Packages\DownloadStationPackage($syno);
         <div class="card-body">
 
                 <pre
-                    class="sh_php"> $dl = new \Rcnchris\Core\Apis\Synology\Packages\DownloadStationPackage($syno);</pre>
+                    class="sh_php"> $dl = $syno->getPackage('DownloadStation');</pre>
 
             <h5 class="card-title">Classe : <code><?= get_class($dl) ?></code></h5>
 

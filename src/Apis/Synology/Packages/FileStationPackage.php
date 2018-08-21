@@ -53,20 +53,30 @@ class FileStationPackage extends SynologyAPIPackage
 
     /**
      * Obtenir la liste des liens partagés
+     * - `$pkg->sharings();`
+     * - `$pkg->sharings(['limit' => 10], 'name');`
      *
      * @param array|null  $params     Paramètres de la requête
-     *                                - offset int
-     *                                - limit int
-     *                                - sort_by string
-     *                                - sort_direction string
-     *                                - force_clean bool
+     *                                - version 3
+     *                                - offset
+     *                                - limit
+     *                                - sort_by
+     *                                - sort_direction (asc ou desc)
+     *                                - force_clean
      * @param string|null $extractKey Nom de la clé de la réponse à extraire
      *
-     * @return bool|null|\Rcnchris\Core\Tools\Items
+     * @return array|bool|null|\Rcnchris\Core\Tools\Items
      */
     public function sharings(array $params = [], $extractKey = null)
     {
-        $params = array_merge(['version' => 3], $params);
+        $params = array_merge([
+            'version' => 3,
+            'offset' => 0,
+            'limit' => 0,
+            'sort_by' => 'name',
+            'sort_direction' => 'asc',
+            'force_clean' => 'false'
+        ], $params);
         return $this->getItems('Sharing', 'list', $params, 'links', $extractKey);
     }
 
@@ -88,16 +98,24 @@ class FileStationPackage extends SynologyAPIPackage
      *
      * @param string     $path   Chemin du dossier ou fichier
      * @param array|null $params Paramètres de la requêtes
+     *                           - version 3
      *                           - path
      *                           - password
-     *                           - date_expired
-     *                           - date_available
+     *                           - date_expired (YYYY-MM-DD)
+     *                           - date_available (YYYY-MM-DD)
      *
      * @return bool|null|\Rcnchris\Core\Tools\Items
      */
     public function createSharing($path, array $params = [])
     {
-        return $this->request('Sharing', 'create', array_merge(['version' => 3, 'path' => $path], $params));
+        $params = array_merge([
+            'version' => 3,
+            'path' => $path,
+            //'password' => '',
+            'date_expired' => 0,
+            'date_available' => 0
+        ], $params);
+        return $this->request('Sharing', 'create', $params);
     }
 
     /**
@@ -142,12 +160,38 @@ class FileStationPackage extends SynologyAPIPackage
      */
     public function sharedFolders(array $params = [], $extractKey = null)
     {
+        $params = array_merge([
+            'offset' => 0,
+            'limit' => 0,
+            'sort_by' => 'name',
+            'sort_direction' => 'asc',
+            'onlywritable' => 'false',
+            'additional' => 'volume_status',
+        ], $params);
         return $this->getItems('List', 'list_share', $params, 'shares', $extractKey);
+    }
+
+    public function sharedFolderFiles($folderPath, array $params = [], $extractKey = null)
+    {
+        $params = array_merge([
+            'version' => 2,
+            'folder_path' => $folderPath,
+            'offset' => 0,
+            'limit' => 0,
+            'sort_by' => 'name',
+            'sort_direction' => 'asc',
+            //'pattern' => '',
+            'filetype' => 'all',
+            //'goto_path' => '',
+            'additional' => 'size'
+        ], $params);
+        return $this->getItems('List', 'list', $params, 'files', $extractKey);
     }
 
     /**
      * Chercher un terme dans un dossier partagé
-     * - `$pkg->search('/Download', 'fichier.txt');`
+     * - `$pkg->search('/Download/Tests', 'chevrolet');`
+     * - `$pkg->search('/Download/Tests', null, ['extension' => 'jpg']);`
      *
      * @param string     $folderPath Chemin de départ de la recherche
      * @param string     $pattern    Terme recherché
@@ -155,43 +199,41 @@ class FileStationPackage extends SynologyAPIPackage
      *
      * @return bool|null|\Rcnchris\Core\Tools\Items
      */
-    public function search($folderPath, $pattern, array $params = [])
+    public function search($folderPath, $pattern = null, array $params = [])
     {
         $apiEndName = 'Search';
-        $version = 2;
-        /**
-         * Paramètres possibles de la méthode start
-         * - folder_path
-         * - recursive
-         * - pattern
-         * - extension
-         * - filetype
-         * - size_from
-         * - size_to
-         * - mtime_from
-         * - mtime_to
-         * - crtime_from
-         * - crtime_to
-         * - atime_from
-         * - atime_to
-         * - owner
-         * - group
-         */
-        $taskid = $this->startTask($apiEndName,
-            array_merge(['folder_path' => $folderPath, 'pattern' => $pattern], $params));
+        $params = array_merge([
+            'version' => 2,
+            'folder_path' => $folderPath,
+            'recursive' => 'true',
+            'pattern' => $pattern,
+            'extension' => null,
+            'filetype' => 'all',
+            // 'size_from' => 0,
+            // 'size_to' => 0,
+            // 'mtime_from' => 0,
+            // 'mtime_to' => 0,
+            // 'crtime_from' => 0,
+            // 'crtime_to' => 0,
+            // 'atime_from' => 0,
+            // 'atime_to' => 0,
+            // 'owner' => '',
+            // 'group' => ''
+        ], $params);
+        $taskid = $this->startTask($apiEndName, $params);
 
-        /**
-         * Paramètres possibles pour la méthode list
-         * - taskid
-         * - offset
-         * - limit
-         * - sort_by
-         * - sort_direction
-         * - pattern
-         * - filetype
-         * - additional
-         */
-        $response = $this->request($apiEndName, 'list', compact('version', 'taskid'));
+        $params = array_merge([
+            'version' => 2,
+            'taskid' => $taskid,
+            'offset' => 0,
+            'limit' => 0,
+            'sort_by' => 'name',
+            'sort_direction' => 'asc',
+            // 'pattern' => '',
+            'filetype' => 'all',
+            'additional' => 'size',
+        ], $params);
+        $response = $this->request($apiEndName, 'list', $params);
         $this->stopTask($taskid, $apiEndName, true);
         return $response;
     }
@@ -213,13 +255,14 @@ class FileStationPackage extends SynologyAPIPackage
      */
     public function virtualFolders(array $params = [], $extractKey = null)
     {
-        $params = array_merge(
-            [
-                'type' => 'iso',
-                'additional' => 'real_path,size,owner,time,perm,volume_status'
-            ],
-            $params
-        );
+        $params = array_merge([
+            'type' => 'iso',
+            'offset' => 0,
+            'limit' => 0,
+            'sort_by' => 'name',
+            'sort_direction' => 'asc',
+            'additional' => 'volume_status'
+        ], $params);
         return $this->getItems('VirtualFolder', 'list', $params, 'folders', $extractKey);
     }
 
@@ -238,13 +281,12 @@ class FileStationPackage extends SynologyAPIPackage
      */
     public function favorites(array $params = [], $extractKey = null)
     {
-        $params = array_merge(
-            [
-                'status' => 'all',
-                'additional' => 'real_path,owner,time,perm,mount_point_type'
-            ],
-            $params
-        );
+        $params = array_merge([
+            'offset' => 0,
+            'limit' => 0,
+            'status_filter' => 'all',
+            // 'additional' => 'type'
+        ], $params);
         return $this->getItems('Favorite', 'list', $params, 'favorites', $extractKey);
     }
 
@@ -402,11 +444,22 @@ class FileStationPackage extends SynologyAPIPackage
 
     /**
      * Copier un fichier dans un répertoire partagé
-     * à tester en post
+     * à tester en post.
+     * Notez que chaque paramètre est passé dans chaque partie mais
+     * que les données du fichier binaire doivent être la dernière partie.
      *
-     * @param mixed      $src    Fichier au format binaire
-     * @param string     $dest   Chemin de destination du fichier
+     * @param mixed      $src    Contenu du fichier au format binaire
+     * @param string     $dest   Un chemin de dossier de destination commençant par un dossier partagé dans lequel les
+     *                           fichiers peuvent être téléchargés.
      * @param array|null $params Paramètres de la requête
+     *                           - create_parents : Créez un ou plusieurs dossiers parents s'il n'en existe pas.
+     *                           - overwrite (true: remplace le fichier de destination s'il en existe un, false: ignore
+     *                           le téléchargement si le fichier de destination existe et lorsqu'il n'est pas spécifié
+     *                           comme vrai ou faux, le téléchargement sera traité avec une erreur lorsque le fichier
+     *                           de destination existe)
+     *                           - mtime : Définir la dernière heure de modification du fichier téléchargé. Timestamp Linux en milliseconde.
+     *                           - crtime : Définissez l'heure de création du fichier téléchargé. Timestamp Linux en milliseconde.
+     *                           - atime : Définir la dernière heure d'accès du fichier téléchargé. Timestamp Linux en milliseconde.
      *
      * @return bool|null|\Rcnchris\Core\Tools\Items
      */
@@ -416,6 +469,10 @@ class FileStationPackage extends SynologyAPIPackage
             'version' => 2,
             'path' => $dest,
             'create_parents' => 'false',
+            'overwrite' => 'true',
+//            'mtime' => 0,
+//            'crtime' => 0,
+//            'atime' => 0,
             'filename' => $src
         ], $params);
         return $this->request('Upload', 'upload', $params);
@@ -474,7 +531,8 @@ class FileStationPackage extends SynologyAPIPackage
             'version' => 2,
             'path' => $path,
             'name' => $name,
-            'additional' => 'real_path,size,owner,time,perm,type'
+            'additional' => 'size',
+            //'search_taskid' => ''
         ], $params);
         return $this->request('Rename', 'rename', $params);
     }
@@ -529,6 +587,15 @@ class FileStationPackage extends SynologyAPIPackage
         return $this->request($apiEndName, 'delete', $params);
     }
 
+    /**
+     * Extraire une archive
+     *
+     * @param string     $filePath   Archive à décompresser
+     * @param string     $destFolder Dossier de destination
+     * @param array|null $params     Paramètres de la requête
+     *
+     * @return bool|null|\Rcnchris\Core\Tools\Items
+     */
     public function extract($filePath, $destFolder, array $params = [])
     {
         $apiEndName = 'Extract';
@@ -540,7 +607,7 @@ class FileStationPackage extends SynologyAPIPackage
             'overwrite' => 'true',
             'keep_dir' => 'true',
             'create_subfolder' => 'true',
-            'codepage' => 'fre',
+            'codepage' => $this->getCodePage(),
 //            'password' => '',
 //            'item_id' => 0,
         ], $params);
@@ -579,6 +646,13 @@ class FileStationPackage extends SynologyAPIPackage
      * @param string     $src    Chemin du fichier/dossier à compresser
      * @param string     $dest   Chemin du fichier de destination
      * @param array|null $params Paramètres de la requête
+     *                           - version 3
+     *                           - path
+     *                           - dest_file_path
+     *                           - level (moderate, store, fastest ou best)
+     *                           - mode (add, update, refreshen, ou synchronize)
+     *                           - format (zip ou 7z)
+     *                           - password
      *
      * @return bool|null|\Rcnchris\Core\Tools\Items
      */
@@ -591,7 +665,7 @@ class FileStationPackage extends SynologyAPIPackage
             'path' => $src,
             'dest_file_path' => $dest,
             'level' => 'best',
-            'mode' => 'add',
+            'mode' => 'synchronize',
             'format' => 'zip',
             //'password' => ''
         ], $params);
@@ -635,4 +709,13 @@ class FileStationPackage extends SynologyAPIPackage
             : $this->request('BackgroundTask', 'clear_finished', compact('taskid'));
     }
 
+    /**
+     * Obtenir le codepage de l'instance
+     *
+     * @return string
+     */
+    public function getCodePage()
+    {
+        return $this->config('Info', 'get')->get('system_codepage');
+    }
 }

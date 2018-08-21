@@ -4,99 +4,182 @@ namespace Tests\Rcnchris\Core\Apis\Synology\Packages;
 use Rcnchris\Core\Apis\Synology\Packages\AudioStationPackage;
 use Rcnchris\Core\Apis\Synology\SynologyAPIEntity;
 use Rcnchris\Core\Tools\Items;
-use Tests\Rcnchris\BaseTestCase;
+use Tests\Rcnchris\Core\Apis\Synology\SynologyBaseTestCase;
 
-class AudioStationPackageTest extends BaseTestCase
+class AudioStationPackageTest extends SynologyBaseTestCase
 {
+    /**
+     * @var AudioStationPackage
+     */
+    private $audioStation;
+
+    /**
+     * Constructeur
+     */
+    public function setUp()
+    {
+        $this->audioStation = $this->makeAudioStationPackage();
+    }
 
     /**
      * @return \Rcnchris\Core\Apis\Synology\Packages\AudioStationPackage
      */
-    public function makeAudioStationPackage()
+    private function makeAudioStationPackage()
     {
         return new AudioStationPackage($this->makeSynoAPI());
     }
 
+    /**
+     * Instance et titre
+     */
     public function testInstance()
     {
-        $this->ekoTitre('API - Synology Package : AudioStation');
-        $this->assertInstanceOf(AudioStationPackage::class, $this->makeAudioStationPackage());
+        $this->ekoTitre('API - Synology Package : ' . $this->audioStation->getName());
+        $this->assertInstanceOf(AudioStationPackage::class, $this->audioStation);
     }
 
+    /**
+     * Obtenir la configuration
+     */
     public function testConfig()
     {
-        $config = $this->makeAudioStationPackage()->config();
+        $config = $this->audioStation->config();
         $this->assertInstanceOf(Items::class, $config);
         $this->assertNotEmpty($config->toArray());
     }
 
+    /**
+     * Obtenir la liste des albums musicaux
+     */
     public function testAlbums()
     {
-        $items = $this->makeAudioStationPackage()->albums(null, ['limit' => 10]);
-        $this->assertInstanceOf(Items::class, $items);
-        $this->assertTrue($items->has('albums'));
-        $this->assertNotEmpty($items->toArray());
-        $this->assertCount(10, $items->get('albums')->toArray());
+        $this->assertSynologyList(
+            $this->audioStation,
+            'albums',
+            [
+                'expectedResponseKeys' => 'albums,offset,total',
+                'itemsKey' => 'albums',
+                'expectedItemKeys' => 'name',
+                'extractKey' => 'name',
+                'typeItemsKey' => 'int',
+                'params' => ['limit' => 3]
+            ]
+        );
     }
 
+    /**
+     * Obtenir la liste des artistes
+     */
     public function testArtists()
     {
-        $items = $this->makeAudioStationPackage()->artists(['limit' => 10]);
-        $this->assertInstanceOf(Items::class, $items);
-        $this->assertTrue($items->has('artists'));
-        $this->assertNotEmpty($items->toArray());
-        $this->assertCount(10, $items->get('artists')->toArray());
+        $this->assertSynologyList(
+            $this->audioStation,
+            'artists',
+            [
+                'expectedResponseKeys' => 'artists,offset,total',
+                'itemsKey' => 'artists',
+                'expectedItemKeys' => 'name',
+                'extractKey' => 'name',
+                'typeItemsKey' => 'int',
+                'params' => ['limit' => 3]
+            ]
+        );
     }
 
+    /**
+     * Obtenir la liste des compositeurs
+     */
     public function testComposers()
     {
-        $items = $this->makeAudioStationPackage()->composers(['limit' => 10]);
-        $this->assertInstanceOf(Items::class, $items);
-        $this->assertTrue($items->has('composers'));
-        $this->assertNotEmpty($items->toArray());
-        $this->assertCount(10, $items->get('composers')->toArray());
+        $this->assertSynologyList(
+            $this->audioStation,
+            'composers',
+            [
+                'expectedResponseKeys' => 'composers,offset,total',
+                'itemsKey' => 'composers',
+                'expectedItemKeys' => 'name',
+                'extractKey' => 'name',
+                'typeItemsKey' => 'int',
+                'params' => ['limit' => 3]
+            ]
+        );
     }
 
+    /**
+     * Obtenir la liste des dossiers
+     */
     public function testFolders()
     {
-        $items = $this->makeAudioStationPackage()->folders(['limit' => 10]);
-        $this->assertInstanceOf(Items::class, $items);
-        $this->assertTrue($items->has('items'));
-        $this->assertNotEmpty($items->toArray());
-        $this->assertCount(10, $items->get('items')->toArray());
+        $this->assertSynologyList(
+            $this->audioStation,
+            'folders',
+            [
+                'expectedResponseKeys' => 'items,offset,total',
+                'itemsKey' => 'items',
+                'expectedItemKeys' => 'id,is_personal,path,title,type',
+                'extractKey' => 'title',
+                'typeItemsKey' => 'string',
+                'params' => ['limit' => 3]
+            ]
+        );
     }
 
+    /**
+     * Obtenir un dossier
+     */
     public function testFolder()
     {
-        $api = $this->makeAudioStationPackage();
-        $folder = $api->folders(['limit' => 10])->get('items')->first();
-        $this->assertInstanceOf(Items::class, $api->folder($folder->id));
-        $this->assertInstanceOf(SynologyAPIEntity::class, $api->folder($folder->id, true));
+        $folder = $this->audioStation->folders(['limit' => 1])->get('items')->first();
+        $this->assertInstanceOf(Items::class, $this->audioStation->folder($folder->id));
+        $this->assertInstanceOf(SynologyAPIEntity::class, $this->audioStation->folder($folder->id, true));
     }
 
+    /**
+     * Obtenir la liste des radios
+     */
     public function testRadios()
     {
-        $items = $this->makeAudioStationPackage()->radios();
-        $this->assertInstanceOf(Items::class, $items);
-        $this->assertTrue($items->has('radios'));
-        $this->assertNotEmpty($items->toArray());
+        $this->assertSynologyList(
+            $this->audioStation,
+            'radios',
+            [
+                'expectedResponseKeys' => 'radios,offset,total',
+                'itemsKey' => 'radios',
+                'expectedItemKeys' => 'desc,id,title,type,url',
+                'extractKey' => 'title',
+                'typeItemsKey' => 'string',
+                'params' => ['limit' => 2]
+            ]
+        );
     }
 
+    /**
+     * Obtenir la liste des lecteurs distants
+     */
     public function testRemotes()
     {
-        $items = $this->makeAudioStationPackage()->remotes();
-        $this->assertInstanceOf(Items::class, $items);
-        $this->assertTrue($items->has('players'));
-        $this->assertNotEmpty($items->toArray());
+        $this->assertSynologyList(
+            $this->audioStation,
+            'remotes',
+            [
+                'expectedResponseKeys' => 'players',
+                'itemsKey' => 'players',
+                'expectedItemKeys' => 'id,is_multiple,name,password_protected,support_seek,support_set_volume,type',
+                'extractKey' => 'name',
+                'typeItemsKey' => 'string'
+            ]
+        );
     }
 
+    /**
+     * Obtenir un lecteur distant
+     */
     public function testRemote()
     {
-        $api = $this->makeAudioStationPackage();
-        $players = $api->remotes()->get('players');
+        $players = $this->audioStation->remotes()->get('players');
         if (!$players->isEmpty()) {
-            $this->assertInstanceOf(Items::class, $api->remote($players->first()->id));
-            $this->assertInstanceOf(SynologyAPIEntity::class, $api->remote($players->first()->id, true));
+            $this->assertInstanceOf(Items::class, $this->audioStation->remote($players->first()->id));
+            $this->assertInstanceOf(SynologyAPIEntity::class, $this->audioStation->remote($players->first()->id, true));
         } else {
             $this->markTestSkipped('Aucun lecteur à tester');
         }
@@ -104,69 +187,103 @@ class AudioStationPackageTest extends BaseTestCase
 
     public function testRemotePlaylist()
     {
-        $api = $this->makeAudioStationPackage();
-        $players = $api->remotes()->get('players');
+        $players = $this->audioStation->remotes()->get('players');
         if (!$players->isEmpty()) {
-            $this->assertInstanceOf(Items::class, $api->remotePlaylist($players->first()->id));
-            $this->assertInstanceOf(SynologyAPIEntity::class, $api->remotePlaylist($players->first()->id, true));
+            $this->assertInstanceOf(Items::class, $this->audioStation->remotePlaylist($players->first()->id));
+            $this->assertInstanceOf(SynologyAPIEntity::class, $this->audioStation->remotePlaylist($players->first()->id, true));
         } else {
             $this->markTestSkipped('Aucun lecteur à tester');
         }
     }
 
+    /**
+     * Obtenir la liste des serveurs multimédias
+     */
     public function testServers()
     {
-        $items = $this->makeAudioStationPackage()->servers(['limit' => 2]);
-        $this->assertInstanceOf(Items::class, $items);
-        $this->assertTrue($items->has('list'));
-        $this->assertNotEmpty($items->toArray());
-        $this->assertEquals(2, $items->get('list')->count());
+        $this->assertSynologyList(
+            $this->audioStation,
+            'servers',
+            [
+                'expectedResponseKeys' => 'list',
+                'itemsKey' => 'list',
+                'expectedItemKeys' => 'cover,id,path,title,type',
+                'extractKey' => 'title',
+                'typeItemsKey' => 'string',
+                'params' => ['limit' => 2]
+            ]
+        );
     }
 
+    /**
+     * Obtenir la liste des morceaux
+     */
     public function testSongs()
     {
-        $items = $this->makeAudioStationPackage()->songs(['limit' => 10]);
+        $items = $this->audioStation->songs(['limit' => 10]);
         $this->assertInstanceOf(Items::class, $items);
         $this->assertTrue($items->has('songs'));
         $this->assertNotEmpty($items->toArray());
         $this->assertEquals(10, $items->get('songs')->count());
     }
 
+    /**
+     * Obtenir un morceaux par son identifiant
+     */
     public function testSong()
     {
-        $api = $this->makeAudioStationPackage();
-        $song = $api->songs(['limit' => 10])->get('songs')->first();
-        $this->assertInstanceOf(Items::class, $api->song($song->id));
-        $this->assertInstanceOf(SynologyAPIEntity::class, $api->song($song->id, true));
+        $song = $this->audioStation->songs(['limit' => 10])->get('songs')->first();
+        $this->assertInstanceOf(Items::class, $this->audioStation->song($song->id));
+        $this->assertInstanceOf(SynologyAPIEntity::class, $this->audioStation->song($song->id, true));
     }
 
     public function testLyricsOfSong()
     {
-        $api = $this->makeAudioStationPackage();
-        $song = $api->songs(['limit' => 10])->get('songs')->first();
-        $this->assertInternalType('string', $api->lyricsOfSong($song->id));
+        $song = $this->audioStation->songs(['limit' => 10])->get('songs')->first();
+        $this->assertInternalType('string', $this->audioStation->lyricsOfSong($song->id));
     }
 
+    /**
+     * Obtenir la liste des genres
+     */
     public function testGenres()
     {
-        $items = $this->makeAudioStationPackage()->genres(['limit' => 10]);
-        $this->assertInstanceOf(Items::class, $items);
-        $this->assertTrue($items->has('genres'));
-        $this->assertNotEmpty($items->toArray());
-        $this->assertCount(10, $items->get('genres')->toArray());
+        $this->assertSynologyList(
+            $this->audioStation,
+            'genres',
+            [
+                'expectedResponseKeys' => 'genres,offset,total',
+                'itemsKey' => 'genres',
+                'expectedItemKeys' => 'name',
+                'extractKey' => 'name',
+                'typeItemsKey' => 'int',
+                'params' => ['limit' => 3]
+            ]
+        );
     }
 
+    /**
+     * Obtenir les listes de lectures
+     */
     public function testPlaylists()
     {
-        $items = $this->makeAudioStationPackage()->playlists();
-        $this->assertInstanceOf(Items::class, $items);
-        $this->assertTrue($items->has('playlists'));
-        $this->assertNotEmpty($items->toArray());
+        $this->assertSynologyList(
+            $this->audioStation,
+            'playlists',
+            [
+                'expectedResponseKeys' => 'playlists,offset,total',
+                'itemsKey' => 'playlists',
+                'expectedItemKeys' => 'name',
+                'extractKey' => 'name',
+                'typeItemsKey' => 'string',
+                'params' => ['limit' => 3]
+            ]
+        );
     }
 
     public function testPlaylist()
     {
-        $api = $this->makeAudioStationPackage();
+        $api = $this->audioStation;
         $playlist = $api->playlists()->get('playlists')->first();
         $this->assertInstanceOf(Items::class, $api->playlist($playlist->id));
         $this->assertInstanceOf(SynologyAPIEntity::class, $api->playlist($playlist->id, true));
@@ -174,9 +291,14 @@ class AudioStationPackageTest extends BaseTestCase
 
     public function testSearchSongs()
     {
-        $items = $this->makeAudioStationPackage()->searchSongs('IAM', ['limit' => 10]);
+        $items = $this->audioStation->searchSongs('IAM', ['limit' => 10]);
         $this->assertInstanceOf(Items::class, $items);
         $this->assertTrue($items->has('songs'));
         $this->assertNotEmpty($items->toArray());
+    }
+
+    public function tearDown()
+    {
+        unset($this->audioStation);
     }
 }

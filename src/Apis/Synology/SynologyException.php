@@ -57,7 +57,8 @@ class SynologyException extends Exception
                 $package = $message;
                 $errors = $package->getApi()->errors;
                 if ($errors) {
-                    r($errors->toArray());
+                    // print_r(debug_backtrace());
+                    // r($errors->toArray());
                 }
                 $message = $package->getName() . ' : ' . $this->getSynologyMessage($code, $package);
             }

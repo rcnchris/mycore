@@ -125,14 +125,14 @@ return [
     'synology' => [
         'nas' => [
             'name' => 'nas',
-            'description' => 'Nas du salon',
+            'description' => 'Nas de la maison',
             'address' => '192.168.1.2',
             'port' => 5551,
             'protocol' => 'http',
             'version' => 1,
             'ssl' => false,
-            'user' => 'rcn',
-            'pwd' => 'maracla'
+            'user' => 'phpunit',
+            'pwd' => 'mycoretest'
         ],
         'nasdev' => [
             'name' => 'nas',
@@ -142,8 +142,8 @@ return [
             'protocol' => 'http',
             'version' => 1,
             'ssl' => false,
-            'user' => 'rcn',
-            'pwd' => 'maracla'
+            'user' => 'phpunit',
+            'pwd' => 'mycoretest'
         ],
     ],
 ];

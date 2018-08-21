@@ -4,9 +4,8 @@ namespace Tests\Rcnchris\Core\Apis\Synology;
 use Rcnchris\Core\Apis\Synology\Packages\AudioStationPackage;
 use Rcnchris\Core\Apis\Synology\SynologyAPIEntity;
 use Rcnchris\Core\Apis\Synology\SynologyAPIPackage;
-use Tests\Rcnchris\BaseTestCase;
 
-class SynologyAPIEntityTest extends BaseTestCase
+class SynologyAPIEntityTest extends SynologyBaseTestCase
 {
     public function makeSynologyEntity($content = null, $package = null)
     {

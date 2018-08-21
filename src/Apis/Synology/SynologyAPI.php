@@ -377,7 +377,6 @@ class SynologyAPI extends CurlAPI
     public function getPackages($withMethods = false)
     {
         $packages = [];
-
         foreach ($this->getApis()->keys() as $apiName) {
             if ($withMethods) {
                 $packages[$this->getPackageName($apiName)][] = $this->getMethodName($apiName);
@@ -483,10 +482,15 @@ class SynologyAPI extends CurlAPI
      */
     public function getPackage($packageName)
     {
-        if (array_key_exists($packageName, $this->packages)) {
-            return $this->packages[$packageName];
+        if ($this->hasPackage($packageName) && !array_key_exists($packageName, $this->packages)) {
+            $className = 'Rcnchris\Core\Apis\Synology\Packages\\' . $packageName . 'Package';
+            if (class_exists($className)) {
+                $this->packages[$packageName] = new $className($this);
+            } else {
+                $this->packages[$packageName] = new SynologyAPIPackage($packageName, $this);
+            }
         }
-        return new SynologyAPIPackage($packageName, $this);
+        return $this->packages[$packageName];
     }
 
     /**
@@ -668,19 +672,6 @@ class SynologyAPI extends CurlAPI
     }
 
     /**
-     * Alimente le tableau de configuration
-     *
-     * @param array $config Configuration
-     *
-     * @return array
-     */
-    private function parseConfig(array $config = [])
-    {
-        $this->config = new Items(array_merge($this->defaultConfig, $config));
-        return $this;
-    }
-
-    /**
      * Obtenir le préfixe du nom de toutes les API
      *
      * @param bool|null $withEndPoint Ajoute un point après le préfixe
@@ -704,10 +695,15 @@ class SynologyAPI extends CurlAPI
      */
     public function getErrorMessages()
     {
-        $messages = new Items(require __DIR__ . '/errors-codes.php');
+        $messages = new Items(require_once __DIR__ . '/errors-codes.php');
         return $messages;
     }
 
+    /**
+     * Obtenir le nom de l'API d'authentification
+     *
+     * @return string
+     */
     private function getAuthApiName()
     {
         return str_replace($this->getPrefixApiName(true), '', $this::API_AUTH_NAME);
@@ -727,5 +723,18 @@ class SynologyAPI extends CurlAPI
             $apiName = $this->getPrefixApiName(true) . $apiName;
         }
         return $apiName;
+    }
+
+    /**
+     * Alimente le tableau de configuration
+     *
+     * @param array $config Configuration
+     *
+     * @return array
+     */
+    private function parseConfig(array $config = [])
+    {
+        $this->config = new Items(array_merge($this->defaultConfig, $config));
+        return $this;
     }
 }

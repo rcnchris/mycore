@@ -5,9 +5,8 @@ use Rcnchris\Core\Apis\Synology\SynologyAPI;
 use Rcnchris\Core\Apis\Synology\SynologyAPIPackage;
 use Rcnchris\Core\Apis\Synology\SynologyException;
 use Rcnchris\Core\Tools\Items;
-use Tests\Rcnchris\BaseTestCase;
 
-class SynologyAPITest extends BaseTestCase
+class SynologyAPITest extends SynologyBaseTestCase
 {
 
     public function testInstance()

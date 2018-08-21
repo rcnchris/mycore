@@ -10,13 +10,10 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Rcnchris\Core\Apis\CurlAPI;
-use Rcnchris\Core\Apis\Synology\SynologyAPI;
-use Rcnchris\Core\Apis\Synology\SynologyAPIPackage;
 use Rcnchris\Core\Config\ConfigContainer;
 
 class BaseTestCase extends TestCase
 {
-
     /**
      * Emplacement des tests
      */
@@ -324,7 +321,8 @@ class BaseTestCase extends TestCase
             $this->assertArrayHasKey(
                 $key,
                 $array,
-                $this->getMessage("La clé $key est absente du tableau")
+                $this->getMessage("La clé $key est absente du tableau. Les clés du tableau sont " . implode(', ',
+                        array_keys($array)))
             );
         }
     }
@@ -332,16 +330,20 @@ class BaseTestCase extends TestCase
     /**
      * Vérifier la présence d'une série d'attributs dans un objet
      *
-     * @param object $object     Objet à vérifier
-     * @param array  $attributes Liste des noms d'attributs
+     * @param object       $object     Objet à vérifier
+     * @param array|string $attributes Liste des noms d'attributs
      */
-    public function assertObjectHasAttributes($object, array $attributes)
+    public function assertObjectHasAttributes($object, $attributes)
     {
+        if (is_string($attributes)) {
+            $attributes = explode(',', $attributes);
+        }
         foreach ($attributes as $attribute) {
             $this->assertObjectHasAttribute(
                 $attribute,
                 $object,
-                $this->getMessage("L'attribut $attribute est absent de l'objet")
+                $this->getMessage("L'attribut $attribute est absent de l'objet. Liste trouvée : " . implode(', ',
+                        array_keys(get_object_vars($object))))
             );
         }
     }
@@ -495,31 +497,5 @@ class BaseTestCase extends TestCase
     protected function makeContainer(array $data = [])
     {
         return new ConfigContainer($data);
-    }
-
-    /**
-     * Obtenir l'instance de l'API Synology
-     *
-     * @param null $config Configuration de connexion
-     *
-     * @return \Rcnchris\Core\Apis\Synology\SynologyAPI
-     */
-    protected function makeSynoAPI($config = null)
-    {
-        return is_null($config)
-            ? new SynologyAPI($this->getConfig('synology')['nas'])
-            : new SynologyAPI($config);
-    }
-
-    /**
-     * Obtenir l'instance d'un package de l'API Synology
-     *
-     * @param string $packageName nom du package (DownloadStation, AudioStation...)
-     *
-     * @return \Rcnchris\Core\Apis\Synology\SynologyAPIPackage
-     */
-    protected function makeSynologyPackage($packageName)
-    {
-        return $this->makeSynoAPI()->getPackage($packageName);
     }
 }

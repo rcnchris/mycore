@@ -3,9 +3,8 @@ namespace Tests\Rcnchris\Core\Apis\Synology;
 
 use Rcnchris\Core\Apis\Synology\Packages\FileStationPackage;
 use Rcnchris\Core\Apis\Synology\SynologyException;
-use Tests\Rcnchris\BaseTestCase;
 
-class SynologyExceptionTest extends BaseTestCase
+class SynologyExceptionTest extends SynologyBaseTestCase
 {
     public function testInstance()
     {

@@ -52,20 +52,23 @@ class AudioStationPackage extends SynologyAPIPackage
     }
 
     /**
-     * Obtenir la liste des albums ou ceux d'un artiste
-     * - `$audio->albums(null, ['limit' => 10])->toArray();`
-     * - `$audio->albums('IAM', ['limit' => 10])->toArray();`
-     * - `$audio->albums('IAM', ['limit' => 10], 'name');`
+     * Obtenir la liste des albums
+     * - `$audio->albums(['limit' => 10])->toArray();`
+     * - `$audio->albums(['artist' => 'IAM'])->toArray();`
      *
-     * @param string|null $artist     Nom de l'artiste
      * @param array       $params     Paramètres de la requête
      * @param string|null $extractKey Nom de la clé des items à extraire
      *
      * @return array|bool|null|\Rcnchris\Core\Tools\Items
      */
-    public function albums($artist = null, array $params = [], $extractKey = null)
+    public function albums(array $params = [], $extractKey = null)
     {
-        return $this->getItems('Album', 'list', array_merge($params, compact('artist')), 'albums', $extractKey);
+        $params = array_merge([
+            'offset' => 0,
+            'limit' => 0,
+            'artist' => null
+        ], $params);
+        return $this->getItems('Album', 'list', $params, 'albums', $extractKey);
     }
 
     /**
@@ -80,6 +83,10 @@ class AudioStationPackage extends SynologyAPIPackage
      */
     public function artists(array $params = [], $extractKey = null)
     {
+        $params = array_merge([
+            'offset' => 0,
+            'limit' => 0
+        ], $params);
         return $this->getItems('Artist', 'list', $params, 'artists', $extractKey);
     }
 
@@ -88,13 +95,17 @@ class AudioStationPackage extends SynologyAPIPackage
      * - `$audio->composers(['limit' => 10])->toArray();`
      * - `$audio->composers(['limit' => 10], 'name');`
      *
-     * @param array|null  $params Paramètres de la requête
-     * @param string|null $extractKey
+     * @param array|null  $params     Paramètres de la requête
+     * @param string|null $extractKey Nom de la clé des items à extraire
      *
      * @return array|bool|null|\Rcnchris\Core\Tools\Items
      */
     public function composers(array $params = [], $extractKey = null)
     {
+        $params = array_merge([
+            'offset' => 0,
+            'limit' => 0
+        ], $params);
         return $this->getItems('Composer', 'list', $params, 'composers', $extractKey);
     }
 
@@ -103,28 +114,17 @@ class AudioStationPackage extends SynologyAPIPackage
      * - `$audio->genres(['limit' => 10])->toArray();`
      * - `$audio->genres(['limit' => 10], 'name');`
      *
-     * @param array $params
-     * @param null  $extractKey
-     *
-     * @return array|bool|null|\Rcnchris\Core\Tools\Items
-     */
-    public function genres(array $params = [], $extractKey = null)
-    {
-        return $this->getItems('Genre', 'list', $params, 'genres', $extractKey);
-    }
-
-    /**
-     * Obtenir la liste des genres
-     * - `$audio->genres(['limit' => 10])->toArray();`
-     * - `$audio->genres(['limit' => 10], 'name');`
-     *
-     * @param array $params
-     * @param null  $extractKey
+     * @param array|null  $params     Paramètres de la requête
+     * @param string|null $extractKey Nom de la clé des items à extraire
      *
      * @return array|bool|null|\Rcnchris\Core\Tools\Items
      */
     public function folders(array $params = [], $extractKey = null)
     {
+        $params = array_merge([
+            'offset' => 0,
+            'limit' => 0
+        ], $params);
         return $this->getItems('Folder', 'list', $params, 'items', $extractKey);
     }
 
@@ -136,7 +136,7 @@ class AudioStationPackage extends SynologyAPIPackage
      * @param string    $id       Identifiant du dossier
      * @param bool|true $toEntity Retourne l'instance d'un entité Synology
      *
-     * @return \Rcnchris\Core\Tools\Items
+     * @return \Rcnchris\Core\Apis\Synology\SynologyAPIEntity|\Rcnchris\Core\Tools\Items
      */
     public function folder($id, $toEntity = false)
     {
@@ -144,11 +144,26 @@ class AudioStationPackage extends SynologyAPIPackage
     }
 
     /**
+     * Obtenir la liste des genres
+     * - `$audio->genres(['limit' => 10])->toArray();`
+     * - `$audio->genres(['limit' => 10], 'name');`
+     *
+     * @param array|null  $params     Paramètres de la requête
+     * @param string|null $extractKey Nom de la clé des items à extraire
+     *
+     * @return array|bool|null|\Rcnchris\Core\Tools\Items
+     */
+    public function genres(array $params = [], $extractKey = null)
+    {
+        return $this->getItems('Genre', 'list', $params, 'genres', $extractKey);
+    }
+
+    /**
      * Obtenir les paroles d'une chanson
      *
      * @param string $id Identifiant du morceau
      *
-     * @return null|\Rcnchris\Core\Tools\Items
+     * @return string
      */
     public function lyricsOfSong($id)
     {
@@ -160,13 +175,18 @@ class AudioStationPackage extends SynologyAPIPackage
      * - `$audio->playlists()->toArray();`
      * - `$audio->playlists('name');`
      *
-     * @param bool $extractKey
+     * @param array $params
+     * @param null  $extractKey
      *
-     * @return null|\Rcnchris\Core\Tools\Items
+     * @return array|bool|null|\Rcnchris\Core\Tools\Items
      */
-    public function playlists($extractKey = null)
+    public function playlists(array $params = [], $extractKey = null)
     {
-        return $this->getItems('Playlist', 'list', [], 'playlists', $extractKey);
+        $params = array_merge([
+            'offset' => 0,
+            'limit' => -1
+        ], $params);
+        return $this->getItems('Playlist', 'list', $params, 'playlists', $extractKey);
     }
 
     /**
@@ -189,13 +209,18 @@ class AudioStationPackage extends SynologyAPIPackage
      * - `$audio->radios()->toArray();`
      * - `$audio->radios('title');`
      *
-     * @param bool $extractKey
+     * @param array $params
+     * @param bool  $extractKey
      *
      * @return array|bool|null|\Rcnchris\Core\Tools\Items
      */
-    public function radios($extractKey = null)
+    public function radios(array $params = [], $extractKey = null)
     {
-        return $this->getItems('Radio', 'list', [], 'radios', $extractKey);
+        $params = array_merge([
+            'offset' => 0,
+            'limit' => 0
+        ], $params);
+        return $this->getItems('Radio', 'list', $params, 'radios', $extractKey);
     }
 
     /**
@@ -224,6 +249,8 @@ class AudioStationPackage extends SynologyAPIPackage
      */
     public function remote($id, $toEntity = false)
     {
+        //return $this->getItem($this, 'RemotePlayer', 'getstatus', $id, 'players', $toEntity);
+
         $response = $this->request('RemotePlayer', 'getstatus', compact('id'));
         return $toEntity
             ? new SynologyAPIEntity($this, $response->toArray())
@@ -260,6 +287,10 @@ class AudioStationPackage extends SynologyAPIPackage
      */
     public function servers(array $params = [], $extractKey = null)
     {
+        $params = array_merge([
+            'offset' => 0,
+            'limit' => 0
+        ], $params);
         return $this->getItems('MediaServer', 'list', $params, 'list', $extractKey);
     }
 

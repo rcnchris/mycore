@@ -4,10 +4,23 @@ namespace Tests\Rcnchris\Core\Apis\Synology\Packages;
 use Rcnchris\Core\Apis\Synology\Packages\VideoStationPackage;
 use Rcnchris\Core\Apis\Synology\SynologyAPIEntity;
 use Rcnchris\Core\Tools\Items;
-use Tests\Rcnchris\BaseTestCase;
+use Tests\Rcnchris\Core\Apis\Synology\SynologyBaseTestCase;
 
-class VideoStationPackageTest extends BaseTestCase
+class VideoStationPackageTest extends SynologyBaseTestCase
 {
+    /**
+     * @var VideoStationPackage
+     */
+    private $videoStation;
+
+    /**
+     * Constructeur
+     */
+    public function setUp()
+    {
+        $this->videoStation = $this->makeVideoStationPackage();
+    }
+
     /**
      * @return \Rcnchris\Core\Apis\Synology\Packages\VideoStationPackage
      */
@@ -18,126 +31,110 @@ class VideoStationPackageTest extends BaseTestCase
 
     public function testInstance()
     {
-        $this->ekoTitre('API - Synology Package : VideoStation');
-        $this->assertInstanceOf(VideoStationPackage::class, $this->makeVideoStationPackage());
+        $this->ekoTitre('API - Synology Package : ' . $this->videoStation->getName());
+        $this->assertInstanceOf(VideoStationPackage::class, $this->videoStation);
     }
 
     public function testGetVersion()
     {
-        $this->assertInternalType('string', $this->makeVideoStationPackage()->getVersion());
+        $this->assertInternalType('string', $this->videoStation->getVersion());
     }
 
     public function testConfig()
     {
-        $api = $this->makeVideoStationPackage();
-        $config = $api->config();
+        $config = $this->videoStation->config();
         $this->assertInstanceOf(Items::class, $config);
         $this->assertNotEmpty($config->toArray());
     }
 
     public function testCollections()
     {
-        $api = $this->makeVideoStationPackage();
-
-        $items = $api->collections();
+        $items = $this->videoStation->collections();
         $this->assertInstanceOf(Items::class, $items);
         $this->assertNotEmpty($items->toArray());
 
-        $items = $api->collections([], 'title');
+        $items = $this->videoStation->collections([], 'title');
         $this->assertInternalType('array', $items);
         $this->assertNotEmpty($items);
     }
 
     public function testVideosOfCollection()
     {
-        $api = $this->makeVideoStationPackage();
-        $collection = $api->collections()->get('collections')->first();
-        $items = $api->videosOfCollection($collection->id);
+        $collection = $this->videoStation->collections()->get('collections')->first();
+        $items = $this->videoStation->videosOfCollection($collection->id);
         $this->assertInstanceOf(Items::class, $items);
     }
 
     public function testMovies()
     {
-        $api = $this->makeVideoStationPackage();
-
-        $items = $api->movies();
+        $items = $this->videoStation->movies();
         $this->assertInstanceOf(Items::class, $items);
         $this->assertNotEmpty($items->toArray());
         $this->assertTrue($items->has('movies'));
 
-        $items = $api->movies([], 'title');
+        $items = $this->videoStation->movies([], 'title');
         $this->assertInternalType('array', $items);
         $this->assertNotEmpty($items);
     }
 
     public function testMovie()
     {
-        $api = $this->makeVideoStationPackage();
-        $movie = $api->movies()->get('movies')->first();
-        $this->assertInstanceOf(Items::class, $api->movie($movie->id));
-        $this->assertInstanceOf(SynologyAPIEntity::class, $api->movie($movie->id, true));
+        $movie = $this->videoStation->movies()->get('movies')->first();
+        $this->assertInstanceOf(Items::class, $this->videoStation->movie($movie->id));
+        $this->assertInstanceOf(SynologyAPIEntity::class, $this->videoStation->movie($movie->id, true));
     }
 
     public function testVideos()
     {
-        $api = $this->makeVideoStationPackage();
-
-        $items = $api->videos();
+        $items = $this->videoStation->videos();
         $this->assertInstanceOf(Items::class, $items);
         $this->assertNotEmpty($items->toArray());
 
-        $items = $api->videos([], 'title');
+        $items = $this->videoStation->videos([], 'title');
         $this->assertInternalType('array', $items);
         $this->assertNotEmpty($items);
     }
 
     public function testVideo()
     {
-        $api = $this->makeVideoStationPackage();
-        $video= $api->videos()->get('videos')->first();
-        $this->assertInstanceOf(Items::class, $api->video($video->id));
-        $this->assertInstanceOf(SynologyAPIEntity::class, $api->video($video->id, true));
+        $video = $this->videoStation->videos()->get('videos')->first();
+        $this->assertInstanceOf(Items::class, $this->videoStation->video($video->id));
+        $this->assertInstanceOf(SynologyAPIEntity::class, $this->videoStation->video($video->id, true));
     }
 
     public function testTvShows()
     {
-        $api = $this->makeVideoStationPackage();
-
-        $items = $api->tvshows();
+        $items = $this->videoStation->tvshows();
         $this->assertInstanceOf(Items::class, $items);
         $this->assertNotEmpty($items->toArray());
 
-        $items = $api->tvshows([], 'title');
+        $items = $this->videoStation->tvshows([], 'title');
         $this->assertInternalType('array', $items);
         $this->assertNotEmpty($items);
     }
 
     public function testTvShow()
     {
-        $api = $this->makeVideoStationPackage();
-        $tvshow = $api->tvshows()->get('tvshows')->first();
-        $this->assertInstanceOf(Items::class, $api->tvshow($tvshow->id));
-        $this->assertInstanceOf(SynologyAPIEntity::class, $api->tvshow($tvshow->id, true));
+        $tvshow = $this->videoStation->tvshows()->get('tvshows')->first();
+        $this->assertInstanceOf(Items::class, $this->videoStation->tvshow($tvshow->id));
+        $this->assertInstanceOf(SynologyAPIEntity::class, $this->videoStation->tvshow($tvshow->id, true));
     }
 
     public function testEpisodes()
     {
-        $api = $this->makeVideoStationPackage();
-
-        $items = $api->episodes();
+        $items = $this->videoStation->episodes();
         $this->assertInstanceOf(Items::class, $items);
         $this->assertNotEmpty($items->toArray());
 
-        $items = $api->episodes([], 'title');
+        $items = $this->videoStation->episodes([], 'title');
         $this->assertInternalType('array', $items);
         $this->assertNotEmpty($items);
     }
 
     public function testEpisode()
     {
-        $api = $this->makeVideoStationPackage();
-        $tvshow = $api->episodes()->get('episodes')->first();
-        $this->assertInstanceOf(Items::class, $api->episode($tvshow->id));
-        $this->assertInstanceOf(SynologyAPIEntity::class, $api->episode($tvshow->id, true));
+        $tvshow = $this->videoStation->episodes()->get('episodes')->first();
+        $this->assertInstanceOf(Items::class, $this->videoStation->episode($tvshow->id));
+        $this->assertInstanceOf(SynologyAPIEntity::class, $this->videoStation->episode($tvshow->id, true));
     }
 }
