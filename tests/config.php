@@ -130,8 +130,8 @@ return [
             'port' => 5551,
             'protocol' => 'http',
             'version' => 1,
-            'user' => 'rcn',
-            'pwd' => 'maracla'
+            'user' => 'phpunit',
+            'pwd' => 'mycoretest'
         ],
         'nasdev' => [
             'name' => 'nas',
