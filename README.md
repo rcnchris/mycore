@@ -145,18 +145,12 @@ $cookies->set('ip', '192.168.1.1')
 ## Apis
 > Package qui permet d'utiliser n'importe qu'elle API facilement et quelques APIs dédiées.
 
-### APITrait
-> Comportement communs à toutes les APIs sur la base de `curl`
-
-### CurlResponse
-> Représente une réponse de la commande <code>curl_exec()</code>
-
-### OneAPI
+### CurlAPI
 > Utiliser n'importe quelle API à partir de son URL.
 
 <pre class="sh_sh">
-$api = new OneAPI('https://randomuser.me/api');
-$users = $api->r(['results' => 3])->toArray('results');
+$api = new CurlAPI('https://randomuser.me/api');
+$users = $api->exec(['results' => 3])->toArray();
 </pre>
 
 ### AlloCiné
@@ -168,17 +162,29 @@ $search = $api->search('Le Parrain');
 </pre>
 
 ### Synology
-> Utiliser les API d'un NAS Synology.
+> Utiliser n'importe qu'elle API d'un NAS Synology.
 
 <pre class="sh_sh">
-$api = new AbstractSynology($config);
-$genres = $api
-    ->getPackage('AudioStation')
-    ->get('Genre');
+$api = new Synology($config);
 
-$movies = $api
-    ->getPackage('VideoStation')
-    ->get('Movie', 'list', ['limit' => 20, 'offset' => 0], 'movies');
+// Obtenir la liste de tous les films
+$movies = $api->request('VideoStation.Movie')->toArray();
+
+// Obtenir les genres de musiques
+$genres = $api->request('AudioStation.Genre');
+
+// Chercher un film
+$movies = $syno->request(
+    'VideoStation.Movie',
+    'search',
+    [
+        'version' => 4,
+        'title' => 'parrain'
+        'limit' => 3,
+        'account' => 'titi',
+        'passwd' => 'grosminet'
+    ]
+)->toArray();
 </pre>
 
 -------

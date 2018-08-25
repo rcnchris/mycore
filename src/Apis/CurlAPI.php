@@ -287,12 +287,13 @@ class CurlAPI
     /**
      * Exécuter la requête de la ressource Curl
      *
-     * @param bool|null   $build Construit la requête à partir des parties et paramètres de l'URL
-     * @param string|null $title Titre de l'enregistrement dans le journal
+     * @param bool|null   $build        Construit la requête à partir des parties et paramètres de l'URL
+     * @param string|null $title        Titre de l'enregistrement dans le journal
+     * @param bool|false  $withResponse retoutner la réponse plutôt que cette instance
      *
      * @return $this
      */
-    public function exec($build = true, $title = null)
+    public function exec($build = true, $title = null, $withResponse = false)
     {
         if (is_bool($build) && $build === true) {
             $this->setCurlOptions(CURLOPT_URL, $this->getUrl());
@@ -301,7 +302,9 @@ class CurlAPI
         }
         $this->response = curl_exec($this->curl);
         $this->log($title);
-        return $this;
+        return $withResponse
+            ? $this->response
+            : $this;
     }
 
     /**
@@ -316,7 +319,6 @@ class CurlAPI
         if ($this->getHttpCode() === 200) {
             $formats = ['array', 'items', 'xml'];
             if (!is_null($format) && in_array(strtolower($format), $formats)) {
-
                 $contentType = $this->getContentType();
 
                 if ($contentType === 'text/xml' && $format === 'xml') {
@@ -331,10 +333,6 @@ class CurlAPI
                 if ($contentType === 'text/plain' && $format === 'items') {
                     $items = new Items($this->response);
                     return $items;
-                }
-
-                if ($contentType === 'image/jpeg') {
-                    return $this->response;
                 }
             }
             return $this->response;
@@ -494,5 +492,15 @@ class CurlAPI
             'title' => $title,
             'details' => $this->getCurlInfos()
         ]);
+    }
+
+    /**
+     * Obtenir les parties d'url à ajouter
+     *
+     * @return array
+     */
+    public function getParts()
+    {
+        return $this->parts;
     }
 }

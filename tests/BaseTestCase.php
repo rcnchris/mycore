@@ -110,9 +110,7 @@ class BaseTestCase extends TestCase
         if ($this::VERBOSE) {
             $methods = get_class_methods(get_class($this));
             $tests = array_map(function ($method) {
-                if (substr($method, 0, 4) === 'test') {
-                    return $method;
-                };
+                return substr($method, 0, 4) === 'test' ? $method : null;
             }, $methods);
             $tests = count(array_filter($tests));
             if ($isTest === true) {
@@ -131,7 +129,9 @@ class BaseTestCase extends TestCase
      */
     protected function ekoMessage($message, $color = "\n\033[0;35m")
     {
-        echo "$color{$message}\033[m\n";
+        if ($this::VERBOSE) {
+            echo "$color{$message}\033[m\n";
+        }
     }
 
     /**

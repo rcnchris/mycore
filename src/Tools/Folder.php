@@ -161,9 +161,9 @@ class Folder
                 $this->content['folders'][] = $entry;
             }
         }
+        sort($this->content['files']);
         sort($this->content['folders']);
         $this->content['folders'] = array_slice($this->content['folders'], 2);
-
         return $key
             ? $this->content[$key]
             : $this->content;

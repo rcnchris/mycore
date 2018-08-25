@@ -4,10 +4,60 @@
  * Retourne un tableau des codes erreurs Synology
  */
 return [
+    'AntiVirus' => [
+        114 => [
+            'en' => 'Unknow error',
+            'fr' => 'Erreur inconnue au bataillon !',
+        ],
+    ],
     'AudioStation' => [
         500 => [
             'en' => 'Unknow error',
             'fr' => 'Erreur inconnue au bataillon !',
+        ],
+    ],
+    'Cal' => [
+        117 => [
+            'en' => 'Unknow error',
+            'fr' => 'Erreur inconnue au bataillon !',
+        ],
+    ],
+    'DownloadStation' => [
+        400 => [
+            'en' => 'File upload failed',
+            'fr' => 'Le téléchargement du fichier a échoué',
+        ],
+        401 => [
+            'en' => 'Max number of tasks reached',
+            'fr' => 'Nombre maximum de tâches atteintes',
+        ],
+        402 => [
+            'en' => 'Destination denied',
+            'fr' => 'Destination refusée',
+        ],
+        403 => [
+            'en' => 'Destination does not exist',
+            'fr' => "La destination n'existe pas",
+        ],
+        404 => [
+            'en' => 'Invalid task id',
+            'fr' => "Identifiant de la tâche incorrect",
+        ],
+        405 => [
+            'en' => 'Invalid task action',
+            'fr' => "Action de tâche invalide",
+        ],
+        406 => [
+            'en' => 'No default destination',
+            'fr' => 'Pas de destination par défaut',
+        ],
+        407 => [
+            'en' => 'Set destination failed',
+            'fr' => 'Impossible de définir la destination',
+        ],
+        408 => [
+            'en' => 'File does not exist',
+            'fr' => "Le fichier n'existe pas",
         ],
     ],
     'FileStation' => [
@@ -228,42 +278,30 @@ return [
             'fr' => "Impossible d'accéder au liens partagés.",
         ],
     ],
-    'DownloadStation' => [
+    'SurveillanceStation' => [
         400 => [
-            'en' => 'File upload failed',
-            'fr' => 'Le téléchargement du fichier a échoué',
+            'en' => 'Execution failed.',
+            'fr' => "L'exécution a échoué.",
         ],
         401 => [
-            'en' => 'Max number of tasks reached',
-            'fr' => 'Nombre maximum de tâches atteintes',
-        ],
-        402 => [
-            'en' => 'Destination denied',
-            'fr' => 'Destination refusée',
-        ],
-        403 => [
-            'en' => 'Destination does not exist',
-            'fr' => "La destination n'existe pas",
-        ],
-        404 => [
-            'en' => 'Invalid task id',
-            'fr' => "Identifiant de la tâche incorrect",
+            'en' => 'Parameter invalid.',
+            'fr' => "Paramètre invalide",
         ],
         405 => [
-            'en' => 'Invalid task action',
-            'fr' => "Action de tâche invalide",
+            'en' => 'CMS server connection failed.',
+            'fr' => "La connexion au serveur CMS a échoué.",
         ],
-        406 => [
-            'en' => 'No default destination',
-            'fr' => 'Pas de destination par défaut',
+        414 => [
+            'en' => 'Some events not exists.',
+            'fr' => "Certains événements n'existent pas.",
         ],
-        407 => [
-            'en' => 'Set destination failed',
-            'fr' => 'Impossible de définir la destination',
+        410 => [
+            'en' => 'Service is not enabled.',
+            'fr' => "Service désactivé.",
         ],
-        408 => [
-            'en' => 'File does not exist',
-            'fr' => "Le fichier n'existe pas",
+        439 => [
+            'en' => 'Too many items selected.',
+            'fr' => "Trop d'éléments sélectionnés.",
         ],
     ],
     'VideoStation' => [
@@ -286,7 +324,7 @@ return [
     ],
     103 => [
         'en' => 'The requested method does not exist',
-        'fr' => 'La méthode demandée n’existe pas',
+        'fr' => "La méthode demandée n’existe pas",
     ],
     104 => [
         'en' => 'The requested version does not support the functionality',

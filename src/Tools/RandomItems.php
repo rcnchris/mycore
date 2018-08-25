@@ -51,6 +51,11 @@ class RandomItems
      */
     private static $datas = [];
 
+    /**
+     * Tags des catégories d'images
+     *
+     * @var array
+     */
     protected static $imgagesCategories = [
         'abstract', 'animals', 'business', 'cats', 'city', 'food', 'nightlife',
         'fashion', 'people', 'nature', 'sports', 'technics', 'transport'
@@ -528,6 +533,13 @@ class RandomItems
         return self::$imgagesCategories;
     }
 
+    /**
+     * Obtenir l'URL d'une image de manière aléatoire
+     *
+     * @param array $options
+     *
+     * @return string
+     */
     public static function image(array $options = [])
     {
         $defaultOptions = [

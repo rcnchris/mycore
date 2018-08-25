@@ -40,6 +40,15 @@ use Whoops\Run;
  */
 class WhoopsMiddleware
 {
+    /**
+     * Charge le middleware de gestion des erreurs Whoops
+     *
+     * @param \Psr\Http\Message\RequestInterface  $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param callable                            $next
+     *
+     * @return mixed
+     */
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
     {
         $whoops = new Run();
