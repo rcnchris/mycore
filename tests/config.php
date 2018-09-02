@@ -123,25 +123,31 @@ return [
      * NAS Synology
      */
     'synology' => [
-        'nas' => [
+        [
             'name' => 'nas',
             'description' => 'Nas de la maison',
             'address' => '192.168.1.2',
             'port' => 5551,
             'protocol' => 'http',
             'version' => 1,
-            'user' => 'phpunit',
-            'pwd' => 'mycoretest'
+//            'user' => 'mycore',
+//            'pwd' => 'kEn5iI',
+            'user' => 'rcn',
+            'pwd' => 'maracla',
+//            'user' => 'phpunit',
+//            'pwd' => '?)(8ct',
+            'format' => 'sid'
         ],
-        'nasdev' => [
-            'name' => 'nas',
+        [
+            'name' => 'nasdev',
             'description' => 'Nas de développement',
             'address' => '192.168.1.20',
             'port' => 5552,
             'protocol' => 'http',
             'version' => 1,
-            'user' => 'phpunit',
-            'pwd' => 'mycoretest'
+            'user' => 'mycore',
+            'pwd' => 'c=|#B@',
+            'format' => 'sid'
         ],
     ],
 ];

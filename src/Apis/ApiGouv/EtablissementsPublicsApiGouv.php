@@ -19,7 +19,7 @@
 namespace Rcnchris\Core\Apis\ApiGouv;
 
 use Rcnchris\Core\Apis\ApiException;
-use Rcnchris\Core\Apis\CurlAPI;
+use Rcnchris\Core\Apis\Curl;
 use Rcnchris\Core\Tools\Items;
 
 /**
@@ -40,7 +40,7 @@ use Rcnchris\Core\Tools\Items;
  *
  * @link     https://github.com/rcnchris on Github
  */
-class EtablissementsPublicsApiGouv extends CurlAPI
+class EtablissementsPublicsApiGouv extends Curl
 {
 
     /**
@@ -211,9 +211,9 @@ class EtablissementsPublicsApiGouv extends CurlAPI
         if (!$this->getTypes()->has($type)) {
             throw new ApiException("le type $type n'existe pas");
         }
-        $this->addUrlParts($departement . '/' . $type);
-        return $this->exec()
-            ->get('items')
+        $this->withParts($departement . '/' . $type);
+        return $this->exec("Communes du département $departement")
+            ->getResponse()
             ->get('features')
             ->extract('properties');
     }

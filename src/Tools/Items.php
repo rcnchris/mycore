@@ -308,7 +308,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      * @param mixed     $key       Clé à retourner
      * @param bool|null $withPoint Si faux, les points ne sont pas considérés pour traverser la hiérachie du tableau
      *
-     * @return null|\Rcnchris\Core\Tools\Items
+     * @return mixed|null|\Rcnchris\Core\Tools\Items
      */
     public function get($key, $withPoint = true)
     {
@@ -394,6 +394,16 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
     public function isEmpty()
     {
         return empty($this->items);
+    }
+
+    /**
+     * Vérifie que la liste n'est pas vide
+     *
+     * @return bool
+     */
+    public function notEmpty()
+    {
+        return !empty($this->items);
     }
 
     /**

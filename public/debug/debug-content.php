@@ -8,10 +8,10 @@ if ($debug) {
     // Objets
     $config = require ROOT . DS . 'tests/config.php';
     $config = new Rcnchris\Core\Config\ConfigContainer($config);
-//    $e = new \Rcnchris\Core\Tools\Environnement();
-//    $folder = new \Rcnchris\Core\Tools\Folder(dirname(__DIR__));
-//    $composer = new \Rcnchris\Core\Tools\Composer(ROOT . DIRECTORY_SEPARATOR . 'composer.json');
-//    $session = new \Rcnchris\Core\Session\PHPSession();
+    $e = new \Rcnchris\Core\Tools\Environnement();
+    $folder = new \Rcnchris\Core\Tools\Folder(dirname(__DIR__));
+    $composer = new \Rcnchris\Core\Tools\Composer(ROOT . DIRECTORY_SEPARATOR . 'composer.json');
+    $session = new \Rcnchris\Core\Session\PHPSession();
 //    $html->setCdns($config->get('cdn'));
     //$rand = \Rcnchris\Core\Tools\RandomItems::getInstance();
     //$adr = new \Rcnchris\Core\Apis\ApiGouv\AdressesApiGouv();
@@ -29,6 +29,4 @@ if ($debug) {
     </div>
 </div>
 
-<?php include 'synology/synology.php'; ?>
-
-<?php // include 'accordion.php'; ?>
+<?php include 'accordion.php'; ?>

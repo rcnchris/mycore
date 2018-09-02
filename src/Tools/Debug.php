@@ -190,6 +190,18 @@ class Debug
     }
 
     /**
+     * Obtenir le namespace de l'instance d'une classe
+     *
+     * @param object $object Objet dont il faut retourner le namespace
+     *
+     * @return string
+     */
+    public static function getNamespace($object)
+    {
+        return namespaceSplit(get_class($object))[0];
+    }
+
+    /**
      * Vérifie que la variable est un objet sinon lève une `Exception`
      *
      * @param mixed $variable Variable qui doit être un objet

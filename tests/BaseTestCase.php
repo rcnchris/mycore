@@ -9,8 +9,11 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Rcnchris\Core\Apis\CurlAPI;
+use Rcnchris\Core\Apis\Curl;
+use Rcnchris\Core\Apis\Synology\Package;
+use Rcnchris\Core\Apis\Synology\Synology;
 use Rcnchris\Core\Config\ConfigContainer;
+use Rcnchris\Core\Tools\Items;
 
 class BaseTestCase extends TestCase
 {
@@ -321,8 +324,35 @@ class BaseTestCase extends TestCase
             $this->assertArrayHasKey(
                 $key,
                 $array,
-                $this->getMessage("La clé $key est absente du tableau. Les clés du tableau sont " . implode(', ',
-                        array_keys($array)))
+                $this->getMessage(
+                    "La clé $key est absente du tableau. Les clés du tableau sont "
+                    . implode(', ', array_keys($array)))
+            );
+        }
+    }
+
+    /**
+     * Vérifier la présence d'une liste de valeurs dans un tableau
+     *
+     * - `$this->assertArrayHasValues($tab, 'val1,val2');`
+     * - `$this->assertArrayHasValues($tab, ['val1', 'val2']);`
+     *
+     * @param array        $array  Tableau à vérifier
+     * @param array|string $values Liste de valeurs à dont il faut vérifier la présence dans le tableau
+     */
+    public function assertArrayHasValues(array $array, $values)
+    {
+        if (!is_array($values)) {
+            $values = explode(',', (string)$values);
+        }
+        foreach ($values as $value) {
+            $this->assertContains(
+                $value,
+                $values,
+                $this->getMessage(
+                    "La valeur " . (string)$value . " est absente du tableau. Les valeurs existantes du tableau sont "
+                    . implode(', ', $array)
+                )
             );
         }
     }
@@ -340,10 +370,10 @@ class BaseTestCase extends TestCase
         }
         foreach ($attributes as $attribute) {
             $this->assertObjectHasAttribute(
-                $attribute,
-                $object,
-                $this->getMessage("L'attribut $attribute est absent de l'objet. Liste trouvée : " . implode(', ',
-                        array_keys(get_object_vars($object))))
+                $attribute, $object,
+                $this->getMessage(
+                    "L'attribut $attribute est absent de l'objet " . get_class($object) . ". Liste trouvée : "
+                    . implode(', ', array_keys(get_object_vars($object))))
             );
         }
     }
@@ -480,11 +510,11 @@ class BaseTestCase extends TestCase
     /**
      * @param string $url URL de base
      *
-     * @return \Rcnchris\Core\Apis\CurlAPI
+     * @return \Rcnchris\Core\Apis\Curl
      */
     protected function makeCurlApi($url)
     {
-        return new CurlAPI($url);
+        return new Curl($url);
     }
 
     /**

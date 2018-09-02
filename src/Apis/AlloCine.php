@@ -33,7 +33,7 @@ namespace Rcnchris\Core\Apis;
  *
  * @link     https://github.com/rcnchris on Github
  */
-class AlloCine extends CurlAPI
+class AlloCine extends Curl
 {
 
     /**
@@ -64,6 +64,13 @@ class AlloCine extends CurlAPI
     ];
 
     /**
+     * Clé de l'API
+     *
+     * @var string
+     */
+    private $api_key;
+
+    /**
      * Constructeur
      * Définit l'URL de base, la clé de l'API et le navigateur à utiliser
      */
@@ -72,6 +79,19 @@ class AlloCine extends CurlAPI
         parent::__construct('http://api.allocine.fr/rest/v3');
         $this->setApiKey('29d185d98c984a359e6e6f26a0474269');
         $this->withUserAgent('Dalvik/1.6.0 (Linux; U; Android 4.2.2; Nexus 4 Build/JDQ39E)');
+    }
+
+    /**
+     * Définir la clé de l'API
+     *
+     * @param string $api_key Clé de l'API
+     *
+     * @return $this
+     */
+    public function setApiKey($api_key)
+    {
+        $this->api_key = $api_key;
+        return $this;
     }
 
     /**
@@ -85,11 +105,11 @@ class AlloCine extends CurlAPI
     public function search($text)
     {
         return $this
-            ->addUrlParts(__FUNCTION__)
-            ->addUrlParams('q', $text)
+            ->withParts(__FUNCTION__)
+            ->withParams(['q' => $text])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Recherche $text")
+            ->getResponse();
     }
 
     /**
@@ -103,14 +123,14 @@ class AlloCine extends CurlAPI
     public function movie($codeMovie, $profile = 'small')
     {
         return $this
-            ->addUrlParts(__FUNCTION__)
-            ->addUrlParams([
+            ->withParts(__FUNCTION__)
+            ->withParams([
                 'code' => intval($codeMovie),
                 'profile' => $profile
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Film $codeMovie")
+            ->getResponse();
     }
 
     /**
@@ -124,15 +144,15 @@ class AlloCine extends CurlAPI
     public function reviewsOfMovie($codeMovie, $filter = 'desk-press')
     {
         return $this
-            ->addUrlParts('reviewlist')
-            ->addUrlParams([
+            ->withParts('reviewlist')
+            ->withParams([
                 'code' => intval($codeMovie),
                 'type' => 'movie',
                 'filter' => $filter
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Critiques du film $codeMovie")
+            ->getResponse();
     }
 
     /**
@@ -146,14 +166,14 @@ class AlloCine extends CurlAPI
     public function theaters($codeZip, $radius = 50)
     {
         return $this
-            ->addUrlParts('theaterlist')
-            ->addUrlParams([
+            ->withParts('theaterlist')
+            ->withParams([
                 'zip' => $codeZip,
                 'radius' => intval($radius)
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Cinémas dans $codeZip")
+            ->getResponse();
     }
 
     /**
@@ -169,16 +189,16 @@ class AlloCine extends CurlAPI
     public function showTimes($codeZip, $codeTheater = null, $codeMovie = null, $radius = 50)
     {
         return $this
-            ->addUrlParts('showtimelist')
-            ->addUrlParams([
+            ->withParts('showtimelist')
+            ->withParams([
                 'zip' => $codeZip,
                 'theater' => $codeTheater,
                 'movie' => $codeMovie,
                 'radius' => intval($radius)
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Séances dans $codeZip")
+            ->getResponse();
     }
 
     /**
@@ -192,14 +212,14 @@ class AlloCine extends CurlAPI
     public function media($codeMedia, $profile = 'small')
     {
         return $this
-            ->addUrlParts('media')
-            ->addUrlParams([
+            ->withParts('media')
+            ->withParams([
                 'code' => $codeMedia,
                 'profile' => $profile
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Média $codeMedia")
+            ->getResponse();
     }
 
     /**
@@ -213,14 +233,14 @@ class AlloCine extends CurlAPI
     public function person($codePerson, $profile = 'small')
     {
         return $this
-            ->addUrlParts(__FUNCTION__)
-            ->addUrlParams([
+            ->withParts(__FUNCTION__)
+            ->withParams([
                 'code' => $codePerson,
                 'profile' => $profile
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Personne $codePerson")
+            ->getResponse();
     }
 
     /**
@@ -234,14 +254,14 @@ class AlloCine extends CurlAPI
     public function filmographyOfPerson($codePerson, $profile = 'small')
     {
         return $this
-            ->addUrlParts('filmography')
-            ->addUrlParams([
+            ->withParts('filmography')
+            ->withParams([
                 'code' => $codePerson,
                 'profile' => $profile
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Filmographie de $codePerson")
+            ->getResponse();
     }
 
     /**
@@ -256,16 +276,16 @@ class AlloCine extends CurlAPI
     public function currentMoviesOfPerson($codePerson, $profile = 'small', $comming = false)
     {
         return $this
-            ->addUrlParts('movielist')
-            ->addUrlParams([
+            ->withParts('movielist')
+            ->withParams([
                 'code' => $codePerson,
                 'profile' => $profile,
                 'filter' => $comming ? 'commingsoon' : 'nowshowing',
                 'order' => 'datedesc'
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Films en cours de $codePerson")
+            ->getResponse();
     }
 
     /**
@@ -280,14 +300,14 @@ class AlloCine extends CurlAPI
     public function tvseries($codeSerie, $profile = 'small')
     {
         return $this
-            ->addUrlParts(__FUNCTION__)
-            ->addUrlParams([
+            ->withParts(__FUNCTION__)
+            ->withParams([
                 'code' => $codeSerie,
                 'profile' => $profile
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Série $codeSerie")
+            ->getResponse();
     }
 
     /**
@@ -302,14 +322,14 @@ class AlloCine extends CurlAPI
     public function season($codeSeason, $profile = 'small')
     {
         return $this
-            ->addUrlParts(__FUNCTION__)
-            ->addUrlParams([
+            ->withParts(__FUNCTION__)
+            ->withParams([
                 'code' => $codeSeason,
                 'profile' => $profile
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Saison $codeSeason")
+            ->getResponse();
     }
 
     /**
@@ -324,14 +344,14 @@ class AlloCine extends CurlAPI
     public function episode($codeEpisode, $profile = 'small')
     {
         return $this
-            ->addUrlParts(__FUNCTION__)
-            ->addUrlParams([
+            ->withParts(__FUNCTION__)
+            ->withParams([
                 'code' => $codeEpisode,
                 'profile' => $profile
             ])
             ->makeUrl()
-            ->exec(false)
-            ->get('items');
+            ->exec("Episode $codeEpisode")
+            ->getResponse();
     }
 
     /**
@@ -345,13 +365,23 @@ class AlloCine extends CurlAPI
     }
 
     /**
+     * Obtenir la clé de l'API
+     *
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return $this->api_key;
+    }
+
+    /**
      * Fabrique et définit l'URL conforme à la structure de l'API
      *
      * @return $this
      */
     private function makeUrl()
     {
-        $this->addUrlParams([
+        $this->withParams([
             'format' => 'json',
             'partner' => $this->partner
         ]);
@@ -359,11 +389,11 @@ class AlloCine extends CurlAPI
         $sed = date('Ymd');
         $sig = urlencode(
             base64_encode(
-                sha1($this->getApiKey() . $this->getParams() . '&sed=' . $sed, true)
+                sha1($this->getApiKey() . $this->getParams(true) . '&sed=' . $sed, true)
             )
         );
-        $url = $this->getUrl(true, false) . '?' . $this->getParams() . '&sed=' . $sed . '&sig=' . $sig;
-        $this->setCurlOptions(CURLOPT_URL, $url);
+        $url = $this->getUrl(true, false) . '?' . $this->getParams(true) . '&sed=' . $sed . '&sig=' . $sig;
+        $this->setUrl($url);
         return $this;
     }
 }

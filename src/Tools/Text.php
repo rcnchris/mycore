@@ -534,10 +534,10 @@ class Text
      *
      * @return string|null
      */
-    public static function getBefore($string, $text)
+    public static function getBefore($string, $text, $default = null)
     {
         $result = strstr($text, $string, true);
-        return $result != '' ? $result : null;
+        return $result != '' ? $result : $default;
     }
 
     /**

@@ -25,17 +25,20 @@ class EtablissementsPublicsApiGouvTest extends BaseTestCase
 
     public function testGetByDepartement()
     {
+        $this->ekoMessage("Organisme d'un département");
         $this->assertInstanceOf(Items::class, $this->makeEtablissementsApiGouv()->getByDepartement(83, 'cpam'));
     }
 
     public function testGetByDepartementWithWrongType()
     {
+        $this->ekoMessage("Organisme d'un département d'un mauvais type");
         $this->expectException(ApiException::class);
         $this->makeEtablissementsApiGouv()->getByDepartement(83, 'fake');
     }
 
     public function testGetTypes()
     {
+        $this->ekoMessage("Types d'organismes disponibles");
         $this->assertInstanceOf(Items::class, $this->makeEtablissementsApiGouv()->getTypes());
     }
 }

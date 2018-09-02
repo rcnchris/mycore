@@ -122,4 +122,9 @@ class DebugTest extends BaseTestCase
         $this->assertNotEmpty(Debug::getConstants('user'));
         $this->assertNotEmpty($this->debugger->getConstants('user'));
     }
+
+    public function testGetNamespace()
+    {
+        $this->assertEquals('Tests\Rcnchris\Core\Tools', $this->debugger->getNamespace($this));
+    }
 }

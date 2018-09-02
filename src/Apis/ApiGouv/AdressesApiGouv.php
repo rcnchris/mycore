@@ -18,7 +18,7 @@
 
 namespace Rcnchris\Core\Apis\ApiGouv;
 
-use Rcnchris\Core\Apis\CurlAPI;
+use Rcnchris\Core\Apis\Curl;
 use Rcnchris\Core\Tools\Items;
 
 /**
@@ -39,7 +39,7 @@ use Rcnchris\Core\Tools\Items;
  *
  * @link     https://github.com/rcnchris on Github
  */
-class AdressesApiGouv extends CurlAPI
+class AdressesApiGouv extends Curl
 {
     /**
      * Liste des départements
@@ -88,9 +88,9 @@ class AdressesApiGouv extends CurlAPI
      */
     public function getRegions($code = null, $format = 'json')
     {
-        $this->addUrlParts('regions');
-        $this->addUrlParams(compact('code', 'format'));
-        return $this->exec()->get('items');
+        $this->withParts('regions');
+        $this->withParams(compact('code', 'format'));
+        return $this->exec("Régions")->getResponse();
     }
 
     /**
@@ -104,14 +104,14 @@ class AdressesApiGouv extends CurlAPI
      */
     public function getDepartements($code = null, $format = 'json')
     {
-        $this->addUrlParts('departements');
+        $this->withParts('departements');
         $params = [
             'code' => $code,
             'fields' => $this->fieldsDepartements,
             'format' => $format
         ];
-        $this->addUrlParams($params);
-        return $this->exec()->get('items');
+        $this->withParams($params);
+        return $this->exec("Départements")->getResponse();
     }
 
     /**
@@ -125,14 +125,14 @@ class AdressesApiGouv extends CurlAPI
      */
     public function getCommunes($departement, $format = 'json')
     {
-        $this->addUrlParts('communes');
+        $this->withParts('communes');
         $params = [
             'codePostal' => $departement,
             'fields' => $this->fieldsCommmunes,
             'format' => $format
         ];
-        $this->addUrlParams($params);
-        return $this->exec()->get('items');
+        $this->withParams($params);
+        return $this->exec("Communes")->getResponse();
     }
 
     /**

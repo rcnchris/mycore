@@ -1,5 +1,5 @@
 <?php
-$debug = false;
+$debug = true;
 $start = microtime(true);
 require '../vendor/autoload.php';
 

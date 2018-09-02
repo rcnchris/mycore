@@ -321,6 +321,8 @@ class Common
     /**
      * Obtenir les parties d'une URL
      *
+     * - `Common::getUrlParts($url, 'host');`
+     *
      * @param string      $url  URL
      * @param string|null $part Partie de l'URL à retourner
      *
@@ -328,11 +330,10 @@ class Common
      */
     public static function getUrlParts($url, $part = null)
     {
-        $partsKeys = ['scheme', 'host', 'path', 'query'];
         $parts = parse_url($url);
         if (is_null($part)) {
             return $parts;
-        } elseif (in_array($part, $partsKeys)) {
+        } elseif (array_key_exists($part, $parts)) {
             return $parts[$part];
         }
         return false;
