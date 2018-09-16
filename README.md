@@ -161,32 +161,6 @@ $api = new AlloCine();
 $search = $api->search('Le Parrain');
 </pre>
 
-### Synology
-> Utiliser n'importe qu'elle API d'un NAS Synology.
-
-<pre class="sh_sh">
-$api = new Synology($config);
-
-// Obtenir la liste de tous les films
-$movies = $api->request('VideoStation.Movie')->toArray();
-
-// Obtenir les genres de musiques
-$genres = $api->request('AudioStation.Genre');
-
-// Chercher un film
-$movies = $syno->request(
-    'VideoStation.Movie',
-    'search',
-    [
-        'version' => 4,
-        'title' => 'parrain'
-        'limit' => 3,
-        'account' => 'titi',
-        'passwd' => 'grosminet'
-    ]
-)->toArray();
-</pre>
-
 -------
 
 ## ORM

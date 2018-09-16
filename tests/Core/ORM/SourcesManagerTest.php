@@ -25,6 +25,7 @@ class SourcesManagerTest extends OrmTestCase
         $this->assertArrayHasKey('host', $m->getSources('test'));
         $this->assertArrayHasKey('host', $m->test);
         $this->assertFalse($m->getSources('fake'));
+        $this->assertInternalType('array', $m->default);
     }
 
     public function testSetSources()
@@ -60,7 +61,7 @@ class SourcesManagerTest extends OrmTestCase
         ];
         $m = $this->getManager()->setSources($newSources, true);
         $this->assertInstanceOf(SourcesManager::class, $m);
-        $this->assertCount(3, $m->getSources());
+        $this->assertCount(4, $m->getSources());
     }
 
     public function testConnnect()

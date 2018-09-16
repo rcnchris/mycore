@@ -79,7 +79,14 @@ class ItemsTest extends BaseTestCase
                 'fruits' => ['Avocat', 'Fraise', 'Citron'],
                 'couleurs' => ['Vert', 'Rouge', 'Jaune'],
             ],
-            'config' => require $this->rootPath() . '/tests/config.php'
+            'config' => require $this->rootPath() . '/tests/config.php',
+            'synology' => [
+                'SYNO.AudioStation.Album' => [
+                    'maxVersion' => 4,
+                    'minVersion' => 1,
+                    'path' => 'AudioStation/query.cgi'
+                ]
+            ]
         ];
         $items = [];
         foreach ($this->itemsDatas as $name => $content) {
@@ -133,6 +140,11 @@ class ItemsTest extends BaseTestCase
     public function testGetWithPoint()
     {
         $this->assertEquals('Raphaël', $this->itemsArray['items']->get('1.name'));
+    }
+
+    public function testGetKeyWithPoint()
+    {
+        $this->assertInstanceOf(Items::class, $this->itemsArray['synology']->get('SYNO.AudioStation.Album', false));
     }
 
     public function testMagicGet()
@@ -290,6 +302,12 @@ class ItemsTest extends BaseTestCase
     {
         $this->assertFalse($this->itemsArray['stringList']->isEmpty());
         $this->assertTrue($this->makeItems([])->isEmpty());
+    }
+
+    public function testNotEmpty()
+    {
+        $this->assertTrue($this->itemsArray['stringList']->NotEmpty());
+        $this->assertFalse($this->makeItems([])->NotEmpty());
     }
 
     public function testFirst()

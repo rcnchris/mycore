@@ -60,7 +60,7 @@ class AdressesApiGouv extends Curl
      *
      * @var string
      */
-    private $fieldsCommmunes = 'nom,code,codesPostaux,centre,surface,contour,codeDepartement,departement,codeRegion,region,population';
+    private $fieldsCommmunes = 'nom,code,codesPostaux,centre,surface,codeDepartement,departement,codeRegion,region,population';
 
     /**
      * Liste de tous les champs d'un département
@@ -79,60 +79,170 @@ class AdressesApiGouv extends Curl
 
     /**
      * Obtenir la liste des régions ou l'une d'entre elles
-     * - `$adr->getRegions()->extract('nom', 'code')->toArray();`
      *
-     * @param string|null $code   Code de la région
-     * @param string|null $format Format de la réponse
+     * - `$adr->getRegions()->toArray();`
+     * - `$adr->getRegions(93)->toArray();`
+     *
+     * @param string|null $code Code de la région
      *
      * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function getRegions($code = null, $format = 'json')
+    public function getRegions($code = null)
     {
-        $this->withParts('regions');
-        $this->withParams(compact('code', 'format'));
-        return $this->exec("Régions")->getResponse();
+        return $this
+            ->withParts("regions/$code")
+            ->withParams(['format' => 'json'])
+            ->exec("Régions")
+            ->getResponse();
     }
 
     /**
-     * Liste les départements ou l'un d'entre eux
-     * - `$adr->getDepartements()->extract('nom', 'code')->toArray();`
+     * Recherche de départements
      *
-     * @param string|null $code   Code du département
-     * @param string|null $format Format de la réponse
+     * - `$adr->searchDepartements()->toArray();`
+     * - `$adr->searchDepartements('code', 83)->toArray();`
+     * - `$adr->searchDepartements('nom', 'var')->toArray();`
+     * - `$adr->searchDepartements('codeRegion', 'var')->toArray();`
+     *
+     * @param string|null     $param  Nom du paramètre de recherche
+     * @param string|int|null $value  Valeur du paramètre
+     * @param string|null     $format Format du retour
      *
      * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function getDepartements($code = null, $format = 'json')
+    public function searchDepartements($param = null, $value = null, $format = 'json')
     {
         $this->withParts('departements');
         $params = [
-            'code' => $code,
+            $param => $value,
             'fields' => $this->fieldsDepartements,
             'format' => $format
         ];
         $this->withParams($params);
-        return $this->exec("Départements")->getResponse();
+        $response = $this->exec("Départements")->getResponse();
+        if ($response->count() === 1) {
+            return $response->first();
+        }
+        return $response;
     }
 
     /**
-     * Liste les communes ou l'une d'entre elles
-     * - `$adr->getCommunes(83000)->toArray();`
+     * Récupérer les informations concernant un département par son code
      *
-     * @param string      $departement Code du département
-     * @param string|null $format      Format de la réponse
+     * - `$adr->getDepartement(83)->toArray();`
      *
-     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
+     * @param string|int $code Code du département
+     *
+     * @return \Intervention\Image\Image|null|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function getCommunes($departement, $format = 'json')
+    public function getDepartement($code)
+    {
+        $this->withParts("departements/$code");
+        $params = [
+            'fields' => $this->fieldsDepartements,
+            'format' => 'json'
+        ];
+        $this->withParams($params);
+        $response = $this->exec("Obtenir le département : $code")->getResponse();
+        return $response;
+    }
+
+    /**
+     * Rechercher des communes par leur code postal
+     *
+     * - `$adr->searchCommunes('nom', 'sanary')->toArray();`
+     * - `$adr->searchCommunes('code', 83123)->toArray();`
+     * - `$adr->searchCommunes('codePostal', 83110)->toArray();`
+     * - `$adr->searchCommunes('codeDepartement', 83)->toArray();`
+     *
+     * @param string      $param  Nom du paramètre
+     * @param string|int  $value  Valeur du paramètre
+     * @param string|null $format Format du retour
+     *
+     * @return \Intervention\Image\Image|null|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
+     */
+    public function searchCommunes($param, $value, $format = 'json')
     {
         $this->withParts('communes');
         $params = [
-            'codePostal' => $departement,
+            $param => $value,
             'fields' => $this->fieldsCommmunes,
-            'format' => $format
+            'format' => $format,
+            'geometry' => 'centre'
         ];
         $this->withParams($params);
-        return $this->exec("Communes")->getResponse();
+        $communes = $this
+            ->exec("Recherche de communes par $param : $value")
+            ->getResponse();
+        if ($communes->count() === 1) {
+            return $communes->first();
+        }
+        return $communes;
+    }
+
+    /**
+     * Récupérer les informations concernant une commune
+     *
+     * @param string|int $codeInsee Code INSEE de la commune
+     *
+     * @return \Intervention\Image\Image|null|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
+     */
+    public function getCommune($codeInsee)
+    {
+        $this->withParts("communes/$codeInsee");
+        $params = [
+            'fields' => $this->fieldsCommmunes,
+            'format' => 'json',
+            'geometry' => 'centre'
+        ];
+        $this->withParams($params);
+        $communes = $this
+            ->exec("Obtenir une commune par son code INSEE : $codeInsee")
+            ->getResponse();
+        return $communes;
+    }
+
+    /**
+     * Obtenir les communes d'un département par son code
+     *
+     * - `$api->getCommunesDuDepartement(83);`
+     *
+     * @param string|int  $departement Code du département
+     * @param string|null $format      Format du retour
+     *
+     * @return \Intervention\Image\Image|null|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
+     */
+    public function getCommunesDuDepartement($departement, $format = 'json')
+    {
+        $this->withParts("departements/$departement/communes");
+        $params = [
+            'fields' => $this->fieldsCommmunes,
+            'format' => $format,
+            'geometry' => 'centre'
+        ];
+        $this->withParams($params);
+        return $this->exec("Communes du département $departement")->getResponse();
+    }
+
+    /**
+     * Obtenir les départements d'une région
+     *
+     * - `$adr->getCommunesDuDepartement(83)->toArray();`
+     *
+     * @param string|int $codeRegion Code de la région
+     *
+     * @return \Intervention\Image\Image|null|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
+     */
+    public function getDepartementsDeRegion($codeRegion)
+    {
+        $this->withParts("regions/$codeRegion/departements");
+        $params = [
+            'code' => $codeRegion,
+            'fields' => $this->fieldsDepartements,
+            'format' => 'json'
+        ];
+        $this->withParams($params);
+        return $this->exec("Départements de la région $codeRegion")->getResponse();
     }
 
     /**

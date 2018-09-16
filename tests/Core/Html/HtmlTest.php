@@ -193,7 +193,7 @@ class HtmlTest extends BaseTestCase
 
     public function testTableWithSimpleListColMode()
     {
-        $list = ['ola','ole','oli'];
+        $list = ['ola','ole','oli', (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05')];
         $expect = '
         <table>
             <thead>
@@ -201,6 +201,7 @@ class HtmlTest extends BaseTestCase
                     <th>0</th>
                     <th>1</th>
                     <th>2</th>
+                    <th>3</th>
                 </tr>
             </thead>
             <tbody>
@@ -208,6 +209,7 @@ class HtmlTest extends BaseTestCase
                     <td>ola</td>
                     <td>ole</td>
                     <td>oli</td>
+                    <td>15-10-1975 05:15:05</td>
                 </tr>
             </tbody>
         </table>
@@ -295,6 +297,7 @@ class HtmlTest extends BaseTestCase
             'Mathis' => 12,
             'Raphaël' => 14,
             'Clara' => 16,
+            'Date' => (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05')
         ];
         $expect = '
         <table>
@@ -302,6 +305,7 @@ class HtmlTest extends BaseTestCase
                 <tr><th>Mathis</th><td>12</td></tr>
                 <tr><th>Raphaël</th><td>14</td></tr>
                 <tr><th>Clara</th><td>16</td></tr>
+                <tr><th>Date</th><td>15-10-1975 05:15:05</td></tr>
             </tbody>
         </table>
         ';
@@ -470,5 +474,12 @@ class HtmlTest extends BaseTestCase
     {
         $expect='<button type="submit">Feu</button>';
         $this->assertSimilar($expect, $this->html->button('Feu'));
+    }
+
+    public function testSelectsAdresse()
+    {
+        $this->assertInternalType('string', $this->html->selectVilles(83));
+        $this->assertInternalType('string', $this->html->selectRegions());
+        $this->assertInternalType('string', $this->html->selectDepartements());
     }
 }

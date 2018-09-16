@@ -316,7 +316,10 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
             $indexes = explode('.', $key);
             return $this->getValue($indexes, $this->items);
         } else {
-            return new self($this->items[$key]);
+            $value = $this->items[$key];
+            return is_array($value)
+                ? new self($value)
+                : $value;
         }
     }
 
@@ -443,14 +446,16 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
     /**
      * Obtenir le premier élément des items
      *
-     * @return self
+     * @param bool|null $withPoint Si faux, Supprime la notation par point
+     *
+     * @return \Rcnchris\Core\Tools\Items
      * @see http://php.net/manual/fr/function.array-slice.php
      */
-    public function first()
+    public function first($withPoint = true)
     {
         $keys = $this->keys()->toArray();
         $firstKey = array_slice($keys, 0, 1);
-        return $this->get($firstKey[0]);
+        return $this->get($firstKey[0], $withPoint);
     }
 
     /**

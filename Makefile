@@ -31,7 +31,7 @@ install: ## Installation du projet
 	@echo -e '$(OK_COLOR)Installation du projet$(NO_COLOR)'
 	@rm -r vendor
 	@rm -r composer.lock
-	@composer install
+	@composer install --ignore-platform-reqs
 
 permprod: ## Permissions des dossiers et fichiers
 	@echo -e '$(OK_COLOR)Permissions des dossiers et fichiers pour la production$(NO_COLOR)'

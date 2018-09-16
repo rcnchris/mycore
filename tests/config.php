@@ -41,6 +41,14 @@ return [
             'port' => 0,
             'fileName' => realpath(dirname(__DIR__) . '/public/dbApp.sqlite')
         ],
+        'demo' => [
+            'host' => '192.168.1.2',
+            'username' => 'demo',
+            'password' => 'demo',
+            'dbName' => 'demo',
+            'sgbd' => 'mysql',
+            'port' => 3306
+        ],
         'test' => [
             'host' => 'dbTests',
             'username' => '',

@@ -2,6 +2,7 @@
 namespace Tests\Rcnchris\Core\PDF;
 
 use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\Writer;
 
 class AbstractPDFTest extends PdfTestCase
 {
@@ -342,9 +343,16 @@ class AbstractPDFTest extends PdfTestCase
 
     public function testSetWriter()
     {
+        $this->ekoMessage("Définir le Writer");
         $this->assertInstanceOf(
             AbstractPDF::class,
             $this->makePdf()->setWriter()
         );
+    }
+
+    public function testGetWriter()
+    {
+        $this->ekoMessage("Obtenir l'instance du Writer");
+        $this->assertInstanceOf(Writer::class, $this->makePdf()->getWriter());
     }
 }

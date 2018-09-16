@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\Apis;
 
+use Intervention\Image\Image;
 use Rcnchris\Core\Apis\Curl;
 use Rcnchris\Core\Tools\Items;
 use Tests\Rcnchris\BaseTestCase;
@@ -21,6 +22,7 @@ class CurlTest extends BaseTestCase
     private $baseUrls = [
         'geo' => 'https://geo.api.gouv.fr',
         'user' => 'https://randomuser.me/api/',
+        'image' => 'http://lorempicsum.com/futurama/255/200/5'
     ];
 
     public function setUp()
@@ -139,7 +141,7 @@ class CurlTest extends BaseTestCase
                 ->withParams([
                     'fields' => 'nom,code',
                     'format' => 'json'
-                ])
+                ], true)
         );
         $this->assertEquals($url . '/regions/93/departements?fields=nom,code&format=json', $curl->getUrl(true));
         $this->assertInstanceOf(Items::class, $curl->getParams());
@@ -152,6 +154,17 @@ class CurlTest extends BaseTestCase
 
         $response = $curl->exec('Départements de la région PACA')->getResponse();
         $this->assertInstanceOf(Items::class, $response);
+    }
+
+    public function testGetResponseWithImage()
+    {
+        $this->ekoMessage("JSON");
+        $response = $this
+            ->makeCurl($this->baseUrls['image'])
+            ->exec('Test image')
+            ->getResponse();
+        $this->assertInstanceOf(Image::class, $response);
+
     }
 
     public function testGetResponseWithError()

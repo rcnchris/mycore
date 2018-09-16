@@ -18,6 +18,7 @@
 
 namespace Rcnchris\Core\Html;
 
+use Rcnchris\Core\Apis\ApiGouv\AdressesApiGouv;
 use Rcnchris\Core\Tools\Items;
 
 /**
@@ -470,6 +471,73 @@ class Html
     {
         $attributes['type'] = $type;
         return self::surround($label, 'button', $attributes);
+    }
+
+    /**
+     * Obtenir une liste déroulante des régions de France
+     *
+     * @param array|null $attributes Attributs du select
+     *
+     * @return string
+     */
+    public function selectRegions(array $attributes = [])
+    {
+        $regions = (new AdressesApiGouv())
+            ->getRegions()
+            ->extract('nom', 'code')
+            ->toArray();
+
+        $attributes = array_merge([
+            'label' => 'Régions de France',
+            'items' => $regions
+        ], $attributes);
+
+        return $this->field('regions', null, $attributes);
+    }
+
+    /**
+     * Obtenir une liste déroulante des départements de France
+     *
+     * @param array|null $attributes Attributs du select
+     *
+     * @return string
+     */
+    public function selectDepartements(array $attributes = [])
+    {
+        $departements = (new AdressesApiGouv())
+            ->searchDepartements()
+            ->extract('nom', 'code')
+            ->toArray();
+
+        $attributes = array_merge([
+            'label' => 'Départements de France',
+            'items' => $departements
+        ], $attributes);
+
+        return $this->field('departements', null, $attributes);
+    }
+
+    /**
+     * Obtenir une liste déroulante des villes d'un département
+     *
+     * @param string     $departement Code du département
+     * @param array|null $attributes  Attributs du select
+     *
+     * @return null|string
+     */
+    public function selectVilles($departement, array $attributes = [])
+    {
+        $departements = (new AdressesApiGouv())
+            ->getCommunesDuDepartement($departement)
+            ->extract('nom', 'code')
+            ->toArray();
+
+        $attributes = array_merge([
+            'label' => "Villes du département $departement",
+            'items' => $departements
+        ], $attributes);
+
+        return $this->field('departements', null, $attributes);
     }
 
     /**

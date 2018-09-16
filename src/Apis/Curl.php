@@ -18,8 +18,10 @@
 
 namespace Rcnchris\Core\Apis;
 
+use Intervention\Image\ImageManagerStatic;
 use Rcnchris\Core\Tools\Items;
 use Rcnchris\Core\Tools\Text;
+use SimpleXMLElement;
 
 /**
  * Class Curl
@@ -114,7 +116,7 @@ class Curl
      */
     public function __destruct()
     {
-        if(!is_null($this->curl)) {
+        if (!is_null($this->curl)) {
             curl_close($this->curl);
         }
     }
@@ -229,18 +231,20 @@ class Curl
     /**
      * Obtenir la réponse cURL sous forme d'objet en fonction de son contenu, type, statut...
      *
-     * @return mixed|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
+     * @return \Intervention\Image\Image|null|\Rcnchris\Core\Tools\Items|SimpleXMLElement
      */
     public function getResponse()
     {
         if ($this->getHttpCode() === 200) {
 
+            $response = null;
+
             if ($this->getContentType() === 'application/json' || $this->getContentType() === 'text/plain') {
                 $content = json_decode($this->response, true);
                 if (is_array($content)) {
-                    return new Items($content);
+                    $response = new Items($content);
                 } else {
-                    return new Items([
+                    $response = new Items([
                         'error' => json_last_error_msg(),
                         'infos' => $this->getInfos(),
                         'response' => $this->response
@@ -249,24 +253,21 @@ class Curl
             }
 
             if ($this->getContentType() === 'text/xml') {
-                return simplexml_load_string($this->response);
+                $response = simplexml_load_string($this->response);
             }
 
             if ($this->getContentType() === 'image/jpeg') {
-                return $this->response;
+                $response = ImageManagerStatic::make($this->getUrl());
             }
-
-            return $this->response;
-
-        } else {
-
-            return new Items([
-                'error' => $this->getHttpCode(),
-                'infos' => $this->getInfos(),
-                'response' => $this->response,
-                'curlError' => curl_error($this->curl)
-            ]);
+            return $response;
         }
+
+        return new Items([
+            'error' => $this->getHttpCode(),
+            'infos' => $this->getInfos(),
+            'response' => $this->response,
+            'curlError' => curl_error($this->curl)
+        ]);
     }
 
     /**
