@@ -236,7 +236,6 @@ class Curl
     public function getResponse()
     {
         if ($this->getHttpCode() === 200) {
-
             $response = null;
 
             if ($this->getContentType() === 'application/json' || $this->getContentType() === 'text/plain') {

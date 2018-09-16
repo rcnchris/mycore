@@ -529,10 +529,11 @@ class Text
     /**
      * Obtenir le texte à gauche d'un caractère.
      *
-     * @param string $string Caractère séparateur
-     * @param string $text   Texte à découper
+     * @param string     $string  Caractère séparateur
+     * @param string     $text    Texte à découper
+     * @param mixed|null $default Valeur à retourner si rien n'est trouvé
      *
-     * @return string|null
+     * @return null|string
      */
     public static function getBefore($string, $text, $default = null)
     {
