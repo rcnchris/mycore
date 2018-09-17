@@ -250,4 +250,9 @@ class TextTest extends BaseTestCase
         $this->assertTrue(Text::isAscii('ola'));
         $this->assertFalse(Text::isAscii('ol§'));
     }
+
+    public function testGetSourceFile()
+    {
+        $this->assertInternalType('string', Text::showSource(__FILE__));
+    }
 }

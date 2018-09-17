@@ -28,8 +28,23 @@ class EntityTest extends OrmTestCase
             'title' => 'On vérifie les dates',
             'category_id' => 1
         ]);
-        $this->assertEquals('On vérifie les dates', $this->model->find($this->model->lastInsertId())->title);
-        $this->assertInstanceOf(\DateTime::class, $this->model->find(21)->created);
+        $idInsert = $this->model->lastInsertId();
+        $this->assertEquals('On vérifie les dates', $this->model->find($idInsert)->title);
+        $this->assertInstanceOf(\DateTime::class, $this->model->find($idInsert)->created);
+    }
+
+    public function testSetDatesWithDates()
+    {
+        $date = date('Y-m-d H:i:s');
+        $this->model->insert([
+            'title' => 'On vérifie les dates',
+            'category_id' => 1,
+            'created' => $date,
+            'modified' => $date,
+        ]);
+        $idInsert = $this->model->lastInsertId();
+        $this->assertEquals('On vérifie les dates', $this->model->find($idInsert)->title);
+        $this->assertInstanceOf(\DateTime::class, $this->model->find($idInsert)->created);
     }
 
     public function testGetPropertiesOfModel()

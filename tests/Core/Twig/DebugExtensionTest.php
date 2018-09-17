@@ -92,6 +92,11 @@ class DebugExtensionTest extends BaseTestCase {
         );
     }
 
+    public function testGetTraits()
+    {
+        $this->assertInternalType('array', $this->ext->getTraits($this));
+    }
+
     public function testGetImplements()
     {
         $this->assertEquals(

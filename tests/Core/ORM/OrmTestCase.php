@@ -23,7 +23,7 @@ class OrmTestCase extends BaseTestCase
 
     public function setUp()
     {
-        if ($this->getConfig('config.name') != 'local') {
+        if ($this->getConfig('configName') != 'local') {
             $this->markTestSkipped('Uniquement en local');
         }
         $this->manager = $this->getManager();

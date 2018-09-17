@@ -20,6 +20,9 @@ namespace Rcnchris\Core\Tools;
 
 /**
  * Class Debug
+ * <ul>
+ * <li>Fournit des méthodes de debug</li>
+ * </ul>
  *
  * @category Debug
  *

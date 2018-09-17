@@ -23,6 +23,9 @@ use Rcnchris\Core\Tools\Items;
 
 /**
  * Class Html
+ * <ul>
+ * <li>Génération de balises HTML</li>
+ * </ul>
  *
  * @category HTML
  *
@@ -329,6 +332,7 @@ class Html
             return null;
         }
         $css = self::$cdns->get($key)->get('core')->get($version)->get('css')->get($type);
+
         if ($css) {
             $defaultAttributes = [
                 'href' => self::$cdns->get($key)->get('prefix') . $css,
@@ -346,7 +350,7 @@ class Html
      * @param string      $key        Nom du CDN
      * @param string|null $type       Type de script (src ou min)
      * @param array|null  $attributes Attributs de la balise `script`
-     * @param string      $version    Version demandée
+     * @param string|null $version    Version demandée
      *
      * @return null|string
      */

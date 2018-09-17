@@ -381,9 +381,9 @@ class Model
     }
 
     /**
-     * Définit le nom de la table du model
+     * Définir le nom de la table du modèle
      *
-     * ### Exemple
+     * ### Example
      * - `$posts->setTable('posts');`
      *
      * @param string      $table Nom de la table du model
@@ -400,7 +400,7 @@ class Model
     /**
      * Obtenir l'instance de PDO
      *
-     * ### Exemple
+     * ### Example
      * - `$posts->getPdo();`
      *
      * @return \PDO
@@ -414,7 +414,7 @@ class Model
      * Exécute une commande SQL
      * et retourne le résultat sous forme d'instance de QueryResult
      *
-     * ### Exemple
+     * ### Example
      * - `$posts->query('SELECT * FROM categories');`
      * - `$posts->query('SELECT * FROM categories WHERE id = :id', ['id' => 3]);`
      *
@@ -438,7 +438,7 @@ class Model
     /**
      * Obtenir le nom court du model
      *
-     * ### Exemple
+     * ### Example
      * - `$posts->getName();`
      *
      * @return string
@@ -453,7 +453,7 @@ class Model
     /**
      * Obtenir le dernier id inséré
      *
-     * ### Exemple
+     * ### Example
      * - `$posts->lastInsertId();`
      *
      * @return string
@@ -466,7 +466,7 @@ class Model
     /**
      * Génère la liste des champs et la valeur
      *
-     * ### Exemple
+     * ### Example
      * - `$posts->buildFieldQuery(['id' => 12]);`
      *
      * @param array $params
@@ -498,7 +498,7 @@ class Model
     /**
      * Ajoute une relation hasMany (a plusieurs)
      *
-     * ### Exemple
+     * ### Example
      * - `$this->hasMany('tags', [
      *       'join' => 'left'
      *      , 'joinTable' => 'images_tags'
@@ -522,7 +522,7 @@ class Model
     /**
      * Ajoute une relation à la liste des relations
      *
-     * ### Exemple
+     * ### Example
      * - `$model->addRelation('tags', );`
      *
      * @param       $tableName
@@ -536,7 +536,7 @@ class Model
     /**
      * Liste des relations du model
      *
-     * ### Exemple
+     * ### Example
      * - `$posts->getRelations();`
      *
      * @return Relation[]
@@ -549,7 +549,7 @@ class Model
     /**
      * Liste des propriétés de l'entité
      *
-     * ### Exemple
+     * ### Example
      * - `$posts->getProperties();`
      *
      * @return array
@@ -561,6 +561,7 @@ class Model
 
     /**
      * Obtenir l'ensemble de la table dans un tableau
+     *
      * @return array
      */
     public function toArray()

@@ -62,16 +62,16 @@ class PoweredByMiddlewareTest extends BaseTestCase
     {
         $request = $this->makeRequestPsr7();
         $response = $this->makeResponsePsr7();
+        $middleware = (new PoweredByMiddleware())
+            ->withContainer($this->makeContainer([
+                'name' => 'Mathis',
+                'debug' => true
+            ]));
+        $this->assertEquals('Mathis', $middleware->name);
+
         $this->assertInstanceOf(
             ResponseInterface::class,
-            (new PoweredByMiddleware())
-                ->withContainer(
-                    $this->makeContainer([
-                        'name' => 'Mathis',
-                        'debug' => true
-                    ])
-                )
-                ->__invoke(
+            $middleware->__invoke(
                     $request,
                     $response,
                     function ($request, $response) {

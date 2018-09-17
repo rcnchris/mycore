@@ -25,6 +25,9 @@ use SimpleXMLElement;
 
 /**
  * Class Curl
+ * <ul>
+ * <li>Effectuer des requêtes HTTP et obtenir le résultat</li>
+ * </ul>
  *
  * @category API
  *
@@ -95,6 +98,7 @@ class Curl
     /**
      * Constructeur
      *
+     * ### Example
      * - `$api = new Curl();`
      * - `$api = new Curl('https://geo.api.gouv.fr/regions');`
      *
@@ -134,6 +138,7 @@ class Curl
     /**
      * Définir une ou plusieurs options de transmission de cURL
      *
+     * ### Example
      * - `$url->setOptions(CURLOPT_AUTOREFERER, false);`
      * - `$url->setOptions([CURLOPT_AUTOREFERER => false, CURLOPT_RETURNTRANSFER => false]);`
      *
@@ -411,6 +416,7 @@ class Curl
     /**
      * Obtenir les parties de l'URL dans un objet ou la valeur d'une clé
      *
+     * ### Example
      * - `$api->parseUrl()->toArray();`
      * - `$api->parseUrl('host');`
      *
@@ -483,6 +489,7 @@ class Curl
     /**
      * Obtenir des informations de l'extension PECL si elle est disponible
      *
+     * ### Example
      * - `$api->getGeoipInfos('country_name_by_name', $api->parseUrl('host'));`
      *
      * @param string     $type  Fin du nom de la fonction à utiliser

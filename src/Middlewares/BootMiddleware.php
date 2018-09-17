@@ -47,7 +47,7 @@ class BootMiddleware extends AbstractMiddleware
      * @var array
      */
     private $defaultConfig = [
-        'php' => '5.6',
+        'php' => '5.5.9',
         'timezone' => 'Europe/Paris',
         'locale' => 'fr_FR',
         'charset' => 'utf-8',
@@ -82,12 +82,12 @@ class BootMiddleware extends AbstractMiddleware
          * Localisation
          */
         if (!is_null($this->container)) {
-            date_default_timezone_set($this->getContainer('app.timezone'));
-            mb_internal_encoding($this->getContainer('app.charset'));
+            date_default_timezone_set($this->getContainer('timezone'));
+            mb_internal_encoding($this->getContainer('charset'));
             if (extension_loaded('intl')) {
-                ini_set('intl.default_locale', $this->getContainer('app.defaultLocale'));
+                ini_set('intl.default_locale', $this->getContainer('locale'));
             }
-            setlocale(LC_MONETARY, $this->getContainer('app.defaultLocale'));
+            setlocale(LC_MONETARY, $this->getContainer('locale'));
         } else {
             date_default_timezone_set($this->defaultConfig['timezone']);
             mb_internal_encoding($this->defaultConfig['charset']);
@@ -116,7 +116,8 @@ class BootMiddleware extends AbstractMiddleware
     {
         $constants = [
             'DS' => DIRECTORY_SEPARATOR,
-            'ROOT' => dirname(dirname(__DIR__))
+            'ROOT' => dirname(dirname(__DIR__)),
+            'PREFIX' => $this->prefix()
         ];
         foreach ($constants as $name => $value) {
             if (!defined($name)) {

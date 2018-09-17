@@ -1,33 +1,32 @@
 <?php
 return [
-    'rootPath' => function () {
-        return dirname(__DIR__);
-    },
+    'rootPath' => dirname(__DIR__),
+
     /**
      * Nom de la configuration à utiliser
      * - local : Tests locaux
      * - dev : Tests Travis
      * - prod : Production
      */
-    'config.name' => 'local',
+    'configName' => 'local',
 
     /**
      * Personnalisation
      */
-    'app.prefix' => '/_lab/mycore/',
-    'app.poweredBy' => 'MRC Consulting',
-    'app.name' => 'My Core',
+    'appPrefix' => '/_lab/mycore/',
+    'appPoweredBy' => 'MRC Consulting',
+    'appName' => 'My Core',
 
     /**
      * Localisation
      */
-    'app.charset' => 'utf-8',
-    'app.timezone' => 'Europe/Paris',
-    'app.defaultLocale' => 'fr_FR',
-    'app.sep_decimal' => ',',
-    'app.sep_mil' => ' ',
-    'app.templates' => dirname(__DIR__) . '/app/Templates',
-    'app.logsPath' => dirname(__DIR__) . '/logs/app.log',
+    'charset' => 'utf-8',
+    'timezone' => 'Europe/Paris',
+    'locale' => 'fr_FR',
+    'sep_decimal' => ',',
+    'sep_mil' => ' ',
+    'templates' => dirname(__DIR__) . '/src/App/templates',
+    'logs' => dirname(__DIR__) . '/logs/app.log',
     /**
      * Database Datasources
      */
@@ -63,6 +62,16 @@ return [
      * CDN locaux et distants
      */
     'cdn' => [
+        'app' => [
+            'name' => 'MyApp',
+            'core' => [
+                'latest' => [
+                    'css' => [
+                        'src' => 'public/css/app.css',
+                    ],
+                ],
+            ]
+        ],
         'jquery' => [
             'name' => 'jQuery',
             'core' => [
@@ -83,11 +92,10 @@ return [
             'core' => [
                 'latest' => [
                     'css' => [
-                        'min' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css',
+                        'min' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
                     ],
                     'js' => [
-                        'min' => '/dist/js/bootstrap.min.js',
-                        'src' => '/dist/js/bootstrap.js',
+                        'min' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js',
                     ],
                 ]
             ],
@@ -125,6 +133,18 @@ return [
                 ]
             ]
         ],
-
+        'shjs' => [
+            'name' => 'SHJS',
+            'core' => [
+                'latest' => [
+                    'css' => [
+                        'min' => '/cdn/vendor/shjs/css/sh_acid.min.css',
+                    ],
+                    'js' => [
+                        'min' => '/cdn/vendor/shjs/sh_main.min.js',
+                    ],
+                ]
+            ],
+        ]
     ]
 ];
