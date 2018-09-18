@@ -76,7 +76,7 @@ class EnvironnementTest extends BaseTestCase
 
     public function testIp()
     {
-        if ($this->getConfig('config.name') != 'dev') {
+        if ($this->getConfig('configName') != 'dev') {
             $this->markTestSkipped('Uniquement en local');
         } else {
             $this->assertSimilar($_SERVER['SERVER_ADDR'], $this->e->getIp());

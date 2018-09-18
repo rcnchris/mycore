@@ -482,4 +482,10 @@ class HtmlTest extends BaseTestCase
         $this->assertInternalType('string', $this->html->selectRegions());
         $this->assertInternalType('string', $this->html->selectDepartements());
     }
+
+    public function testIcon()
+    {
+        $this->assertEquals('<i class="fa fa-home"></i>', $this->html->icon('home'));
+        $this->assertEquals('<span class="icon-home"></span>', $this->html->icon('icon-home', 'other'));
+    }
 }

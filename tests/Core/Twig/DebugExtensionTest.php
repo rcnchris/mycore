@@ -3,6 +3,7 @@ namespace Tests\Rcnchris\Core\Twig;
 
 use Rcnchris\Core\Apis\OneAPI;
 use Rcnchris\Core\Tools\Collection;
+use Rcnchris\Core\Tools\Items;
 use Rcnchris\Core\Twig\DebugExtension;
 use Tests\Rcnchris\BaseTestCase;
 
@@ -40,7 +41,7 @@ class DebugExtensionTest extends BaseTestCase {
      */
     public function testGetClass()
     {
-        $o = new Collection('ola,ole,oli');
+        $o = new Items('ola,ole,oli');
         $this->assertEquals(get_class($o), $this->ext->getClass($o));
     }
 
@@ -54,7 +55,7 @@ class DebugExtensionTest extends BaseTestCase {
      */
     public function testGetMethods()
     {
-        $o = new Collection('ola,ole,oli');
+        $o = new Items('ola,ole,oli');
         $methods = get_class_methods(get_class($o));
         $this->assertEquals($methods, $this->ext->getMethods($o));
     }
@@ -125,7 +126,7 @@ class DebugExtensionTest extends BaseTestCase {
     public function testIsType()
     {
         $a = ['ola', 'ole', 'oli'];
-        $c = new Collection($a);
+        $c = new Items($a);
 
         $this->assertTrue($this->ext->isArray($a));
         $this->assertTrue($this->ext->isObject($c));

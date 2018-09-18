@@ -212,13 +212,11 @@ class ItemsTest extends BaseTestCase
 
     public function testMerge()
     {
+        $items = new Items($this->itemsArray['combine']['fruits']);
+        $merge = $items->merge(['Vert', 'Rouge', 'Jaune']);
         $this->assertEquals(
             ['Avocat', 'Fraise', 'Citron', 'Vert', 'Rouge', 'Jaune'],
-            $this->itemsArray['combine']->merge('fruits', 'couleurs')->toArray()
-        );
-        $this->assertEquals(
-            ['Avocat', 'Fraise', 'Citron', 'Vert', 'Rouge', 'Jaune'],
-            $this->itemsArray['combine']->merge('fruits', 'couleurs', true)->toArray()
+            $merge->toArray()
         );
     }
 
@@ -244,8 +242,8 @@ class ItemsTest extends BaseTestCase
 
     public function testIntersectKeys()
     {
-        $a1 = ['blue'  => 1, 'red'  => 2, 'green'  => 3, 'purple' => 4];
-        $a2 = ['green' => 5, 'blue' => 6, 'yellow' => 7, 'cyan'   => 8];
+        $a1 = ['blue' => 1, 'red' => 2, 'green' => 3, 'purple' => 4];
+        $a2 = ['green' => 5, 'blue' => 6, 'yellow' => 7, 'cyan' => 8];
 
         $items = $this->makeItems(['a1' => $a1, 'a2' => $a2]);
         $this->assertEquals([

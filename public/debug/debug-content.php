@@ -19,7 +19,7 @@ if ($debug) {
 <!-- Titre -->
 <div class="row">
     <div class="col">
-        <?= Html::surround('Debug', 'h1', ['class' => 'display-3']) ?>
+        <?= Html::surround('<i class="fa fa-wrench"></i> Debug', 'h1', ['class' => 'display-3']) ?>
         <hr/>
     </div>
 </div>

@@ -5,6 +5,7 @@ use Rcnchris\Core\ORM\Model;
 use Rcnchris\Core\ORM\Query;
 use Rcnchris\Core\ORM\QueryResult;
 use Rcnchris\Core\Tools\Collection;
+use Rcnchris\Core\Tools\Items;
 
 class ModelTest extends OrmTestCase
 {
@@ -101,8 +102,8 @@ class ModelTest extends OrmTestCase
 
     public function testSetEntity()
     {
-        $this->model->setEntity(Collection::class);
-        $this->assertInstanceOf(Collection::class, $this->model->findAll()->fetch());
+        $this->model->setEntity(Items::class);
+        $this->assertInstanceOf(Items::class, $this->model->findAll()->fetch());
     }
 
     public function testExists()

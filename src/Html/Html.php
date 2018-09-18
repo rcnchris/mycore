@@ -281,6 +281,25 @@ class Html
     }
 
     /**
+     * Obtenir une balise d'icône
+     *
+     * ### Example
+     * - `$html->icon('home');`
+     *
+     * @param string      $name Nom de l'icône
+     * @param string|null $lib  Librairie à utiliser
+     *
+     * @return string
+     */
+    public function icon($name, $lib = 'fa')
+    {
+        if ($lib === 'fa') {
+            return '<i class="fa fa-' . $name . '"></i>';
+        }
+        return '<span class="' . $name . '"></span>';
+    }
+
+    /**
      * Obtenir une balise `input`
      *
      * @param array|null $attributes
@@ -319,6 +338,9 @@ class Html
     /**
      * Obtenir la balise `link` pour le CSS d'un CDN
      *
+     * ### Example
+     * - `$html->css('bootstrap', 'min');`
+     *
      * @param string      $key        Nom du CDN
      * @param string|null $type       Type de css (src ou min)
      * @param array|null  $attributes Attributs de la balise `link`
@@ -346,6 +368,9 @@ class Html
 
     /**
      * Obtenir la balise `script` d'un CDN
+     *
+     * ### Example
+     * - `$html->script('bootstrap', 'min');`
      *
      * @param string      $key        Nom du CDN
      * @param string|null $type       Type de script (src ou min)

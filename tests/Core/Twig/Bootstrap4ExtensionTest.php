@@ -2,6 +2,7 @@
 namespace Tests\Rcnchris\Core\Twig;
 
 use Rcnchris\Core\Tools\Collection;
+use Rcnchris\Core\Tools\Items;
 use Rcnchris\Core\Twig\Bootstrap4Extension;
 use Tests\Rcnchris\BaseTestCase;
 
@@ -76,9 +77,9 @@ class Bootstrap4ExtensionTest extends BaseTestCase
 
     public function testGetBadgeWithObject()
     {
-        $o = new Collection('ola,ole,oli');
+        $o = new Items('ola,ole,oli');
         $this->assertEquals(
-            '<span class="badge badge-secondary">' . json_encode(['ola', 'ole', 'oli']) . '</span>'
+            '<span class="badge badge-secondary">' . serialize(['ola', 'ole', 'oli']) . '</span>'
             , $this->ext->badge($o)
         );
     }

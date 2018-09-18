@@ -53,10 +53,8 @@ class ArrayExtensionTest extends BaseTestCase
     public function testExtract()
     {
         $tab = [
-            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
-            ,
-            ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
-            ,
+            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'],
+            ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male'],
             ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
         ];
         $this->assertEquals(
@@ -68,18 +66,14 @@ class ArrayExtensionTest extends BaseTestCase
     public function testExtractWithKey()
     {
         $tab = [
-            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
-            ,
-            ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
-            ,
+            ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'],
+            ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male'],
             ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
         ];
         $this->assertEquals(
             [
-                'Mathis' => 'male'
-                ,
-                'Raphaël' => 'male'
-                ,
+                'Mathis' => 'male',
+                'Raphaël' => 'male',
                 'Clara' => 'female'
             ]
             , $this->ext->extract($tab, 'genre', 'name')
@@ -174,7 +168,7 @@ class ArrayExtensionTest extends BaseTestCase
     public function testToHtmlWithAssociativeArray()
     {
         $tab = ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'];
-        $expect ='
+        $expect = '
             <table>
                 <tbody>
                     <tr><td>Mathis</td></tr>

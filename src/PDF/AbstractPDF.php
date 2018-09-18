@@ -18,7 +18,7 @@
 
 namespace Rcnchris\Core\PDF;
 
-use Rcnchris\Core\Tools\Collection;
+use Rcnchris\Core\Tools\Items;
 
 /**
  * Class AbstractPDF
@@ -106,7 +106,7 @@ class AbstractPDF extends \FPDF
     /**
      * Options de construction du document
      *
-     * @var \Rcnchris\Core\Tools\Collection
+     * @var Items
      */
     public $options;
 
@@ -128,10 +128,7 @@ class AbstractPDF extends \FPDF
      */
     public function __construct(array $options = [])
     {
-        $this->options = new Collection(
-            array_merge($this->defaultOptions, $options),
-            "Options de construction par défaut du document PDF"
-        );
+        $this->options = new Items(array_merge($this->defaultOptions, $options));
         parent::__construct(
             $this->options->get('orientation'),
             $this->options->get('unit'),

@@ -18,7 +18,7 @@
 
 namespace Rcnchris\Core\PDF;
 
-use Rcnchris\Core\Tools\Collection;
+use Rcnchris\Core\Tools\Items;
 
 /**
  * Class Writer
@@ -63,7 +63,7 @@ class Writer
     /**
      * Options d'écritures dans le document
      *
-     * @var \Rcnchris\Core\Tools\Collection
+     * @var Items
      */
     private $writingOptions;
 
@@ -76,10 +76,7 @@ class Writer
     public function __construct(AbstractPDF $pdf = null, array $options = [])
     {
         $this->pdf = is_null($pdf) ? new AbstractPDF() : $pdf;
-        $this->writingOptions = new Collection(
-            array_merge($this->defaultOptions, $options),
-            "Options d'écriture du Writer"
-        );
+        $this->writingOptions = new Items(array_merge($this->defaultOptions, $options));
     }
 
     /**

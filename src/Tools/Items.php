@@ -58,7 +58,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
      *
      * @see http://php.net/manual/fr/function.get-object-vars.php
      */
-    public function __construct($items)
+    public function __construct($items = null)
     {
         if (is_string($items)) {
             $json = json_decode($items, true);
@@ -135,7 +135,7 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
 
     /**
      * Obtenir les items sous forme de tableau
-     * - `$array = $collection->toArray();`
+     * - `$array = $items->toArray();`
      *
      * @param callable $filter
      *
@@ -486,28 +486,30 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
     }
 
     /**
-     * Fusionne deux tableaux en un seul
+     * Fusionne le tableau passé en paramètre avec les items de l'instance
      *
-     * @param           $k1
-     * @param           $k2
+     * ### Example
+     * - `$items->merge(['Vert', 'Rouge', 'Bleu']);`
+     *
+     * @param array $array Tableau à fusionner avec les items
      *
      * @param bool|null $recurs Ajoute les valeurs avec des clés identiques
      *
      * @return self
      * @see http://php.net/manual/fr/function.array-merge.php
      */
-    public function merge($k1, $k2, $recurs = false)
+    public function merge(array $array, $recurs = false)
     {
         if ($recurs) {
-            return new self(array_merge_recursive($this->get($k1)->toArray(), $this->get($k2)->toArray()));
+            return new self(array_merge_recursive($this->toArray(), $array));
         }
-        return new self(array_merge($this->get($k1)->toArray(), $this->get($k2)->toArray()));
+        return new self(array_merge($this->toArray(), $array));
     }
 
     /**
      * Inverser l'ordre des clés des items
      *
-     * @param mixed|null $key          Clé dont il faut inverser les clés
+     * @param mixed|null $key          Clé dont il faut inverser l'ordre des clés
      * @param bool|null  $preserveKeys Si définit à TRUE, les clés numériques seront préservées.
      *                                 Les clés non-numériques ne seront pas affectées par cette configuration,
      *                                 et seront toujours préservées.

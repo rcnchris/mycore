@@ -71,6 +71,7 @@ $html->setCdns($config->get('cdn'));
 <?= $html->script('popper', 'min') ?>
 <?= $html->script('bootstrap', 'min') ?>
 <?= $html->script('shjs', 'min') ?>
+<?= $html->script('fontawesome', 'src') ?>
 
 </body>
 </html>
