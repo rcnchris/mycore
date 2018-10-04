@@ -96,15 +96,16 @@ class Model
     /**
      * Obtenir l'instance d'une Query
      *
-     * ### Exemple
+     * ### Example
      * - `$model->makeQuery();`
      *
      * @return Query
      */
     public function makeQuery()
     {
-        return (new Query($this->getPdo()))
-            ->from($this->getTable(false))
+        return $this
+            ->getTable()
+            ->query()
             ->into($this->entity);
     }
 
@@ -178,7 +179,7 @@ class Model
             foreach ($joins as $table => $condition) {
                 $query = $query->join($table, $condition);
             }
-            $query->where($this->getTable() . ".id = $id");
+            $query->where($this->getTableName() . ".id = $id");
         } else {
             $query->where("id = $id");
         }
@@ -242,12 +243,12 @@ class Model
     /**
      * Obtenir le nom de la classe d'une entité
      *
-     * ### Exemple
-     * - `$posts->getEntity()`
+     * ### Example
+     * - `$posts->getEntityClass()`
      *
      * @return string
      */
-    public function getEntity()
+    public function getEntityClass()
     {
         return $this->entity;
     }
@@ -255,7 +256,7 @@ class Model
     /**
      * Définit la classe de l'entité
      *
-     * ### Exemple
+     * ### Example
      * - `$posts->setEntity(Collection::class)`
      *
      * @param string $entity Nom de la classe à utiliser pour une entité
@@ -277,7 +278,7 @@ class Model
      */
     public function exists($id)
     {
-        $stmt = $this->pdo->prepare("select id from {$this->getTable()} where id = ?");
+        $stmt = $this->pdo->prepare("select id from {$this->getTableName()} where id = ?");
         $stmt->execute([$id]);
         return $stmt->fetchColumn() !== false;
     }
@@ -303,7 +304,7 @@ class Model
             return ':' . $field;
         }, $fields));
         $fields = join(', ', $fields);
-        $stmt = $this->pdo->prepare("insert into {$this->getTable()} ($fields) values ($values)");
+        $stmt = $this->pdo->prepare("insert into {$this->getTableName()} ($fields) values ($values)");
         return $stmt->execute($params);
     }
 
@@ -322,7 +323,7 @@ class Model
     {
         $fieldQuery = $this->buildFieldQuery($params);
         $params['id'] = $id;
-        $stmt = $this->pdo->prepare("UPDATE " . $this->getTable() . " SET $fieldQuery WHERE id = :id");
+        $stmt = $this->pdo->prepare("UPDATE " . $this->getTableName() . " SET $fieldQuery WHERE id = :id");
         return $stmt->execute($params);
     }
 
@@ -338,7 +339,7 @@ class Model
      */
     public function delete($id)
     {
-        $stmt = $this->pdo->prepare("delete from {$this->getTable()} where id = ?");
+        $stmt = $this->pdo->prepare("delete from {$this->getTableName()} where id = ?");
         return $stmt->execute([$id]);
     }
 
@@ -350,20 +351,39 @@ class Model
      * Obtenir le nom de la table
      *
      * ### Exemple
-     * - `$posts->getTable();`
-     * - `$posts->getTable(true);`
+     * - `$posts->getTableName();`
+     * - `$posts->getTableName(true);`
      *
      * @param bool|null $withAlias Ajout de la mention 'as alias' après le nom de la table
      *
      * @return string
      */
-    public function getTable($withAlias = false)
+    public function getTableName($withAlias = false)
     {
         $tableName = current($this->table);
         if ($withAlias) {
             return $tableName . ' as ' . array_search($tableName, $this->table);
         }
         return $tableName;
+    }
+
+    /**
+     * Obtenir l'instance de d'une table
+     *
+     * ### Example
+     * - `$model->getTable();`
+     * - `$model->getTable('tabs');`
+     *
+     * @param string|null $name Nom de la table
+     *
+     * @return \Rcnchris\Core\ORM\Table
+     */
+    public function getTable($name = null)
+    {
+        $tableName = is_null($name)
+            ? $this->getTableName()
+            : $name;
+        return new Table($tableName, $this->getPdo());
     }
 
     /**
@@ -376,7 +396,7 @@ class Model
      */
     public function getAlias()
     {
-        $parts = explode(' ', $this->getTable(true));
+        $parts = explode(' ', $this->getTableName(true));
         return array_pop($parts);
     }
 
@@ -490,7 +510,7 @@ class Model
     {
         $options = array_merge([
             'type' => __FUNCTION__,
-            'mainTable' => $this->getTable()
+            'mainTable' => $this->getTableName()
         ], $options);
         $this->addRelation(strtolower($tableName), $options);
     }
@@ -514,7 +534,7 @@ class Model
     {
         $options = array_merge([
             'type' => __FUNCTION__,
-            'mainTable' => $this->getTable()
+            'mainTable' => $this->getTableName()
         ], $options);
         $this->addRelation($tableName, $options);
     }

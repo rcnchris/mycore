@@ -97,7 +97,7 @@ class ModelTest extends OrmTestCase
 
     public function testGetEntity()
     {
-        $this->assertEquals(\stdClass::class, $this->model->getEntity());
+        $this->assertEquals(\stdClass::class, $this->model->getEntityClass());
     }
 
     public function testSetEntity()

@@ -19,7 +19,7 @@ class EntityTest extends OrmTestCase
     public function testInstance()
     {
         parent::testInstance();
-        $this->assertEquals(PostsEntity::class, $this->model->getEntity());
+        $this->assertEquals(PostsEntity::class, $this->model->getEntityClass());
     }
 
     public function testSetDates()

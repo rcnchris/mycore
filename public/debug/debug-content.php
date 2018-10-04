@@ -24,6 +24,6 @@ if ($debug) {
     </div>
 </div>
 <?php //include 'apigouv.php'; ?>
-<?php include 'html.php'; ?>
-<?php // include 'orm.php'; ?>
-<?php // include 'accordion.php'; ?>
+<?php //include 'html.php'; ?>
+<?php include 'orm.php'; ?>
+<?php //include 'accordion.php'; ?>

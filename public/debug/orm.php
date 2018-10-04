@@ -1,4 +1,5 @@
 <div class="row">
+
     <div class="col-6">
         <h2>Manager de sources de données</h2>
         <pre class="sh_php"> $manager = new SourcesManager($config->get('datasources'));</pre>
@@ -30,6 +31,7 @@
         r($db->getAvailableDrivers());
         ?>
     </div>
+
     <div class="col-6">
         <h2>Une Table</h2>
         <pre class="sh_php"> $users = new Table('users', $db);</pre>
@@ -85,5 +87,151 @@
             </tbody>
         </table>
         <pre class="sh_sql"><?= $query->__toString() ?></pre>
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <hr/>
+    </div>
+    <div class="col-6">
+        <h2>Modèle</h2>
+        <?php
+        $users = new \Tests\Rcnchris\Core\ORM\UsersModel($db);
+        r($users);
+        ?>
+    </div>
+    <div class="col-6">
+        <h2>Méthodes</h2>
+
+        <div class="row">
+            <div class="col-6">
+                <p>Nom du modèle</p>
+            </div>
+            <div class="col-6">
+                <pre class="sh_php"> $users->getName();</pre>
+                <div class="alert alert-secondary">
+                    <?= $users->getName() ?>
+                </div>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p>Nom de la table</p>
+            </div>
+            <div class="col-6">
+                <pre class="sh_php"> $users->getTableName();</pre>
+                <div class="alert alert-secondary">
+                    <?= $users->getTableName() ?>
+                </div>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p>Alias de la table</p>
+            </div>
+            <div class="col-6">
+                <pre class="sh_php"> $users->getAlias();</pre>
+                <div class="alert alert-secondary">
+                    <?= $users->getAlias() ?>
+                </div>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p>Nombre d'enregistrements</p>
+            </div>
+            <div class="col-6">
+                <pre class="sh_php"> $users->count();</pre>
+                <div class="alert alert-secondary">
+                    <?= $users->count() ?>
+                </div>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p>Obtenir les enregistrements dans un tableau</p>
+            </div>
+            <div class="col-6">
+                <pre class="sh_php"> $users->->findAll()->all()->toArray();</pre>
+                <?= r($users->findAll()->all()->toArray()) ?>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                Obtenir une liste des enregistrements
+            </div>
+            <div class="col-6">
+                <pre class="sh_php"> $users->findList('prenom');</pre>
+                <?= r($users->findList('prenom')) ?>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p>Obtenir les propriétés d'une entité</p>
+            </div>
+            <div class="col-6">
+                <pre class="sh_php"> $users->getProperties();</pre>
+                <?= r($users->getProperties()) ?>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p>Obtenir un enregistrement par son identifiant</p>
+            </div>
+            <div class="col-6">
+                <pre class="sh_php"> $users->find(1);</pre>
+                <?= r($users->find(1)) ?>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p>Obtenir un enregistrement par la valeur d'un champ</p>
+            </div>
+            <div class="col-6">
+                <pre class="sh_php"> $users->findBy('username', 'rcn');</pre>
+                <?= r($users->findBy('username', 'rcn')) ?>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <p>Obtenir l'instance de la table</p>
+            </div>
+            <div class="col-4">
+                <pre class="sh_php"> $users->getTable();</pre>
+                <?= r($users->getTable()) ?>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
     </div>
 </div>
