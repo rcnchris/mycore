@@ -209,7 +209,7 @@ class Debug
      *
      * @param mixed $variable Variable qui doit être un objet
      *
-     * @return $this
+     * @return mixed
      * @throws \Exception
      */
     private static function isObject($variable)

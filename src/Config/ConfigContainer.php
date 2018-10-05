@@ -57,6 +57,18 @@ class ConfigContainer implements ContainerInterface
     }
 
     /**
+     * Obtenir la valeur d'une clé
+     *
+     * @param string $key Nom de la clé à retourner
+     *
+     * @return mixed
+     */
+    public function __get($key)
+    {
+        return $this->get($key);
+    }
+
+    /**
      * Finds an entry of the container by its identifier and returns it.
      *
      * @param string $key Identifier of the entry to look for.

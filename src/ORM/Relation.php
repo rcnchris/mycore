@@ -37,11 +37,11 @@ class Relation
 {
 
     /**
-     * Nom de la table principale
+     * Instance du modèle principal
      *
-     * @var string
+     * @var Model
      */
-    public $mainTable;
+    public $mainModel;
 
     /**
      * Nom de la table à joindre
@@ -49,6 +49,13 @@ class Relation
      * @var string
      */
     public $refTable;
+
+    /**
+     * Options de la relation
+     *
+     * @var array
+     */
+    public $options = [];
 
     /**
      * Constructeur
@@ -60,7 +67,43 @@ class Relation
     {
         $this->refTable = $tableName;
         foreach ($options as $k => $v) {
-            $this->$k = $v;
+            $this->options[$k] = $v;
         }
+        $this->mainModel = $this->options['mainModel'];
+        unset($this->options['mainModel']);
+    }
+
+    /**
+     * Obtenir la description verbeuse de la relation
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return 'One ' . $this->mainModel->getTableName() . ' '
+        . $this->options['type'] . ' '
+        . $this->refTable . ' where '
+        . $this->options['conditions'];
+    }
+
+    /**
+     * Obtenir la liste des enregistrements liés
+     *
+     * @return array
+     */
+    public function findList()
+    {
+        $query = new Query($this->mainModel->getPdo());
+        if (isset($this->options['conditions'])) {
+            $conditions = $this->options['conditions'];
+            if (is_array($conditions)) {
+                foreach ($conditions as $field => $value) {
+                    $query->where($field . ' = ' . $value);
+                }
+            } elseif (is_string($conditions)) {
+                $query->where($conditions);
+            }
+        }
+        return $query->from($this->refTable)->all()->toArray();
     }
 }

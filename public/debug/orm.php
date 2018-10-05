@@ -233,5 +233,49 @@
                 <hr/>
             </div>
         </div>
+        <div class="row">
+            <div class="col-6">
+                <p>Obtenir les relations de la table</p>
+            </div>
+            <div class="col-4">
+                <pre class="sh_php"> $users->getRelations();</pre>
+                <?= r($users->getRelations()) ?>
+            </div>
+            <div class="col-12">
+                <hr/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <hr/>
+    </div>
+    <div class="col">
+        <h2>Relation belongsTo</h2>
+        <?php
+        $relation = $users->getRelations()[0];
+        r($relation);
+        echo $relation;
+        r($relation->findList())
+        ?>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <hr/>
+    </div>
+    <div class="col">
+        <h2>Entité</h2>
+        <?php
+        /** @var Tests\Rcnchris\Core\ORM\User $user */
+        $user = $users->find(1);
+        r($user);
+        r($user->getProperties());
+        r($user->birthday->format('d-m-Y'));
+        r($user->civilite);
+        ?>
     </div>
 </div>

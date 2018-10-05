@@ -145,11 +145,11 @@ $cookies->set('ip', '192.168.1.1')
 ## Apis
 > Package qui permet d'utiliser n'importe qu'elle API facilement et quelques APIs dédiées.
 
-### CurlAPI
+### Curl
 > Utiliser n'importe quelle API à partir de son URL.
 
 <pre class="sh_sh">
-$api = new CurlAPI('https://randomuser.me/api');
+$api = new Curl('https://randomuser.me/api');
 $users = $api->exec(['results' => 3])->toArray();
 </pre>
 
@@ -184,12 +184,12 @@ $pdoMysql = DbFactory::get('192.168.1.1', 3306, 'user', 'secret', 'home', 'mysql
 $pdoSqlsrv = DbFactory::get('MYSERVER\SQLEXPRESS', 1433, 'user', 'secret', 'home', 'sqlsrv');
 </pre>
 
-### TableFactory
+### Table
 > Fournit l'instance d'une table dans une base de données.
 
 <pre class="sh_sh">
-$phinxTable = TableFactory::get('users');
-$cakeTable = TableFactory::get('users', ['orm' => 'cake']);
+$users = new Table('users', $db);
+$users->query()->all()->toArray();
 </pre>
 
 ### Query
@@ -212,6 +212,20 @@ $result = $query->all()->toArray();
 
 <pre class="sh_sh">
 $result = (new DepartementsModel($pdo))->makeQuery();
+</pre>
+
+### Model
+> Représente une table identifiée
+
+<pre class="sh_sh">
+$users = new UsersModel($db);
+</pre>
+
+### Entity
+> Représente un enregistrement d'une table
+
+<pre class="sh_sh">
+$user = (new UsersModel($db))->find(1);
 </pre>
 
 -------

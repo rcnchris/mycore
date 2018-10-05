@@ -312,7 +312,8 @@ class Query implements \IteratorAggregate
     {
         return new QueryResult(
             $this->execute()->fetchAll(\PDO::FETCH_ASSOC),
-            $this->entity
+            $this->entity,
+            $this->getPdo()
         );
     }
 

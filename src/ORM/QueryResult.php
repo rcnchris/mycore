@@ -63,17 +63,23 @@ class QueryResult implements \ArrayAccess, \Iterator
      * @var null|object
      */
     private $entity;
+    /**
+     * @var \PDO
+     */
+    private $pdo;
 
     /**
      * Constructeur
      *
      * @param array       $records Tableau de données
      * @param object|null $entity  Classe de l'entité à hydrater
+     * @param \PDO        $pdo
      */
-    public function __construct(array $records, $entity = null)
+    public function __construct(array $records, $entity = null, \PDO $pdo = null)
     {
         $this->records = $records;
         $this->entity = $entity;
+        $this->pdo = $pdo;
     }
 
     /**
@@ -97,7 +103,7 @@ class QueryResult implements \ArrayAccess, \Iterator
     {
         if ($this->entity) {
             if (!isset($this->hydratedRecords[$index])) {
-                $this->hydratedRecords[$index] = Hydrator::hydrate($this->records[$index], $this->entity);
+                $this->hydratedRecords[$index] = Hydrator::hydrate($this->records[$index], $this->entity, $this->pdo);
             }
             return $this->hydratedRecords[$index];
         } else {

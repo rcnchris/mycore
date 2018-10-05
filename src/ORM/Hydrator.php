@@ -37,19 +37,19 @@ class Hydrator
     /**
      * Définir les valeurs des propriétés d'un objet avec les valeurs de la base de données
      *
-     * ### Exemple
+     * ### Example
      * - `Hydrator::hydrate($this->records[$index], $this->entity);`
      *
      * @param array         $array  Tableau de données
-     * @param string|object $object Entité à hydrater
+     * @param string|object $entityClass Entité à hydrater
      *
      * @return object
      */
-    public static function hydrate(array $array, $object)
+    public static function hydrate(array $array, $entityClass, \PDO $pdo = null)
     {
-        $instance = is_string($object)
-            ? new $object()
-            : $object;
+        $instance = is_string($entityClass)
+            ? new $entityClass($pdo)
+            : $entityClass;
         foreach ($array as $key => $value) {
             $method = self::getSetter($key);
             if (method_exists($instance, $method)) {
@@ -65,10 +65,10 @@ class Hydrator
     /**
      * Obtenir le setter
      *
-     * ### Exemple
+     * ### Example
      * - `self::getSetter($key);`
      *
-     * @param $fieldName
+     * @param string $fieldName Nom du champ
      *
      * @return string
      */
@@ -80,10 +80,10 @@ class Hydrator
     /**
      * Obtenir la propriété
      *
-     * ### Exemple
+     * ### Example
      * - `self::getProperty($key);`
      *
-     * @param $fieldName
+     * @param string $fieldName Nom du champ
      *
      * @return string
      */

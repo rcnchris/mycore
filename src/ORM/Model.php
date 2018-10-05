@@ -510,7 +510,7 @@ class Model
     {
         $options = array_merge([
             'type' => __FUNCTION__,
-            'mainTable' => $this->getTableName()
+            'mainModel' => $this
         ], $options);
         $this->addRelation(strtolower($tableName), $options);
     }
@@ -534,7 +534,7 @@ class Model
     {
         $options = array_merge([
             'type' => __FUNCTION__,
-            'mainTable' => $this->getTableName()
+            'mainModel' => $this
         ], $options);
         $this->addRelation($tableName, $options);
     }

@@ -42,5 +42,10 @@ class UsersModel extends Model
     {
         parent::__construct($pdo);
         $this->setTable('users');
+        $this->setEntity(User::class);
+        $this->belongsTo('tabs', [
+            'propertyName' => 'civilite',
+            'conditions' => 'parent_id = 1'
+        ]);
     }
 }

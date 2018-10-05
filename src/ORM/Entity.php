@@ -56,6 +56,16 @@ class Entity
     public $modified;
 
     /**
+     * @var \PDO
+     */
+    private $pdo;
+
+    public function __construct(\PDO $pdo = null)
+    {
+        $this->pdo = $pdo;
+    }
+
+    /**
      * Définir la date de création
      *
      * @param string|null $datetime Date
@@ -63,7 +73,7 @@ class Entity
     public function setCreated($datetime = null)
     {
         if (is_null($datetime)) {
-            $this->created = new \DateTime(date('y-m-d H:i:s'));
+            $this->created = new \DateTime(date('Y-m-d H:i:s'));
         } elseif (is_string($datetime)) {
             $this->created = new \DateTime($datetime);
         }
@@ -77,9 +87,31 @@ class Entity
     public function setModified($datetime = null)
     {
         if (is_null($datetime)) {
-            $this->modified = new \DateTime(date('y-m-d H:i:s'));
+            $this->modified = new \DateTime(date('Y-m-d H:i:s'));
         } elseif (is_string($datetime)) {
             $this->modified = new \DateTime($datetime);
         }
+    }
+
+    /**
+     * Obtenir la liste des propriétés de l'entité avec leur type respectif
+     *
+     * @return array
+     */
+    public function getProperties()
+    {
+        $properties = [];
+        foreach (get_object_vars($this) as $propertyName => $value) {
+            $properties[$propertyName] = gettype($value);
+        }
+        return $properties;
+    }
+
+    /**
+     * @return \PDO
+     */
+    public function getPdo()
+    {
+        return $this->pdo;
     }
 }
