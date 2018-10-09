@@ -23,8 +23,8 @@ if ($debug) {
         <hr/>
     </div>
 </div>
-<?php //include 'apigouv.php'; ?>
-<?php include 'container.php'; ?>
+<?php include 'apigouv.php'; ?>
+<?php //include 'container.php'; ?>
 <?php //include 'html.php'; ?>
 <?php //include 'orm.php'; ?>
 <?php //include 'accordion.php'; ?>
