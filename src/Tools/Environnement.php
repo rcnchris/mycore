@@ -188,7 +188,7 @@ class Environnement
      *
      * @return string
      */
-    public function getPhpVersion($short = false)
+    public function getPhpVersion($short = true)
     {
         $version = PHP_VERSION;
         if ($short) {
@@ -344,15 +344,20 @@ class Environnement
     {
         return php_sapi_name();
     }
-
     /**
-     * Obtenir la liste des contantes
+     * Obtenir la liste des constantes
+     *
+     * @param string|null $key Clé de la constante à retourner
      *
      * @return \Rcnchris\Core\Tools\Items
      */
-    public function getConstants()
+    public static function getConstants($key = null)
     {
-        return $this->makeItems(get_defined_constants(true));
+        $constants = get_defined_constants(true);
+        if (!is_null($key) && array_key_exists($key, $constants)) {
+            return $constants[$key];
+        }
+        return self::makeItems($constants);
     }
 
     /**
@@ -393,6 +398,7 @@ class Environnement
 
     /**
      * Obtenir la version de Wkhtmltopdf
+     *
      * @return string
      * @see https://wkhtmltopdf.org
      */
@@ -408,8 +414,42 @@ class Environnement
      *
      * @return \Rcnchris\Core\Tools\Items
      */
-    private function makeItems($items)
+    private function makeItems($items = [])
     {
         return new Items($items);
+    }
+
+    /**
+     * Obtenir le nom court du navigateur
+     *
+     * @param string|null $ua   Retour de $_SERVER['HTTP_USER_AGENT'] pour Apache
+     * @param bool|null   $full Obtenir le nom complet
+     *
+     * @return string
+     */
+    public function getUserAgent($ua = null, $full = false)
+    {
+        if (is_null($ua)) {
+            $ua = $this->get('HTTP_USER_AGENT');
+        }
+        if ($full) {
+            return $ua;
+        }
+        if (preg_match("/Firefox/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
+            $ua = "Firefox";
+        } elseif (preg_match("/OPR/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
+            $ua = "Opera";
+        } elseif (preg_match("/Edge/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
+            $ua = "Edge";
+        } elseif (preg_match("/MSIE/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
+            $ua = "Internet Explorer";
+        } elseif (preg_match("/Chrome/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
+            $ua = "Google Chrome";
+        } elseif (preg_match("/Safari/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
+            $ua = "Safari";
+        } elseif (preg_match("/Mozilla/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
+            $ua = "Firefox";
+        }
+        return $ua;
     }
 }

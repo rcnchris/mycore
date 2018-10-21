@@ -3,31 +3,42 @@ $debug = true;
 $start = microtime(true);
 require '../vendor/autoload.php';
 
+//error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+//ini_set("display_errors", 1);
+
+$config = new Rcnchris\Core\Config\ConfigContainer(require '../tests/config.php');
+
 // PSR7
 $request = \GuzzleHttp\Psr7\ServerRequest::fromGlobals();
 $response = new \GuzzleHttp\Psr7\Response();
 
 // Middlewares
-(new \Rcnchris\Core\Middlewares\WhoopsMiddleware())->__invoke($request, $response, function () {
-    return null;
-});
-(new \Rcnchris\Core\Middlewares\BootMiddleware())->__invoke($request, $response, function () {
-    return null;
-});
-(new \Rcnchris\Core\Middlewares\PoweredByMiddleware())->__invoke($request, $response, function () {
-    return null;
-});
-(new \Rcnchris\Core\Middlewares\SessionMiddleware())->__invoke($request, $response, function () {
-    return null;
-});
-(new \Rcnchris\Core\Middlewares\CookiesMiddleware())->__invoke($request, $response, function () {
-    return null;
-});
-(new \Rcnchris\Core\Middlewares\TrailingSlashMiddleware())->__invoke($request, $response, function () {
-    return null;
-});
+(new \Rcnchris\Core\Middlewares\WhoopsMiddleware())
+    ->__invoke($request, $response, function () {
+        return null;
+    });
+(new \Rcnchris\Core\Middlewares\BootMiddleware())
+    ->withContainer($config)
+    ->__invoke($request, $response, function () {
+        return null;
+    });
+(new \Rcnchris\Core\Middlewares\PoweredByMiddleware())
+    ->__invoke($request, $response, function () {
+        return null;
+    });
+(new \Rcnchris\Core\Middlewares\SessionMiddleware())
+    ->__invoke($request, $response, function () {
+        return null;
+    });
+(new \Rcnchris\Core\Middlewares\CookiesMiddleware())
+    ->__invoke($request, $response, function () {
+        return null;
+    });
+(new \Rcnchris\Core\Middlewares\TrailingSlashMiddleware())
+    ->__invoke($request, $response, function () {
+        return null;
+    });
 
-$config = new Rcnchris\Core\Config\ConfigContainer(require ROOT . DS . 'tests/config.php');
 $html = Rcnchris\Core\Html\Html::getInstance();
 $html->setCdns($config->get('cdn'));
 ?>

@@ -66,7 +66,7 @@ class Debug
      */
     public static function getClass($object)
     {
-        return get_class(self::isObject($object));
+        return get_class(self::isObject($object, true));
     }
 
     /**
@@ -88,13 +88,13 @@ class Debug
      *
      * @param object|null $object
      *
-     * @return array
+     * @return \Rcnchris\Core\Tools\Items
      * @throws \Exception
      * @see http://php.net/manual/fr/function.get-object-vars.php
      */
     public static function getProperties($object = null)
     {
-        return get_object_vars(self::isObject($object));
+        return self::makeItems(get_object_vars(self::isObject($object, true)));
     }
 
     /**
@@ -102,12 +102,12 @@ class Debug
      *
      * @param object|null $object Objet dont il faut lister les méthodes
      *
-     * @return array
+     * @return \Rcnchris\Core\Tools\Items
      * @see http://php.net/manual/fr/function.get-class-methods.php
      */
     public static function getMethods($object = null)
     {
-        return get_class_methods(self::getClass($object));
+        return self::makeItems(get_class_methods(self::getClass($object)));
     }
 
     /**
@@ -115,7 +115,7 @@ class Debug
      *
      * @param object|null $object
      *
-     * @return array
+     * @return \Rcnchris\Core\Tools\Items
      */
     public static function getParentsMethods($object = null)
     {
@@ -123,7 +123,7 @@ class Debug
         foreach (self::getParents($object) as $parent) {
             $methods[$parent] = get_class_methods($parent);
         }
-        return $methods;
+        return self::makeItems($methods);
     }
 
     /**
@@ -132,7 +132,7 @@ class Debug
      * @param object|null $object  Objet dont il faut retourner la liste des parents
      * @param bool|null   $reverse inverse l'ordre de retour du tableau
      *
-     * @return array
+     * @return \Rcnchris\Core\Tools\Items
      * @see http://php.net/manual/fr/function.get-parent-class.php
      */
     public static function getParents($object = null, $reverse = false)
@@ -147,7 +147,7 @@ class Debug
         if ($reverse) {
             return array_reverse($parents);
         }
-        return $parents;
+        return self::makeItems($parents);
     }
 
     /**
@@ -155,12 +155,12 @@ class Debug
      *
      * @param null $object
      *
-     * @return array
+     * @return \Rcnchris\Core\Tools\Items
      * @see http://php.net/manual/fr/function.class-uses.php
      */
     public static function getInterfaces($object = null)
     {
-        return array_keys(class_implements(self::getClass($object)));
+        return self::makeItems(array_keys(class_implements(self::getClass($object))));
     }
 
     /**
@@ -168,28 +168,12 @@ class Debug
      *
      * @param null $object
      *
-     * @return array
+     * @return \Rcnchris\Core\Tools\Items
      * @see http://php.net/manual/fr/function.class-uses.php
      */
     public static function getTraits($object)
     {
-        return array_keys(class_uses(self::getClass($object)));
-    }
-
-    /**
-     * Obtenir la liste des constantes
-     *
-     * @param string|null $key Clé de la constante à retourner
-     *
-     * @return array|mixed
-     */
-    public static function getConstants($key = null)
-    {
-        $constants = get_defined_constants(true);
-        if (!is_null($key) && array_key_exists($key, $constants)) {
-            return $constants[$key];
-        }
-        return $constants;
+        return self::makeItems(array_keys(class_uses(self::getClass($object))));
     }
 
     /**
@@ -201,7 +185,26 @@ class Debug
      */
     public static function getNamespace($object)
     {
+        r(get_class($object));die;
         return namespaceSplit(get_class($object))[0];
+    }
+
+    /**
+     * Obtenir le type d'une ou plusieurs variables
+     *
+     * @param mixed ...$vars Une variable ou une liste de variables
+     *
+     * @return string|\Rcnchris\Core\Tools\Items
+     */
+    public static function getType(...$vars)
+    {
+        $types = array_map(function ($var) {
+            return gettype($var);
+        }, $vars);
+        if (count($types) === 1) {
+            return current($types);
+        }
+        return self::makeItems($types);
     }
 
     /**
@@ -209,17 +212,67 @@ class Debug
      *
      * @param mixed $variable Variable qui doit être un objet
      *
-     * @return mixed
+     * @return bool|mixed
      * @throws \Exception
      */
-    private static function isObject($variable)
+    public static function isObject($variable, $withException = false)
     {
-        if (!is_object($variable)) {
-            throw new \Exception(
-                "Le type de la variable passé à la fonction doit être un objet. "
-                . "Là c'est : " . gettype($variable) . "... Pas bien..."
-            );
+        $isObject = self::isType('object', $variable);
+
+        if ($withException) {
+            if(!$isObject) {
+                throw new \Exception(
+                    "Le type de la variable passé à la fonction doit être un objet. "
+                    . "Là c'est : " . gettype($variable) . "... Pas bien..."
+                );
+            }
+            return $variable;
         }
-        return $variable;
+        return $isObject;
+    }
+
+    /**
+     * Vérife que la variable soit un tableau
+     *
+     * @param mixed $var Variable
+     *
+     * @return bool
+     */
+    public static function isArray($var)
+    {
+        return self::isType('array', $var);
+    }
+
+    /**
+     * Vérife que la variable soit un tableau
+     *
+     * @param mixed $var Variable
+     *
+     * @return bool
+     */
+    public static function isBool($var)
+    {
+        return self::isType('bool', $var);
+    }
+
+    public static function isType($type, $var)
+    {
+        $methodName = 'is_' . strtolower($type);
+        if (function_exists($methodName)) {
+            return $methodName($var);
+        }
+        throw new \Exception("Le type demandé '$type', ne donne pas lieu à une fonction connue !");
+    }
+
+    /**
+     * Obtenir une instance de Items
+     *
+     * @param array $items Liste d'éléments
+     *
+     * @return \Rcnchris\Core\Tools\Items
+     */
+    public static function makeItems($items = [])
+    {
+        return new Items($items);
     }
 }

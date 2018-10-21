@@ -53,7 +53,9 @@ class DebugExtension extends \Twig_Extension
             new \Twig_SimpleFilter('getParentMethods', [$this, 'getParentMethods'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('getImplements', [$this, 'getImplements'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('getTraits', [$this, 'getTraits'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('getType', [$this, 'getType'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('isObject', [$this, 'isObject'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('isBool', [$this, 'isBool'], ['is_safe' => ['html']]),
             new \Twig_SimpleFilter('isArray', [$this, 'isArray'], ['is_safe' => ['html']])
         ];
     }
@@ -175,6 +177,19 @@ class DebugExtension extends \Twig_Extension
     }
 
     /**
+     * Obtenir le type PHP d'une variable
+     * - Filtre
+     *
+     * @param mixed $value
+     *
+     * @return string
+     */
+    public function getType($value)
+    {
+        return gettype($value);
+    }
+
+    /**
      * Vérifie si la variable est un objet
      * - Filtre
      *
@@ -198,6 +213,19 @@ class DebugExtension extends \Twig_Extension
     public function isArray($var)
     {
         return is_array($var);
+    }
+
+    /**
+     * Vérifie si la valeur est de type booléen
+     * - Filtre
+     *
+     * @param mixed $var Variable
+     *
+     * @return bool
+     */
+    public function isBool($var)
+    {
+        return is_bool($var);
     }
 
     /**
