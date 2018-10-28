@@ -3,9 +3,6 @@ $debug = true;
 $start = microtime(true);
 require '../vendor/autoload.php';
 
-//error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-//ini_set("display_errors", 1);
-
 $config = new Rcnchris\Core\Config\ConfigContainer(require '../tests/config.php');
 
 // PSR7
@@ -40,7 +37,7 @@ $response = new \GuzzleHttp\Psr7\Response();
     });
 
 $html = Rcnchris\Core\Html\Html::getInstance();
-$html->setCdns($config->get('cdn'));
+$html->setCdns($config->get('cdn'), $config->get('appPrefix'));
 ?>
 <!doctype html>
 <html lang="<?= substr($config->get('locale'), 0, 2) ?>">
@@ -83,6 +80,7 @@ $html->setCdns($config->get('cdn'));
 <?= $html->script('bootstrap', 'min') ?>
 <?= $html->script('shjs', 'min') ?>
 <?= $html->script('fontawesome', 'src') ?>
+<?= $html->script('app', 'src') ?>
 
 </body>
 </html>

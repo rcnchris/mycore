@@ -414,7 +414,7 @@ class Environnement
      *
      * @return \Rcnchris\Core\Tools\Items
      */
-    private function makeItems($items = [])
+    private static function makeItems($items = [])
     {
         return new Items($items);
     }

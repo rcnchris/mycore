@@ -409,4 +409,12 @@ class Composer implements IteratorAggregate, ArrayAccess
     {
         throw new \Exception('Pas possible pour le moment');
     }
+
+    /**
+     * @return string
+     */
+    public function getFileName()
+    {
+        return $this->fileName;
+    }
 }

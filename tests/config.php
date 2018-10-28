@@ -70,6 +70,9 @@ return [
                     'css' => [
                         'src' => 'public/css/app.css',
                     ],
+                    'js' => [
+                        'src' => 'public/js/app.js',
+                    ],
                 ],
             ]
         ],
@@ -96,7 +99,7 @@ return [
                         'min' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
                     ],
                     'js' => [
-                        'min' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js',
+                        'min' => 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js',
                     ],
                 ]
             ],

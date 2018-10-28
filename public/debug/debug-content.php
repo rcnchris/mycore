@@ -23,10 +23,10 @@ if ($debug) {
         <hr/>
     </div>
 </div>
-<?php // include 'apigouv.php'; ?>
-<?php // include 'environment.php'; ?>
-<?php include 'debug.php'; ?>
+<?php //include 'apigouv.php'; ?>
+<?php //include 'environment.php'; ?>
+<?php // include 'debug.php'; ?>
 <?php //include 'container.php'; ?>
-<?php //include 'html.php'; ?>
+<?php include 'html.php'; ?>
 <?php //include 'orm.php'; ?>
 <?php //include 'accordion.php'; ?>

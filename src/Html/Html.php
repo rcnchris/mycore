@@ -56,6 +56,13 @@ class Html
     private static $cdns;
 
     /**
+     * Préfixe de l'url
+     *
+     * @var string
+     */
+    private static $prefixUrl;
+
+    /**
      * Obtenir l'instance de cette classe
      *
      * @return \Rcnchris\Core\Html\Html
@@ -354,10 +361,12 @@ class Html
             return null;
         }
         $css = self::$cdns->get($key)->get('core')->get($version)->get('css')->get($type);
-
         if ($css) {
+            if (substr(trim($css, '/'), 0, 6) === 'public') {
+                $css = self::$prefixUrl . trim($css, '/');
+            }
             $defaultAttributes = [
-                'href' => self::$cdns->get($key)->get('prefix') . $css,
+                'href' => $css,
                 'rel' => 'stylesheet',
                 'type' => 'text/css'
             ];
@@ -386,8 +395,12 @@ class Html
         }
         $script = self::$cdns->get($key)->get('core')->get($version)->get('js')->get($type);
         if ($script) {
+
+            if (substr(trim($script, '/'), 0, 6) === 'public') {
+                $script = self::$prefixUrl . trim($script, '/');
+            }
             $defaultAttributes = [
-                'src' => self::$cdns->get($key)->get('prefix') . $script,
+                'src' => $script,
                 'type' => 'text/javascript'
             ];
             return self::surround(
@@ -414,8 +427,9 @@ class Html
      *
      * @param array $cdns
      */
-    public static function setCdns(array $cdns)
+    public static function setCdns(array $cdns, $prefix = null)
     {
+        self::$prefixUrl = $prefix;
         self::$cdns = new Items($cdns);
     }
 
@@ -447,8 +461,9 @@ class Html
         if (array_key_exists('required', $options)) {
             $attributes['required'] = true;
         }
-
-        // Class ?
+        if (array_key_exists('placeholder', $options)) {
+            $attributes['placeholder'] = $options['placeholder'];
+        }
         if (array_key_exists('class', $options)) {
             $attributes['class'] = $options['class'];
         }
