@@ -34,6 +34,13 @@
 $ls = Cmd::exec("cd $path && ls");
 </pre>
 
+#### Debug
+> Helper de debug.
+
+<pre class="sh_sh">
+$className = Debug::getClass($object);
+</pre>
+
 #### Environnement
 > Fournit des méthodes d'interrogation de l'environnement.
 
@@ -49,15 +56,8 @@ $e->getPhpVersion();
 Html::link('Google', 'http://google.fr', ['class' => 'btn btn-primary');
 </pre>
 
-#### Collection
-> Facilite la manipulation des listes de données, tableaux multi-dimensionels...
-
-<pre class="sh_sh">
-$col = new Collection('ola,ole,oli', "Liste de valeurs dans une chaîne avec séparateur");
-</pre>
-
 #### Items
-> Une autre classe de gestion des listes qui facilite la manipulation de tableaux multi-dimensionels...
+> Une classe de gestion des listes qui facilite la manipulation de tableaux multi-dimensionels...
 
 <pre class="sh_sh">
 $col = new Items('ola,ole,oli');
@@ -153,12 +153,28 @@ $api = new Curl('https://randomuser.me/api');
 $users = $api->exec(['results' => 3])->toArray();
 </pre>
 
-### AlloCiné
+#### AlloCiné
 > Obtenir des informations de l'API.
 
 <pre class="sh_sh">
 $api = new AlloCine();
 $search = $api->search('Le Parrain');
+</pre>
+
+#### Adresses
+> Utiliser l'API geo.api.gouv.fr
+
+<pre class="sh_sh">
+$adr = new AdressesApiGouv();
+$adr->searchCommunes('codePostal', 83110)->toArray();
+</pre>
+
+#### Etablissements publics
+> Utiliser l'API etablissements-publics.api.gouv.fr
+
+<pre class="sh_sh">
+$adr = new EtablissementsPublicsApiGouv();
+$liste = $api->getByDepartement(83, 'cpam')->extract('Nom', 'codeInsee')->toArray();
 </pre>
 
 -------
