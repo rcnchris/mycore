@@ -335,23 +335,3 @@ $pdf->toView(ResponseInterface $response, 'filename');
     <dt>Cookies</dt>
     <dd>Gestion des cookies.</dd>
 </dl>
-
--------
-
-## Home en mode debug
-<img src="public/img/home-debug.png" align="center" />
-
-## Todo <progress></progress>
-
-<dl>
-    <dt>Synology</dt>
-    <dd>
-        - Utilisation des cookies.
-    </dd>
-    <dt>Twig</dt>
-    <dd>
-        - <code>ArrayExtension</code> : Améliorer toHml pour pouvoir déterminer le sens du tableau
-    </dd>
-</dl>
-
--------

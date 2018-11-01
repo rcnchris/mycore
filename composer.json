@@ -29,6 +29,7 @@
     "michelf/php-markdown": "^1.7",
     "twig/twig": "^2.4",
     "setasign/fpdf": "^1.8",
+    "robmorgan/phinx": "^0.10.3",
     "fzaninotto/faker": "^1.7",
     "psr/container": "^1.0"
   },
@@ -41,8 +42,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Rcnchris\\Core\\": "src/",
-      "App\\": "app/"
+      "Rcnchris\\Core\\": "src/"
     }
   },
   "autoload-dev": {
