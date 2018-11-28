@@ -261,6 +261,10 @@ class Html
                     $html .= self::surround(self::table($value, [], $withHeader, $colMode), 'td');
                 } elseif ($value instanceof \DateTime) {
                     $html .= self::surround($value->format('d-m-Y H:i:s'), 'td');
+                } elseif (is_object($value)) {
+                    $html = method_exists($value, '__toString')
+                        ? $html . self::surround((string)$value, 'td')
+                        : $html . self::surround(get_class($value), 'td');
                 } else {
                     $html .= self::surround($value, 'td');
                 }
@@ -276,6 +280,10 @@ class Html
                     $html .= self::surround(self::table($value, [], $withHeader, $colMode), 'td');
                 } elseif ($value instanceof \DateTime) {
                     $html .= self::surround($value->format('d-m-Y H:i:s'), 'td');
+                } elseif (is_object($value)) {
+                    $html = method_exists($value, '__toString')
+                        ? $html . self::surround((string)$value, 'td')
+                        : $html . self::surround(get_class($value), 'td');
                 } else {
                     $html .= self::surround($value, 'td');
                 }

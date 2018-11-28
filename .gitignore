@@ -2,4 +2,4 @@
 /composer.lock
 /public/coverage/
 /public/doc/
-/app/
+/tests/Core/PDF/results/

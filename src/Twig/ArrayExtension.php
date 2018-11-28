@@ -80,7 +80,8 @@ class ArrayExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFunction('arrayMerge', [$this, 'arrayMerge']),
             new \Twig_SimpleFunction('extract', [$this, 'extract']),
-            new \Twig_SimpleFunction('inArray', [$this, 'inArray'])
+            new \Twig_SimpleFunction('inArray', [$this, 'inArray']),
+            new \Twig_SimpleFunction('explode', [$this, 'explode']),
         ];
     }
 
@@ -126,5 +127,23 @@ class ArrayExtension extends \Twig_Extension
     public function inArray($value, array $array)
     {
         return in_array($value, $array);
+    }
+
+    /**
+     * Explose une chaîne en tableau selon un séparateur
+     * - Fonction
+     *
+     * ### Exemple
+     * - `explode(string)`
+     * - `explode(string, '/')`
+     *
+     * @param string      $value Chaîne à exploser
+     * @param string|null $sep   Séparateur de la chaîne à exploser
+     *
+     * @return array
+     */
+    public function explode($value, $sep = ',')
+    {
+        return array_filter(explode($sep, $value));
     }
 }
