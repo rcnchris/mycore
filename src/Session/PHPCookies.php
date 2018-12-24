@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Session;
 
+use ArrayAccess;
+
 /**
  * Class PHPCookies
  * <ul>
@@ -33,7 +35,7 @@ namespace Rcnchris\Core\Session;
  *
  * @version  Release: <1.0.0>
  */
-class PHPCookies implements CookiesInterface
+class PHPCookies implements CookiesInterface, ArrayAccess
 {
 
     /**
@@ -54,6 +56,7 @@ class PHPCookies implements CookiesInterface
      *
      * @param mixed|null $datas   Données à écrire dans les cookies
      * @param array|null $options Options des cookies (lifetime, path, domain, secure, httponly)
+     *
      * @codeCoverageIgnore
      */
     public function __construct($datas = null, array $options = [])
@@ -243,5 +246,79 @@ class PHPCookies implements CookiesInterface
     public function has($key)
     {
         return array_key_exists($key, $_COOKIE);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Whether a offset exists
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     *
+     * @param mixed $offset <p>
+     *                      An offset to check for.
+     *                      </p>
+     *
+     * @return boolean true on success or false on failure.
+     * </p>
+     * <p>
+     * The return value will be casted to boolean if non-boolean was returned.
+     */
+    public function offsetExists($offset)
+    {
+        return $this->has($offset);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to retrieve
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to retrieve.
+     *                      </p>
+     *
+     * @return mixed Can return all value types.
+     */
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to set
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to assign the value to.
+     *                      </p>
+     * @param mixed $value  <p>
+     *                      The value to set.
+     *                      </p>
+     *
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to unset
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to unset.
+     *                      </p>
+     *
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        $this->delete($offset);
     }
 }
