@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Tools;
 
+use SplFileInfo;
+
 /**
  * Class Folder<br/>
  * <ul>
@@ -259,5 +261,15 @@ class Folder
         return is_null($name)
             ? array_unique($ret)
             : in_array($name, $ret);
+    }
+
+    /**
+     * @param string $name Nom complet du fichier
+     *
+     * @return SplFileInfo
+     */
+    public function getFileInfo($name)
+    {
+        return new SplFileInfo($name);
     }
 }

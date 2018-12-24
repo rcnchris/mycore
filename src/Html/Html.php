@@ -116,13 +116,13 @@ class Html
      *
      * @return string
      */
-    public static function liste($items, array $attributes = ['type' => 'ul'], $withKeys = true)
+    public static function liste($items, array $attributes = ['type' => 'ul'], $withKeys = false)
     {
         $type = $attributes['type'];
         unset($attributes['type']);
 
         $html = '';
-        if ($type != 'dl') {
+        if ($type !== 'dl') {
             foreach ($items as $key => $value) {
                 if (is_string($value) || is_numeric($value)) {
                     $html = $withKeys

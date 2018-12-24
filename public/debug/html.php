@@ -273,7 +273,7 @@ $html->field(
     ['class' => 'form-control']
 );
 </pre>
-                            <?= $html->field('title', 'Le titre qui va bien', ['class' => 'form-control']) ?>
+                            <?= $html->field('title', 'Le titre qui va bien', ['class' => 'form-control', 'required' => true]) ?>
                         </div>
                     </div>
                     <div class="card">

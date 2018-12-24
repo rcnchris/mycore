@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Session;
 
+use Rcnchris\Core\Tools\Items;
+
 /**
  * Class FlashService
  * <ul>
@@ -52,9 +54,9 @@ class FlashService
     /**
      * Tableau des messages stockés
      *
-     * @var array[string]
+     * @var array
      */
-    private $messages = null;
+    private $messages = [];
 
     /**
      * Constructeur
@@ -67,62 +69,67 @@ class FlashService
     }
 
     /**
-     * Définir un message de succès
+     * @param string $type
+     * @param string $msg
      *
-     * @param string $message Contenu du message
-     *
-     * @return void
+     * @return $this
      */
-    public function success($message)
+    public function add($type, $msg)
     {
-        $flash = $this->session->get($this->sessionKey, []);
-        $flash['success'] = $message;
-        $this->session->set($this->sessionKey, $flash);
+        $this->messages[$type][] = $msg;
+        $this->session->set($this->sessionKey, $this->getMessages());
+        return $this;
     }
 
     /**
-     * Définir un message d'erreur
+     * Vérifie la présence d'un type de message
      *
-     * @param string $message Contenu du message
+     * @param string $type Nom du type de message (error, success, warning...)
      *
-     * @return void
+     * @return bool
      */
-    public function error($message)
+    public function has($type)
     {
-        $flash = $this->session->get($this->sessionKey, []);
-        $flash['error'] = $message;
-        $this->session->set($this->sessionKey, $flash);
+        return $this->getMessages()->has($type);
     }
 
     /**
-     * Définir un message
-     *
-     * @param string $type    Type de message
-     * @param string $message Contenu du message
-     */
-    public function set($type, $message)
-    {
-        $flash = $this->session->get($this->sessionKey, []);
-        $flash[$type] = $message;
-        $this->session->set($this->sessionKey, $flash);
-    }
-
-    /**
-     * Obtenir un type de message flash
+     * Obtenir la liste des messages pour un type de message
      *
      * @param string $type Type de message (success, info, warning, danger...)
      *
-     * @return string|null
+     * @return mixed|null|\Rcnchris\Core\Tools\Items|null
      */
     public function get($type)
     {
-        if (is_null($this->messages)) {
-            $this->messages = $this->session->get($this->sessionKey, []);
-            $this->session->delete($this->sessionKey);
-        }
-        if (array_key_exists($type, $this->messages)) {
-            return $this->messages[$type];
+        $messages = $this->getMessages()->get($type);
+        if (!$messages->isEmpty()) {
+            $this->getSession()->get($this->sessionKey)->offsetUnset($type);
+            if ($messages->count() === 1) {
+                return $messages->first();
+            }
+            return $messages;
         }
         return null;
+    }
+
+    /**
+     * Obtenir tous les messages
+     *
+     * @return \Rcnchris\Core\Tools\Items
+     */
+    public function getMessages()
+    {
+        return new Items($this->messages);
+    }
+
+    /**
+     * Obtenir la session
+     *
+     * @return SessionInterface
+     */
+    public function getSession()
+    {
+        return $this->session;
     }
 }
