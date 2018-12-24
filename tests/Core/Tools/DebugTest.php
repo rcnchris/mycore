@@ -19,7 +19,6 @@
 namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Debug;
-use Rcnchris\Core\Twig\ArrayExtension;
 use Tests\Rcnchris\BaseTestCase;
 
 class DebugTest extends BaseTestCase
