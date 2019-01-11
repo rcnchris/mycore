@@ -62,7 +62,6 @@ class Debug
      *
      * @return string
      * @throws \Exception
-     * @see http://php.net/manual/fr/function.get-class.php
      */
     public static function getClass($object)
     {
@@ -145,7 +144,7 @@ class Debug
             $value = $parent;
         }
         if ($reverse) {
-            return array_reverse($parents);
+            return self::makeItems(array_reverse($parents));
         }
         return self::makeItems($parents);
     }
@@ -185,7 +184,6 @@ class Debug
      */
     public static function getNamespace($object)
     {
-        r(get_class($object));die;
         return namespaceSplit(get_class($object))[0];
     }
 
@@ -220,7 +218,7 @@ class Debug
         $isObject = self::isType('object', $variable);
 
         if ($withException) {
-            if(!$isObject) {
+            if (!$isObject) {
                 throw new \Exception(
                     "Le type de la variable passé à la fonction doit être un objet. "
                     . "Là c'est : " . gettype($variable) . "... Pas bien..."

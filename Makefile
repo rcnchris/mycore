@@ -1,75 +1,67 @@
-.PHONY: test help
+# .SILENT:
+.PHONY: help install ideperm webperm code test server proxy watch
+
+.DEFAULT_GOAL = help
+
+today=$(shell date +%Y-%m-%d)
+todayAll=$(shell date +%Y%m%d%H%M%S)
+
+colorCom=\033[0;34m
+colorObj=\033[0;36m
+colorOk=\033[0;32m
+colorErr=\033[0;31m
+colorWarn=\033[0;33m
+colorOff=\033[m
+
+userConsole=dev
+userApache=www-data
+userComposer=rcnchris
+mail=rcn.chris@gmail.com
+root=$(shell pwd)
+
+templatePhpDoc=responsive
+
+serverName=0.0.0.0
+serverPort?=8000
+serverFolder=public
 
 help: ## Aide de ce fichier
 	@grep -E '(^[a-zA-Z_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-15s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
-.DEFAULT_GOAL = help
+vendor: composer.json ## Génération du dossier vendor
+	composer install -o --no-suggest
 
-COM_COLOR   = \033[0;34m
-OBJ_COLOR   = \033[0;36m
-OK_COLOR    = \033[0;32m
-ERROR_COLOR = \033[0;31m
-WARN_COLOR  = \033[0;33m
-NO_COLOR    = \033[m
+composer.lock: composer.json
+	composer update -o --no-suggest
 
-PROJECT_DIR = $(shell pwd)
-TEMPLATE_DOC = responsive
-APACHE_USER = www-data
-DEV_USER = dev
+install: vendor composer.lock ## Installation et/ou mise à jour des librairies
 
-update: ## Mise à jour des librairies composer
-	@composer selfupdate
-	@echo -e '$(OK_COLOR)Mise à jour Composer$(NO_COLOR)'
-	@composer update
+ideperm: ## Permissions de développement
+	@echo -e '$(colorObj)Permissions de développement$(colorOff)'
+	@sudo chown -R $(userConsole):$(userConsole) public
 
-vendor: composer.json ## Modification composer.json
-	@composer selfupdate
-	@echo -e '$(OK_COLOR)Mise à jour Composer$(NO_COLOR)'
-	@composer update
+webperm: ## Permissions de production
+	@echo -e '$(colorOk)Permissions de production$(colorOff)'
+	@sudo chown -R $(userApache):$(userApache) public
 
-install: ## Installation du projet
-	@echo -e '$(OK_COLOR)Installation du projet$(NO_COLOR)'
-	@rm -r vendor
-	@rm -r composer.lock
-	@composer install --ignore-platform-reqs
-
-permprod: ## Permissions des dossiers et fichiers
-	@echo -e '$(OK_COLOR)Permissions des dossiers et fichiers pour la production$(NO_COLOR)'
-	@sudo chown -R $(APACHE_USER):$(APACHE_USER) $(PROJECT_DIR)
-	@sudo find $(PROJECT_DIR) -type d -exec chmod 755 {} +
-	@sudo find $(PROJECT_DIR) -type f -exec chmod 644 {} +
-
-permdev: ## Permissions des dossiers et fichiers
-	@echo -e '$(OK_COLOR)Permissions des dossiers et fichiers pour le développement$(NO_COLOR)'
-	@sudo chown -R $(DEV_USER):$(DEV_USER) $(PROJECT_DIR)
-	@sudo find $(PROJECT_DIR) -type d -exec chmod 755 {} +
-	@sudo find $(PROJECT_DIR) -type f -exec chmod 644 {} +
-
-code: ## Vérification et correction de la syntaxe
-	@echo -e '$(OK_COLOR)Corrections syntaxiques$(NO_COLOR)'
+code: ideperm ## Vérification et correction de la syntaxe
+	@echo -e '$(colorObj)Vérification et correction de la syntaxe$(colorOff)'
+	@echo -e '$(colorCom)Corrections syntaxiques$(colorOff)'
 	@./vendor/bin/phpcbf
-	@echo -e '$(OK_COLOR)Tests syntaxiques$(NO_COLOR)'
-	@./vendor/bin/phpcs --ignore=/home/dev/www/_lab/mycore/src/PDF/AbstractPDF.php
+	@echo -e '$(colorCom)Tests syntaxiques$(colorOff)'
+	@./vendor/bin/phpcs
 
-test: ## Lance les tests unitaires
-	@echo -e '$(OK_COLOR)Tests unitaires$(NO_COLOR)'
-	@./vendor/bin/phpunit --coverage-html public/coverage
+test: ideperm install ## Tests unitaires
+	@echo -e '$(colorObj)Tests unitaires$(colorOff)'
+	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(today)_before_tests.pdf
+	@./vendor/bin/phpunit --stop-on-failure --coverage-html public/coverage
+	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(today)_after_tests.pdf
+	
+server: install ## Lance un serveur de développement
+	@echo -e '$(colorObj)Lance un serveur sur le $(serverName):$(serverPort)$(colorOff)'
+	@php -S $(serverName):$(serverPort) -t $(serverFolder)/ -d display_errors=1
 
-testcode: code ## Lance les tests unitaires en vérifiant la syntaxe du code
-	@echo -e '$(OK_COLOR)Tests unitaires$(NO_COLOR)'
-	@./vendor/bin/phpunit --coverage-html public/coverage
+proxy: ## Permet de rafraîchir automatiquement la page du serveur de déveeloppement
+	browser-sync start --port 3000 --proxy $(serverName):$(serverPort) --files 'src/**/*.php' --files 'app/**/*.php' --files 'app/**/*.phtml'
 
-doc: ## Génération de la documentation
-	@echo -e '$(OK_COLOR)Documentation des sources$(NO_COLOR)'
-	@/home/dev/www/phpdoc/./vendor/bin/phpdoc -d $(PROJECT_DIR)/src -t $(PROJECT_DIR)/public/doc --template="$(TEMPLATE_DOC)"
-
-prepush: testcode doc ## Préparation avant un push
-	@echo -e '$(OK_COLOR)Documentation des sources$(NO_COLOR)'
-	@/home/dev/www/phpdoc/./vendor/bin/phpdoc -d $(PROJECT_DIR)/src -t $(PROJECT_DIR)/public/doc --template="$(TEMPLATE_DOC)"
-	@git status
-
-push: test ## Commit et Push tous les changements
-	@git status
-	@git add .
-	@git commit -a -m "MAJ Globale"
-	@git push -u origin master
+watch: server proxy

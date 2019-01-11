@@ -2,6 +2,7 @@
 namespace Tests\Rcnchris\Core\Html;
 
 use Rcnchris\Core\Html\Html;
+use Rcnchris\Core\Tools\Items;
 use Tests\Rcnchris\BaseTestCase;
 
 class HtmlTest extends BaseTestCase
@@ -30,6 +31,12 @@ class HtmlTest extends BaseTestCase
         $this->assertSimilar($expect, $this->html->link('http://google.fr', 'Google'));
     }
 
+    public function testLinkWithoutLabel()
+    {
+        $expect = '<a href="http://google.fr">http://google.fr</a>';
+        $this->assertSimilar($expect, $this->html->link('http://google.fr'));
+    }
+
     public function testLinkWithAttribute()
     {
         $expect = '<a class="btn btn-primary" href="http://google.fr">Google</a>';
@@ -44,13 +51,13 @@ class HtmlTest extends BaseTestCase
 
     public function testMakeList()
     {
-        $expect = '<ul><li>0 : ola</li><li>1 : ole</li></ul>';
+        $expect = '<ul><li>ola</li><li>ole</li></ul>';
         $this->assertSimilar($expect, $this->html->liste(['ola', 'ole']));
     }
 
     public function testMakeListOl()
     {
-        $expect = '<ol><li>0 : ola</li><li>1 : ole</li></ol>';
+        $expect = '<ol><li>ola</li><li>ole</li></ol>';
         $this->assertSimilar($expect, $this->html->liste(['ola', 'ole'], ['type' => 'ol']));
     }
 
@@ -87,14 +94,14 @@ class HtmlTest extends BaseTestCase
     public function testSourceWithFile()
     {
         $file = $this->rootPath() . '/.htaccess';
-        $expect = '<pre>' . file_get_contents($file) . '</pre>';
+        $expect = '<pre>' . htmlentities(file_get_contents($file)) . '</pre>';
         $this->assertSimilar($expect, $this->html->source($file));
     }
 
     public function testSourceWithFileWithHeader()
     {
         $file = $this->rootPath() . '/.htaccess';
-        $expect = '<code>' . $file . '</code><pre>' . file_get_contents($file) . '</pre>';
+        $expect = '<code>' . $file . '</code><pre>' . htmlentities(file_get_contents($file)) . '</pre>';
         $this->assertSimilar($expect, $this->html->source($file, [], true));
     }
 
@@ -108,7 +115,7 @@ class HtmlTest extends BaseTestCase
 
     public function testTableWithSimpleList()
     {
-        $list = ['ola','ole','oli'];
+        $list = ['ola', 'ole', 'oli'];
         $expect = '
         <table>
             <tbody>
@@ -123,7 +130,7 @@ class HtmlTest extends BaseTestCase
 
     public function testTableWithSimpleListWithoutHeader()
     {
-        $list = ['ola','ole','oli'];
+        $list = ['ola', 'ole', 'oli'];
         $expect = '
         <table>
             <tbody>
@@ -139,8 +146,8 @@ class HtmlTest extends BaseTestCase
     public function testTableRecursive()
     {
         $list = [
-            'list1' => ['ola','ole','oli'],
-            'list2' => ['olo','olu','oly'],
+            'list1' => ['ola', 'ole', 'oli'],
+            'list2' => ['olo', 'olu', 'oly'],
         ];
         $expect = '
         <table>
@@ -177,7 +184,7 @@ class HtmlTest extends BaseTestCase
 
     public function testTableWithSimpleListWithCaption()
     {
-        $list = ['ola','ole','oli'];
+        $list = ['ola', 'ole', 'oli'];
         $expect = '
         <table>
             <caption>Avec un titre</caption>
@@ -193,7 +200,7 @@ class HtmlTest extends BaseTestCase
 
     public function testTableWithSimpleListColMode()
     {
-        $list = ['ola','ole','oli', (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05')];
+        $list = ['ola', 'ole', 'oli', (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05')];
         $expect = '
         <table>
             <thead>
@@ -220,8 +227,8 @@ class HtmlTest extends BaseTestCase
     public function testTableWithSimpleListColModeRecursive()
     {
         $list = [
-            'list1' => ['ola','ole','oli'],
-            'list2' => ['olo','olu','oly'],
+            'list1' => ['ola', 'ole', 'oli'],
+            'list2' => ['olo', 'olu', 'oly'],
         ];
         $expect = '
         <table>
@@ -276,9 +283,9 @@ class HtmlTest extends BaseTestCase
         $this->assertSimilar($expect, $this->html->table($list, [], true, true));
     }
 
-    public function testTableWithWithAttributes()
+    public function testTableWithAttributes()
     {
-        $list = ['ola','ole','oli'];
+        $list = ['ola', 'ole', 'oli'];
         $expect = '
         <table class="table table-sm">
             <tbody>
@@ -297,7 +304,9 @@ class HtmlTest extends BaseTestCase
             'Mathis' => 12,
             'Raphaël' => 14,
             'Clara' => 16,
-            'Date' => (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05')
+            'Date' => (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05'),
+            'Diff' => (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05')->diff(new \DateTime()),
+            'Items' => new Items('ola,ole'),
         ];
         $expect = '
         <table>
@@ -306,10 +315,45 @@ class HtmlTest extends BaseTestCase
                 <tr><th>Raphaël</th><td>14</td></tr>
                 <tr><th>Clara</th><td>16</td></tr>
                 <tr><th>Date</th><td>15-10-1975 05:15:05</td></tr>
+                <tr><th>Diff</th><td>DateInterval</td></tr>
+                <tr><th>Items</th><td><table><tbody><tr><th>0</th><td>ola</td></tr><tr><th>1</th><td>ole</td></tr></tbody></table></td></tr>
             </tbody>
         </table>
         ';
         $this->assertSimilar($expect, $this->html->table($list));
+    }
+
+    public function testTableWithAssociativeArrayColMode()
+    {
+        $list = [
+            'Mathis' => 12,
+            'Raphaël' => 14,
+            'Clara' => 16,
+            'Date' => (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05'),
+            'Diff' => (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05')->diff(new \DateTime()),
+            'Items' => new Items('ola,ole'),
+        ];
+        $expect = '
+        <table>
+            <thead><tr><th>Mathis</th><th>Raphaël</th><th>Clara</th><th>Date</th><th>Diff</th><th>Items</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td>12</td>
+                    <td>14</td>
+                    <td>16</td>
+                    <td>15-10-1975 05:15:05</td>
+                    <td>DateInterval</td>
+                    <td>
+                        <table>
+                            <thead><tr><th>0</th><th>1</th></tr></thead>
+                            <tbody><tr><td>ola</td><td>ole</td></tr></tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        ';
+        $this->assertSimilar($expect, $this->html->table($list, [], true, true));
     }
 
     public function testGetScript()
@@ -383,7 +427,8 @@ class HtmlTest extends BaseTestCase
     public function testGetFieldInputTextWithLabel()
     {
         $expect = '<label for="year">Année</label><input class="form-control" id="year" name="year" type="text" value="2018">';
-        $this->assertSimilar($expect, $this->html->field('year', 2018, ['class' => 'form-control', 'label' => 'Année']));
+        $this->assertSimilar($expect,
+            $this->html->field('year', 2018, ['class' => 'form-control', 'label' => 'Année']));
     }
 
     public function testGetFieldInputDate()
@@ -418,7 +463,8 @@ class HtmlTest extends BaseTestCase
     public function testGetFieldTextarea()
     {
         $expect = '<textarea cols="25" id="year" name="year" rows="5">2018</textarea>';
-        $this->assertSimilar($expect, $this->html->field('year', 2018, ['type' => 'textarea', 'rows' => 5, 'cols' => 25]));
+        $this->assertSimilar($expect,
+            $this->html->field('year', 2018, ['type' => 'textarea', 'rows' => 5, 'cols' => 25]));
     }
 
     public function testGetFieldSelect()
@@ -472,7 +518,7 @@ class HtmlTest extends BaseTestCase
 
     public function testButton()
     {
-        $expect='<button type="submit">Feu</button>';
+        $expect = '<button type="submit">Feu</button>';
         $this->assertSimilar($expect, $this->html->button('Feu'));
     }
 

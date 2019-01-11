@@ -68,11 +68,11 @@ class DebugTest extends BaseTestCase
 
     public function testGetProperties()
     {
-        $this->assertEquals([], Debug::getProperties($this));
+        $this->assertEquals([], Debug::getProperties($this)->toArray());
         $o = new \stdClass();
         $o->name = 'Clara';
-        $this->assertEquals(['name' => 'Clara'], Debug::getProperties($o));
-        $this->assertEquals(['name' => 'Clara'], $this->debugger->getProperties($o));
+        $this->assertEquals(['name' => 'Clara'], Debug::getProperties($o)->toArray());
+        $this->assertEquals(['name' => 'Clara'], $this->debugger->getProperties($o)->toArray());
     }
 
     public function testGetMethods()
@@ -90,15 +90,15 @@ class DebugTest extends BaseTestCase
     public function testGetParents()
     {
         $this->assertNotEmpty(Debug::getParents($this));
-        $this->assertCount(3, Debug::getParents($this));
-        $this->assertEquals(get_parent_class(get_class($this)), current(Debug::getParents($this)));
-        $this->assertEquals(get_parent_class(get_class($this)), current($this->debugger->getParents($this)));
+        $this->assertCount(4, Debug::getParents($this));
+        $this->assertEquals(get_parent_class(get_class($this)), current(Debug::getParents($this)->toArray()));
+        $this->assertEquals(get_parent_class(get_class($this)), current($this->debugger->getParents($this)->toArray()));
     }
 
     public function testGetParentsReverse()
     {
-        $this->assertEquals(array_reverse(Debug::getParents($this)), Debug::getParents($this, true));
-        $this->assertEquals(array_reverse($this->debugger->getParents($this)), $this->debugger->getParents($this, true));
+        $this->assertEquals(array_reverse(Debug::getParents($this)->toArray()), Debug::getParents($this, true)->toArray());
+        $this->assertEquals(array_reverse($this->debugger->getParents($this)->toArray()), $this->debugger->getParents($this, true)->toArray());
     }
 
     public function testGetInterfaces()
@@ -109,17 +109,8 @@ class DebugTest extends BaseTestCase
 
     public function testGetTraits()
     {
-        $this->assertEquals([], Debug::getTraits($this));
-        $this->assertEquals([], $this->debugger->getTraits($this));
-    }
-
-    public function testGetConstants()
-    {
-        $this->assertNotEmpty(Debug::getConstants());
-        $this->assertNotEmpty($this->debugger->getConstants());
-
-        $this->assertNotEmpty(Debug::getConstants('user'));
-        $this->assertNotEmpty($this->debugger->getConstants('user'));
+        $this->assertEquals([], Debug::getTraits($this)->toArray());
+        $this->assertEquals([], $this->debugger->getTraits($this)->toArray());
     }
 
     public function testGetNamespace()

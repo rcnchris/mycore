@@ -83,7 +83,7 @@ class DebugExtension extends \Twig_Extension
      *
      * @param object $object Objet
      *
-     * @return array|bool
+     * @return bool|\Rcnchris\Core\Tools\Items
      */
     public function getMethods($object)
     {
@@ -120,7 +120,7 @@ class DebugExtension extends \Twig_Extension
      *
      * @param object    $value  Objet dont il faut récupérer le nom du parent
      *
-     * @return bool|string
+     * @return bool|\Rcnchris\Core\Tools\Items
      */
     public function getParentClass($value)
     {
@@ -137,7 +137,7 @@ class DebugExtension extends \Twig_Extension
      *
      * @param $value
      *
-     * @return array
+     * @return \Rcnchris\Core\Tools\Items
      */
     public function getParentMethods($value)
     {
@@ -153,7 +153,7 @@ class DebugExtension extends \Twig_Extension
      *
      * @param object $value Objet
      *
-     * @return array|bool
+     * @return \Rcnchris\Core\Tools\Items
      */
     public function getImplements($value)
     {
@@ -169,7 +169,7 @@ class DebugExtension extends \Twig_Extension
      *
      * @param object $value Objet dont on veut connaître les traits utilisés
      *
-     * @return array|bool
+     * @return \Rcnchris\Core\Tools\Items
      */
     public function getTraits($value)
     {
@@ -237,6 +237,7 @@ class DebugExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('r', [$this, 'phpRef'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('rt', [$this, 'phpRefText'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('vd', [$this, 'vd'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('getConstants', [$this, 'getConstants'], ['is_safe' => ['html']])
         ];
@@ -262,6 +263,17 @@ class DebugExtension extends \Twig_Extension
     public function phpRef($value)
     {
         r($value);
+    }
+
+    /**
+     * Utiliser phpref pour debugger en mode texte
+     * - Fonction
+     *
+     * @param $value
+     */
+    public function phpRefText($value)
+    {
+        rt($value);
     }
 
     /**

@@ -18,6 +18,8 @@
 
 namespace Rcnchris\Core\Twig;
 
+use SplFileInfo;
+
 /**
  * Class FileExtension
  * <ul>
@@ -43,10 +45,74 @@ class FileExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('baseName', [$this, 'baseName']),
-            new \Twig_SimpleFilter('dirName', [$this, 'dirName']),
-            new \Twig_SimpleFilter('fileExtension', [$this, 'fileExtension'])
+            new \Twig_SimpleFilter('getFile', [$this, 'getFile'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('baseName', [$this, 'baseName'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('dirName', [$this, 'dirName'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('fileExtension', [$this, 'fileExtension'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('mime', [$this, 'getMime'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFilter('isImage', [$this, 'isImage'], ['is_safe' => ['html']])
         ];
+    }
+
+
+    /**
+     * Obtenir un fichier sous différentes formes
+     *
+     * @param string $path Chemin d'un fichier
+     * @param string $to   (info, array, uploaded, text)
+     *
+     * @return array|\SplFileInfo|string|null
+     */
+    public function getFile($path, $to = 'info')
+    {
+        if (!is_file($path)) {
+            return null;
+        }
+        switch ($to) {
+            case 'info':
+                return new SplFileInfo($path);
+                break;
+            case 'array':
+                return file($path);
+                break;
+            case 'text':
+                return file_get_contents($path);
+                break;
+            default:
+                return new SplFileInfo($path);
+                break;
+        }
+    }
+
+    /**
+     * Obtenir le type MIME d'un fichier
+     * - Filtre
+     *
+     * @param string $path Chemion d'un fichier
+     *
+     * @return null|string
+     */
+    public function getMime($path)
+    {
+        if (is_file($path)) {
+            return mime_content_type($path);
+        }
+        return null;
+    }
+
+    /**
+     * Savoir si le fichier est une image
+     * - Filtre
+     *
+     * @param string $path Chemin d'un fichier
+     *
+     * @return bool
+     */
+    public function isImage($path)
+    {
+        $mime = $this->getMime($path);
+        $parts = explode('/', $mime);
+        return $parts[0] === 'image';
     }
 
     /**

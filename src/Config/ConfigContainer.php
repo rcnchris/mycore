@@ -37,7 +37,7 @@ use Psr\Container\NotFoundExceptionInterface;
  *
  * @link     https://github.com/rcnchris on Github
  */
-class ConfigContainer implements ContainerInterface
+class ConfigContainer implements ContainerInterface, \ArrayAccess
 {
     /**
      * Configuration
@@ -98,6 +98,123 @@ class ConfigContainer implements ContainerInterface
      */
     public function has($key)
     {
-        return in_array($key, $this->config);
+        return in_array($key, $this->keys());
+    }
+
+    /**
+     * Définir une clé et sa valeur
+     *
+     * @param string     $key   Nom de la clé
+     * @param mixed|null $value Valeur de la clé
+     */
+    public function set($key, $value = null)
+    {
+        $this->config[$key] = $value;
+    }
+
+    /**
+     * Supprimer une clé et sa valeur
+     *
+     * @param string $key
+     */
+    public function del($key)
+    {
+        if ($this->has($key)) {
+            unset($this->config[$key]);
+        }
+    }
+
+    /**
+     * Obtenir la liste des clés
+     *
+     * @return array
+     */
+    public function keys()
+    {
+        return array_keys($this->config);
+    }
+
+    /**
+     * Obtenir tout le conteneur sous forme de tableau
+     *
+     * @return array
+     */
+    public function all()
+    {
+        return $this->config;
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Whether a offset exists
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
+     *
+     * @param mixed $offset <p>
+     *                      An offset to check for.
+     *                      </p>
+     *
+     * @return boolean true on success or false on failure.
+     * </p>
+     * <p>
+     * The return value will be casted to boolean if non-boolean was returned.
+     */
+    public function offsetExists($offset)
+    {
+        return $this->has($offset);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to retrieve
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetget.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to retrieve.
+     *                      </p>
+     *
+     * @return mixed Can return all value types.
+     */
+    public function offsetGet($offset)
+    {
+        return $this->get($offset);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to set
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to assign the value to.
+     *                      </p>
+     * @param mixed $value  <p>
+     *                      The value to set.
+     *                      </p>
+     *
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        $this->set($offset, $value);
+    }
+
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Offset to unset
+     *
+     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
+     *
+     * @param mixed $offset <p>
+     *                      The offset to unset.
+     *                      </p>
+     *
+     * @return void
+     */
+    public function offsetUnset($offset)
+    {
+        $this->del($offset);
     }
 }

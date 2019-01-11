@@ -246,7 +246,7 @@ class Html
         // Header
         if ($colMode) {
             $html .= '<thead><tr>';
-            foreach (array_keys($items) as $key) {
+            foreach ($items as $key => $value) {
                 $html .= self::surround($key, 'th');
             }
             $html .= '</tr></thead>';
@@ -403,7 +403,6 @@ class Html
         }
         $script = self::$cdns->get($key)->get('core')->get($version)->get('js')->get($type);
         if ($script) {
-
             if (substr(trim($script, '/'), 0, 6) === 'public') {
                 $script = self::$prefixUrl . trim($script, '/');
             }

@@ -14,7 +14,5 @@
 
 ## Installation
 
-<pre class="sh_sh">
- # Pour l'utiliser dans son projet
- composer require rcnchris/core
-</pre>
+### Pour l'utiliser dans son projet
+<pre class="sh_sh">composer require rcnchris/core</pre>

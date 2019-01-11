@@ -74,8 +74,25 @@ class TimeExtension extends \Twig_Extension
     {
         return [
             new \Twig_SimpleFunction('now', [$this, 'now'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('getDate', [$this, 'getDate'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('dateDiff', [$this, 'dateDiff'], ['is_safe' => ['html']])
         ];
+    }
+
+
+    /**
+     * Obtenir l'instance d'un DateTime à partir d'une valeur et d'un format
+     * - Fonction
+     *
+     * @param string      $value  Valeur de la date
+     * @param string|null $format Format de la date
+     *
+     * @return \DateTime
+     */
+    public function getDate($value, $format = 'Y-m-d')
+    {
+        $d = (new \DateTime())->createFromFormat($format, $value);
+        return $d;
     }
 
     /**

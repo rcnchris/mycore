@@ -240,9 +240,9 @@ class Curl
      */
     public function getResponse()
     {
-        if ($this->getHttpCode() === 200) {
+        $codesOk = [200, 301, 302];
+        if (in_array($this->getHttpCode(), $codesOk)) {
             $response = null;
-
             if ($this->getContentType() === 'application/json' || $this->getContentType() === 'text/plain') {
                 $content = json_decode($this->response, true);
                 if (is_array($content)) {

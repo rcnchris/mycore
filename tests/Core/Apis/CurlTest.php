@@ -22,7 +22,7 @@ class CurlTest extends BaseTestCase
     private $baseUrls = [
         'geo' => 'https://geo.api.gouv.fr',
         'user' => 'https://randomuser.me/api/',
-        'image' => 'http://lorempicsum.com/futurama/255/200/5'
+        'image' => 'http://placekitten.com/200/300'
     ];
 
     public function setUp()
@@ -163,6 +163,7 @@ class CurlTest extends BaseTestCase
             ->makeCurl($this->baseUrls['image'])
             ->exec('Test image')
             ->getResponse();
+
         $this->assertInstanceOf(Image::class, $response);
 
     }

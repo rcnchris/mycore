@@ -1,5 +1,5 @@
+/app/
 /vendor/
 /composer.lock
-/public/coverage/
-/public/doc/
+/public/
 /tests/Core/PDF/results/

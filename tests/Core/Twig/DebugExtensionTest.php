@@ -57,7 +57,7 @@ class DebugExtensionTest extends BaseTestCase {
     {
         $o = new Items('ola,ole,oli');
         $methods = get_class_methods(get_class($o));
-        $this->assertEquals($methods, $this->ext->getMethods($o));
+        $this->assertEquals($methods, $this->ext->getMethods($o)->toArray());
     }
 
     public function testGestMethodsWithWrongParameter()
@@ -76,7 +76,7 @@ class DebugExtensionTest extends BaseTestCase {
     {
         $this->assertEquals(
             get_parent_class($this->ext),
-            current($this->ext->getParentClass($this->ext))
+            current($this->ext->getParentClass($this->ext)->toArray())
         );
     }
 
@@ -89,20 +89,20 @@ class DebugExtensionTest extends BaseTestCase {
     {
         $this->assertEquals(
             get_class_methods(get_parent_class($this->ext)),
-            current($this->ext->getParentMethods($this->ext))
+            current($this->ext->getParentMethods($this->ext)->toArray())
         );
     }
 
     public function testGetTraits()
     {
-        $this->assertInternalType('array', $this->ext->getTraits($this));
+        $this->assertInternalType('array', $this->ext->getTraits($this)->toArray());
     }
 
     public function testGetImplements()
     {
         $this->assertEquals(
             current(class_implements($this->ext)),
-            current($this->ext->getImplements($this->ext))
+            current($this->ext->getImplements($this->ext)->toArray())
         );
     }
 

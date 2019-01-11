@@ -96,7 +96,7 @@ class EnvironnementTest extends BaseTestCase
 
     public function testPhpVersion()
     {
-        $this->assertSimilar(PHP_VERSION, $this->e->getPhpVersion());
+        $this->assertSimilar(PHP_VERSION, $this->e->getPhpVersion(false));
         $this->assertInternalType('string', $this->e->getPhpVersion(true));
     }
 
