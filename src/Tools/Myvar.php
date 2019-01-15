@@ -35,6 +35,15 @@ namespace Rcnchris\Core\Tools;
  */
 class Myvar
 {
+
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Facilite la manipulation de fichiers et dossiers",
+    ];
     /**
      * Variable
      *
@@ -320,5 +329,21 @@ class Myvar
     public function toInt()
     {
         return intval($this->var);
+    }
+
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

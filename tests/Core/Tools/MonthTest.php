@@ -21,6 +21,11 @@ class MonthTest extends BaseTestCase
         $this->assertEquals($today->format('m-Y'), $month->getFirstDay()->format('m-Y'));
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makeMonth());
+    }
+
     public function testMagicToString()
     {
         $this->assertEquals('Janvier - 2019', (string)$this->makeMonth(1, 2019));

@@ -25,6 +25,16 @@ class BaseTestCase extends TestCase
     const VERBOSE = true;
 
     /**
+     * Chemin du fichier de configuration
+     */
+    const CONFIG_PATH = __DIR__ . '/config.php';
+
+    /**
+     * Chemin du fichier des dépendances
+     */
+    const DEP_PATH = __DIR__ . '/../app/dependencies.php';
+
+    /**
      * Liste des fichiers utilisés pour les tests
      *
      * @var array
@@ -474,6 +484,23 @@ class BaseTestCase extends TestCase
     }
 
     /**
+     * Obtenir une instance mockée d'une classe
+     *
+     * @param string $class Nom d'une classe à mocker
+     * @param array  $methods Liste des méthodes à mocker
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    public function makeMock($class, array $methods = [])
+    {
+        $mock = $this->getMockBuilder($class);
+        if (!empty($methods)) {
+            $mock->setMethods($methods);
+        }
+        return $mock->getMock();
+    }
+
+    /**
      * Obtenir une nouvelle requête PSR7
      *
      * @return ServerRequestInterface
@@ -524,5 +551,18 @@ class BaseTestCase extends TestCase
     protected function makeContainer(array $data = [])
     {
         return new ConfigContainer($data);
+    }
+
+    /**
+     * Vérifie qu'un objet dispose de la propriété help et de la méthode associée
+     *
+     * @param object $o objet à tester
+     */
+    public function assertHasHelp($o)
+    {
+        $this->assertObjectHasAttribute('help', $o);
+        $this->assertObjectHasMethods($o, ['help']);
+        $this->assertInternalType('string', $o->help());
+        $this->assertInternalType('array', $o->help(false));
     }
 }

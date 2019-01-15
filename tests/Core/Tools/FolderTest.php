@@ -2,6 +2,7 @@
 namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Folder;
+use SplFileInfo;
 use Tests\Rcnchris\BaseTestCase;
 
 class FolderTest extends BaseTestCase {
@@ -41,6 +42,11 @@ class FolderTest extends BaseTestCase {
     {
         $this->ekoTitre('Tools - Folder');
         $this->assertInstanceOf(Folder::class, $this->folder);
+    }
+
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->folder);
     }
 
     /**
@@ -149,5 +155,10 @@ class FolderTest extends BaseTestCase {
     public function testDestroy()
     {
         $this->assertTrue($this->folder->__destroy());
+    }
+
+    public function testGetFileInfo()
+    {
+        $this->assertInstanceOf(SplFileInfo::class, $this->folder->getFileInfo('composer.json'));
     }
 }

@@ -25,13 +25,18 @@ class EnvironnementTest extends BaseTestCase
      */
     public function makeEnvironnement($server = null)
     {
-        return new Environnement($server);
+        return Environnement::getInstance($server);
     }
 
     public function testInstance()
     {
         $this->ekoTitre('Tools - Environnement');
         $this->assertInstanceOf(Environnement::class, $this->e);
+    }
+
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->e);
     }
 
     public function testGet()
@@ -59,11 +64,11 @@ class EnvironnementTest extends BaseTestCase
         $this->assertSimilar(`uname -r`, $this->e->getUname('r'));
     }
 
-    public function testServerName()
-    {
-        $e = $this->makeEnvironnement(['SERVER_NAME' => 'testserver']);
-        $this->assertEquals('testserver', $e->getServerName());
-    }
+//    public function testServerName()
+//    {
+//        $e = $this->makeEnvironnement(['SERVER_NAME' => 'testserver']);
+//        $this->assertEquals('testserver', $e->getServerName());
+//    }
 
     public function testApacheModules()
     {
@@ -140,19 +145,6 @@ class EnvironnementTest extends BaseTestCase
         $this->assertContains('Europe/Paris', $this->e->getTimezones()->toArray());
     }
 
-    public function testLocale()
-    {
-        $this->assertInstanceOf(Locale::class, $this->e->getLocale());
-    }
-
-    public function testSetLocale()
-    {
-        $this->e->setLocale('us_US');
-        $this->assertEquals('us_US', $this->e->getLocale()->getDefault());
-        $this->e->setLocale('fr_FR');
-        $this->assertEquals('fr_FR', $this->e->getLocale()->getDefault());
-    }
-
     public function testLocales()
     {
         $this->assertContains('fr_FR', $this->e->getLocales()->toArray());
@@ -173,12 +165,6 @@ class EnvironnementTest extends BaseTestCase
         $this->assertEquals('cli', $this->e->getSapi());
     }
 
-    public function testConstants()
-    {
-        $this->assertNotEmpty($this->e->getConstants()->toArray());
-        $this->assertTrue($this->e->getConstants()->has('user'));
-    }
-
     public function testGitVersion()
     {
         $this->assertInternalType('string', $this->e->getGitVersion());
@@ -197,5 +183,42 @@ class EnvironnementTest extends BaseTestCase
     public function testWkhtmltopdfVersion()
     {
         $this->assertInternalType('string', $this->e->getWkhtmltopdfVersion());
+    }
+
+    public function testGetConstants()
+    {
+        $this->assertInstanceOf(Items::class, $this->e->getConstants());
+    }
+
+    public function testGetConstantsWithKey()
+    {
+        $constants = $this->e->getConstants('user');
+        $this->assertInstanceOf(Items::class, $constants);
+        $this->assertEquals('/', $constants->get('DS'));
+    }
+
+    public function testGetUserAgent()
+    {
+        $browsers = [
+            'Firefox' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:65.0) Gecko/20100101 Firefox/65.0',
+            'Opera' => 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36 OPR/57.0.3098.116',
+            'Edge' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36 Edge/17.17134',
+            'Chrome' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
+            'PhpStorm' => 'Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.52 Safari/537.36',
+            'PhpStormREST' => 'Apache-HttpClient/4.3.2 (java 1.5)'
+        ];
+        $this->assertNull($this->e->getUserAgent());
+        $this->assertEquals($browsers['PhpStormREST'], $this->e->getUserAgent($browsers['PhpStormREST'], true));
+        $this->assertEquals('Firefox', $this->e->getUserAgent($browsers['Firefox']));
+        $this->assertEquals('Opera', $this->e->getUserAgent($browsers['Opera']));
+        $this->assertEquals('Edge', $this->e->getUserAgent($browsers['Edge']));
+        $this->assertEquals('Chrome', $this->e->getUserAgent($browsers['Chrome']));
+        $this->assertEquals('Chrome', $this->e->getUserAgent($browsers['PhpStorm']));
+
+    }
+
+    public function testGetServername()
+    {
+        $this->assertNull($this->e->getServerName());
     }
 }

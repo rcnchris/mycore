@@ -34,10 +34,21 @@ use ArrayAccess;
  * @author   Raoul <rcn.chris@gmail.com>
  *
  * @version  Release: <1.0.0>
+ *
+ * @codeCoverageIgnore
  */
 class PHPCookies implements CookiesInterface, ArrayAccess
 {
 
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        'Manipulation des <strong>cookies</strong>',
+        "Implémentation de l'interface <code>CookiesInterface</code>"
+    ];
     /**
      * Options par défaut des cookies
      *
@@ -320,5 +331,21 @@ class PHPCookies implements CookiesInterface, ArrayAccess
     public function offsetUnset($offset)
     {
         $this->delete($offset);
+    }
+
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

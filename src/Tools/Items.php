@@ -40,7 +40,14 @@ use Traversable;
  */
 class Items implements ArrayAccess, Countable, IteratorAggregate
 {
-
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Gestion d'une liste de données",
+    ];
     /**
      * Items
      *
@@ -889,5 +896,20 @@ class Items implements ArrayAccess, Countable, IteratorAggregate
     public function getIterator()
     {
         return new ArrayIterator($this->items);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

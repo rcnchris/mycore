@@ -36,6 +36,15 @@ namespace Rcnchris\Core\Tools;
 class Colors
 {
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private $help = [
+        'Facilite la manipulation des couleurs',
+    ];
+
+    /**
      * Liste des couleurs
      *
      * @var array
@@ -256,17 +265,25 @@ class Colors
      * @return array
      * @throws \Exception
      */
-    public function hexaToRgb($hexa)
+    public function hexaToRgb($hexa, $tostring = false)
     {
         $hexa = strtolower($hexa);
         if ($hexa[0] != '#' || strlen($hexa) != 7) {
             throw new \Exception('code héxadécimal incorrect : ' . $hexa);
         }
-        return [
+        $ret = [
             'r' => hexdec(substr($hexa, 1, 2)),
             'g' => hexdec(substr($hexa, 3, 2)),
             'b' => hexdec(substr($hexa, 5, 2))
         ];
+        if ($tostring) {
+            return 'rgb('
+            . hexdec(substr($hexa, 1, 2))
+            . ', ' . hexdec(substr($hexa, 3, 2))
+            . ', ' . hexdec(substr($hexa, 5, 2))
+            . ')';
+        }
+        return $ret;
     }
 
     /**
@@ -335,5 +352,20 @@ class Colors
     public function rand($nb = 1, $inverse = false)
     {
         return array_rand($this->getList($inverse), $nb);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public function help($text = true)
+    {
+        if ($text) {
+            return join('. ', $this->help);
+        }
+        return $this->help;
     }
 }

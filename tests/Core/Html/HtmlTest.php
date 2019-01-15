@@ -3,6 +3,7 @@ namespace Tests\Rcnchris\Core\Html;
 
 use Rcnchris\Core\Html\Html;
 use Rcnchris\Core\Tools\Items;
+use Rcnchris\Core\Tools\Url;
 use Tests\Rcnchris\BaseTestCase;
 
 class HtmlTest extends BaseTestCase
@@ -15,14 +16,17 @@ class HtmlTest extends BaseTestCase
     public function setUp()
     {
         $this->html = Html::getInstance();
-        $this->html->setCdns($this->getConfig('cdn'));
     }
 
     public function testInstance()
     {
         $this->ekoTitre('Html - Helper HTML');
         $this->assertInstanceOf(Html::class, $this->html);
-        $this->assertArrayHasKey('jquery', $this->html->getCdns()->toArray());
+    }
+
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->html);
     }
 
     public function testLink()
@@ -200,7 +204,11 @@ class HtmlTest extends BaseTestCase
 
     public function testTableWithSimpleListColMode()
     {
-        $list = ['ola', 'ole', 'oli', (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05')];
+        $list = [
+            'ola', 'ole', 'oli',
+            (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05'),
+            (new Url('http://php.net/manual/fr/'))
+        ];
         $expect = '
         <table>
             <thead>
@@ -209,6 +217,7 @@ class HtmlTest extends BaseTestCase
                     <th>1</th>
                     <th>2</th>
                     <th>3</th>
+                    <th>4</th>
                 </tr>
             </thead>
             <tbody>
@@ -217,6 +226,7 @@ class HtmlTest extends BaseTestCase
                     <td>ole</td>
                     <td>oli</td>
                     <td>15-10-1975 05:15:05</td>
+                    <td>http://php.net/manual/fr/</td>
                 </tr>
             </tbody>
         </table>
@@ -307,6 +317,7 @@ class HtmlTest extends BaseTestCase
             'Date' => (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05'),
             'Diff' => (new \DateTime())->createFromFormat('d-m-Y H:i:s', '15-10-1975 05:15:05')->diff(new \DateTime()),
             'Items' => new Items('ola,ole'),
+            'Url' => new Url('http://php.net/manual/fr/')
         ];
         $expect = '
         <table>
@@ -317,6 +328,7 @@ class HtmlTest extends BaseTestCase
                 <tr><th>Date</th><td>15-10-1975 05:15:05</td></tr>
                 <tr><th>Diff</th><td>DateInterval</td></tr>
                 <tr><th>Items</th><td><table><tbody><tr><th>0</th><td>ola</td></tr><tr><th>1</th><td>ole</td></tr></tbody></table></td></tr>
+                <tr><th>Url</th><td>http://php.net/manual/fr/</td></tr>
             </tbody>
         </table>
         ';
@@ -356,50 +368,6 @@ class HtmlTest extends BaseTestCase
         $this->assertSimilar($expect, $this->html->table($list, [], true, true));
     }
 
-    public function testGetScript()
-    {
-        $expect = '<script src="https://code.highcharts.com/highcharts.js" type="text/javascript"></script>';
-        $this->assertSimilar($expect, $this->html->script('highcharts'));
-    }
-
-    public function testGetScriptMin()
-    {
-        $expect = '<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" type="text/javascript"></script>';
-        $this->assertSimilar($expect, $this->html->script('jquery', 'min'));
-    }
-
-    public function testGetScriptWithWrongType()
-    {
-        $this->assertNull($this->html->script('jquery', 'fake'));
-    }
-
-    public function testGetScriptWithMissingKey()
-    {
-        $this->assertNull($this->html->script('fake', 'src'));
-    }
-
-    public function testGetCssLink()
-    {
-        $expect = '<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.css" rel="stylesheet" type="text/css"/>';
-        $this->assertSimilar($expect, $this->html->css('datatables'));
-    }
-
-    public function testGetCssLinkMin()
-    {
-        $expect = '<link href="https://cdn.datatables.net/1.10.16/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css"/>';
-        $this->assertSimilar($expect, $this->html->css('datatables', 'min'));
-    }
-
-    public function testGetCssWithWrongKey()
-    {
-        $this->assertNull($this->html->css('fake'));
-    }
-
-    public function testGetCssWithWrongType()
-    {
-        $this->assertNull($this->html->css('bootstrap', 'fake'));
-    }
-
     public function testGetFieldInputText()
     {
         $expect = '<input id="year" name="year" type="text" value="2018">';
@@ -416,6 +384,12 @@ class HtmlTest extends BaseTestCase
     {
         $expect = '<input id="year" name="year" required type="text" value="2018">';
         $this->assertSimilar($expect, $this->html->field('year', 2018, ['required' => true]));
+    }
+
+    public function testGetFieldInputTextWithPlaceHolder()
+    {
+        $expect = '<input class="form-control" id="year" name="year" placeholder="Année" type="text" value="2018">';
+        $this->assertSimilar($expect, $this->html->field('year', 2018, ['class' => 'form-control', 'placeholder' => 'Année']));
     }
 
     public function testGetFieldInputTextWithClass()

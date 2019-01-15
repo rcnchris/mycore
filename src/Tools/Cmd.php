@@ -35,12 +35,43 @@ namespace Rcnchris\Core\Tools;
  */
 class Cmd
 {
+
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Permet d'exécuter des <strong>commandes shell</strong>",
+        'Instanciable et statique',
+    ];
+
     /**
      * Liste des commandes
      *
      * @var array
      */
     private static $cmds = [];
+
+    /**
+     * Instance
+     *
+     * @var $this
+     */
+    private static $instance;
+
+    /**
+     * Obtenir une instance (Singleton)
+     *
+     * @return \Rcnchris\Core\Tools\Debug
+     */
+    public static function getInstance()
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
 
     /**
      * Exécute une ou plusieurs commandes et retourne le résultat
@@ -242,5 +273,20 @@ class Cmd
         }
 
         return $size;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

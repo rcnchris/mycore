@@ -22,7 +22,8 @@ use Tests\Rcnchris\BaseTestCase;
  *
  * @link     https://github.com/rcnchris on Github
  */
-class FileExtensionTest extends BaseTestCase {
+class FileExtensionTest extends BaseTestCase
+{
 
     /**
      * @var FileExtension
@@ -70,4 +71,64 @@ class FileExtensionTest extends BaseTestCase {
         $this->assertEquals('php', $this->ext->fileExtension(__FILE__));
     }
 
+    public function testGetFileWithoutParameter()
+    {
+        $this->assertInstanceOf(
+            \SplFileInfo::class,
+            $this->ext->getFile(__FILE__)
+        );
+    }
+
+    public function testGetFileToInfo()
+    {
+        $this->assertInstanceOf(
+            \SplFileInfo::class,
+            $this->ext->getFile(__FILE__, 'info')
+        );
+    }
+
+    public function testGetFileToArray()
+    {
+        $this->assertInternalType(
+            'array',
+            $this->ext->getFile(__FILE__, 'array')
+        );
+    }
+
+    public function testGetFileToText()
+    {
+        $this->assertInternalType(
+            'string',
+            $this->ext->getFile(__FILE__, 'text')
+        );
+    }
+
+    public function testGetFileWithWrongType()
+    {
+        $this->assertInstanceOf(
+            \SplFileInfo::class,
+            $this->ext->getFile(__FILE__, 'fake')
+        );
+    }
+
+    public function testGetFileWithMissingFile()
+    {
+        $this->assertNull($this->ext->getFile('/fake/file'));
+    }
+
+    public function testGetMime()
+    {
+        $this->assertEquals('text/x-php', $this->ext->getMime(__FILE__));
+    }
+
+    public function testGetMimeWithMissingFile()
+    {
+        $this->assertNull($this->ext->getMime('/fake/file'));
+    }
+
+    public function testIsImage()
+    {
+        $this->assertFalse($this->ext->isImage(__FILE__));
+        $this->assertTrue($this->ext->isImage($this->rootPath() . $this::TESTS_FOLDER . '/files/icon_readme.png'));
+    }
 }

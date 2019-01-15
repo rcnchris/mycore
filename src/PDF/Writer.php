@@ -124,11 +124,11 @@ class Writer
                 );
             }
         } elseif (is_object($content)) {
-            foreach ($this->writingOptions['keys'] as $key) {
+            foreach (get_object_vars($content) as $property => $value) {
                 $this->pdf->Cell(
                     $this->writingOptions->get('width'),
                     $this->writingOptions->get('heightline'),
-                    utf8_decode($key . ' : ' . $content->$key),
+                    utf8_decode($property . ' : ' . $value),
                     $this->writingOptions->get('border'),
                     $this->writingOptions->get('lnAfter'),
                     $this->writingOptions->get('align'),

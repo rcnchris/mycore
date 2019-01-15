@@ -179,4 +179,9 @@ class ArrayExtensionTest extends BaseTestCase
         ';
         $this->assertSimilar($expect, $this->ext->toHtml($tab));
     }
+
+    public function testExplode()
+    {
+        $this->assertEquals(['ola', 'ole'], $this->ext->explode('ola,ole'));
+    }
 }

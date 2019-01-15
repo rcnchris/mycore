@@ -33,6 +33,11 @@ class SourceManagerTest extends BaseTestCase
         $this->assertInstanceOf(SourcesManager::class, $this->dbManager);
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->dbManager);
+    }
+
     public function testGetSources()
     {
         $sources = $this->dbManager->getSources();

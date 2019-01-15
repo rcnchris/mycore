@@ -74,28 +74,30 @@ class BootMiddleware extends AbstractMiddleware
             throw new \Exception(
                 "Version de PHP " . PHP_VERSION
                 . " non supportée par cette application ! Elle a besoin de PHP "
-                . $this->defaultConfig['php']. " ou supérieur."
+                . $this->defaultConfig['php'] . " ou supérieur."
             );
         }
 
         /**
          * Localisation
          */
+        $localisations = [
+            'timezone' => $this->defaultConfig['timezone'],
+            'charset' => $this->defaultConfig['charset'],
+            'locale' => $this->defaultConfig['locale'],
+        ];
         if (!is_null($this->container)) {
-            date_default_timezone_set($this->getContainer('timezone'));
-            mb_internal_encoding($this->getContainer('charset'));
-            if (extension_loaded('intl')) {
-                ini_set('intl.default_locale', $this->getContainer('locale'));
-            }
-            setlocale(LC_MONETARY, $this->getContainer('locale'));
-        } else {
-            date_default_timezone_set($this->defaultConfig['timezone']);
-            mb_internal_encoding($this->defaultConfig['charset']);
-            if (extension_loaded('intl')) {
-                ini_set('intl.default_locale', $this->defaultConfig['locale']);
-            }
-            setlocale(LC_MONETARY, $this->defaultConfig['locale']);
+            $localisations['timezone'] = $this->getContainer('timezone');
+            $localisations['charset'] = $this->getContainer('charset');
+            $localisations['locale'] = $this->getContainer('lang');
         }
+        date_default_timezone_set($localisations['timezone']);
+        mb_internal_encoding($localisations['charset']);
+        if (extension_loaded('intl')) {
+            ini_set('intl.default_locale', $localisations['locale']);
+        }
+        setlocale(LC_ALL, $localisations['locale']);
+        (new \Locale())->setDefault($localisations['locale']);
 
         /**
          * Affichage des erreurs PHP si la clé du conteneur de dépendances `debug` est à `true`

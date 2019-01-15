@@ -18,6 +18,7 @@
 
 namespace Rcnchris\Core\PDF;
 
+use Michelf\MarkdownExtra;
 use mikehaertl\wkhtmlto\Pdf;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Http\Response;
@@ -40,6 +41,16 @@ use Slim\Http\Response;
 class Wkhtmltopdf extends Pdf
 {
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        'Helper <strong>Wkhtmltopdf</strong>',
+        'Permet de <strong>générer</strong> et <strong>rendre</strong> des document <strong>PDF</strong>',
+        "Requiert l'installation de <code>Wkhtmltopdf</code> sur le système d'exploitation du serveur PHP"
+    ];
+    /**
      * Options par défaut d'un document PDF généré par Wkhtmltopdf
      *
      * @var array
@@ -49,7 +60,7 @@ class Wkhtmltopdf extends Pdf
         'orientation' => 'Portrait',
         'encoding' => 'utf-8',
         'disable-smart-shrinking',
-        'disable-javascript',
+        //'disable-javascript',
         // Options
         'header-line',
         'header-spacing' => 3,
@@ -69,7 +80,7 @@ class Wkhtmltopdf extends Pdf
     public function __construct($options = null)
     {
         if (is_null($options)) {
-            $options = [];
+            $options = $this->defaultOptions;
         }
         parent::__construct(array_merge($this->defaultOptions, $options));
     }
@@ -105,11 +116,8 @@ class Wkhtmltopdf extends Pdf
             return $this->_options;
         } elseif (array_key_exists($key, $this->_options)) {
             return $this->_options[$key];
-        } else {
-            $id = array_search($key, $this->_options);
-            if ($id) {
-                return $this->_options[$id];
-            }
+        } elseif (in_array($key, array_values($this->_options))) {
+            return $key;
         }
         return null;
     }
@@ -123,17 +131,13 @@ class Wkhtmltopdf extends Pdf
      */
     public function hasOption($name)
     {
-        if (array_key_exists($name, $this->_options)) {
-            return true;
-        } elseif (array_search($name, $this->_options)) {
+        if (array_key_exists($name, $this->_options) || in_array($name, array_values($this->_options))) {
             return true;
         }
         return false;
     }
 
     /**
-     * Rendre le document PDF dans une réponse PSR7
-     *
      * @param \Psr\Http\Message\ResponseInterface $response
      * @param array                               $options
      *
@@ -238,5 +242,39 @@ class Wkhtmltopdf extends Pdf
             $input = 'http://localhost' . $input;
         }
         return parent::addPage($input, $options, $type);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
+    }
+
+    /**
+     * Obtenir l'aide du binaire Wkhtmltopdf
+     *
+     * @param string $type Type d'aide (help, extended-help, readme, htmldoc, manpage)
+     *
+     * @return string
+     */
+    public function getDoc($type = 'extended-help')
+    {
+        $cmd = 'wkhtmltopdf --' . $type;
+        $ret = shell_exec($cmd);
+        if ($type === 'readme') {
+            $ret = MarkdownExtra::defaultTransform($ret);
+        } elseif ($type === 'help' || $type === 'extended-help') {
+            $ret = '<pre>' . strip_tags($ret) . '</pre>';
+        }
+        return $ret;
     }
 }

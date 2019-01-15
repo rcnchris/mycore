@@ -2,6 +2,7 @@
 namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Cmd;
+use Rcnchris\Core\Tools\Items;
 use Tests\Rcnchris\BaseTestCase;
 
 class CmdTest extends BaseTestCase {
@@ -30,6 +31,12 @@ class CmdTest extends BaseTestCase {
     {
         $this->ekoTitre('Tools - Shell');
         $this->assertInstanceOf(Cmd::class, $this->cmd);
+        $this->assertInstanceOf(Cmd::class, Cmd::getInstance());
+    }
+
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->cmd);
     }
 
     public function testExec()

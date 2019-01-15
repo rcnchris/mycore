@@ -41,6 +41,11 @@ class ComposerTest extends BaseTestCase {
         );
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->composer);
+    }
+
     public function testInstanceWithWrongFile()
     {
         $this->expectException(\Exception::class);
@@ -243,6 +248,11 @@ class ComposerTest extends BaseTestCase {
             , $requires
             , $this->getMessage("Le retour de '__call' avec plusieurs paramètres est incorrect")
         );
+    }
+
+    public function testGetFileName()
+    {
+        $this->assertFileExists($this->makeComposer()->getFileName());
     }
 
 //    public function testCallWrongMethod()

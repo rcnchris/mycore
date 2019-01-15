@@ -34,7 +34,14 @@ namespace Rcnchris\Core\Session;
  */
 class ArraySession implements SessionInterface
 {
-
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    protected $help = [
+        "Gestion des sessions utilisateurs sous la forme de tableau",
+    ];
     /**
      * Variables de session sous forme de tableau
      *
@@ -134,5 +141,20 @@ class ArraySession implements SessionInterface
     public function has($key)
     {
         return array_key_exists($key, $this->session);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public function help($text = true)
+    {
+        if ($text) {
+            return join('. ', $this->help);
+        }
+        return $this->help;
     }
 }

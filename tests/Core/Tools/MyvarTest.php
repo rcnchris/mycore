@@ -34,20 +34,20 @@ class MyvarTest extends BaseTestCase
     public function setUp()
     {
         $this->vars = [
-            'string' => 'ola les gens'
-            , 'integer' => 12
-            , 'double' => 12.56
-            , 'array' => [
-                ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
-                , ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
-                , ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
-            ]
-            , 'object' => new Items([
-                ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male']
-                , ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male']
-                , ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
-            ])
-            , 'resource' => curl_init('http://fake.com')
+            'string' => 'ola les gens',
+            'integer' => 12,
+            'double' => 12.56,
+            'array' => [
+                ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'],
+                ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male'],
+                ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
+            ],
+            'object' => new Items([
+                ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'],
+                ['name' => 'Raphaël', 'year' => 2007, 'genre' => 'male'],
+                ['name' => 'Clara', 'year' => 2009, 'genre' => 'female']
+            ]),
+            'resource' => curl_init('http://fake.com')
         ];
         $this->item = ['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'];
     }
@@ -56,6 +56,11 @@ class MyvarTest extends BaseTestCase
     {
         $this->ekoTitre('Tools - MyVar');
         $this->assertInstanceOf(Myvar::class, $this->makeVar('ola'));
+    }
+
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makeVar('ola'));
     }
 
     public function testGetType()
@@ -169,16 +174,16 @@ class MyvarTest extends BaseTestCase
     {
         foreach ($this->vars as $type => $value) {
             $this->assertEquals(
-                $this->vars[$type]
-                , $this->makeVar($value)->get()
-                , $this->getMessage("La valeur obtenue est différente de la valeur initiale")
+                $this->vars[$type],
+                $this->makeVar($value)->get(),
+                $this->getMessage("La valeur obtenue est différente de la valeur initiale")
             );
         }
 
         $this->assertEquals(
-            'Mathis'
-            , $this->makeVar(['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'])->get('name')
-            , $this->getMessage("La valeur de la clé demandée est incorrecte")
+            'Mathis',
+            $this->makeVar(['name' => 'Mathis', 'year' => 2007, 'genre' => 'male'])->get('name'),
+            $this->getMessage("La valeur de la clé demandée est incorrecte")
         );
 
         $o = new \stdClass();
@@ -191,23 +196,12 @@ class MyvarTest extends BaseTestCase
             , $this->getMessage("La valeur de la clé demandée à l'objet est incorrecte")
         );
 
-//        $o = new Items($o);
-//        $this->assertEquals(
-//            'Mathis'
-//            , $this->makeVar($o)->get('name')
-//            , $this->getMessage("La valeur de la clé demandée à l'objet est incorrecte")
-//        );
-//
-//        $this->assertEquals(
-//            $o->toArray()
-//            , $this->makeVar($o)->get('toArray')
-//            , $this->getMessage("L'appel d'une méthode de l'objet est incorrect")
-//        );
-
         $this->assertFalse(
             $this->makeVar($o)->get('fake')
             , $this->getMessage("L'appel d'une clé, méthode ou propriété sur l'objet est incorrect")
         );
+
+        $this->assertInternalType('integer', $this->makeVar($this->vars['object'])->get('count'));
     }
 
     public function testGetMethods()

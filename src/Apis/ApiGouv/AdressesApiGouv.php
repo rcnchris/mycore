@@ -41,6 +41,15 @@ use Rcnchris\Core\Tools\Items;
  */
 class AdressesApiGouv extends Curl
 {
+
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private $help = [
+        "Utilise l'API du gouvernement français <a href='https://geo.api.gouv.fr/' target='_blank'><strong>https://geo.api.gouv.fr/</strong></a>"
+    ];
     /**
      * Liste des départements
      *
@@ -91,9 +100,8 @@ class AdressesApiGouv extends Curl
     {
         return $this
             ->withParts("regions/$code")
-            ->withParams(['format' => 'json'])
             ->exec("Régions")
-            ->getResponse();
+            ->getResponse('json');
     }
 
     /**
@@ -119,7 +127,7 @@ class AdressesApiGouv extends Curl
             'format' => $format
         ];
         $this->withParams($params);
-        $response = $this->exec("Départements")->getResponse();
+        $response = $this->exec("Départements")->getResponse('json');
         if ($response->count() === 1) {
             return $response->first();
         }
@@ -139,11 +147,10 @@ class AdressesApiGouv extends Curl
     {
         $this->withParts("departements/$code");
         $params = [
-            'fields' => $this->fieldsDepartements,
-            'format' => 'json'
+            'fields' => $this->fieldsDepartements
         ];
         $this->withParams($params);
-        $response = $this->exec("Obtenir le département : $code")->getResponse();
+        $response = $this->exec("Obtenir le département : $code")->getResponse('json');
         return $response;
     }
 
@@ -173,7 +180,7 @@ class AdressesApiGouv extends Curl
         $this->withParams($params);
         $communes = $this
             ->exec("Recherche de communes par $param : $value")
-            ->getResponse();
+            ->getResponse('json');
         if ($communes->count() === 1) {
             return $communes->first();
         }
@@ -192,13 +199,12 @@ class AdressesApiGouv extends Curl
         $this->withParts("communes/$codeInsee");
         $params = [
             'fields' => $this->fieldsCommmunes,
-            'format' => 'json',
             'geometry' => 'centre'
         ];
         $this->withParams($params);
         $communes = $this
             ->exec("Obtenir une commune par son code INSEE : $codeInsee")
-            ->getResponse();
+            ->getResponse('json');
         return $communes;
     }
 
@@ -221,7 +227,7 @@ class AdressesApiGouv extends Curl
             'geometry' => 'centre'
         ];
         $this->withParams($params);
-        return $this->exec("Communes du département $departement")->getResponse();
+        return $this->exec("Communes du département $departement")->getResponse('json');
     }
 
     /**
@@ -238,11 +244,10 @@ class AdressesApiGouv extends Curl
         $this->withParts("regions/$codeRegion/departements");
         $params = [
             'code' => $codeRegion,
-            'fields' => $this->fieldsDepartements,
-            'format' => 'json'
+            'fields' => $this->fieldsDepartements
         ];
         $this->withParams($params);
-        return $this->exec("Départements de la région $codeRegion")->getResponse();
+        return $this->exec("Départements de la région $codeRegion")->getResponse('json');
     }
 
     /**
@@ -283,5 +288,20 @@ class AdressesApiGouv extends Curl
     public function setFieldsDepartements($fieldsDepartements)
     {
         $this->fieldsDepartements = $fieldsDepartements;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public function help($text = true)
+    {
+        if ($text) {
+            return join('. ', $this->help);
+        }
+        return $this->help;
     }
 }

@@ -44,6 +44,14 @@ class EtablissementsPublicsApiGouv extends Curl
 {
 
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private $help = [
+        "Annuaire des établissements publics de l’administration"
+    ];
+    /**
      * Liste des types disponibles
      *
      * @var array
@@ -213,7 +221,7 @@ class EtablissementsPublicsApiGouv extends Curl
         }
         $this->withParts($departement . '/' . $type);
         return $this->exec("Communes du département $departement")
-            ->getResponse()
+            ->getResponse('json')
             ->get('features')
             ->extract('properties');
     }
@@ -226,5 +234,21 @@ class EtablissementsPublicsApiGouv extends Curl
     public function getTypes()
     {
         return new Items($this->types);
+    }
+
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public function help($text = true)
+    {
+        if ($text) {
+            return join('. ', $this->help);
+        }
+        return $this->help;
     }
 }

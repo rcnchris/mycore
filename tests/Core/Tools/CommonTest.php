@@ -2,20 +2,35 @@
 namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Common;
+use Rcnchris\Core\Tools\Items;
 use Tests\Rcnchris\BaseTestCase;
 
 class CommonTest extends BaseTestCase
 {
 
+    public function makeCommon()
+    {
+        return new Common();
+    }
+
     public function testGetInstance()
     {
         $this->ekoTitre('Tools - Common');
-        $common = new Common();
         $this->assertInstanceOf(
-            Common::class
-            , $common
-            , $this->getMessage("L'instance retournée n'est pas la bonne")
+            Common::class,
+            $this->makeCommon(),
+            $this->getMessage("L'instance retournée n'est pas la bonne")
         );
+        $this->assertInstanceOf(
+            Common::class,
+            Common::getInstance(),
+            $this->getMessage("L'instance retournée n'est pas la bonne, lors d'un appel statique")
+        );
+    }
+
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makeCommon());
     }
 
     public function testObjectToArray()

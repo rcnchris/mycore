@@ -41,6 +41,16 @@ class PHPSession implements SessionInterface, ArrayAccess
 {
 
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Manipulation des <strong>sessions PHP</strong>",
+        "Implémentation de l'interface <code>SessionInterface</code>"
+    ];
+
+    /**
      * Constructeur
      *
      * @param string|null $name Nom de la session
@@ -302,5 +312,20 @@ class PHPSession implements SessionInterface, ArrayAccess
     public function offsetUnset($offset)
     {
         $this->delete($offset);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

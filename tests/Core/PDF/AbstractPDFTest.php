@@ -26,7 +26,7 @@ class AbstractPDFTest extends PdfTestCase
 
     public function testInstance()
     {
-        $this->ekoTitre('PDF - Abstraction');
+        $this->ekoTitre('PDF - FPDF');
         $this->assertInstanceOf(
             AbstractPDF::class,
             $this->makePdf(),

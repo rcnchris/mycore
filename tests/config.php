@@ -15,14 +15,14 @@ return [
      * Personnalisation
      */
     'appPrefix' => '/_lab/mycore/',
-    'appPoweredBy' => 'MRC Consulting',
+    'poweredBy' => 'MRC Consulting',
     'appName' => 'My Core',
 
     /**
      * Localisation
      */
     'charset' => 'utf-8',
-    'timezone' => 'Europe/Paris',
+    'timezone' => new \DateTimeZone('Europe/Paris'),
     'locale' => 'fr_FR',
     'sep_decimal' => ',',
     'sep_mil' => ' ',

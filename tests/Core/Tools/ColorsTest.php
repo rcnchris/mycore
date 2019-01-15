@@ -31,6 +31,11 @@ class ColorsTest extends BaseTestCase
         );
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makeColors());
+    }
+
     public function testInstanceWithPalette()
     {
         $colors = $this->makeColors($this->flatui);
@@ -148,6 +153,12 @@ class ColorsTest extends BaseTestCase
         $colors->hexaToRgb('1ABC9C');
     }
 
+    public function testHexaToRGBToString()
+    {
+        $colors = $this->makeColors($this->flatui);
+        $this->assertInternalType('string', $colors->hexaToRgb('#1ABC9C', true));
+    }
+
     public function testHexaToRGBWithLongParameter()
     {
         $colors = $this->makeColors($this->flatui);
@@ -183,7 +194,8 @@ class ColorsTest extends BaseTestCase
         $this->assertArrayHasKey(
             '#1ABC9C'
             , $colors->getList(true)
-            , $this->getMessage("Le code couleur '#1ABC9C' est abasent lors de la demande de la liste inversée est incorrect")
+            ,
+            $this->getMessage("Le code couleur '#1ABC9C' est abasent lors de la demande de la liste inversée est incorrect")
         );
     }
 

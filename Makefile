@@ -1,5 +1,5 @@
 # .SILENT:
-.PHONY: help install ideperm webperm code test server proxy watch
+.PHONY: help install ideperm webperm code test server proxy watch clear
 
 .DEFAULT_GOAL = help
 
@@ -53,9 +53,10 @@ code: ideperm ## Vérification et correction de la syntaxe
 
 test: ideperm install ## Tests unitaires
 	@echo -e '$(colorObj)Tests unitaires$(colorOff)'
-	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(today)_before_tests.pdf
+	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(shell date +%Y%m%d)_before_tests.pdf
 	@./vendor/bin/phpunit --stop-on-failure --coverage-html public/coverage
-	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(today)_after_tests.pdf
+	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(shell date +%Y%m%d)_after_tests.pdf
+	@sudo rm -r host*
 	
 server: install ## Lance un serveur de développement
 	@echo -e '$(colorObj)Lance un serveur sur le $(serverName):$(serverPort)$(colorOff)'
@@ -65,3 +66,6 @@ proxy: ## Permet de rafraîchir automatiquement la page du serveur de déveelopp
 	browser-sync start --port 3000 --proxy $(serverName):$(serverPort) --files 'src/**/*.php' --files 'app/**/*.php' --files 'app/**/*.phtml'
 
 watch: server proxy
+
+clear: ## Vider les fichiers temporaires
+	@sudo rm -r $(root)/host*

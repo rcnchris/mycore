@@ -36,6 +36,17 @@ class Debug
 {
 
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        'Fournit des méthodes de debug',
+        'Instanciable et statique',
+        'Toutes les méthodes qui peuvent retourner des listes, retournent une instance de <code>Items</code>'
+    ];
+
+    /**
      * Instance
      *
      * @var $this
@@ -58,24 +69,28 @@ class Debug
     /**
      * Obtenir le nom de la classe d'un objet à partir de son instance
      *
-     * @param object $object Objet dont il faut retourner le nom de la classe
+     * @param object    $object        Instance d'un objet
+     * @param bool|null $withNamespace Retourner le nom court sans le namespace
      *
      * @return string
      * @throws \Exception
      */
-    public static function getClass($object)
+    public static function getClass($object, $withNamespace = true)
     {
-        return get_class(self::isObject($object, true));
+        if ($withNamespace) {
+            return get_class(self::isObject($object, true));
+        }
+        return self::getClassShortName(self::isObject($object, true));
     }
 
     /**
-     * Obtenir le nom sans le namespace
+     * Obtenir le nom de la classe sans le namespace
      *
-     * @param null $object
+     * @param object $object Instance d'un objet
      *
      * @return string
      */
-    public static function getClassShortName($object = null)
+    public static function getClassShortName($object)
     {
         $className = self::getClass($object);
         $parts = explode('\\', $className);
@@ -85,13 +100,13 @@ class Debug
     /**
      * Obtenir les propriétés d'un objet
      *
-     * @param object|null $object
+     * @param object $object Instance d'un objet
      *
      * @return \Rcnchris\Core\Tools\Items
      * @throws \Exception
      * @see http://php.net/manual/fr/function.get-object-vars.php
      */
-    public static function getProperties($object = null)
+    public static function getProperties($object)
     {
         return self::makeItems(get_object_vars(self::isObject($object, true)));
     }
@@ -99,14 +114,27 @@ class Debug
     /**
      * Obtenir la liste des méthodes d'un objet à partir de son instance
      *
-     * @param object|null $object Objet dont il faut lister les méthodes
+     * @param object $object Objet dont il faut lister les méthodes
      *
      * @return \Rcnchris\Core\Tools\Items
      * @see http://php.net/manual/fr/function.get-class-methods.php
      */
-    public static function getMethods($object = null)
+    public static function getMethods($object)
     {
         return self::makeItems(get_class_methods(self::getClass($object)));
+    }
+
+    /**
+     * Vérifier la présnce d'une méthode par son nom
+     *
+     * @param string $name Nom de la méthode de l'objet
+     * @param object $o    Instance de l'objet
+     *
+     * @return bool
+     */
+    public static function hasMethod($name, $o)
+    {
+        return self::getMethods($o)->hasValue($name);
     }
 
     /**
@@ -206,9 +234,10 @@ class Debug
     }
 
     /**
-     * Vérifie que la variable est un objet sinon lève une `Exception`
+     * Vérifie que la variable est un objet
      *
-     * @param mixed $variable Variable qui doit être un objet
+     * @param mixed     $variable      Variable qui doit être un objet
+     * @param bool|null $withException Si vrai, une exception est levée en cas d'échec
      *
      * @return bool|mixed
      * @throws \Exception
@@ -272,5 +301,46 @@ class Debug
     public static function makeItems($items = [])
     {
         return new Items($items);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
+    }
+
+    /**
+     * Obtenir le code source d'un fichier.
+     *
+     * @param string    $file         Chemin complet du fichier
+     * @param bool|null $htmlentities Convertit tous les caractères éligibles en entités HTML
+     *
+     * @return mixed|null|string
+     * @see http://php.net/manual/fr/function.htmlentities.php
+     * @see http://php.net/manual/fr/function.highlight-string.php
+     */
+    public static function showSource($file, $htmlentities = true)
+    {
+        $content = null;
+        if (is_file($file)) {
+            $parts = explode('.', $file);
+            $ext = array_pop($parts);
+            $content = file_get_contents($file);
+            if (strtolower($ext) === 'php') {
+                $content = highlight_string($content);
+            }
+        }
+        return $htmlentities
+            ? htmlentities($content)
+            : $content;
     }
 }

@@ -41,9 +41,9 @@ class DbFactory
      * @var array
      */
     private static $sgbds = [
-        'sqlite' => 'pdo_sqlite'
-        , 'mysql' => 'pdo_mysql'
-        , 'sqlsrv' => 'pdo_dblib'
+        'sqlite' => 'pdo_sqlite',
+        'mysql' => 'pdo_mysql',
+        'sqlsrv' => 'pdo_dblib'
     ];
 
     /**
@@ -90,14 +90,15 @@ class DbFactory
             throw new \Exception("Le type de SGBD $sgbd n'est pas géré par cette classe !");
         }
         self::$driver = self::$sgbds[$sgbd];
-        self::$dsnParts = ['driver' => explode('_', self::$driver)[1]
-            , 'host' => $server
-            , 'port' => intval($port)
-            , 'dbname' => $database
-            , 'charset' => 'UTF-8'
-            , 'user' => $user
-            , 'password' => $password
-            , 'file' => $file
+        self::$dsnParts = [
+            'driver' => explode('_', self::$driver)[1],
+            'host' => $server,
+            'port' => intval($port),
+            'dbname' => $database,
+            'charset' => 'UTF-8',
+            'user' => $user,
+            'password' => $password,
+            'file' => $file
         ];
         return self::getPdo(self::$dsnParts, $user, $password);
     }

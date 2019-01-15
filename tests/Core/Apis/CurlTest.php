@@ -1,9 +1,10 @@
 <?php
 namespace Tests\Rcnchris\Core\Apis;
 
-use Intervention\Image\Image;
 use Rcnchris\Core\Apis\Curl;
+use Rcnchris\Core\Tools\Image;
 use Rcnchris\Core\Tools\Items;
+use SimpleXMLElement;
 use Tests\Rcnchris\BaseTestCase;
 
 class CurlTest extends BaseTestCase
@@ -28,6 +29,11 @@ class CurlTest extends BaseTestCase
     public function setUp()
     {
         $this->curl = $this->makeCurl($this->baseUrls['geo']);
+    }
+
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makeCurl($this->baseUrls['geo']));
     }
 
     /**
@@ -91,7 +97,7 @@ class CurlTest extends BaseTestCase
 
         $this->assertInstanceOf(Curl::class, $curl);
         $this->assertFalse($curl->getParams());
-        $response = $curl->exec('Utilisateur')->getResponse();
+        $response = $curl->exec('Utilisateur')->getResponse('json');
         $this->assertInstanceOf(Items::class, $response);
         $this->assertTrue($response->has('results'));
 
@@ -112,7 +118,7 @@ class CurlTest extends BaseTestCase
         $this->assertInstanceOf(Curl::class, $curl);
         $this->assertInstanceOf(Curl::class, $curl->withParts('regions'));
         $this->assertEquals($url . '/regions', $curl->getUrl());
-        $response = $curl->exec('Régions')->getResponse();
+        $response = $curl->exec('Régions')->getResponse('json');
         $this->assertInstanceOf(Items::class, $response);
     }
 
@@ -124,7 +130,7 @@ class CurlTest extends BaseTestCase
         $this->assertInstanceOf(Curl::class, $curl);
         $this->assertInstanceOf(Curl::class, $curl->withParts(['regions', '93', 'departements']));
         $this->assertEquals($url . '/regions/93/departements', $curl->getUrl());
-        $response = $curl->exec('Départements de la région PACA')->getResponse();
+        $response = $curl->exec('Départements de la région PACA')->getResponse('json');
         $this->assertInstanceOf(Items::class, $response);
     }
 
@@ -152,17 +158,25 @@ class CurlTest extends BaseTestCase
         $this->assertTrue($curl->getParams()->has('format'));
         $this->assertEquals('json', $curl->getParams()->get('format'));
 
-        $response = $curl->exec('Départements de la région PACA')->getResponse();
+        $response = $curl->exec('Départements de la région PACA')->getResponse('json');
         $this->assertInstanceOf(Items::class, $response);
+    }
+
+    public function testExecWithUserAgent()
+    {
+        $curl = $this->makeCurl('http://php.net/manual/fr/');
+        $curl->withUserAgent('Apache-HttpClient/4.3.2 (java 1.5)');
+        $response = $curl->exec()->getResponse();
+        $this->assertInternalType('string', $response);
     }
 
     public function testGetResponseWithImage()
     {
-        $this->ekoMessage("JSON");
+        $this->ekoMessage("Image");
         $response = $this
             ->makeCurl($this->baseUrls['image'])
             ->exec('Test image')
-            ->getResponse();
+            ->getResponse('img');
 
         $this->assertInstanceOf(Image::class, $response);
 
@@ -176,17 +190,101 @@ class CurlTest extends BaseTestCase
         $response = $curl
             ->withParts('fake')
             ->exec('Fake part')
-            ->getResponse();
-        $this->assertTrue($response->has('error'));
+            ->getResponse('json');
+        $this->assertTrue($response->has('code'));
         $this->assertTrue($response->has('infos'));
         $this->assertFalse($response->get('response'));
         $this->assertInternalType('string', $response->get('curlError'));
+        $this->assertTrue($response->has('curlErrorCode'));
+    }
+
+    public function testGetResponse()
+    {
+        $title = '5 utilisateurs';
+        $this->ekoMessage($title);
+        $curl = $this->makeCurl($this->baseUrls['user']);
+        $curl->withParams(['results' => 5], true);
+        $response = $curl->exec($title)->getResponse(false);
+        $this->assertInternalType('string', $response);
+    }
+
+    public function testGetResponseHtml()
+    {
+        $title = 'Page HTML';
+        $this->ekoMessage($title);
+        $curl = $this->makeCurl('http://php.net/manual/fr/');
+        $response = $curl->exec($title)->getResponse();
+        $this->assertInternalType('string', $response);
+    }
+
+    public function testGetResponseJson()
+    {
+        $title = '5 utilisateurs au format JSON';
+        $this->ekoMessage($title);
+        $curl = $this->makeCurl($this->baseUrls['user']);
+        $curl->withParams(['format' => 'json', 'results' => 5], true);
+        $response = $curl->exec($title)->getResponse();
+        $this->assertInstanceOf(Items::class, $response);
+        $this->assertTrue($response->has('results'));
+    }
+
+    public function testGetResponseWithWrongJson()
+    {
+        $title = 'XML en bois';
+        $this->ekoMessage($title);
+        $curl = $this->makeCurl('http://localhost/_lab/mycore/tests/files/jsonenbois.json');
+        $response = $curl->exec($title)->getResponse();
+        $this->assertInstanceOf(Items::class, $response);
+        $this->assertArrayHasKey('jsonErrorMsg', $response->toArray());
+        $this->ekoMessage($response->jsonErrorMsg);
+    }
+
+    public function testGetResponsePrettyJson()
+    {
+        $title = '5 utilisateurs au format PrettyJSON';
+        $this->ekoMessage($title);
+        $curl = $this->makeCurl($this->baseUrls['user']);
+        $curl->withParams(['format' => 'pretty', 'results' => 5], true);
+        $response = $curl->exec($title)->getResponse();
+        $this->assertInstanceOf(Items::class, $response);
+        $this->assertTrue($response->has('results'));
+    }
+
+    public function testGetResponseXml()
+    {
+        $title = '5 utilisateurs au format XML';
+        $this->ekoMessage($title);
+        $curl = $this->makeCurl($this->baseUrls['user']);
+        $curl->withParams(['format' => 'xml', 'results' => 5], true);
+        $response = $curl->exec($title)->getResponse();
+        $this->assertInstanceOf(SimpleXMLElement::class, $response);
+    }
+
+    public function testGetResponseWithWrongXml()
+    {
+        $title = 'XML en bois';
+        $this->ekoMessage($title);
+        $curl = $this->makeCurl('http://localhost/_lab/mycore/tests/files/xmlenbois.xml');
+        $response = $curl->exec($title)->getResponse();
+        $this->assertInstanceOf(Items::class, $response);
+        $this->assertArrayHasKey('xmlErrors', $response->toArray());
+        $this->ekoMessage($response->xmlErrors->first()->msg);
+    }
+
+    public function testGetResponseCsv()
+    {
+        $title = '5 utilisateurs au format CSV';
+        $this->ekoMessage($title);
+        $curl = $this->makeCurl($this->baseUrls['user']);
+        $curl->withParams(['format' => 'csv', 'results' => 5], true);
+        $response = $curl->exec($title)->getResponse();
+        $this->assertInstanceOf(Items::class, $response);
     }
 
     public function testPeclFunctions()
     {
-        $this->ekoMessage("GeoIP si PECL installé");
         if (extension_loaded('pecl')) {
+            $this->ekoMessage("GeoIP installé");
             $this->assertInternalType(
                 'string',
                 $this->curl->getGeoipInfos(
@@ -195,12 +293,15 @@ class CurlTest extends BaseTestCase
                 )
             );
         } else {
-            $this->assertFalse(
-                $this->curl->getGeoipInfos(
-                    'country_name_by_name',
-                    $this->curl->parseUrl('host')
-                )
-            );
+            $this->ekoMessage("GeoIP absent");
+            $this->markTestSkipped('Extension PECL absente');
         }
+    }
+
+    public function testGetParams()
+    {
+        $curl = $this->makeCurl('https://www.google.com/search?client=firefox-b-d&q=php');
+        $this->assertInstanceOf(Items::class, $curl->getParams());
+        $this->assertInternalType('string', $curl->getParams(true));
     }
 }

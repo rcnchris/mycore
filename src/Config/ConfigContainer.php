@@ -21,6 +21,7 @@ namespace Rcnchris\Core\Config;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Rcnchris\Core\HelpTrait;
 
 /**
  * Class Config
@@ -39,6 +40,16 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class ConfigContainer implements ContainerInterface, \ArrayAccess
 {
+
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    protected $help = [
+        "Permet de disposer d'un conteneur de dépendances",
+    ];
+
     /**
      * Configuration
      *
@@ -216,5 +227,20 @@ class ConfigContainer implements ContainerInterface, \ArrayAccess
     public function offsetUnset($offset)
     {
         $this->del($offset);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public function help($text = true)
+    {
+        if ($text) {
+            return join('. ', $this->help);
+        }
+        return $this->help;
     }
 }

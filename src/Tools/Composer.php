@@ -40,6 +40,15 @@ class Composer implements IteratorAggregate, ArrayAccess
 {
 
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Facilite la manipulation d'un fichier <strong>composer.json</strong>",
+    ];
+
+    /**
      * Contenu du fichier
      *
      * @var array
@@ -411,10 +420,28 @@ class Composer implements IteratorAggregate, ArrayAccess
     }
 
     /**
+     * Obtenir le nom du fichier
+     *
      * @return string
      */
     public function getFileName()
     {
         return $this->fileName;
+    }
+
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

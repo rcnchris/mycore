@@ -25,6 +25,11 @@ class ArraySessionTest extends BaseTestCase
         $this->assertInstanceOf(ArraySession::class, $this->session);
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->session);
+    }
+
     public function testSet()
     {
         $ip = '192.168.1.100';

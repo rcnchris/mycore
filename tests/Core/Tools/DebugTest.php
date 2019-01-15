@@ -1,24 +1,25 @@
 <?php
 /**
- * Fichier DebugTest.php du 02/07/2018 
- * Description : Fichier de la classe DebugTest 
+ * Fichier DebugTest.php du 02/07/2018
+ * Description : Fichier de la classe DebugTest
  *
  * PHP version 5
  *
  * @category New
  *
- * @package Tools
+ * @package  Tools
  *
- * @author Raoul <rcn.chris@gmail.com>
+ * @author   Raoul <rcn.chris@gmail.com>
  *
- * @license https://github.com/rcnchris GPL
+ * @license  https://github.com/rcnchris GPL
  *
- * @link https://github.com/rcnchris On Github
+ * @link     https://github.com/rcnchris On Github
  */
 
 namespace Tests\Rcnchris\Core\Tools;
 
 use Rcnchris\Core\Tools\Debug;
+use Rcnchris\Core\Tools\Items;
 use Tests\Rcnchris\BaseTestCase;
 
 class DebugTest extends BaseTestCase
@@ -42,22 +43,89 @@ class DebugTest extends BaseTestCase
         $this->assertInstanceOf(Debug::class, $this->debugger);
     }
 
-    public function testIsObjectException()
+    public function testHasHelp()
     {
-        $this->expectException(\Exception::class);
-        Debug::getClass('fake');
+        $this->assertHasHelp($this->debugger);
     }
 
-    public function testIsObjectExceptionPublic()
+    public function testIsType()
+    {
+        $this->assertTrue(Debug::isType('bool', true));
+    }
+
+    public function testIsTypeWithWrongType()
     {
         $this->expectException(\Exception::class);
-        $this->debugger->getClass('fake');
+        $this->assertTrue(Debug::isType('fake', true));
+    }
+
+    public function testIsObjectWithoutException()
+    {
+        $this->assertFalse(Debug::isObject('fake'));
+    }
+
+    public function testIsObjectWithException()
+    {
+        $this->expectException(\Exception::class);
+        Debug::isObject('fake', true);
+    }
+
+    public function testIsArrayWithArray()
+    {
+        $var = ['ola', 'ole'];
+        $this->assertTrue(Debug::isArray($var));
+    }
+
+    public function testIsArrayWithString()
+    {
+        $var = 'ola, ole';
+        $this->assertFalse(Debug::isArray($var));
+    }
+
+    public function testIsBoolWithBool()
+    {
+        $var = true;
+        $this->assertTrue(Debug::isBool($var));
+    }
+
+    public function testIsBoolWithString()
+    {
+        $var = 'ola, ole';
+        $this->assertFalse(Debug::isBool($var));
+    }
+
+    public function testGetType()
+    {
+        $var1 = 'ola';
+        $var2 = ['ola', 'ole'];
+        $var3 = new \stdClass();
+        $var4 = true;
+        $this->assertInstanceOf(
+            Items::class,
+            Debug::getType($var1, $var2, $var3, $var4)
+        );
+        $this->assertEquals(
+            ['string', 'array', 'object', 'boolean'],
+            Debug::getType($var1, $var2, $var3, $var4)->toArray()
+        );
+    }
+
+    public function testGetTypeWithOneVar()
+    {
+        $var = 'ola';
+        $this->assertEquals('string', Debug::getType($var));
     }
 
     public function testGetClass()
     {
-        $this->assertEquals('Tests\Rcnchris\Core\Tools\DebugTest', Debug::getClass($this));
-        $this->assertEquals('Tests\Rcnchris\Core\Tools\DebugTest', $this->debugger->getClass($this));
+        $className = get_class($this);
+        $this->assertEquals($className, Debug::getClass($this));
+        $this->assertEquals($className, $this->debugger->getClass($this));
+    }
+
+    public function testGetClassWithoutNamespace()
+    {
+        $this->assertEquals('DebugTest', Debug::getClass($this, false));
     }
 
     public function testGetClassShortName()
@@ -73,6 +141,12 @@ class DebugTest extends BaseTestCase
         $o->name = 'Clara';
         $this->assertEquals(['name' => 'Clara'], Debug::getProperties($o)->toArray());
         $this->assertEquals(['name' => 'Clara'], $this->debugger->getProperties($o)->toArray());
+    }
+
+    public function testHasMethods()
+    {
+        $this->assertTrue(Debug::hasMethod('testHasMethods', $this));
+        $this->assertFalse(Debug::hasMethod('testFake', $this));
     }
 
     public function testGetMethods()
@@ -97,8 +171,10 @@ class DebugTest extends BaseTestCase
 
     public function testGetParentsReverse()
     {
-        $this->assertEquals(array_reverse(Debug::getParents($this)->toArray()), Debug::getParents($this, true)->toArray());
-        $this->assertEquals(array_reverse($this->debugger->getParents($this)->toArray()), $this->debugger->getParents($this, true)->toArray());
+        $this->assertEquals(array_reverse(Debug::getParents($this)->toArray()),
+            Debug::getParents($this, true)->toArray());
+        $this->assertEquals(array_reverse($this->debugger->getParents($this)->toArray()),
+            $this->debugger->getParents($this, true)->toArray());
     }
 
     public function testGetInterfaces()
@@ -116,5 +192,12 @@ class DebugTest extends BaseTestCase
     public function testGetNamespace()
     {
         $this->assertEquals('Tests\Rcnchris\Core\Tools', $this->debugger->getNamespace($this));
+    }
+
+    public function testGetSourceFile()
+    {
+        ob_start();
+        $this->assertInternalType('string', $this->debugger->showSource(__FILE__));
+        $content = ob_get_clean();
     }
 }

@@ -1,11 +1,11 @@
 <?php
 /**
- * Fichier Text.php du 03/11/2017
+ * Fichier Text.php du 13/01/2019
  * Description : Fichier de la classe Text
  *
  * PHP version 5
  *
- * @category Texte brut
+ * @category Texte
  *
  * @package  Rcnchris\Core\Tools
  *
@@ -20,518 +20,58 @@ namespace Rcnchris\Core\Tools;
 
 /**
  * Class Text
- * <ul>
- * <li>Classe statique de manipulation des chaînes de caractères</li>
- * </ul>
  *
- * @category Texte brut
+ * @category Texte
  *
  * @package  Rcnchris\Core\Tools
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
+ * @license  https://github.com/rcnchris GPL
+ *
  * @version  Release: <1.0.0>
- * @since    Release: <0.0.1>
+ *
+ * @link     https://github.com/rcnchris on Github
  */
 class Text
 {
-    /**
-     * Transliterator par défaut
-     *
-     * @var string
-     */
-    protected static $defaultTransliteratorId = 'Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove';
 
     /**
-     * Séparateurs
+     * Aide de cette classe
      *
      * @var array
      */
-    private static $prefs = [
-        'sepDec' => ',',
-        'sepMil' => ' '
+    private static $help = [
+        'Facilite la manipulations des chaînes de caractères',
+        'Statique et instanciable via <code>getInstance()</code>',
     ];
 
     /**
-     * Compléter une chaîne de caractères
+     * Instance
      *
-     * ### Exemple
-     * - `Text::compl('1', '0');` --> '01'
-     * - `Text::compl('1', '0', 3);` --> '0001'
-     * - `Text::compl('1', '0', 3, 'right');` --> '1000'
-     *
-     * @param string      $input  Chaîne à compléter
-     * @param string      $compl  Complément
-     * @param int|null    $lenght Longueur du complément
-     * @param string|null $sens   Sens du complémént (left ou right)
-     *
-     * @return string
+     * @var $this
      */
-    public static function compl($input, $compl, $lenght = 1, $sens = 'left')
-    {
-        $ret = '';
-        for ($i = 1; $i <= $lenght; $i++) {
-            $ret .= $compl;
-        }
-        return $sens === 'left'
-            ? $ret . $input
-            : $input . $ret;
-    }
+    private static $instance;
 
     /**
-     * Obtenir un ID unique
+     * Obtenir une instance (Singleton)
      *
-     * ### Exemple
-     * - `Text::uuid('ola');` --> '5997e8605bc0a7.42903584'
-     *
-     * @param string|null $prefixe Préfixe de l'ID à retourner
-     *
-     * @return string
+     * @return \Rcnchris\Core\Tools\Debug
      */
-    public static function uuid($prefixe = null)
+    public static function getInstance()
     {
-        return uniqid($prefixe, true);
-    }
-
-    /**
-     * Obtenir une chaîne de caractères sérialisée
-     *
-     * ### Exemple
-     * - `Text::serialize('ola');` --> 's:3:"ola";'
-     *
-     * @param string $value Valeur à sérialiser
-     *
-     * @return string
-     */
-    public static function serialize($value)
-    {
-        return serialize($value);
-    }
-
-    /**
-     * Obtenir une variable à partir d'une chaîne sérialisée
-     *
-     * ### Exemple
-     * - `Text::unserialize('s:3:"ola";');` --> 'ola'
-     *
-     * @param string $value Valeur à désérialiser
-     *
-     * @return string
-     */
-    public static function unserialize($value)
-    {
-        return unserialize($value);
-    }
-
-    /**
-     * Tronquer une chaîne de caractères en traitant les entités html
-     *
-     * ### Exemple
-     * - `Text::truncate($text)`
-     * - `Text::truncate($text, 50, ['ellipsis' => '***'])`
-     *
-     * ### Options
-     * - 'ellipsis' => '...'
-     * - 'exact' => true
-     * - 'html' => false
-     * - 'trimWidth' => false
-     *
-     * @param string     $text    Rexte à tronquer
-     * @param int        $length  Longueur
-     * @param array|null $options Options de la demande
-     *
-     * @return string
-     */
-    public static function truncate($text, $length = 100, array $options = [])
-    {
-        $default = [
-            'ellipsis' => '...',
-            'exact' => true,
-            'html' => false,
-            'trimWidth' => false,
-        ];
-        if (!empty($options['html']) && strtolower(mb_internal_encoding()) === 'utf-8') {
-            $default['ellipsis'] = "\xe2\x80\xa6";
+        if (is_null(self::$instance)) {
+            self::$instance = new self();
         }
-        $options += $default;
-
-        $prefix = '';
-        $suffix = $options['ellipsis'];
-
-        if ($options['html']) {
-            $ellipsisLength = self::strlen(strip_tags($options['ellipsis']), $options);
-
-            $truncateLength = 0;
-            $totalLength = 0;
-            $openTags = [];
-            $truncate = '';
-
-            preg_match_all('/(<\/?([\w+]+)[^>]*>)?([^<>]*)/', $text, $tags, PREG_SET_ORDER);
-            foreach ($tags as $tag) {
-                $contentLength = self::strlen($tag[3], $options);
-
-                if ($truncate === '') {
-                    if (!preg_match(
-                        '/img|br|input|hr|area|base|basefont|col|frame|isindex|link|meta|param/i',
-                        $tag[2]
-                    )
-                    ) {
-                        if (preg_match('/<[\w]+[^>]*>/', $tag[0])) {
-                            array_unshift($openTags, $tag[2]);
-                        } elseif (preg_match('/<\/([\w]+)[^>]*>/', $tag[0], $closeTag)) {
-                            $pos = array_search($closeTag[1], $openTags);
-                            if ($pos !== false) {
-                                array_splice($openTags, $pos, 1);
-                            }
-                        }
-                    }
-
-                    $prefix .= $tag[1];
-
-                    if ($totalLength + $contentLength + $ellipsisLength > $length) {
-                        $truncate = $tag[3];
-                        $truncateLength = $length - $totalLength;
-                    } else {
-                        $prefix .= $tag[3];
-                    }
-                }
-
-                $totalLength += $contentLength;
-                if ($totalLength > $length) {
-                    break;
-                }
-            }
-
-            if ($totalLength <= $length) {
-                return $text;
-            }
-
-            $text = $truncate;
-            $length = $truncateLength;
-
-            foreach ($openTags as $tag) {
-                $suffix .= '</' . $tag . '>';
-            }
-        } else {
-            if (self::strlen($text, $options) <= $length) {
-                return $text;
-            }
-            $ellipsisLength = self::strlen($options['ellipsis'], $options);
-        }
-
-        $result = self::substr($text, 0, $length - $ellipsisLength, $options);
-
-        if (!$options['exact']) {
-            if (self::substr($text, $length - $ellipsisLength, 1, $options) !== ' ') {
-                $result = self::removeLastWord($result);
-            }
-            // Si le résultat est vide, nous n'avons pas besoin de compter l'ellipse dans la coupe.
-            if (!strlen($result)) {
-                $result = self::substr($text, 0, $length, $options);
-            }
-        }
-        return $prefix . $result . $suffix;
-    }
-
-    /**
-     * Tronquer une chaîne de caractères en commençant par la fin
-     *
-     * ### Options
-     * - `ellipsis` Préfixera la chaîne retournée
-     * - `exact` Si faux, les mots ne sont pas coupés
-     *
-     * @param string     $text    Chaîne à tronquer.
-     * @param int|null   $length  Longueur de la chaîne à retourner
-     * @param array|null $options Options de la demande
-     *
-     * @return string
-     */
-    public static function tail($text, $length = 100, array $options = [])
-    {
-        $default = [
-            'ellipsis' => '...',
-            'exact' => true
-        ];
-        $options += $default;
-        $exact = $ellipsis = null;
-        extract($options);
-        if (mb_strlen($text) <= $length) {
-            return $text;
-        }
-        $truncate = mb_substr($text, mb_strlen($text) - $length + mb_strlen($ellipsis));
-        if (!$exact) {
-            $spacepos = mb_strpos($truncate, ' ');
-            $truncate = $spacepos === false
-                ? ''
-                : trim(mb_substr($truncate, $spacepos));
-        }
-        return $ellipsis . $truncate;
-    }
-
-    /**
-     * Vérifier si la chaîne contient des caractères multibits
-     *
-     * @param string $string Chaîne à vérifier
-     *
-     * @return bool
-     */
-    public static function isMultibyte($string)
-    {
-        $length = strlen($string);
-        for ($i = 0; $i < $length; $i++) {
-            $value = ord($string[$i]);
-            if ($value > 128) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Vérifie si la chaîne est au format ASCII
-     *
-     * @param string $s
-     *
-     * @return bool
-     */
-    public static function isAscii($s)
-    {
-        $nb = strlen($s);
-        for ($i = 0; $i < $nb; $i++) {
-            if (ord($s[$i]) > 127) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Appliquer une transliteration
-     *
-     * @param string      $string           Chaîne à traiter
-     * @param string|null $transliteratorId Id
-     *
-     * @return string
-     */
-    public static function transliterate($string, $transliteratorId = null)
-    {
-        if (is_null($transliteratorId)) {
-            $transliteratorId = static::$defaultTransliteratorId;
-        }
-        return transliterator_transliterate($transliteratorId, $string);
-    }
-
-    /**
-     * Obtenir le slug d'une chaîne
-     *
-     * ### Exemple
-     * - `Text::slug('Oyé les gens, comment vont-ils ?');`
-     * - `Text::slug('Oyé les gens, comment vont-ils ?', '#');`
-     *
-     * @param string $string  Chaîne à traiter
-     * @param array  $options Options de la demande
-     *
-     * @return string
-     */
-    public static function slug($string, $options = [])
-    {
-        if (is_string($options)) {
-            $options = ['replacement' => $options];
-        }
-        $options += [
-            'replacement' => '-',
-            'transliteratorId' => null,
-            'preserve' => null
-        ];
-
-        if ($options['transliteratorId'] !== false) {
-            $string = static::transliterate($string, $options['transliteratorId']);
-        }
-
-        $regex = '^\s\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}';
-        if ($options['preserve']) {
-            $regex .= '(' . preg_quote($options['preserve'], '/') . ')';
-        }
-        $quotedReplacement = preg_quote($options['replacement'], '/');
-        $map = [
-            '/[' . $regex . ']/mu' => ' ',
-            '/[\s]+/mu' => $options['replacement'],
-            sprintf('/^[%s]+|[%s]+$/', $quotedReplacement, $quotedReplacement) => '',
-        ];
-        $string = preg_replace(array_keys($map), $map, $string);
-        return strtolower($string);
-    }
-
-    /**
-     * Obtenir un nombre formaté
-     *
-     * ### Exemple
-     * - `Text::formatNumber(123456.7892);`
-     * - `Text::formatNumber(123456.7892, 3, '.', ',');`
-     *
-     * @param mixed       $value Valeur à formater
-     * @param int|null    $nbDec Nombre de décimales
-     * @param string|null $dec   Caractère de la décimale
-     * @param string|null $sep   Séparateur de millier
-     *
-     * @return string
-     */
-    public static function formatNumber($value, $nbDec = 0, $dec = null, $sep = null)
-    {
-        if (gettype($value) === 'string') {
-            $value = floatval($value);
-        }
-        $dec = is_null($dec) ? self::$prefs['sepDec'] : $dec;
-        $sep = is_null($sep) ? self::$prefs['sepMil'] : $sep;
-        return number_format($value, $nbDec, $dec, $sep);
-    }
-
-    /**
-     * Obtenir la longueur d'une chaîne de caractères
-     *
-     * ### Options :
-     * - `html` Si vrai, les entités HTML seront traitées comme des caractères décodés
-     * - `trimWidth` Si vrai, la longueur est retournée
-     *
-     * @param string $text    Texte à compter
-     * @param array  $options Options de la demande
-     *
-     * @return int
-     */
-    protected static function strlen($text, array $options)
-    {
-        $strlen = empty($options['trimWidth'])
-            ? 'mb_strlen'
-            : 'mb_strwidth';
-        if (empty($options['html'])) {
-            return $strlen($text);
-        }
-        $pattern = '/&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};/i';
-        $replace = preg_replace_callback(
-            $pattern,
-            function ($match) use ($strlen) {
-                $utf8 = html_entity_decode($match[0], ENT_HTML5 | ENT_QUOTES, 'UTF-8');
-                return str_repeat(' ', $strlen($utf8, 'UTF-8'));
-            },
-            $text
-        );
-        return $strlen($replace);
-    }
-
-    /**
-     * Obtenir une partie d'une chaîne
-     *
-     * @param string     $text    Texte en entrée
-     * @param int        $start   Position de départ dans la chaîne
-     * @param int        $length  Longueur de la chaîne à extraire
-     * @param array|null $options Options de la demande
-     *
-     * @return string
-     */
-    public static function substr($text, $start, $length, array $options = [])
-    {
-        $substr = empty($options['trimWidth'])
-            ? 'mb_substr'
-            : 'mb_strimwidth';
-
-        $maxPosition = self::strlen($text, ['trimWidth' => false] + $options);
-
-        if ($start < 0) {
-            $start += $maxPosition;
-            if ($start < 0) {
-                $start = 0;
-            }
-        }
-        if ($start >= $maxPosition) {
-            return '';
-        }
-
-        if ($length === null) {
-            $length = self::strlen($text, $options);
-        }
-
-        if ($length < 0) {
-            $text = self::substr($text, $start, null, $options);
-            $start = 0;
-            $length += self::strlen($text, $options);
-        }
-
-        if ($length <= 0) {
-            return '';
-        }
-
-        if (empty($options['html'])) {
-            return (string)$substr($text, $start, $length);
-        }
-
-        $totalOffset = 0;
-        $totalLength = 0;
-        $result = '';
-
-        $pattern = '/(&[0-9a-z]{2,8};|&#[0-9]{1,7};|&#x[0-9a-f]{1,6};)/i';
-        $parts = preg_split($pattern, $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-        foreach ($parts as $part) {
-            $offset = 0;
-
-            if ($totalOffset < $start) {
-                $len = self::strlen($part, ['trimWidth' => false] + $options);
-                if ($totalOffset + $len <= $start) {
-                    $totalOffset += $len;
-                    continue;
-                }
-
-                $offset = $start - $totalOffset;
-                $totalOffset = $start;
-            }
-
-            $len = self::strlen($part, $options);
-            if ($offset !== 0 || $totalLength + $len > $length) {
-                if (strpos($part, '&') === 0 && preg_match($pattern, $part)
-                    && $part !== html_entity_decode($part, ENT_HTML5 | ENT_QUOTES, 'UTF-8')
-                ) {
-                    // Entities cannot be passed substr.
-                    continue;
-                }
-
-                $part = $substr($part, $offset, $length - $totalLength);
-                $len = self::strlen($part, $options);
-            }
-
-            $result .= $part;
-            $totalLength += $len;
-            if ($totalLength >= $length) {
-                break;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Supprimmer le dernier mot d'une chaîne
-     *
-     * @param string $text Chaîne en entrée
-     *
-     * @return string
-     */
-    public static function removeLastWord($text)
-    {
-        $spacepos = mb_strrpos($text, ' ');
-        if ($spacepos !== false) {
-            $lastWord = mb_strrpos($text, $spacepos);
-            if (mb_strwidth($lastWord) === mb_strlen($lastWord)) {
-                $text = mb_substr($text, 0, $spacepos);
-            }
-            return $text;
-        }
-        return '';
+        return self::$instance;
     }
 
     /**
      * Obtenir le texte à gauche d'un caractère.
      *
-     * @param string     $string  Caractère séparateur
-     * @param string     $text    Texte à découper
-     * @param mixed|null $default Valeur à retourner si rien n'est trouvé
+     * @param string      $string  Caractère séparateur
+     * @param string      $text    Texte à découper
+     * @param string|null $default Valeur par défaut si le caractère n'est pas trouvé
      *
      * @return null|string
      */
@@ -544,41 +84,40 @@ class Text
     /**
      * Obtenir le texte à droite d'un caractère.
      *
-     * @param string $string Caractère séparateur
-     * @param string $text   Texte à découper
+     * @param string      $string  Caractère séparateur
+     * @param string      $text    Texte à découper
+     * @param string|null $default Valeur par défaut si le caractère n'est pas trouvé
      *
-     * @return string|null
-     * @see http://fr2.php.net/manual/fr/function.strstr.php
+     * @return null|string
      */
-    public static function getAfter($string, $text)
+    public static function getAfter($string, $text, $default = null)
     {
         $result = strstr($text, $string);
-        return $result != '' ? substr($result, 1, strlen($result) - 1) : null;
+        return $result != '' ? substr($result, 1, strlen($result) - 1) : $default;
+    }
+
+    public static function serialize($value, $format = null)
+    {
+        switch ($format) {
+            case 'json':
+                return json_encode($value);
+            default:
+                return serialize($value);
+        }
     }
 
     /**
-     * Obtenir le code source d'un fichier.
+     * Obtenir l'aide de cette classe
      *
-     * @param string    $file         Chemin complet du fichier
-     * @param bool|null $htmlentities Convertit tous les caractères éligibles en entités HTML
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
      *
-     * @return mixed|null|string
-     * @see http://php.net/manual/fr/function.htmlentities.php
-     * @see http://php.net/manual/fr/function.highlight-string.php
+     * @return array|string
      */
-    public static function showSource($file, $htmlentities = true)
+    public static function help($text = true)
     {
-        $content = null;
-        if (is_file($file)) {
-            $parts = explode('.', $file);
-            $ext = array_pop($parts);
-            $content = file_get_contents($file);
-            if (strtolower($ext) === 'php') {
-                $content = highlight_string($content);
-            }
+        if ($text) {
+            return join('. ', self::$help);
         }
-        return $htmlentities
-            ? htmlentities($content)
-            : $content;
+        return self::$help;
     }
 }

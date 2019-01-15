@@ -23,6 +23,11 @@ class EtablissementsPublicsApiGouvTest extends BaseTestCase
         $this->assertInstanceOf(EtablissementsPublicsApiGouv::class, $this->makeEtablissementsApiGouv());
     }
 
+
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makeEtablissementsApiGouv());
+    }
     public function testGetByDepartement()
     {
         $this->ekoMessage("Organisme d'un département");

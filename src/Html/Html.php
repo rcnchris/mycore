@@ -42,18 +42,22 @@ use Rcnchris\Core\Tools\Items;
 class Html
 {
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        'Helper HTML',
+        'Génération de balises HTML',
+        'Instanciable et statique',
+    ];
+
+    /**
      * Instance de cette classe
      *
      * @var self
      */
     private static $instance;
-
-    /**
-     * Liste des CDN
-     *
-     * @var \Rcnchris\Core\Tools\Items
-     */
-    private static $cdns;
 
     /**
      * Préfixe de l'url
@@ -351,96 +355,6 @@ class Html
     }
 
     /**
-     * Obtenir la balise `link` pour le CSS d'un CDN
-     *
-     * ### Example
-     * - `$html->css('bootstrap', 'min');`
-     *
-     * @param string      $key        Nom du CDN
-     * @param string|null $type       Type de css (src ou min)
-     * @param array|null  $attributes Attributs de la balise `link`
-     * @param string      $version    Version demandée
-     *
-     * @return null|string
-     */
-    public static function css($key, $type = 'src', array $attributes = [], $version = 'latest')
-    {
-        if (!self::$cdns->has($key)) {
-            return null;
-        }
-        $css = self::$cdns->get($key)->get('core')->get($version)->get('css')->get($type);
-        if ($css) {
-            if (substr(trim($css, '/'), 0, 6) === 'public') {
-                $css = self::$prefixUrl . trim($css, '/');
-            }
-            $defaultAttributes = [
-                'href' => $css,
-                'rel' => 'stylesheet',
-                'type' => 'text/css'
-            ];
-            return '<link' . self::parseAttributes(array_merge($defaultAttributes, $attributes)) . '/>';
-        }
-        return null;
-    }
-
-    /**
-     * Obtenir la balise `script` d'un CDN
-     *
-     * ### Example
-     * - `$html->script('bootstrap', 'min');`
-     *
-     * @param string      $key        Nom du CDN
-     * @param string|null $type       Type de script (src ou min)
-     * @param array|null  $attributes Attributs de la balise `script`
-     * @param string|null $version    Version demandée
-     *
-     * @return null|string
-     */
-    public static function script($key, $type = 'src', array $attributes = [], $version = 'latest')
-    {
-        if (!self::$cdns->has($key)) {
-            return null;
-        }
-        $script = self::$cdns->get($key)->get('core')->get($version)->get('js')->get($type);
-        if ($script) {
-            if (substr(trim($script, '/'), 0, 6) === 'public') {
-                $script = self::$prefixUrl . trim($script, '/');
-            }
-            $defaultAttributes = [
-                'src' => $script,
-                'type' => 'text/javascript'
-            ];
-            return self::surround(
-                '',
-                'script',
-                array_merge($defaultAttributes, $attributes)
-            );
-        }
-        return null;
-    }
-
-    /**
-     * Obtenir les CDN
-     *
-     * @return \Rcnchris\Core\Tools\Items
-     */
-    public static function getCdns()
-    {
-        return self::$cdns;
-    }
-
-    /**
-     * Définir les CDN
-     *
-     * @param array $cdns
-     */
-    public static function setCdns(array $cdns, $prefix = null)
-    {
-        self::$prefixUrl = $prefix;
-        self::$cdns = new Items($cdns);
-    }
-
-    /**
      * Obtenir la balise html qui correspond au type demandé
      *
      * @param string     $name    Nom de la balise générée
@@ -655,5 +569,20 @@ class Html
             return serialize($value);
         }
         return (string)$value;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

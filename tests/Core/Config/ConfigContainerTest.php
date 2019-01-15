@@ -22,6 +22,11 @@ class ConfigContainerTest extends BaseTestCase
         $this->assertInstanceOf(ConfigContainer::class, $this->config);
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->config);
+    }
+
     public function testSet()
     {
         $this->config->set('test', 'ola');

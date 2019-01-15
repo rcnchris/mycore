@@ -38,6 +38,15 @@ use Cake\I18n\Time;
 class Month
 {
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Facilite la manipulation de fichiers et dossiers",
+    ];
+
+    /**
      * Tableau des noms de mois par langue
      *
      * @var array
@@ -177,5 +186,20 @@ class Month
             $year -= 1;
         }
         return new self($month, $year);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

@@ -7,7 +7,8 @@ use Rcnchris\Core\Tools\Items;
 use Rcnchris\Core\Twig\DebugExtension;
 use Tests\Rcnchris\BaseTestCase;
 
-class DebugExtensionTest extends BaseTestCase {
+class DebugExtensionTest extends BaseTestCase
+{
 
     /**
      * @var DebugExtension
@@ -115,6 +116,15 @@ class DebugExtensionTest extends BaseTestCase {
         $content = ob_get_clean();
     }
 
+    public function testGetPhpRefInText()
+    {
+        ob_start();
+        $r1 = rt($this->ext);
+        $r2 = $this->ext->phpRefText($this->ext);
+        $this->assertEquals($r1, $r2);
+        $content = ob_get_clean();
+    }
+
     public function testVardump()
     {
         ob_start();
@@ -123,21 +133,34 @@ class DebugExtensionTest extends BaseTestCase {
         $content = ob_get_clean();
     }
 
-    public function testIsType()
+    public function testIsArray()
     {
-        $a = ['ola', 'ole', 'oli'];
-        $c = new Items($a);
+        $var = ['ola', 'ole'];
+        $this->assertTrue($this->ext->isArray($var));
+        $this->assertFalse($this->ext->isArray(true));
+    }
 
-        $this->assertTrue($this->ext->isArray($a));
-        $this->assertTrue($this->ext->isObject($c));
+    public function testIsBool()
+    {
+        $this->assertTrue($this->ext->isBool(true));
+        $this->assertFalse($this->ext->isBool(['ola', 'ole']));
+    }
 
-        $this->assertFalse($this->ext->isArray($c));
-        $this->assertFalse($this->ext->isObject($a));
+    public function testIsObject()
+    {
+        $var=new \stdClass();
+        $this->assertTrue($this->ext->isObject($var));
+        $this->assertFalse($this->ext->isObject(['ola', 'ole']));
     }
 
     public function testGetConstants()
     {
         $this->assertNotEmpty($this->ext->getConstants());
         $this->assertNotEmpty($this->ext->getConstants('user'));
+    }
+
+    public function testGetType()
+    {
+        $this->assertEquals('string', $this->ext->getType('ola'));
     }
 }

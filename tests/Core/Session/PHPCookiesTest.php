@@ -35,6 +35,11 @@ class PHPCookiesTest extends BaseTestCase
         $this->assertInstanceOf(PHPCookies::class, $this->cookies);
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->cookies);
+    }
+
     public function testInstanceWithOptions()
     {
         $cookies = $this->makeCookies(null, ['lifetime' => 240]);

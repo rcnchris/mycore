@@ -23,6 +23,11 @@ class WkhtmltopdfTest extends BaseTestCase
         $this->assertInstanceOf(Wkhtmltopdf::class, $this->makePdf());
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makePdf());
+    }
+
     public function testEnabled()
     {
         $this->assertTrue($this->makePdf()->wkhtmltopdfEnabled());
@@ -45,7 +50,7 @@ class WkhtmltopdfTest extends BaseTestCase
 
     public function testGetOptionsWithValueKeyLess()
     {
-        $this->assertEquals('disable-javascript', $this->makePdf()->getOptions('disable-javascript'));
+        $this->assertEquals('disable-smart-shrinking', $this->makePdf()->getOptions('disable-smart-shrinking'));
     }
 
     public function testGetOptionsWithMissingKey()
@@ -56,7 +61,7 @@ class WkhtmltopdfTest extends BaseTestCase
     public function testHasOptions()
     {
         $this->assertTrue($this->makePdf()->hasOption('page-size'));
-        $this->assertTrue($this->makePdf()->hasOption('disable-javascript'));
+        $this->assertTrue($this->makePdf()->hasOption('disable-smart-shrinking'));
         $this->assertFalse($this->makePdf()->hasOption('fake'));
     }
 
@@ -97,5 +102,60 @@ class WkhtmltopdfTest extends BaseTestCase
             Wkhtmltopdf::class,
             $this->makePdf()->addPage('/')
         );
+    }
+
+    public function testGetDocWithoutParameter()
+    {
+        $this->assertInternalType('string', $this->makePdf()->getDoc());
+    }
+
+    public function testGetDocHelp()
+    {
+        $this->assertInternalType('string', $this->makePdf()->getDoc('help'));
+    }
+
+    public function testGetDocExtendedHelp()
+    {
+        $this->assertInternalType('string', $this->makePdf()->getDoc('extended-help'));
+    }
+
+    public function testGetDocReadme()
+    {
+        $this->assertInternalType('string', $this->makePdf()->getDoc('readme'));
+    }
+
+    public function testGetDocHtmlDoc()
+    {
+        $this->assertInternalType('string', $this->makePdf()->getDoc('htmldoc'));
+    }
+
+    public function testGetDocManpage()
+    {
+        $this->assertInternalType('string', $this->makePdf()->getDoc('manpage'));
+    }
+
+    public function testRender()
+    {
+        $response = $this
+            ->makePdf()
+            ->addPage('<h1>Oyé les gens</h1>')
+            ->render();
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        if ($response->getStatusCode() !== 200) {
+            $this->ekoMessage((string)$response->getBody());
+        }
+    }
+
+    public function testDownload()
+    {
+        $file = $this->rootPath() . $this::TESTS_FOLDER . '/Core/PDF/results/oye-test.pdf';
+        $response = $this
+            ->makePdf()
+            ->addPage('<h1>Oyé les gens</h1>')
+            ->download(null, [], $file);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        if ($response->getStatusCode() !== 200) {
+            $this->ekoMessage((string)$response->getBody());
+        }
     }
 }

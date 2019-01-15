@@ -38,6 +38,15 @@ use SplFileInfo;
 class Folder
 {
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Facilite la manipulation de fichiers et dossiers",
+    ];
+
+    /**
      * Chemin
      *
      * @var string
@@ -157,9 +166,10 @@ class Folder
     public function content($key = null)
     {
         while (false !== ($entry = $this->dir->read())) {
-            if (is_file($this->path . DIRECTORY_SEPARATOR . $entry)) {
+            $item = $this->path . DIRECTORY_SEPARATOR . $entry;
+            if (is_file($item)) {
                 $this->content['files'][] = $entry;
-            } elseif (is_dir($this->path . DIRECTORY_SEPARATOR . $entry)) {
+            } elseif (is_dir($item)) {
                 $this->content['folders'][] = $entry;
             }
         }
@@ -271,5 +281,20 @@ class Folder
     public function getFileInfo($name)
     {
         return new SplFileInfo($name);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

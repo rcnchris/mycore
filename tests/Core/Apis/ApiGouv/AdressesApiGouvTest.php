@@ -22,6 +22,11 @@ class AdressesApiGouvTest extends BaseTestCase
         $this->assertInstanceOf(AdressesApiGouv::class, $this->makeAdressesApiGouv());
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makeAdressesApiGouv());
+    }
+
     public function testGetRegions()
     {
         $this->ekoMessage("Régions");

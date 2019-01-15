@@ -37,6 +37,16 @@ use Faker\Factory;
  */
 class RandomItems
 {
+
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Facilite la manipulation de fichiers et dossiers",
+    ];
+
     /**
      * Instance
      *
@@ -635,5 +645,20 @@ class RandomItems
             self::$datas = null;
         }
         return count($datas) === 1 ? $datas[0] : $datas;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

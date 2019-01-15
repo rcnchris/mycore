@@ -20,6 +20,9 @@ namespace Rcnchris\Core\Tools;
 
 /**
  * Class Environnement
+ * <ul>
+ * <li>Permet d'accéder aux variables d'environnement</li>
+ * </ul>
  *
  * @category Environnement
  *
@@ -35,6 +38,15 @@ namespace Rcnchris\Core\Tools;
  */
 class Environnement
 {
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Permet d'accéder aux variables d'environnement",
+        "Statique et instanciable via <code>getInstance</code>",
+    ];
 
     /**
      * Tableau `$_SERVER` dans une instance de Items
@@ -46,20 +58,36 @@ class Environnement
     /**
      * Instance
      *
-     * @var \Locale
+     * @var $this
      */
-    private $locale;
+    private static $instance;
 
     /**
      * Constructeur
      *
      * @param array|null $server Contenu de la variable `$_SERVER`
      */
-    public function __construct($server = null)
+    private function __construct($server = null)
     {
         $this->server = is_null($server) ? new Items($_SERVER) : new Items($server);
-        $this->locale = new \Locale();
     }
+
+
+    /**
+     * Obtenir une instance (Singleton)
+     *
+     * @param null $server
+     *
+     * @return \Rcnchris\Core\Tools\Debug
+     */
+    public static function getInstance($server = null)
+    {
+        if (is_null(self::$instance)) {
+            self::$instance = new self($server);
+        }
+        return self::$instance;
+    }
+
 
     /**
      * Est appelée pour lire des données depuis des propriétés inaccessibles.
@@ -70,16 +98,7 @@ class Environnement
      */
     public function __get($key)
     {
-        return $this->get($key);
-    }
-
-    /**
-     * Suppression des propriétés
-     */
-    public function __destruct()
-    {
-        unset($this->server);
-        unset($this->locale);
+        return self::get($key);
     }
 
     /**
@@ -285,27 +304,6 @@ class Environnement
     }
 
     /**
-     * Obtenir la localisation courante
-     *
-     * @return \Locale
-     * @see http://php.net/manual/fr/class.locale.php
-     */
-    public function getLocale()
-    {
-        return $this->locale;
-    }
-
-    /**
-     * Définit la locale par défaut
-     *
-     * @param string $locale Locale à définir par défaut
-     */
-    public function setLocale($locale)
-    {
-        $this->locale->setDefault($locale);
-    }
-
-    /**
      * Obtenir la liste de toutes les locales
      *
      * @return \Rcnchris\Core\Tools\Items
@@ -343,21 +341,6 @@ class Environnement
     public function getSapi()
     {
         return php_sapi_name();
-    }
-    /**
-     * Obtenir la liste des constantes
-     *
-     * @param string|null $key Clé de la constante à retourner
-     *
-     * @return \Rcnchris\Core\Tools\Items
-     */
-    public static function getConstants($key = null)
-    {
-        $constants = get_defined_constants(true);
-        if (!is_null($key) && array_key_exists($key, $constants)) {
-            return $constants[$key];
-        }
-        return self::makeItems($constants);
     }
 
     /**
@@ -435,21 +418,51 @@ class Environnement
         if ($full) {
             return $ua;
         }
-        if (preg_match("/Firefox/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
-            $ua = "Firefox";
-        } elseif (preg_match("/OPR/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
-            $ua = "Opera";
-        } elseif (preg_match("/Edge/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
-            $ua = "Edge";
-        } elseif (preg_match("/MSIE/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
-            $ua = "Internet Explorer";
-        } elseif (preg_match("/Chrome/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
-            $ua = "Google Chrome";
-        } elseif (preg_match("/Safari/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
-            $ua = "Safari";
-        } elseif (preg_match("/Mozilla/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
-            $ua = "Firefox";
+        $browsers = [
+            'Firefox' => 'Firefox',
+            'OPR' => 'Opera',
+            'Edge' => 'Edge',
+            'MSIE' => 'Internet Explorer',
+            'Chrome' => 'Chrome',
+            'Safari' => 'Safari',
+            'Mozilla' => 'Firefox'
+        ];
+        foreach ($browsers as $term => $browser) {
+            if (preg_match("/$term/", $ua, $matches, PREG_OFFSET_CAPTURE)) {
+                $ua = $browser;
+            }
         }
         return $ua;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
+    }
+
+    /**
+     * Obtenir la liste des contantes définies
+     *
+     * @param string|null $key Nom d'une clé des constantes
+     *
+     * @return mixed|null|\Rcnchris\Core\Tools\Items
+     */
+    public static function getConstants($key = null)
+    {
+        $constants = get_defined_constants(true);
+        if (!is_null($key) && array_key_exists($key, $constants)) {
+            $constants = $constants[$key];
+        }
+        return self::makeItems($constants);
     }
 }

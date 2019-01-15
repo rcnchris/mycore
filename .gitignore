@@ -1,5 +1,6 @@
 /app/
 /vendor/
 /composer.lock
+/.htaccess
 /public/
 /tests/Core/PDF/results/

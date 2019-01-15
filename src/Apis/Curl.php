@@ -18,7 +18,7 @@
 
 namespace Rcnchris\Core\Apis;
 
-use Intervention\Image\ImageManagerStatic;
+use Rcnchris\Core\Tools\Image;
 use Rcnchris\Core\Tools\Items;
 use Rcnchris\Core\Tools\Text;
 use SimpleXMLElement;
@@ -44,6 +44,14 @@ use SimpleXMLElement;
 class Curl
 {
 
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private $help = [
+        "Effectuer des requêtes HTTP et obtenir le résultat"
+    ];
     /**
      * Session cURL
      *
@@ -236,42 +244,72 @@ class Curl
     /**
      * Obtenir la réponse cURL sous forme d'objet en fonction de son contenu, type, statut...
      *
-     * @return \Intervention\Image\Image|null|\Rcnchris\Core\Tools\Items|SimpleXMLElement
+     * @param bool|null $toObject Retour dans un objet selon le type de réponse
+     *
+     * @return mixed|null|\Rcnchris\Core\Tools\Image|\Rcnchris\Core\Tools\Items|\SimpleXMLElement
      */
-    public function getResponse()
+    public function getResponse($toObject = true)
     {
-        $codesOk = [200, 301, 302];
-        if (in_array($this->getHttpCode(), $codesOk)) {
-            $response = null;
-            if ($this->getContentType() === 'application/json' || $this->getContentType() === 'text/plain') {
-                $content = json_decode($this->response, true);
-                if (is_array($content)) {
-                    $response = new Items($content);
-                } else {
-                    $response = new Items([
-                        'error' => json_last_error_msg(),
-                        'infos' => $this->getInfos(),
-                        'response' => $this->response
-                    ]);
-                }
-            }
-
-            if ($this->getContentType() === 'text/xml') {
-                $response = simplexml_load_string($this->response);
-            }
-
-            if ($this->getContentType() === 'image/jpeg') {
-                $response = ImageManagerStatic::make($this->getUrl());
-            }
-            return $response;
+        if ($toObject === false) {
+            return $this->response;
         }
-
-        return new Items([
-            'error' => $this->getHttpCode(),
+        $type = $this->getContentType();
+        $response = null;
+        $errors = [
+            'code' => $this->getHttpCode(),
+            'type' => $type,
             'infos' => $this->getInfos(),
             'response' => $this->response,
-            'curlError' => curl_error($this->curl)
-        ]);
+            'curlError' => curl_error($this->curl),
+            'curlErrorCode' => curl_errno($this->curl),
+        ];
+        if ($type === 'text/html') {
+            $response = $this->response;
+        } elseif ($type === 'application/json') {
+            $content = json_decode($this->response, true);
+            $response = is_array($content)
+                ? new Items($content)
+                : new Items(array_merge($errors,
+                    ['jsonError' => json_last_error(), 'jsonErrorMsg' => json_last_error_msg()]));
+        } elseif ($type === 'text/csv') {
+            // Chaque ligne dans un tableau
+            $array = str_getcsv($this->response, "\n");
+
+            // Extraction des entêtes de colonnes
+            $headers = str_getcsv($array[0]);
+            unset($array[0]);
+
+            // Traitement des lignes
+            $rows = [];
+            foreach ($array as $indLine => $row) {
+                foreach (str_getcsv($row) as $indCol => $value) {
+                    if (isset($headers[$indCol])) {
+                        $rows[$indLine][$headers[$indCol]] = $value;
+                    }
+                }
+            }
+            $response = new Items($rows);
+        } elseif (in_array($type, ['application/xml', 'text/xml'])) {
+            libxml_use_internal_errors(true);
+            $response = simplexml_load_string($this->response);
+            if ($response === false) {
+                $xmlErrors = [];
+                foreach (libxml_get_errors() as $e) {
+                    $xmlErrors[] = [
+                        'code' => $e->code,
+                        'line' => $e->line,
+                        'column' => $e->column,
+                        'msg' => $e->message,
+                    ];
+                }
+                $response = new Items(array_merge($errors, compact('xmlErrors')));
+            }
+        } elseif (in_array($type, ['image/jpeg'])) {
+            $response = new Image($this->getUrl());
+        } else {
+            $response = new Items($errors);
+        }
+        return $response;
     }
 
     /**
@@ -496,6 +534,7 @@ class Curl
      * @param mixed|null $param Paramètre de la fonction
      *
      * @return bool|mixed
+     * @codeCoverageIgnore
      */
     public function getGeoipInfos($type, $param = null)
     {
@@ -506,5 +545,20 @@ class Curl
             }
         }
         return false;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public function help($text = true)
+    {
+        if ($text) {
+            return join('. ', $this->help);
+        }
+        return $this->help;
     }
 }

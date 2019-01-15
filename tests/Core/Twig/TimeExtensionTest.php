@@ -55,4 +55,14 @@ class TimeExtensionTest extends BaseTestCase {
         $result = $this->ext->dateDiff($start, $end->format('d-m-Y H:i:s'));
         $this->assertInstanceOf(\DateInterval::class, $result);
     }
+
+    public function testGetDate()
+    {
+        $this->assertInstanceOf(\DateTime::class, $this->ext->getDate('1975-10-15'));
+    }
+
+    public function testGetDateWithFormat()
+    {
+        $this->assertInstanceOf(\DateTime::class, $this->ext->getDate('15-10-1975', 'd-m-Y'));
+    }
 }

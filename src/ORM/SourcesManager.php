@@ -38,6 +38,16 @@ class SourcesManager
 {
 
     /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Responsable de la fourniture des <strong>configurations</strong> des sources de données",
+        "<strong>Connexion</strong> aux sources de données",
+        "<strong>Fonctionne uniquement avec <code>PDO</code></strong>"
+    ];
+    /**
      * Nom de la source de données par défaut
      *
      * @const string
@@ -147,5 +157,20 @@ class SourcesManager
         return array_key_exists($key, $this->sources)
             ? $this->sources[$key]
             : false;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

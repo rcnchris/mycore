@@ -114,6 +114,11 @@ class ItemsTest extends BaseTestCase
         }
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makeItems('ola,ole'));
+    }
+
     public function testToString()
     {
         $this->assertEquals(serialize($this->itemsDatas['item']), (string)$this->itemsArray['item']);

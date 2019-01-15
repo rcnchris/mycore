@@ -59,6 +59,11 @@ class ImageTest extends BaseTestCase
         return new Image($source);
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp($this->makeImage());
+    }
+
     public function testInstanceWithPathFile()
     {
         $file = __DIR__ . '/img/bob_marley_santa-barbara79.jpg';

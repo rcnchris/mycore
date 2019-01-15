@@ -37,7 +37,15 @@ use Intervention\Image\ImageManagerStatic;
  */
 class Image
 {
-
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private static $help = [
+        "Facilite la manipulation de fichiers et dossiers",
+    ];
+    
     /**
      * Image
      *
@@ -84,7 +92,7 @@ class Image
     {
         if (is_null($source)) {
             throw new \Exception("La source de l'image est vide");
-        } elseif (is_string($source) && file_exists($source)) {
+        } elseif (is_string($source)) {
             $this->img = ImageManagerStatic::make($source);
         } elseif ($source instanceof \Intervention\Image\Image) {
             $this->img = $source;
@@ -300,5 +308,20 @@ class Image
     private function getQuality($quality = null)
     {
         return is_null($quality) ? $this->quality : intval($quality);
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

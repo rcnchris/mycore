@@ -16,6 +16,11 @@ class RandomItemsTest extends BaseTestCase {
         );
     }
 
+    public function testHelp()
+    {
+        $this->assertHasHelp(RandomItems::getInstance());
+    }
+
     public function testGetDate()
     {
         $this->assertInternalType(
