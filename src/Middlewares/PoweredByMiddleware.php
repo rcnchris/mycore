@@ -52,7 +52,6 @@ class PoweredByMiddleware extends AbstractMiddleware
      */
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
     {
-        $response = $response->withHeader('X-Powered-By', 'MRC Consulting');
-        return $next($request, $response);
+        return $next($request, $response->withHeader('X-Powered-By', 'MRC Consulting'));
     }
 }

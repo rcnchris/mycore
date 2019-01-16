@@ -26,12 +26,10 @@ namespace Rcnchris\Core\ORM;
  * </ul>
  *
  * @category Base de données
- *
  * @package  Rcnchris\Core\ORM
- *
  * @author   Raoul <rcn.chris@gmail.com>
- *
  * @version  Release: <1.0.0>
+ * @codeCoverageIgnore
  */
 class DbFactory
 {

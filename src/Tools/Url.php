@@ -51,6 +51,11 @@ class Url
      */
     private $curl;
 
+    /**
+     * Constructeur
+     *
+     * @param string|null $url URL au format texte
+     */
     public function __construct($url = null)
     {
         $this->set($url);
@@ -66,6 +71,13 @@ class Url
         return $this->url;
     }
 
+    /**
+     * Obtenir une partie de l'URL
+     *
+     * @param string $key Nom d'une clé retournée par parse_url()
+     *
+     * @return mixed|null|\Rcnchris\Core\Tools\Items
+     */
     public function __get($key)
     {
         return $this->parse()->get($key);

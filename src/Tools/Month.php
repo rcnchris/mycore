@@ -5,9 +5,9 @@
  *
  * PHP version 5
  *
- * @category New
+ * @category Calendrier
  *
- * @package  App\Modules\Events
+ * @package  Rcnchris\Core\Tools
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -23,9 +23,9 @@ use Cake\I18n\Time;
 /**
  * Class Month
  *
- * @category Un mois du calendrier
+ * @category Calendrier
  *
- * @package  App\Modules\Events
+ * @package  Rcnchris\Core\Tools
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -76,11 +76,17 @@ class Month
     public $days = [
         'fr' => ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
     ];
+
     /**
+     * Numéro du mois
+     *
      * @var string
      */
     public $month;
+
     /**
+     * Année
+     *
      * @var int
      */
     public $year;

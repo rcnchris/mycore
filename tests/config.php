@@ -28,6 +28,10 @@ return [
     'sep_mil' => ' ',
     'templates' => dirname(__DIR__) . '/src/App/templates',
     'logs' => dirname(__DIR__) . '/logs/app.log',
+
+    'phpVersion' => PHP_VERSION,
+    'sapi' => PHP_SAPI,
+
     /**
      * Database Datasources
      */
@@ -59,6 +63,7 @@ return [
             'fileName' => realpath(dirname(__DIR__) . '/Core/ORM/dbTests.sqlite')
         ]
     ],
+
     /**
      * CDN locaux et distants
      */

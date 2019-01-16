@@ -282,6 +282,15 @@ class Debug
         return self::isType('bool', $var);
     }
 
+    /**
+     * Vérifie la type d'une variable
+     *
+     * @param string $type Type de variable PHP
+     * @param mixed  $var  Variable
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public static function isType($type, $var)
     {
         $methodName = 'is_' . strtolower($type);

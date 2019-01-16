@@ -177,7 +177,32 @@ class Environnement
      */
     public function getApacheModules()
     {
-        return $this->makeItems(apache_get_modules());
+        if ($this->hasFunction('apache_get_modules')) {
+            return $this->makeItems(apache_get_modules());
+        }
+        return [];
+    }
+
+    /**
+     * Obtenir le port d'écoute d'Apache
+     *
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function getApachePortListen()
+    {
+        return $this->get('SERVER_PORT');
+    }
+
+    /**
+     * Obtenir l'administrateur Apache
+     *
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function getApacheAdmin($default=null)
+    {
+        return $this->get('SERVER_ADMIN');
     }
 
     /**
@@ -464,5 +489,29 @@ class Environnement
             $constants = $constants[$key];
         }
         return self::makeItems($constants);
+    }
+
+    /**
+     * Vérifie la présence d'une fonction
+     *
+     * @param string $name Nom de la fonction
+     *
+     * @return bool
+     */
+    public static function hasFunction($name)
+    {
+        return function_exists($name);
+    }
+
+    /**
+     * Vérifie la présence d'une clé dans l'environnement
+     *
+     * @param string $key Nom d'une clé
+     *
+     * @return bool
+     */
+    public function has($key)
+    {
+        return $this->server->has($key);
     }
 }

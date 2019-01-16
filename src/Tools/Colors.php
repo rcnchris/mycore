@@ -261,6 +261,7 @@ class Colors
      * - `$colors->colorToRgb('#45EF4B');`
      *
      * @param string $hexa Code héxadécimal sur 7 caractères
+     * @param bool|null   $tostring Si vrai, retourne une chaîne de cractères : rgb(0, 0, 0)
      *
      * @return array
      * @throws \Exception

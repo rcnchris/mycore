@@ -3,7 +3,7 @@
   "description": "PHP Libraries",
   "keywords": ["library","php","core"],
   "time": "2019-01-11",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -21,22 +21,20 @@
   },
   "minimum-stability": "stable",
   "require": {
-    "intervention/image": "^2.4",
-    "michelf/php-markdown": "^1.7",
-    "twig/twig": "^2.4",
-    "setasign/fpdf": "^1.8",
-    "robmorgan/phinx": "^0.10.3",
-    "fzaninotto/faker": "^1.7",
     "psr/container": "^1.0",
     "psr/http-server-middleware": "^1.0",
+    "michelf/php-markdown": "^1.7",
+    "setasign/fpdf": "^1.8",
     "mikehaertl/phpwkhtmltopdf": "^2.3",
+    "intervention/image": "^2.4",
+    "twig/twig": "^2.4",
+    "fzaninotto/faker": "^1.7",
     "cakephp/i18n": "^3.7"
   },
   "require-dev": {
+    "digitalnature/php-ref": "^1.2",
     "phpunit/phpunit": ">=4.8 < 6.0",
     "squizlabs/php_codesniffer": "^3.2",
-    "digitalnature/php-ref": "^1.2",
-    "filp/whoops": "^2.2",
     "slim/slim": "^3.11",
     "slim/php-view": "^2.2",
     "slim/twig-view": "^2.4"

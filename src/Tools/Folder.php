@@ -274,6 +274,8 @@ class Folder
     }
 
     /**
+     * Obtenir les informations d'un fichier
+     *
      * @param string $name Nom complet du fichier
      *
      * @return SplFileInfo

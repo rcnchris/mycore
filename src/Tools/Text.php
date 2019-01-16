@@ -96,6 +96,14 @@ class Text
         return $result != '' ? substr($result, 1, strlen($result) - 1) : $default;
     }
 
+    /**
+     * Sérialise une variable
+     *
+     * @param mixed       $value  Variable à sérialiser
+     * @param string|null $format Format de sérialisation
+     *
+     * @return string|void
+     */
     public static function serialize($value, $format = null)
     {
         switch ($format) {

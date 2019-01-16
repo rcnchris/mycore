@@ -5,9 +5,9 @@
  *
  * PHP version 5
  *
- * @category New
+ * @category PDF
  *
- * @package  PDF
+ * @package  Rcnchris\Core\PDF
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -25,10 +25,13 @@ use Slim\Http\Response;
 
 /**
  * Class Wkhtmltopdf
+ * <ul>
+ * <li>Facilite la manipulation de la commande <code>Wkhtmltopdf</code></li>
+ * </ul>
  *
- * @category Wkhtmltopdf
+ * @category PDF
  *
- * @package  PDF
+ * @package  Rcnchris\Core\PDF
  *
  * @author   Raoul <rcn.chris@gmail.com>
  *
@@ -47,6 +50,7 @@ class Wkhtmltopdf extends Pdf
      */
     private static $help = [
         'Helper <strong>Wkhtmltopdf</strong>',
+        "Le contenu envoyé doit être du HTML, sous la forme d'une chaîne de caractères, d'un fichier HTML ou d'une URL",
         'Permet de <strong>générer</strong> et <strong>rendre</strong> des document <strong>PDF</strong>',
         "Requiert l'installation de <code>Wkhtmltopdf</code> sur le système d'exploitation du serveur PHP"
     ];
@@ -75,6 +79,8 @@ class Wkhtmltopdf extends Pdf
     ];
 
     /**
+     * Constructeur
+     *
      * @param null $options
      */
     public function __construct($options = null)
@@ -96,6 +102,8 @@ class Wkhtmltopdf extends Pdf
     }
 
     /**
+     * Obtenir la version de Wkhtmltopdf
+     *
      * @return string|null
      */
     public function getVersion()
@@ -138,10 +146,13 @@ class Wkhtmltopdf extends Pdf
     }
 
     /**
+     * Rendre le PDF
+     *
      * @param \Psr\Http\Message\ResponseInterface $response
      * @param array                               $options
      *
      * @return static
+     * @codeCoverageIgnore
      */
     public function render(ResponseInterface $response = null, array $options = [])
     {
@@ -167,11 +178,14 @@ class Wkhtmltopdf extends Pdf
     }
 
     /**
+     * Télécharger le PDF via le navigateur
+     *
      * @param \Psr\Http\Message\ResponseInterface $response
      * @param array                               $options
      * @param null                                $dest
      *
      * @return static
+     * @codeCoverageIgnore
      */
     public function download(ResponseInterface $response = null, array $options = [], $dest = null)
     {
@@ -201,7 +215,7 @@ class Wkhtmltopdf extends Pdf
      *
      * @param string $path Chemin vers le fichier CSS
      *
-     * @return $this
+     * @return self
      */
     public function withCss($path)
     {
@@ -217,7 +231,7 @@ class Wkhtmltopdf extends Pdf
      * @param string     $key   Clé ou valeur unique
      * @param mixed|null $value Valeur de la clé
      *
-     * @return $this
+     * @return self
      */
     public function setOption($key, $value = null)
     {
@@ -229,6 +243,8 @@ class Wkhtmltopdf extends Pdf
     }
 
     /**
+     * Ajoute du contenu dans une nouvelle page
+     *
      * @param string      $input   URL, a HTML string or a filename
      * @param array|null  $options Options de la page
      * @param string|null $type    a type hint if the input is a string of known type. This can either be `TYPE_HTML`

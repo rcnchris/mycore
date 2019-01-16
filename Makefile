@@ -51,7 +51,11 @@ code: ideperm ## Vérification et correction de la syntaxe
 	@echo -e '$(colorCom)Tests syntaxiques$(colorOff)'
 	@./vendor/bin/phpcs
 
+doc: ## Génération de la documentation
+	@../../devtools/phpdoc/vendor/bin/phpdoc -d $(root)/src -t $(root)/public/doc/src/responsive --template="$(templatePhpDoc)"
+
 test: ideperm install ## Tests unitaires
+	@clear
 	@echo -e '$(colorObj)Tests unitaires$(colorOff)'
 	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(shell date +%Y%m%d)_before_tests.pdf
 	@./vendor/bin/phpunit --stop-on-failure --coverage-html public/coverage
@@ -62,7 +66,7 @@ server: install ## Lance un serveur de développement
 	@echo -e '$(colorObj)Lance un serveur sur le $(serverName):$(serverPort)$(colorOff)'
 	@php -S $(serverName):$(serverPort) -t $(serverFolder)/ -d display_errors=1
 
-proxy: ## Permet de rafraîchir automatiquement la page du serveur de déveeloppement
+proxy: ## Permet de rafraîchir automatiquement la page du serveur de développement
 	browser-sync start --port 3000 --proxy $(serverName):$(serverPort) --files 'src/**/*.php' --files 'app/**/*.php' --files 'app/**/*.phtml'
 
 watch: server proxy

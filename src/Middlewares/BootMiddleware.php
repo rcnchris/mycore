@@ -66,17 +66,7 @@ class BootMiddleware extends AbstractMiddleware
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
     {
         $this->defineConstants();
-
-        /**
-         * Version de PHP
-         */
-        if (version_compare(PHP_VERSION, $this->defaultConfig['php']) < 0) {
-            throw new \Exception(
-                "Version de PHP " . PHP_VERSION
-                . " non supportée par cette application ! Elle a besoin de PHP "
-                . $this->defaultConfig['php'] . " ou supérieur."
-            );
-        }
+        $this->compareVersion();
 
         /**
          * Localisation
@@ -125,6 +115,21 @@ class BootMiddleware extends AbstractMiddleware
             if (!defined($name)) {
                 define($name, $value);
             }
+        }
+    }
+
+    /**
+     * @throws \Exception
+     * @codeCoverageIgnore
+     */
+    private function compareVersion()
+    {
+        if (version_compare(PHP_VERSION, $this->defaultConfig['php']) < 0) {
+            throw new \Exception(
+                "Version de PHP " . PHP_VERSION
+                . " non supportée par cette application ! Elle a besoin de PHP "
+                . $this->defaultConfig['php'] . " ou supérieur."
+            );
         }
     }
 }

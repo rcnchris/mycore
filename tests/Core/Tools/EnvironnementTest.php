@@ -1,7 +1,6 @@
 <?php
 namespace Tests\Rcnchris\Core\Tools;
 
-use Locale;
 use Rcnchris\Core\Tools\Environnement;
 use Rcnchris\Core\Tools\Items;
 use Tests\Rcnchris\BaseTestCase;
@@ -220,5 +219,34 @@ class EnvironnementTest extends BaseTestCase
     public function testGetServername()
     {
         $this->assertNull($this->e->getServerName());
+    }
+
+    public function testGetApacheAdmin()
+    {
+        if ($this->e->has('SERVER_ADMIN')) {
+            $this->assertInternalType('string', $this->e->getApacheAdmin());
+        } else {
+            $this->markTestSkipped('Clé SERVER_ADMIN absente');
+        }
+    }
+
+    public function testGetApachePortListen()
+    {
+        if ($this->e->has('SERVER_PORT')) {
+            $this->assertEquals(80, $this->e->getApachePortListen());
+        } else {
+            $this->markTestSkipped('Clé SERVER_PORT absente');
+        }
+    }
+
+    public function testHasFunction()
+    {
+        $this->assertTrue($this->e->hasFunction('var_dump'));
+        $this->assertFalse($this->e->hasFunction('apache_get_modules'));
+    }
+
+    public function testHas()
+    {
+        $this->assertFalse($this->e->has('SERVER_PORT'));
     }
 }
