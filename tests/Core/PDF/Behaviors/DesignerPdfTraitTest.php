@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Tests\Rcnchris\Core\PDF\PdfTestCase;
 
 class DesignerPdfTraitTest extends PdfTestCase
@@ -69,7 +69,7 @@ class DesignerPdfTraitTest extends PdfTestCase
     public function testDrawReturnInstance()
     {
         $this->assertInstanceOf(
-            AbstractPDF::class,
+            PdfDoc::class,
             $this->makePdf()->draw('rect', [])
         );
     }
@@ -293,7 +293,7 @@ class DesignerPdfTraitTest extends PdfTestCase
     public function testDrawCode39()
     {
         $pdf = $this->makePdf();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->draw('code39', [
+        $this->assertInstanceOf(PdfDoc::class, $pdf->draw('code39', [
             'x' => 10,
             'y' => 40,
             'code' => 'test code 39',

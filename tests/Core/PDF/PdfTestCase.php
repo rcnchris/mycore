@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF;
 
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Tests\Rcnchris\BaseTestCase;
 
 class PdfTestCase extends BaseTestCase
@@ -23,7 +23,7 @@ class PdfTestCase extends BaseTestCase
     /**
      * Instance du document PDF
      *
-     * @var AbstractPDF
+     * @var PdfDoc
      */
     protected $pdf;
 
@@ -41,7 +41,7 @@ class PdfTestCase extends BaseTestCase
      * @param string|null $className Nom de la classe du document PDF
      * @param bool|null   $withPage  N'ajoute pas de première page si false
      *
-     * @return \Rcnchris\Core\PDF\AbstractPDF
+     * @return \Rcnchris\Core\PDF\PdfDoc
      * @throws \Exception
      */
     public function makePdf($className = null, $withPage = true)

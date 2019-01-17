@@ -1,12 +1,11 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF;
 
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Rcnchris\Core\PDF\Writer;
 
-class AbstractPDFTest extends PdfTestCase
+class PdfDocTest extends PdfTestCase
 {
-
     /**
      * @var DocPdf
      */
@@ -28,7 +27,7 @@ class AbstractPDFTest extends PdfTestCase
     {
         $this->ekoTitre('PDF - FPDF');
         $this->assertInstanceOf(
-            AbstractPDF::class,
+            PdfDoc::class,
             $this->makePdf(),
             $this->getMessage("La classe obtenue à l'instance est incorrecte")
         );
@@ -38,16 +37,16 @@ class AbstractPDFTest extends PdfTestCase
     {
         $pdf = $this->makePdf(null, false);
         $this->assertEquals(
-            0
-            , $pdf->getTotalPages()
-            , $this->getMessage("Le nombre total de pages ne correspond pas")
+            0,
+            $pdf->getTotalPages(),
+            $this->getMessage("Le nombre total de pages ne correspond pas")
         );
 
         $pdf->AddPage();
         $this->assertEquals(
-            1
-            , $pdf->getTotalPages()
-            , $this->getMessage("Le nombre total de pages ne correspond pas")
+            1,
+            $pdf->getTotalPages(),
+            $this->getMessage("Le nombre total de pages ne correspond pas")
         );
     }
 
@@ -91,16 +90,16 @@ class AbstractPDFTest extends PdfTestCase
     public function testSetMargin()
     {
         $pdf = $this->makePdf();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->setMargin('top', 20));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->setMargin('top', 20));
         $this->assertEquals(20, $pdf->getMargin('top'));
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->setMargin('bottom', 20));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->setMargin('bottom', 20));
         $this->assertEquals(20, $pdf->getMargin('bottom'));
     }
 
     public function testSetCursor()
     {
         $pdf = $this->makePdf();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->setCursor(10));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->setCursor(10));
         $this->assertEquals(10, $pdf->getCursor('x'));
     }
 
@@ -328,12 +327,6 @@ class AbstractPDFTest extends PdfTestCase
         $this->assertEquals('0.059 0.039 0.294 rg', $pdf->getToolColor('text'));
     }
 
-    public function testSetToolColorWithNamedColor()
-    {
-        $this->expectException(\Exception::class);
-        $this->makePdf()->setToolColor('gray', 'text');
-    }
-
     public function testGetLinks()
     {
         $pdf = $this->makePdf()->demo();
@@ -345,7 +338,7 @@ class AbstractPDFTest extends PdfTestCase
     {
         $this->ekoMessage("Définir le Writer");
         $this->assertInstanceOf(
-            AbstractPDF::class,
+            PdfDoc::class,
             $this->makePdf()->setWriter()
         );
     }
@@ -353,6 +346,6 @@ class AbstractPDFTest extends PdfTestCase
     public function testGetWriter()
     {
         $this->ekoMessage("Obtenir l'instance du Writer");
-        $this->assertInstanceOf(Writer::class, $this->makePdf()->getWriter());
+        $this->assertInstanceOf(Writer::class, $this->makePdf()->writer());
     }
 }

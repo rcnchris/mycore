@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF;
 
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Rcnchris\Core\PDF\Writer;
 
 class WriterTest extends PdfTestCase
@@ -65,7 +65,7 @@ class WriterTest extends PdfTestCase
         $fileDest = $this->resultPath . '/' . __FUNCTION__;
         $content = 'ola les gens !';
         $pdf = $writer->write($content);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->toFile($fileDest);
         $this->addUsedFile($fileDest . '.pdf');
         $pdf->Close();
@@ -78,7 +78,7 @@ class WriterTest extends PdfTestCase
         $fileDest = $this->resultPath . '/' . __FUNCTION__;
         $content = 'ola les gens !';
         $pdf = $writer->write($content);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->toFile($fileDest);
         $this->addUsedFile($fileDest . '.pdf');
         $pdf->Close();
@@ -92,7 +92,7 @@ class WriterTest extends PdfTestCase
         $pdf = $writer->write($content, [
             'heightline' => 20
         ]);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->toFile($fileDest);
         $this->addUsedFile($fileDest . '.pdf');
         $pdf->Close();
@@ -109,7 +109,7 @@ class WriterTest extends PdfTestCase
         $pdf = $writer->write($content, [
             'heightline' => 6
         ]);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->toFile($fileDest);
         $this->addUsedFile($fileDest . '.pdf');
         $pdf->Close();
@@ -127,7 +127,7 @@ class WriterTest extends PdfTestCase
             'heightline' => 6,
             'keys' => ['name', 'year']
         ]);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->toFile($fileDest);
         $this->addUsedFile($fileDest . '.pdf');
         $pdf->Close();

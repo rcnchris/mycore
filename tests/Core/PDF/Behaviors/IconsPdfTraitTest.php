@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Tests\Rcnchris\Core\PDF\PdfTestCase;
 
 class IconsPdfTraitTest extends PdfTestCase
@@ -26,7 +26,7 @@ class IconsPdfTraitTest extends PdfTestCase
     public function testPrintIcon()
     {
         $pdf = $this->makePdf();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->printIcon('envelope'));
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->printIcon('envelope', 10, 20));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->printIcon('envelope'));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->printIcon('envelope', 10, 20));
     }
 }

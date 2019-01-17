@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Tests\Rcnchris\Core\PDF\PdfTestCase;
 
 class ComponentsPdfTraitTest extends PdfTestCase
@@ -57,31 +57,31 @@ class ComponentsPdfTraitTest extends PdfTestCase
 
     public function testTitle()
     {
-        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->title('Ola'));
+        $this->assertInstanceOf(PdfDoc::class, $this->makePdf()->title('Ola'));
     }
 
     public function testCodeBloc()
     {
-        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->codeBloc('Ola'));
+        $this->assertInstanceOf(PdfDoc::class, $this->makePdf()->codeBloc('Ola'));
     }
 
     public function testAlert()
     {
-        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->alert('Ola'));
+        $this->assertInstanceOf(PdfDoc::class, $this->makePdf()->alert('Ola'));
     }
 
     public function testPrintInfoClass()
     {
         $pdf = $this->makePdf();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->printInfoClass(get_class($this)));
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->printInfoClass($this));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->printInfoClass(get_class($this)));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->printInfoClass($this));
         $this->expectException(\Exception::class);
         $pdf->printInfoClass('fake');
     }
 
     public function testPrintDocumentProperties()
     {
-        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->printDocumentProperties());
+        $this->assertInstanceOf(PdfDoc::class, $this->makePdf()->printDocumentProperties());
     }
 
     public function testSetTitleTemplates()
@@ -90,7 +90,7 @@ class ComponentsPdfTraitTest extends PdfTestCase
             ['fontFamily' => 'courier'],
             ['fontFamily' => 'helvetica']
         ];
-        $this->assertInstanceOf(AbstractPDF::class, $this->makePdf()->setTitleTemplates($templates));
+        $this->assertInstanceOf(PdfDoc::class, $this->makePdf()->setTitleTemplates($templates));
     }
 
     public function testPuces()

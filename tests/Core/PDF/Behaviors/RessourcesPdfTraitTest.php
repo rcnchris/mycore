@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Tests\Rcnchris\Core\PDF\PdfTestCase;
 
 class RessourcesPdfTraitTest extends PdfTestCase
@@ -62,14 +62,14 @@ class RessourcesPdfTraitTest extends PdfTestCase
     public function testAddBookmarks()
     {
         $pdf = $this->makePdf();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->addBookmark('Le premier'));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->addBookmark('Le premier'));
         $this->assertCount(1, $pdf->getBookmarks());
     }
 
     public function testGetBookmarks()
     {
         $pdf = $this->makePdf();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->addBookmark('Le premier'));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->addBookmark('Le premier'));
         $this->assertCount(1, $pdf->getBookmarks());
         $this->assertEquals(['t', 'l', 'y', 'p'], array_keys($pdf->getBookmarks(0)));
         $this->assertEquals('Le premier', $pdf->getBookmarks(0, 't'));
@@ -123,7 +123,7 @@ class RessourcesPdfTraitTest extends PdfTestCase
     public function testJoinFileReturnInstance()
     {
         $this->assertInstanceOf(
-            AbstractPDF::class,
+            PdfDoc::class,
             $this->makePdf()->joinFile($this->filesPath . '/textFile.txt')
         );
     }
@@ -132,7 +132,7 @@ class RessourcesPdfTraitTest extends PdfTestCase
     {
         $fileName = 'textFile.txt';
         $this->assertInstanceOf(
-            AbstractPDF::class,
+            PdfDoc::class,
             $this->makePdf()->joinFile($fileName)
         );
     }
@@ -140,7 +140,7 @@ class RessourcesPdfTraitTest extends PdfTestCase
     public function testSetJoinedFilesPane()
     {
         $this->assertInstanceOf(
-            AbstractPDF::class,
+            PdfDoc::class,
             $this->makePdf()->setJoinedPane(true)
         );
     }

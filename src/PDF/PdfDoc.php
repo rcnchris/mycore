@@ -1,6 +1,6 @@
 <?php
 /**
- * Fichier AbstractPDF.php du 12/02/2018
+ * Fichier PdfDoc.php du 12/02/2018
  * Description : Fichier de la classe AbstractPDF
  *
  * PHP version 5
@@ -18,13 +18,23 @@
 
 namespace Rcnchris\Core\PDF;
 
+use Rcnchris\Core\PDF\Behaviors\ColorsPdfTrait;
+use Rcnchris\Core\PDF\Behaviors\ComponentsPdfTrait;
+use Rcnchris\Core\PDF\Behaviors\DataPdfTrait;
+use Rcnchris\Core\PDF\Behaviors\DesignerPdfTrait;
+use Rcnchris\Core\PDF\Behaviors\IconsPdfTrait;
+use Rcnchris\Core\PDF\Behaviors\Psr7PdfTrait;
+use Rcnchris\Core\PDF\Behaviors\RecordSetPdfTrait;
+use Rcnchris\Core\PDF\Behaviors\RessourcesPdfTrait;
+use Rcnchris\Core\PDF\Behaviors\RotatePdfTrait;
+use Rcnchris\Core\PDF\Behaviors\RowPdfTrait;
 use Rcnchris\Core\Tools\Items;
 
 /**
- * Class AbstractPDF
+ * Class PdfDoc
  * <ul>
  * <li>Classe parente de tous les documents PDF.</li>
- * <li>Pour créer nouveau document, créer une classe qui hérite de <code>AbstractPDF</code>
+ * <li>Pour créer nouveau document, créer une classe qui hérite de <code>PdfDoc</code>
  * et lui associer les traits qui correspondent aux fonctionnalités souhaitées</li>
  * </ul>
  *
@@ -36,8 +46,19 @@ use Rcnchris\Core\Tools\Items;
  *
  * @version  Release: <1.0.0>
  */
-class AbstractPDF extends \FPDF
+class PdfDoc extends \FPDF
 {
+    use ColorsPdfTrait,
+        ComponentsPdfTrait,
+        DataPdfTrait,
+        DesignerPdfTrait,
+        IconsPdfTrait,
+        Psr7PdfTrait,
+        RecordSetPdfTrait,
+        RessourcesPdfTrait,
+        RotatePdfTrait,
+        RowPdfTrait;
+
     /**
      * Options par défaut du document
      *
@@ -413,7 +434,6 @@ class AbstractPDF extends \FPDF
      */
     public function toFile($fileName = null)
     {
-
         if (is_null($fileName)) {
             $fileName = get_class($this);
             $fileName = explode('\\', $fileName);
@@ -480,27 +500,15 @@ class AbstractPDF extends \FPDF
         } elseif (!empty($properties)) {
             // Couleur du texte
             if (array_key_exists('textColor', $properties)) {
-                if (method_exists($this, 'setColor')) {
-                    $this->setColor($properties['textColor']);
-                } else {
-                    $this->setToolColor($this->hexaToRgb($properties['textColor']), 'text');
-                }
+                $this->setColor($properties['textColor']);
             }
             // Couleur du trait
             if (array_key_exists('drawColor', $properties)) {
-                if (method_exists($this, 'setColor')) {
-                    $this->setColor($properties['drawColor'], 'draw');
-                } else {
-                    $this->setToolColor($this->hexaToRgb($properties['drawColor']), 'draw');
-                }
+                $this->setColor($properties['drawColor'], 'draw');
             }
             // Couleur de remplissage
             if (array_key_exists('fillColor', $properties)) {
-                if (method_exists($this, 'setColor')) {
-                    $this->setColor($properties['fillColor'], 'fill');
-                } else {
-                    $this->setToolColor($this->hexaToRgb($properties['fillColor']), 'fill');
-                }
+                $this->setColor($properties['fillColor'], 'fill');
             }
 
             // Souligné ?
@@ -669,12 +677,12 @@ class AbstractPDF extends \FPDF
     /**
      * Définir un nouveau writer
      *
-     * @param \Rcnchris\Core\PDF\AbstractPDF|null $pdf     Document PDF
-     * @param array|null                          $options Options d'écritures du Writer
+     * @param \Rcnchris\Core\PDF\PdfDoc|null $pdf     Document PDF
+     * @param array|null                     $options Options d'écritures du Writer
      *
      * @return $this
      */
-    public function setWriter(AbstractPDF $pdf = null, array $options = [])
+    public function setWriter(PdfDoc $pdf = null, array $options = [])
     {
         if (is_null($pdf)) {
             $pdf = $this;
@@ -688,8 +696,18 @@ class AbstractPDF extends \FPDF
      *
      * @return Writer
      */
-    public function getWriter()
+    public function writer()
     {
         return $this->writer;
+    }
+
+    /**
+     * Obtenir les options
+     *
+     * @return Items
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 }

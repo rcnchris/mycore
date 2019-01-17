@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Tests\Rcnchris\Core\PDF\PdfTestCase;
 
 class RecordSetPdfTraitTest extends PdfTestCase
@@ -54,7 +54,7 @@ class RecordSetPdfTraitTest extends PdfTestCase
     public function testSetRsWithoutWidth()
     {
         $this->assertInstanceOf(
-            AbstractPDF::class,
+            PdfDoc::class,
             $this->makePdf()->setRs()
         );
     }
@@ -62,7 +62,7 @@ class RecordSetPdfTraitTest extends PdfTestCase
     public function testSetWithWidthInUnit()
     {
         $this->assertInstanceOf(
-            AbstractPDF::class,
+            PdfDoc::class,
             $this->makePdf()->setRs(['w' => [30, 20, 50]])
         );
     }
@@ -85,7 +85,7 @@ class RecordSetPdfTraitTest extends PdfTestCase
     public function testSetWithDefaultOptions()
     {
         $this->assertInstanceOf(
-            AbstractPDF::class,
+            PdfDoc::class,
             $this->makePdf()->setRs()
         );
     }
@@ -101,7 +101,7 @@ class RecordSetPdfTraitTest extends PdfTestCase
                 'headerFontStyle' => 'B',
                 'headerAlign' => 'C'
             ]);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
     }
 
     public function testGetPropertiesWithoutOptions()
@@ -153,7 +153,7 @@ class RecordSetPdfTraitTest extends PdfTestCase
                 'w' => [30, 20, 50],
                 'headerNames' => $names
             ]);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->printRsHeader());
+        $this->assertInstanceOf(PdfDoc::class, $pdf->printRsHeader());
     }
 
     public function testPrintRsBody()
@@ -169,6 +169,6 @@ class RecordSetPdfTraitTest extends PdfTestCase
                 'w' => [30, 20, 50],
                 'headerNames' => $names
             ]);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->printRsBody($items));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->printRsBody($items));
     }
 }

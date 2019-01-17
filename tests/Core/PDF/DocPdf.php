@@ -18,11 +18,11 @@
 
 namespace Tests\Rcnchris\Core\PDF;
 
-use Rcnchris\Core\PDF\AbstractPDF;
 use Rcnchris\Core\PDF\Behaviors\ComponentsPdfTrait;
 use Rcnchris\Core\PDF\Behaviors\DesignerPdfTrait;
 use Rcnchris\Core\PDF\Behaviors\Psr7PdfTrait;
 use Rcnchris\Core\PDF\Behaviors\RessourcesPdfTrait;
+use Rcnchris\Core\PDF\PdfDoc;
 
 /**
  * Class AbstractPdf
@@ -35,7 +35,7 @@ use Rcnchris\Core\PDF\Behaviors\RessourcesPdfTrait;
  *
  * @version  Release: <1.0.0>
  */
-class DocPdf extends AbstractPDF
+class DocPdf extends PdfDoc
 {
     use RessourcesPdfTrait, ComponentsPdfTrait, DesignerPdfTrait, Psr7PdfTrait;
 
@@ -147,7 +147,7 @@ class DocPdf extends AbstractPDF
 
         $this
             ->title('Retourne', 2)
-            ->codeBloc(AbstractPDF::class)
+            ->codeBloc(PdfDoc::class)
             ->Ln();
 
         $desc = "Utilisation de préférences par défaut pour créer le document (police, hauteur de ligne...). Elles sont stockées dans la propriété 'options' qui est une Collection.";
@@ -348,7 +348,7 @@ class DocPdf extends AbstractPDF
 
         $this
             ->title('Retourne', 2)
-            ->codeBloc(AbstractPDF::class)
+            ->codeBloc(PdfDoc::class)
             ->Ln();
 
         $this->title('Exemple', 2)
@@ -483,7 +483,7 @@ class DocPdf extends AbstractPDF
             ->Ln();
 
         $this->title('Retourne', 2)
-            ->codeBloc(AbstractPDF::class)
+            ->codeBloc(PdfDoc::class)
             ->Ln();
 
         $this->title('Se positionner à la colonne 20 et à la ligne 55.', 2)

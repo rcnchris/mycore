@@ -1,7 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Tests\Rcnchris\Core\PDF\PdfTestCase;
 
 class DataPdfTraitTest extends PdfTestCase
@@ -44,7 +44,7 @@ class DataPdfTraitTest extends PdfTestCase
     public function testSetData()
     {
         $pdf = $this->makePdf();
-        $this->assertInstanceOf(AbstractPDF::class, $pdf->setData($this->data));
+        $this->assertInstanceOf(PdfDoc::class, $pdf->setData($this->data));
     }
 
     public function testGetData()

@@ -1,8 +1,7 @@
 <?php
 namespace Tests\Rcnchris\Core\PDF\Behaviors;
 
-
-use Rcnchris\Core\PDF\AbstractPDF;
+use Rcnchris\Core\PDF\PdfDoc;
 use Tests\Rcnchris\Core\PDF\PdfTestCase;
 
 class RowPdfTraitTest extends PdfTestCase
@@ -27,14 +26,14 @@ class RowPdfTraitTest extends PdfTestCase
     public function testSetColWidth()
     {
         $pdf = $this->makePdf()->setColsWidth(20, 20, 50);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
     public function testSetColWidthInPourc()
     {
         $pdf = $this->makePdf()->setColsWidthInPourc(30, 20, 50);
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -44,7 +43,7 @@ class RowPdfTraitTest extends PdfTestCase
             ->setColsWidth(20, 20, 50)
             ->setColsAlign('L', 'C', 'R');
 
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
 
         $pdf->Close();
     }
@@ -55,7 +54,7 @@ class RowPdfTraitTest extends PdfTestCase
             ->setColsWidth(20, 20, 50)
             ->setColsBorder('B', 'B', 'B');
 
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -65,7 +64,7 @@ class RowPdfTraitTest extends PdfTestCase
             ->setColsWidth(20, 20, 50)
             ->setColsFill(false, true, false);
 
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -75,7 +74,7 @@ class RowPdfTraitTest extends PdfTestCase
             ->setColsWidth(20, 20, 50)
             ->setColsDrawColors('#CCCCCC', '#000000', '#000000');
 
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -84,7 +83,7 @@ class RowPdfTraitTest extends PdfTestCase
         $pdf = $this->makePdf()
             ->setColsWidth(20, 20, 50)
             ->setColsFillColors('#CCCCCC', '#000000', '#000000');
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -94,7 +93,7 @@ class RowPdfTraitTest extends PdfTestCase
             ->setColsWidth(20, 20, 50)
             ->setColsTextColors('#CCCCCC', '#000000', '#000000');
 
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -104,7 +103,7 @@ class RowPdfTraitTest extends PdfTestCase
             ->setColsWidth(20, 20, 50)
             ->setColsFont('courier', 'helvetica', 'helvetica');
 
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -114,7 +113,7 @@ class RowPdfTraitTest extends PdfTestCase
             ->setColsWidth(20, 20, 50)
             ->setColsFontSize(10, 8, 10);
 
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -124,7 +123,7 @@ class RowPdfTraitTest extends PdfTestCase
             ->setColsWidth(20, 20, 50)
             ->setHeightLine(15);
 
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -134,7 +133,7 @@ class RowPdfTraitTest extends PdfTestCase
             ->setColsWidth(20, 20, 50)
             ->rowCols('ola', 'les', 'gens');
 
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -144,7 +143,7 @@ class RowPdfTraitTest extends PdfTestCase
         for ($i = 0; $i <= 99; $i++) {
             $pdf->rowCols("ola$i", "les$i", "gens$i");
         }
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
@@ -154,7 +153,7 @@ class RowPdfTraitTest extends PdfTestCase
         for ($i = 0; $i <= 99; $i++) {
             $pdf->rowCols("ola$i", "les$i", "gens$i", '');
         }
-        $this->assertInstanceOf(AbstractPDF::class, $pdf);
+        $this->assertInstanceOf(PdfDoc::class, $pdf);
         $pdf->Close();
     }
 
