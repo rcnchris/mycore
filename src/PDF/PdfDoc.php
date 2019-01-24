@@ -671,14 +671,8 @@ class PdfDoc extends \FPDF
             if ($color[0] === '#') {
                 $rgb = $this->hexaToRgb($color);
             } elseif ($color[0] != '#') {
-                if (method_exists($this, 'setColor')) {
-                    $this->setColor($color, $tool);
-                    return $this;
-                } else {
-                    throw new \Exception(
-                        "Le trait 'ColorsPdfTrait' doit être implémenté pour utiliser les couleurs nommées !"
-                    );
-                }
+                $this->setColor($color, $tool);
+                return $this;
             }
         }
         $this->$method($rgb['r'], $rgb['g'], $rgb['b']);

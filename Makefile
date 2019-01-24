@@ -69,7 +69,7 @@ runtest: ## Exécution des ests unitaires
 coveragepdf: ## Couverture des tests dans un PDF
 	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(shell date +%Y%m%d%H%M%S).pdf
 
-test: ideperm install runtest coveragepdf clear webperm
+test: ideperm runtest coveragepdf clear webperm
 
 runtestfolder: ideperm ## Tester un répertoire particulier
 	@echo -e '$(colorObj)Tests du dossier $(testsFolder)$(colorOff)'	

@@ -19,7 +19,6 @@
     "issues": "https://github.com/rcnchris/mycore/issues",
     "wiki": "https://github.com/rcnchris/mycore/wiki"
   },
-  "minimum-stability": "stable",
   "require": {
     "psr/container": "^1.0",
     "psr/http-server-middleware": "^1.0",

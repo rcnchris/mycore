@@ -232,7 +232,7 @@ class CurlTest extends BaseTestCase
     {
         $title = 'XML en bois';
         $this->ekoMessage($title);
-        $curl = $this->makeCurl('http://localhost/_lab/mycore/tests/files/jsonenbois.json');
+        $curl = $this->makeCurl('http://localhost/_github/mycore/tests/files/jsonenbois.json');
         $response = $curl->exec($title)->getResponse();
         $this->assertInstanceOf(Items::class, $response);
         $this->assertArrayHasKey('jsonErrorMsg', $response->toArray());
@@ -264,7 +264,7 @@ class CurlTest extends BaseTestCase
     {
         $title = 'XML en bois';
         $this->ekoMessage($title);
-        $curl = $this->makeCurl('http://localhost/_lab/mycore/tests/files/xmlenbois.xml');
+        $curl = $this->makeCurl('http://localhost/_github/mycore/tests/files/xmlenbois.xml');
         $response = $curl->exec($title)->getResponse();
         $this->assertInstanceOf(Items::class, $response);
         $this->assertArrayHasKey('xmlErrors', $response->toArray());
