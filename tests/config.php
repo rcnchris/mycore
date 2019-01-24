@@ -5,9 +5,9 @@ return [
 
     /**
      * Nom de la configuration à utiliser
-     * - local : Tests locaux
-     * - dev : Tests Travis
-     * - prod : Production
+     * - local : Tests locaux (Tous les tests)
+     * - dev : Tests Travis (Tests elligibles pour Travis)
+     * - prod : Production (Production)
      */
     'configName' => 'local',
 

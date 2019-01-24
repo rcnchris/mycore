@@ -42,13 +42,12 @@ use Psr\Http\Message\ResponseInterface;
 class BootMiddleware extends AbstractMiddleware
 {
     /**
-     * Confiuration par défaut
+     * Configuration par défaut
      *
      * @var array
      */
     private $defaultConfig = [
         'php' => '5.5.9',
-        'timezone' => 'Europe/Paris',
         'locale' => 'fr_FR',
         'charset' => 'utf-8',
     ];
@@ -65,23 +64,32 @@ class BootMiddleware extends AbstractMiddleware
      */
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
     {
-        $this->defineConstants();
         $this->compareVersion();
+        /**
+         * Affichage des erreurs PHP si la clé du conteneur de dépendances `debug` est à `true`
+         */
+        error_reporting(0);
+        if ($this->getContainer('debug') === true) {
+            error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+            ini_set("display_errors", 1);
+        }
+
+        $this->defineConstants();
 
         /**
          * Localisation
          */
         $localisations = [
-            'timezone' => $this->defaultConfig['timezone'],
+            'timezone' => new \DateTimeZone('Europe/Paris'),
             'charset' => $this->defaultConfig['charset'],
             'locale' => $this->defaultConfig['locale'],
         ];
-        if (!is_null($this->container)) {
+        if (isset($this->container)) {
             $localisations['timezone'] = $this->getContainer('timezone');
             $localisations['charset'] = $this->getContainer('charset');
             $localisations['locale'] = $this->getContainer('lang');
         }
-        date_default_timezone_set($localisations['timezone']);
+        date_default_timezone_set($localisations['timezone']->getName());
         mb_internal_encoding($localisations['charset']);
         if (extension_loaded('intl')) {
             ini_set('intl.default_locale', $localisations['locale']);
@@ -90,12 +98,10 @@ class BootMiddleware extends AbstractMiddleware
         (new \Locale())->setDefault($localisations['locale']);
 
         /**
-         * Affichage des erreurs PHP si la clé du conteneur de dépendances `debug` est à `true`
+         * Powered By
          */
-        error_reporting(0);
-        if ($this->getContainer('debug') === true) {
-            error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-            ini_set("display_errors", 1);
+        if (isset($this->container)) {
+            $response = $response->withAddedHeader('X-Powered-By', $this->container->get('poweredBy'));
         }
 
         return $next($request, $response);
@@ -108,8 +114,7 @@ class BootMiddleware extends AbstractMiddleware
     {
         $constants = [
             'DS' => DIRECTORY_SEPARATOR,
-            'ROOT' => dirname(dirname(__DIR__)),
-            'PREFIX' => $this->prefix()
+            'ROOT' => isset($this->container) ? $this->container->get('root') : '/'
         ];
         foreach ($constants as $name => $value) {
             if (!defined($name)) {
@@ -119,6 +124,8 @@ class BootMiddleware extends AbstractMiddleware
     }
 
     /**
+     * Vérifie la version de PHP
+     *
      * @throws \Exception
      * @codeCoverageIgnore
      */

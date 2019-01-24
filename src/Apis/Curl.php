@@ -269,8 +269,10 @@ class Curl
             $content = json_decode($this->response, true);
             $response = is_array($content)
                 ? new Items($content)
-                : new Items(array_merge($errors,
-                    ['jsonError' => json_last_error(), 'jsonErrorMsg' => json_last_error_msg()]));
+                : new Items(array_merge(
+                    $errors,
+                    ['jsonError' => json_last_error(), 'jsonErrorMsg' => json_last_error_msg()]
+                ));
         } elseif ($type === 'text/csv') {
             // Chaque ligne dans un tableau
             $array = str_getcsv($this->response, "\n");

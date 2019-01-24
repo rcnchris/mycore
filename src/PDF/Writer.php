@@ -26,6 +26,16 @@ use Rcnchris\Core\Tools\Items;
  * <li>Facilite l'écriture de contenu dans un document PDF.</li>
  * </ul>
  *
+ * ## Méthodes natives \FPDF pour écrire dans le document
+ * - Cell(w, h, txt, border, ln, align, fill, link) : imprime une cellule
+ * - MultiCell(w, h, txt, border, align, fill) : imprime du texte avec saut de ligne
+ * - Text(x, y, txt) : imprime une chaîne
+ * - Write(h, txt, link) : imprime du texte en mode flot.
+ *
+ * ## Rappel de la terminologie
+ * - X : Abscisse (position horizontale)
+ * - Y : Ordonnée (position verticale)
+ *
  * @category PDF
  *
  * @package  Rcnchris\Core\PDF
@@ -157,7 +167,6 @@ class Writer
                 );
             }
         }
-
         return $pdf;
     }
 }

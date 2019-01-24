@@ -139,7 +139,7 @@ class WkhtmltopdfTest extends BaseTestCase
         $response = $this
             ->makePdf()
             ->addPage('<h1>Oyé les gens</h1>')
-            ->render();
+            ->render($this->makeResponsePsr7());
         $this->assertInstanceOf(ResponseInterface::class, $response);
         if ($response->getStatusCode() !== 200) {
             $this->ekoMessage((string)$response->getBody());
@@ -152,7 +152,7 @@ class WkhtmltopdfTest extends BaseTestCase
         $response = $this
             ->makePdf()
             ->addPage('<h1>Oyé les gens</h1>')
-            ->download(null, [], $file);
+            ->download($this->makeResponsePsr7(), [], $file);
         $this->assertInstanceOf(ResponseInterface::class, $response);
         if ($response->getStatusCode() !== 200) {
             $this->ekoMessage((string)$response->getBody());

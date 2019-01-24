@@ -33,7 +33,13 @@ class BootMiddlewareTest extends BaseTestCase
         $this->assertInstanceOf(
             ResponseInterface::class,
             (new BootMiddleware())
-                ->withContainer($this->makeContainer(['name' => 'Mathis', 'debug' => true]))
+                ->withContainer($this->makeContainer([
+                    'name' => 'Mathis',
+                    'debug' => true,
+                    'timezone' => new \DateTimeZone('Europe/Paris'),
+                    'charset' => 'utf-8',
+                    'locale' => 'fr_FR',
+                ]))
                 ->__invoke(
                     $request,
                     $response,

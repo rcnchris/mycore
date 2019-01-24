@@ -114,14 +114,4 @@ abstract class AbstractMiddleware
     {
         return $this->getContainer($key);
     }
-
-    /**
-     * Obtenir le prefix de l'application
-     *
-     * @return string
-     */
-    protected function prefix()
-    {
-        return basename(dirname(dirname(__DIR__)));
-    }
 }

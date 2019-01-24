@@ -60,7 +60,6 @@ class CookiesMiddleware extends AbstractMiddleware
         ];
         new PHPCookies($arrayCookies, [
             'lifetime' => time() + 3600 * 24 * 3,
-            'path' => $this->prefix(),
             'domain' => $request->getUri()->getAuthority()
         ]);
         return $next($request, $response);

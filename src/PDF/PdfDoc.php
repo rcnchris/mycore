@@ -34,8 +34,7 @@ use Rcnchris\Core\Tools\Items;
  * Class PdfDoc
  * <ul>
  * <li>Classe parente de tous les documents PDF.</li>
- * <li>Pour créer nouveau document, créer une classe qui hérite de <code>PdfDoc</code>
- * et lui associer les traits qui correspondent aux fonctionnalités souhaitées</li>
+ * <li>Pour créer nouveau document, créer une classe qui hérite de <code>PdfDoc</code></li>
  * </ul>
  *
  * @category PDF
@@ -45,6 +44,8 @@ use Rcnchris\Core\Tools\Items;
  * @author   Raoul <rcn.chris@gmail.com>
  *
  * @version  Release: <1.0.0>
+ * @see      http://www.fpdf.org/
+ * @see      http://www.fpdf.org/fr/doc
  */
 class PdfDoc extends \FPDF
 {
@@ -58,6 +59,17 @@ class PdfDoc extends \FPDF
         RessourcesPdfTrait,
         RotatePdfTrait,
         RowPdfTrait;
+
+    /**
+     * Aide de cette classe
+     *
+     * @var array
+     */
+    private $help = [
+        'Helper <code>\FPDF</code>',
+        "Permet d'écrire ligne à ligne, de <strong>générer</strong> et <strong>rendre</strong> des document <strong>PDF</strong>",
+        '<a href="http://www.fpdf.org/" target="_blank">FPDF</a>'
+    ];
 
     /**
      * Options par défaut du document
@@ -426,7 +438,7 @@ class PdfDoc extends \FPDF
      * Enregistrer le document PDF sur le serveur
      *
      * ### Exemple
-     * - `$pdf->toFile('patht/to/file/filename');`
+     * - `$pdf->toFile('path/to/file/filename');`
      *
      * @param string|null $fileName Chemin et nom du fichier PDF (sans l'extension)
      *
@@ -709,5 +721,20 @@ class PdfDoc extends \FPDF
     public function getOptions()
     {
         return $this->options;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public function help($text = true)
+    {
+        if ($text) {
+            return join('. ', $this->help);
+        }
+        return $this->help;
     }
 }

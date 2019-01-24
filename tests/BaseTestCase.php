@@ -145,6 +145,16 @@ class BaseTestCase extends TestCase
     }
 
     /**
+     * @param string $message Message
+     */
+    protected function ekoMsgInfo($message)
+    {
+        if ($this::VERBOSE) {
+            echo "\033[0;34m$message\n\033[m";
+        }
+    }
+
+    /**
      * Obtenir le message d'erreur d'une assertion
      *
      * ### Exemple
@@ -162,13 +172,6 @@ class BaseTestCase extends TestCase
     {
         if ($this::VERBOSE) {
             return "\033[0;33m$message\033[m";
-        }
-    }
-
-    protected function ekoMsgInfo($message)
-    {
-        if ($this::VERBOSE) {
-            echo "\033[0;34m$message\n\033[m";
         }
     }
 

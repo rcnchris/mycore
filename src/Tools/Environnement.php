@@ -200,7 +200,7 @@ class Environnement
      * @return string
      * @codeCoverageIgnore
      */
-    public function getApacheAdmin($default=null)
+    public function getApacheAdmin()
     {
         return $this->get('SERVER_ADMIN');
     }

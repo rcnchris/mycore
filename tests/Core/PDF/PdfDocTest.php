@@ -3,6 +3,7 @@ namespace Tests\Rcnchris\Core\PDF;
 
 use Rcnchris\Core\PDF\PdfDoc;
 use Rcnchris\Core\PDF\Writer;
+use Rcnchris\Core\Tools\Items;
 
 class PdfDocTest extends PdfTestCase
 {
@@ -20,7 +21,10 @@ class PdfDocTest extends PdfTestCase
      */
     public function makePdf($className = null, $withPage = true)
     {
-        return parent::makePdf(DocPdf::class, $withPage);
+        if(is_null($className)){
+            $className= DocPdf::class;
+        }
+        return parent::makePdf($className, $withPage);
     }
 
     public function testInstance()
@@ -31,6 +35,11 @@ class PdfDocTest extends PdfTestCase
             $this->makePdf(),
             $this->getMessage("La classe obtenue à l'instance est incorrecte")
         );
+    }
+
+    public function testHasHelp()
+    {
+        $this->assertHasHelp($this->makePdf(PdfDoc::class));
     }
 
     public function testGetTotalPages()
@@ -347,5 +356,10 @@ class PdfDocTest extends PdfTestCase
     {
         $this->ekoMessage("Obtenir l'instance du Writer");
         $this->assertInstanceOf(Writer::class, $this->makePdf()->writer());
+    }
+
+    public function testGetOptions()
+    {
+        $this->assertInstanceOf(Items::class, $this->makePdf()->getOptions());
     }
 }

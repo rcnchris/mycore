@@ -313,21 +313,6 @@ class Debug
     }
 
     /**
-     * Obtenir l'aide de cette classe
-     *
-     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
-     *
-     * @return array|string
-     */
-    public static function help($text = true)
-    {
-        if ($text) {
-            return join('. ', self::$help);
-        }
-        return self::$help;
-    }
-
-    /**
      * Obtenir le code source d'un fichier.
      *
      * @param string    $file         Chemin complet du fichier
@@ -351,5 +336,20 @@ class Debug
         return $htmlentities
             ? htmlentities($content)
             : $content;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui ets retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

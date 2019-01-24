@@ -1,5 +1,4 @@
-# .SILENT:
-.PHONY: help install ideperm webperm code test server proxy watch clear
+.PHONY: help install ideperm webperm code gendoc doc pretest runtest posttest test runtestapi runtestfolder server proxy watch clear
 
 .DEFAULT_GOAL = help
 
@@ -25,10 +24,13 @@ serverName=0.0.0.0
 serverPort?=8000
 serverFolder=public
 
+folderTest?=tests
+
 help: ## Aide de ce fichier
 	@grep -E '(^[a-zA-Z_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-15s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
 vendor: composer.json ## Génération du dossier vendor
+	composer selfupdate
 	composer install -o --no-suggest
 
 composer.lock: composer.json
@@ -39,9 +41,10 @@ install: vendor composer.lock ## Installation et/ou mise à jour des librairies
 ideperm: ## Permissions de développement
 	@echo -e '$(colorObj)Permissions de développement$(colorOff)'
 	@sudo chown -R $(userConsole):$(userConsole) public
+	@sudo chown -R $(userConsole):$(userConsole) tests
 
 webperm: ## Permissions de production
-	@echo -e '$(colorOk)Permissions de production$(colorOff)'
+	@echo -e '$(colorObj)Permissions de production$(colorOff)'
 	@sudo chown -R $(userApache):$(userApache) public
 
 code: ideperm ## Vérification et correction de la syntaxe
@@ -51,25 +54,39 @@ code: ideperm ## Vérification et correction de la syntaxe
 	@echo -e '$(colorCom)Tests syntaxiques$(colorOff)'
 	@./vendor/bin/phpcs
 
-doc: ## Génération de la documentation
-	@../../devtools/phpdoc/vendor/bin/phpdoc -d $(root)/src -t $(root)/public/doc/src/responsive --template="$(templatePhpDoc)"
+gendoc: ideperm ## Génération de la documentation
+	@echo -e '$(colorObj)Génération de la documentation$(colorOff)'
+	@echo -e '$(colorCom)Corrections syntaxiques$(colorOff)'
+	@./vendor/bin/phpcbf
+	@../../devtools/phpdoc/vendor/bin/phpdoc -d src -t public/doc --template='responsive'
 
-test: ideperm install ## Tests unitaires
-	@clear
-	@echo -e '$(colorObj)Tests unitaires$(colorOff)'
-	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(shell date +%Y%m%d)_before_tests.pdf
+doc: gendoc webperm ## Génération de la documentation
+
+pretest: ideperm install clear ## Préparation des tests
+	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(shell date +%Y%m%d%H%M%S)_before_tests.pdf
+
+runtest: ## Tests unitaires
+	@echo -e '$(colorObj)Tests unitaires$(colorOff)'	
 	@./vendor/bin/phpunit --stop-on-failure --coverage-html public/coverage
-	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(shell date +%Y%m%d)_after_tests.pdf
-	@sudo rm -r host*
+
+posttest: clear ## Finalisation des tests
+	@wkhtmltopdf --orientation Landscape public/coverage/index.html public/pdf/Coverage_$(shell date +%Y%m%d%H%M%S)_after_tests.pdf
+
+test: pretest runtest posttest webperm
+
+runtestfolder: ideperm ## Tester un répertoire particulier
+	@echo -e '$(colorObj)Package Apis$(colorOff)'	
+	@./vendor/bin/phpunit $(folderTest) --stop-on-failure --coverage-text
 	
 server: install ## Lance un serveur de développement
-	@echo -e '$(colorObj)Lance un serveur sur le $(serverName):$(serverPort)$(colorOff)'
+	@echo -e '$(colorObj)Serveur $(serverName):$(serverPort) actif$(colorOff)'
 	@php -S $(serverName):$(serverPort) -t $(serverFolder)/ -d display_errors=1
 
-proxy: ## Permet de rafraîchir automatiquement la page du serveur de développement
+proxy: ## Permet de rafraîchir automatiquement la page du serveur de déveeloppement
 	browser-sync start --port 3000 --proxy $(serverName):$(serverPort) --files 'src/**/*.php' --files 'app/**/*.php' --files 'app/**/*.phtml'
 
 watch: server proxy
 
 clear: ## Vider les fichiers temporaires
-	@sudo rm -r $(root)/host*
+	@sudo rm -rf host*
+	@sudo rm -rf tmp/*

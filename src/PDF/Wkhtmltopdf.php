@@ -21,7 +21,6 @@ namespace Rcnchris\Core\PDF;
 use Michelf\MarkdownExtra;
 use mikehaertl\wkhtmlto\Pdf;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Http\Response;
 
 /**
  * Class Wkhtmltopdf
@@ -52,7 +51,8 @@ class Wkhtmltopdf extends Pdf
         'Helper <strong>Wkhtmltopdf</strong>',
         "Le contenu envoyé doit être du HTML, sous la forme d'une chaîne de caractères, d'un fichier HTML ou d'une URL",
         'Permet de <strong>générer</strong> et <strong>rendre</strong> des document <strong>PDF</strong>',
-        "Requiert l'installation de <code>Wkhtmltopdf</code> sur le système d'exploitation du serveur PHP"
+        "Requiert l'installation de <code>Wkhtmltopdf</code> sur le système d'exploitation du serveur PHP",
+        '<a href="https://wkhtmltopdf.org/" target="_blank">Wkhtmltopdf</a>'
     ];
     /**
      * Options par défaut d'un document PDF généré par Wkhtmltopdf
@@ -64,7 +64,6 @@ class Wkhtmltopdf extends Pdf
         'orientation' => 'Portrait',
         'encoding' => 'utf-8',
         'disable-smart-shrinking',
-        //'disable-javascript',
         // Options
         'header-line',
         'header-spacing' => 3,
@@ -154,11 +153,8 @@ class Wkhtmltopdf extends Pdf
      * @return static
      * @codeCoverageIgnore
      */
-    public function render(ResponseInterface $response = null, array $options = [])
+    public function render(ResponseInterface $response, array $options = [])
     {
-        if (is_null($response)) {
-            $response = new Response();
-        }
         $body = $response->getBody();
         $body->write($this->send());
         if ($this->getError()) {
@@ -187,11 +183,8 @@ class Wkhtmltopdf extends Pdf
      * @return static
      * @codeCoverageIgnore
      */
-    public function download(ResponseInterface $response = null, array $options = [], $dest = null)
+    public function download(ResponseInterface $response, array $options = [], $dest = null)
     {
-        if (is_null($response)) {
-            $response = new Response();
-        }
         $body = $response->getBody();
         $body->write($this->send($dest));
         if ($this->getError()) {
@@ -261,21 +254,6 @@ class Wkhtmltopdf extends Pdf
     }
 
     /**
-     * Obtenir l'aide de cette classe
-     *
-     * @param bool|null $text Si faux, c'est le tableau qui est retourné
-     *
-     * @return array|string
-     */
-    public static function help($text = true)
-    {
-        if ($text) {
-            return join('. ', self::$help);
-        }
-        return self::$help;
-    }
-
-    /**
      * Obtenir l'aide du binaire Wkhtmltopdf
      *
      * @param string $type Type d'aide (help, extended-help, readme, htmldoc, manpage)
@@ -292,5 +270,20 @@ class Wkhtmltopdf extends Pdf
             $ret = '<pre>' . strip_tags($ret) . '</pre>';
         }
         return $ret;
+    }
+
+    /**
+     * Obtenir l'aide de cette classe
+     *
+     * @param bool|null $text Si faux, c'est le tableau qui est retourné
+     *
+     * @return array|string
+     */
+    public static function help($text = true)
+    {
+        if ($text) {
+            return join('. ', self::$help);
+        }
+        return self::$help;
     }
 }

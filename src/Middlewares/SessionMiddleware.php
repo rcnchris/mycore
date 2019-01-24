@@ -53,7 +53,7 @@ class SessionMiddleware extends AbstractMiddleware
      */
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next = null)
     {
-        $session = new PHPSession($this->prefix());
+        $session = new PHPSession();
         $session->set('ip', $request->getServerParams()['REMOTE_ADDR']);
         $session->set('nav', current($request->getHeader('User-Agent')));
         $session->set('currentUrl', (string)$request->getUri());

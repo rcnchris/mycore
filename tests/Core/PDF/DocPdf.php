@@ -37,8 +37,6 @@ use Rcnchris\Core\PDF\PdfDoc;
  */
 class DocPdf extends PdfDoc
 {
-    use RessourcesPdfTrait, ComponentsPdfTrait, DesignerPdfTrait, Psr7PdfTrait;
-
     public function Header()
     {
         parent::SetCreator('My Core');
