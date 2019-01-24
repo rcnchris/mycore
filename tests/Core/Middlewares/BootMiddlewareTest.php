@@ -64,4 +64,10 @@ class BootMiddlewareTest extends BaseTestCase
                 ->getContainer()
         );
     }
+
+    public function testMagicGet()
+    {
+        $midl = (new BootMiddleware())->withContainer($this->makeContainer(['name' => 'Mathis']));
+        $this->assertEquals('Mathis', $midl->name);
+    }
 }

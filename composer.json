@@ -58,6 +58,6 @@
     "process-timeout": 0
   },
   "scripts": {
-    "server": "php -S 0.0.0.0:8000 -t public/ -d display_errors=1"
+    "server": "php -S 0.0.0.0:8000 -t public index.php -d display_errors=1"
   }
 }
