@@ -4,3 +4,4 @@
 /.htaccess
 /public/
 /tests/Core/PDF/results/
+/tests/Core/Office/results/

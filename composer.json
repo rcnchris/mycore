@@ -3,7 +3,7 @@
   "description": "PHP Libraries",
   "keywords": ["library","php","core"],
   "time": "2019-01-23",
-  "version": "0.8.3",
+  "version": "0.8.5",
   "type": "library",
   "license": "MIT",
   "authors": [
@@ -52,11 +52,5 @@
       "Tests\\Rcnchris\\": "tests/",
       "App\\": "app/"
     }
-  },
-  "config": {
-    "process-timeout": 0
-  },
-  "scripts": {
-    "server": "php -S 0.0.0.0:8000 -t public index.php -d display_errors=1"
   }
 }

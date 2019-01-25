@@ -5,7 +5,7 @@
 [![Packagist License](https://img.shields.io/packagist/l/rcnchris/core.svg)](https://img.shields.io/packagist/l/rcnchris/core.svg)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/rcnchris/core.svg)](https://img.shields.io/packagist/dt/rcnchris/core.svg)
 
-<img src="public/img/icon_readme.png" align="right" />
+<img src="readme.png" align="right" />
 
 # My Core
 > Librairies PHP.
